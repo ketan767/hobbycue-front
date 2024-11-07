@@ -110,10 +110,10 @@ export default function index() {
                 <strong>Log your Daily Work here:</strong>
               </h4>
               <p>Your Name*</p>
-              <input type="text" />
+              <input type="text" autoComplete="new" />
               <br />
               <p>Your Email*</p>
-              <input type="text" />
+              <input type="text" autoComplete="new" />
               <br />
               <p>Work Date*</p>
               <input type="date" />

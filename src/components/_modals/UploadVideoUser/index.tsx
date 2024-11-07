@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
@@ -11,7 +11,7 @@ import styles from './styles.module.css'
 import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, setVerified } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
@@ -36,25 +36,37 @@ const UploadVideoUser: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [url, setUrl] = useState('')
   const [nextDisabled, setNextDisabled] = useState(false)
+  const urlRef = useRef<HTMLInputElement>(null)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
-    const { err, res } = await updateMyProfileDetail({
-      video_url: url,
-    })
-    setSubmitBtnLoading(false)
-    if (err) return console.log(err)
-    if (res?.data.success) {
-      if (onComplete) onComplete()
-      else {
-        window.location.reload()
-        dispatch(closeModal())
+    try {
+      const { err, res } = await updateMyProfileDetail({
+        video_url: url,
+      })
+      setSubmitBtnLoading(false)
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        if (onComplete) onComplete()
+        else {
+          // window.location.reload()
+          dispatch(setVerified(true))
+          dispatch(closeModal())
+        }
       }
+    } catch (error) {
+      console.log(error)
     }
   }
   console.log('user', user)
+
+  useEffect(() => {
+    if (urlRef.current) {
+      urlRef.current.focus()
+    }
+  }, [])
 
   return (
     <>
@@ -69,9 +81,16 @@ const UploadVideoUser: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
           <label className={styles.label}>URL</label>
           <div className={styles['input-box']}>
             <input
+              ref={urlRef}
+              autoComplete="new"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               className={styles.input}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSubmit()
+                }
+              }}
             />
           </div>
         </section>

@@ -58,6 +58,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   const [filtercategories, setFilterCategories] = useState([])
   const [filtersubCategories, setFilterSubCategories] = useState([])
   const [filterhobbyData, setFilterHobbyData] = useState([])
+
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     ExtendedDropdownListItem[]
   >([])
@@ -449,6 +450,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                 <h2>Hobbies</h2>
                 <div className={styles['select-filter']}>
                   <TextField
+                    autoComplete="off"
                     className={hobbyStyles['hobby-search']}
                     size="small"
                     placeholder="Type and select..."
@@ -597,6 +599,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                   <div className={styles['select-filter']}>
                     <p>Hobby</p>
                     <TextField
+                      autoComplete="off"
                       size="small"
                       placeholder="Select Hobby"
                       id="outlined-basic"

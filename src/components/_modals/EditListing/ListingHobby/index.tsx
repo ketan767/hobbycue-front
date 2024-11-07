@@ -106,7 +106,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const [showSnackbar, setShowSnackbar] = useState<Snackbar>({
     triggerOpen: false,
     message: '',
-    type: 'success' || 'error',
+    type: 'success',
   })
   const bodyRef = useRef<HTMLElement>(null)
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
@@ -901,8 +901,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                             <input
                               ref={hobbyRef}
                               type="text"
+                              autoComplete="new"
                               placeholder="Search hobby..."
-                              autoComplete="name"
                               required
                               value={hobbyInputValue}
                               onFocus={() => setShowHobbyDropdown(true)}
@@ -952,8 +952,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                           <div className={styles['input-box']}>
                             <input
                               type="text"
+                              autoComplete="new"
                               placeholder="Genre/Style"
-                              autoComplete="name"
                               required
                               ref={genreInputRef}
                               value={genreInputValue}

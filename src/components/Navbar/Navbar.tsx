@@ -75,6 +75,14 @@ import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import { useMediaQuery } from '@mui/material'
 import { getAllPosts, searchPosts } from '@/services/post.service'
 import { getAllBlogs, searchBlogs } from '@/services/blog.services'
+import {
+  setCategory,
+  setHobby,
+  setKeyword,
+  setLocation,
+  setSearching,
+  setSub_category,
+} from '@/redux/slices/explore'
 
 type Props = {}
 
@@ -94,6 +102,8 @@ export const Navbar: React.FC<Props> = ({}) => {
   const router = useRouter()
   const [menuActive, setMenuActive] = useState(false)
   const [isWriting, setIsWriting] = useState(false)
+  const [hasShadow, setHasShadow] = useState(true)
+
   const pathname = usePathname()
 
   const { isLoggedIn, isAuthenticated, user } = useSelector(
@@ -111,12 +121,35 @@ export const Navbar: React.FC<Props> = ({}) => {
     'user-menu' | 'hobby-list' | 'explore-list' | null
   >(null)
   useEffect(() => {
-    if (router.asPath === '/search') {
-      return
+    if (!router.pathname.includes('search')) {
+      setData((prev) => ({
+        ...prev,
+        search: { value: '', error: null },
+      }))
     } else {
-      setData((prev) => ({ ...prev, search: { value: '', error: null } }))
+      setData((prev) => ({
+        ...prev,
+        search: { value: data.search.value, error: null },
+      }))
     }
-  }, [router.asPath])
+  }, [router.pathname])
+
+  // useEffect(() => {
+  //   if (!(router.asPath === '/explore')) {
+  //     setData((prev) => ({
+  //       ...prev,
+  //       search: { value: '', error: null },
+  //     }))
+  //   }
+  // }, [router.asPath])
+
+  useEffect(() => {
+    if (router.pathname.includes('explore')) {
+      setHasShadow(false)
+    } else {
+      setHasShadow(true)
+    }
+  }, [router.pathname])
 
   const handleLogout = () => {
     logout()
@@ -125,9 +158,11 @@ export const Navbar: React.FC<Props> = ({}) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
+    dispatch(setKeyword(value))
   }
 
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const mobileSearchInputRef = useRef<HTMLInputElement>(null)
   const mobileSearchRef = useRef<HTMLFormElement>(null)
   const [isSearchInputVisible, setIsSearchInputVisible] = useState(false)
 
@@ -138,6 +173,7 @@ export const Navbar: React.FC<Props> = ({}) => {
       setTimeout(() => searchInputRef.current?.focus(), 0)
     }
   }
+
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -566,6 +602,13 @@ export const Navbar: React.FC<Props> = ({}) => {
 
   const isMobile = useMediaQuery('(max-width:1100px)')
 
+  useEffect(() => {
+    if (router.asPath === '/search') {
+      searchInputRef.current?.focus()
+      if (isMobile) toggleSearchInput()
+    }
+  }, [router.asPath])
+
   const searchCloseIcon = (
     <svg
       onClick={toggleSearchInput}
@@ -623,7 +666,11 @@ export const Navbar: React.FC<Props> = ({}) => {
 
   return (
     <>
-      <header className={`${styles['navbar-wrappper']}`}>
+      <header
+        className={`${styles['navbar-wrappper']} ${
+          hasShadow ? `${styles['showShadow']}` : ''
+        }`}
+      >
         <nav className={`site-container `}>
           <section className={styles['navbar-left']}>
             <Link
@@ -695,6 +742,7 @@ export const Navbar: React.FC<Props> = ({}) => {
             </Link>
 
             <TextField
+              autoComplete="off"
               inputRef={searchInputRef}
               variant="outlined"
               placeholder="Search for anything on your hobbies..."
@@ -786,7 +834,17 @@ export const Navbar: React.FC<Props> = ({}) => {
                 onMouseOver={() => setShowDropdown('explore-list')}
                 onMouseLeave={() => setShowDropdown(null)}
               >
-                <Link href={'/explore'}>
+                <Link
+                  href={'/explore'}
+                  onClick={() => {
+                    dispatch(setCategory(''))
+                    dispatch(setSub_category(''))
+                    dispatch(setKeyword(''))
+                    dispatch(setHobby(''))
+                    dispatch(setLocation(''))
+                    dispatch(setSearching(true))
+                  }}
+                >
                   <Image src={ExploreIcon} alt="" />
                   <span>Explore</span>
                   <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
@@ -800,8 +858,16 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
+                            dispatch(setCategory('People'))
+                            dispatch(setSearching(true))
+                            dispatch(setSub_category(''))
+                            dispatch(setKeyword(''))
+                            dispatch(setHobby(''))
+                            dispatch(setLocation(''))
+                            const query = { category: 'People' }
                             router.push({
                               pathname: '/explore/people',
+                              query: query,
                             })
                           }}
                         >
@@ -821,8 +887,16 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
+                            dispatch(setCategory('Place'))
+                            dispatch(setSearching(true))
+                            dispatch(setSub_category(''))
+                            dispatch(setKeyword(''))
+                            dispatch(setHobby(''))
+                            dispatch(setLocation(''))
+                            const query = { category: 'Place' }
                             router.push({
                               pathname: '/explore/places',
+                              query: query,
                             })
                           }}
                         >
@@ -837,8 +911,16 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
+                            dispatch(setCategory('Product'))
+                            dispatch(setSearching(true))
+                            dispatch(setSub_category(''))
+                            dispatch(setKeyword(''))
+                            dispatch(setHobby(''))
+                            dispatch(setLocation(''))
+                            const query = { category: 'Product' }
                             router.push({
                               pathname: '/explore/products',
+                              query: query,
                             })
                           }}
                         >
@@ -853,8 +935,16 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
+                            dispatch(setCategory('Program'))
+                            dispatch(setSearching(true))
+                            dispatch(setSub_category(''))
+                            dispatch(setKeyword(''))
+                            dispatch(setHobby(''))
+                            dispatch(setLocation(''))
+                            const query = { category: 'Program' }
                             router.push({
                               pathname: '/explore/programs',
+                              query: query,
                             })
                           }}
                         >
@@ -1288,8 +1378,11 @@ export const Navbar: React.FC<Props> = ({}) => {
                     </header>
                     <div className={styles['mobile-search-container']}>
                       <TextField
+                        autoComplete="off"
+                        ref={mobileSearchInputRef}
+                        type="search"
                         variant="outlined"
-                        placeholder="Search here..."
+                        placeholder="Search for anything on your hobbies..."
                         size="small"
                         autoFocus
                         onFocus={() => {
@@ -1351,7 +1444,11 @@ export const Navbar: React.FC<Props> = ({}) => {
                     }
                   >
                     {data.search.value.length > 0 && (
-                      <input type="text" value={data.search.value} />
+                      <input
+                        type="text"
+                        autoComplete="new"
+                        value={data.search.value}
+                      />
                     )}
                     <div
                       onClick={() => {

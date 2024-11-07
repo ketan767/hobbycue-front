@@ -594,6 +594,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                 <div className={styles['profile-url-input']}>
                   <input
                     type="text"
+                    autoComplete="new"
                     placeholder=""
                     required
                     value={data?.page_url.value as string}
@@ -672,12 +673,12 @@ const ListingContactEditModal: React.FC<Props> = ({
                 <label> Page Admin </label>
                 <input
                   type="text"
+                  autoComplete="new"
                   placeholder={`Type and Select...`}
                   value={
                     isTransferModal ? pageInputValue : data.page_admin.value
                   }
                   name="page_admin"
-                  autoComplete="page_admin"
                   ref={inputRef}
                   onChange={(e) => {
                     if (isTransferModal) {
@@ -744,10 +745,10 @@ const ListingContactEditModal: React.FC<Props> = ({
                 </label>
                 <input
                   type="text"
+                  autoComplete="new"
                   placeholder={`Alternate email ID`}
                   value={data.public_email.value}
                   name="public_email"
-                  autoComplete="email"
                   onChange={handleInputChange}
                   ref={emailRef}
                 />
@@ -781,10 +782,10 @@ const ListingContactEditModal: React.FC<Props> = ({
                   />
                   <input
                     type="text"
+                    autoComplete="new"
                     placeholder={`Phone number`}
                     value={data.phone.number}
                     name="phone"
-                    autoComplete="phone"
                     ref={phoneRef}
                     onChange={handleInputChange}
                     className={styles['phone-input']}
@@ -887,9 +888,9 @@ const ListingContactEditModal: React.FC<Props> = ({
                   />
                   <input
                     type="text"
+                    autoComplete="new"
                     placeholder={`Phone number`}
                     value={data.whatsapp_number.number}
-                    autoComplete="phone"
                     name="whatsapp_number"
                     onChange={handleInputChange}
                     ref={WhtphoneRef}
@@ -911,10 +912,10 @@ const ListingContactEditModal: React.FC<Props> = ({
               <label>Website</label>
               <input
                 type="text"
+                autoComplete="new"
                 placeholder={`URL`}
                 value={data.website.value}
                 name="website"
-                autoComplete="website"
                 ref={websiteRef}
                 onChange={handleInputChange}
               />
@@ -925,7 +926,7 @@ const ListingContactEditModal: React.FC<Props> = ({
               <textarea
                 className={styles['long-input-box']}
                 placeholder="This information is visible only to Admins of this Page"
-                autoComplete="nickname"
+                autoComplete="new"
                 value={data.admin_note.value}
                 name="admin_note"
                 onChange={handleInputChange}

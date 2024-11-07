@@ -18,8 +18,9 @@ import { getAllUserDetail } from '@/services/user.service'
 import EditIcon from '@/assets/svg/edit-colored.svg'
 import { useMediaQuery } from '@mui/material'
 import { openModal } from '@/redux/slices/modal'
+import { htmlToPlainTextAdv } from '@/utils'
 
-type Props = { data: { hobbyData: any } }
+type Props = { data: { hobbyData: any }; unformattedAbout?: string }
 
 const HobbyDetail: React.FC<Props> = (props) => {
   const router = useRouter()
@@ -88,19 +89,28 @@ const HobbyDetail: React.FC<Props> = (props) => {
   }, [data.level, data.slug, data.tags, router.asPath])
 
   const displayDescMeta = () => {
+    let toReturn = ''
     if (data?.level === 0) {
-      return 'Category'
+      toReturn += 'Category'
     } else if (data?.level === 1) {
-      return 'Sub-Category'
+      toReturn += 'Sub-Category'
     } else if (data?.level === 2) {
-      return 'Hobby Tag'
+      toReturn += 'Hobby Tag'
     } else if (data?.level === 3) {
-      return 'Hobby'
+      toReturn += 'Hobby'
     } else if (data?.level === 5) {
-      return 'Genre/Style'
+      toReturn += 'Genre/Style'
     } else {
-      return data?.about ?? ''
+      // toReturn += props?.data?.hobbyData?.description ?? ''
     }
+
+    if (toReturn && props.unformattedAbout) {
+      toReturn += ' | '
+    }
+    if (props.unformattedAbout) {
+      toReturn += props.unformattedAbout
+    }
+    return toReturn
   }
 
   const handleExpandAll: (value: boolean) => void = (value) => {
@@ -231,9 +241,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
                 >
                   <h4>
                     {data?.level === 0
-                      ? 'Sub-Categories'
+                      ? 'Sub-Categories and Tags'
                       : data?.level === 1
-                      ? 'Hobbies'
+                      ? 'Tags and Hobbies'
                       : data?.level === 2
                       ? 'Hobbies'
                       : data?.level === 3
@@ -379,9 +389,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     blogsData: null,
     hobbyData: res.data?.hobbies?.[0] ?? [],
   }
+  const unformattedAbout = htmlToPlainTextAdv(
+    res.data?.hobbies?.[0]?.description,
+  )
+
   return {
     props: {
       data,
+      unformattedAbout,
     },
   }
 }

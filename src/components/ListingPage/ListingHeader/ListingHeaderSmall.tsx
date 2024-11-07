@@ -359,16 +359,23 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
     const from = new Date(fromDate)
     const to = new Date(toDate)
 
-    const fromDay = new Intl.DateTimeFormat('en-US', dayOptions).format(from)
-    const toDay = new Intl.DateTimeFormat('en-US', dayOptions).format(to)
-    const fromMonthYear = new Intl.DateTimeFormat(
-      'en-US',
-      monthYearOptions,
-    ).format(from)
-    const toMonthYear = new Intl.DateTimeFormat(
-      'en-US',
-      monthYearOptions,
-    ).format(to)
+    const fromDay =
+      from && from instanceof Date && !isNaN(from.getTime())
+        ? new Intl.DateTimeFormat('en-US', dayOptions).format(from)
+        : ''
+    const toDay =
+      to && to instanceof Date && !isNaN(to.getTime())
+        ? new Intl.DateTimeFormat('en-US', dayOptions).format(to)
+        : ''
+    const fromMonthYear =
+      from && from instanceof Date && !isNaN(from.getTime())
+        ? new Intl.DateTimeFormat('en-US', monthYearOptions).format(from)
+        : ''
+
+    const toMonthYear =
+      to && to instanceof Date && !isNaN(to.getTime())
+        ? new Intl.DateTimeFormat('en-US', monthYearOptions).format(to)
+        : ''
 
     if (
       from.getMonth() === to.getMonth() &&

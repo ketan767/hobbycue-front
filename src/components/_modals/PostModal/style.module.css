@@ -81,6 +81,9 @@
   text-align: left;
   word-break: break-all;
 }
+.post-content ol, .post-content ul {
+  padding-left: 2rem;
+}
 
 .meta-votes {
   padding: 8px 16px;

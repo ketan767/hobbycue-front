@@ -1,7 +1,7 @@
-
 .container {
-  background-color: #F2F0F5;
+  background-color: #f2f0f5;
   padding: 12px;
+  min-height: 77vh;
 }
 .gridContainer {
   margin: 0 auto;
@@ -10,19 +10,17 @@
   grid-template-columns: repeat(4, 1fr);
   row-gap: 12px;
   column-gap: 24px;
-  background-color: #F2F0F5;
-  
+  background-color: #f2f0f5;
 }
 
 @media (max-width: 1100px) {
-
-.container {
-  background-color: #EBEDF0;
-  padding: 12px 0 50px 0;
-}
+  .container {
+    background-color: #ebedf0;
+    padding: 8px 0 50px 0;
+  }
   .gridContainer {
     row-gap: 8px;
-    background-color: #EBEDF0;
+    background-color: #ebedf0;
     grid-template-columns: repeat(1, 1fr);
   }
 }

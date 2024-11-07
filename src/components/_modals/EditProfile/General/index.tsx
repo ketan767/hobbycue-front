@@ -101,14 +101,24 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
 
+    if (name === 'full_name') {
+      if (value?.length > 100) {
+        setInputErrs((prev) => ({
+          ...prev,
+          [name]: 'Full Name cannot exceed 100 characters',
+        }))
+        return
+      }
+    }
+
     if (name === 'tagline') {
-      const limitedValue = value.slice(0, 81)
+      const limitedValue = value.slice(0, 101)
 
       setData((prev) => ({ ...prev, [name]: limitedValue }))
       setInputErrs((prev) => ({
         ...prev,
         [name]:
-          limitedValue.length > 80
+          limitedValue.length > 100
             ? 'Tagline cannot exceed 100 characters'
             : null,
       }))
@@ -419,8 +429,8 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
               <label className={styles['label-required']}>Full Name</label>
               <input
                 type="text"
+                autoComplete="new"
                 placeholder="Full Name"
-                autoComplete="name"
                 required
                 value={data.full_name}
                 name="full_name"
@@ -439,6 +449,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
               <label>Tagline</label>
               <input
                 type="text"
+                autoComplete="new"
                 placeholder="Something catchy... that also appears in search results"
                 value={data.tagline}
                 name="tagline"
@@ -457,6 +468,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
               <div className={styles['profile-url-input']}>
                 <input
                   type="text"
+                  autoComplete="new"
                   placeholder="profile-url"
                   required
                   value={data.profile_url as string}
@@ -482,9 +494,9 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
                 <label className={styles['label-required']}>Display Name</label>
                 <input
                   type="text"
+                  autoComplete="new"
                   placeholder="Display Name"
                   required
-                  autoComplete="nickname"
                   value={data.display_name}
                   name="display_name"
                   onChange={handleInputChange}
@@ -505,9 +517,9 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
                   <label>Year of Birth</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     placeholder="Year"
                     required
-                    autoComplete="bday-year"
                     value={data.year_of_birth}
                     name="year_of_birth"
                     onChange={handleInputChange}

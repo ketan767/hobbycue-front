@@ -20,7 +20,12 @@ import post, {
 import PostCard from '@/components/PostCard/PostCard'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
-import { checkIfUrlExists, validateEmail } from '@/utils'
+import {
+  checkIfUrlExists,
+  htmlToPlainTextAdv,
+  isMobile,
+  validateEmail,
+} from '@/utils'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
@@ -42,14 +47,18 @@ type singlePostProps = {
   trendingHobbies: any[]
 }
 
-const htmlToPlainText = (html: string) => {
-  if (typeof window !== 'undefined') {
-    const element = document.createElement('div')
-    element.innerHTML = html
-    return element.textContent || ''
-  }
-  return ''
-}
+// const htmlToPlainText = (html: string) => {
+//   if (typeof window !== 'undefined') {
+//     const element = document.createElement('div')
+//     element.innerHTML = html
+//     return element.textContent || ''
+//   }
+//   return ''
+// }
+
+// function htmlToPlainText(html: string): string {
+//   return html.replace(/<\/?[^>]+(>|$)/g, '')
+// }
 
 const CommunityLayout: React.FC<Props> = ({ data }) => {
   const router = useRouter()
@@ -106,18 +115,22 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     if (res.data.success) {
       setPostData(res.data.data.posts?.[0])
     }
+
+    /*
+    💥 asifs : if we set the postData making it a SSR rather than calling it in the frontend again,
+    the loading UI will not be there but things will become smoother
+    */
+    // setPostData(data?.postsData)
+
     setIsLoadingPosts(false)
     // router.push('/community')
   }
 
   const getPreviewimage = () => {
-    if (data?.metadata?.data?.image) {
-      return data?.metadata?.data?.image
-    } else if (
-      data?.postsData?.media?.length > 0 &&
-      data?.postsData?.media[0]
-    ) {
+    if (data?.postsData?.media?.length > 0 && data?.postsData?.media[0]) {
       return data?.postsData?.media[0]
+    } else if (data?.metadata?.data?.image) {
+      return data?.metadata?.data?.image
     } else {
       return '/HobbyCue-FB-4Ps.png'
     }
@@ -298,20 +311,28 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     }
   }
 
+  const isMob = isMobile()
+
   const Children: React.FC<singlePostProps> = ({
     hobbyMembers,
     whatsNew,
     trendingHobbies,
   }) => {
     return (
-      <main style={{ paddingBottom: '3.5rem', minHeight: '100vh' }}>
+      <main
+        style={{
+          paddingBottom: '3.5rem',
+          minHeight: '100vh',
+          marginTop: isMob ? 8 : 12,
+        }}
+      >
         {!postData || isLoadingPosts ? (
           <>
             <PostCardSkeletonLoading />
           </>
         ) : (
           <>
-            <header
+            {/* <header
               className={`${stylesCommunity['community-header']} ${stylesCommunity['community-header-small']}`}
             >
               <div className={stylesCommunity['community-header-left']}>
@@ -447,14 +468,14 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
                   </section>
                 )}
               </div>
-            </header>
+            </header> */}
             <PostCard postData={postData} />
           </>
         )}
       </main>
     )
   }
-  console.warn('posrcontenttttttttttttttttttttttttttttt', data.postcontent)
+  console.warn('postcontentttttttttttttttttt', data.postcontent)
   return (
     <>
       <Head>
@@ -463,13 +484,14 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
 
         <meta
           property="og:description"
-          content={`${
-            data?.postsData?.content?.length > 0
-              ? data.postsData.content
-              : data.metadata?.data?.description
-              ? data.metadata?.data?.description
-              : 'View this post on hobbycue.com'
-          }`}
+          // content={`${
+          //   data?.postsData?.content?.length > 0
+          //     ? data.postsData.content
+          //     : data.metadata?.data?.description
+          //     ? data.metadata?.data?.description
+          //     : 'View this post on hobbycue.com'
+          // }`}
+          content={data?.postcontent || 'View this post on hobbycue.com'}
         />
 
         <meta property="og:image:alt" content="Profile picture" />
@@ -483,7 +505,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
           }`}`}
         </title>
       </Head>
-      <CommunityPageLayout activeTab="posts" singlePostPage={true}>
+      <CommunityPageLayout activeTab="posts" singlePostPage={false} hide={true}>
         <Children hobbyMembers={[]} whatsNew={[]} trendingHobbies={[]} />
       </CommunityPageLayout>
     </>
@@ -495,18 +517,19 @@ export default CommunityLayout
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context,
 ) => {
-  const { params, req } = context
+  const { query, req } = context
 
-  const protocol = req.headers['x-forwarded-proto'] || 'http'
-  const host = req.headers['host']
-  const url = `${protocol}://${host}${req.url}`
+  // const protocol = req.headers['x-forwarded-proto'] || 'http'
+  // const host = req.headers['host']
+  // const url = `${protocol}://${host}${req.url}`
 
-  console.log('Current URL:', url)
+  // console.log('Current URL:', url)
 
   // Extract postId and query parameters
-  const postId = new URL(url).pathname.split('/').pop()
+  // const postId = new URL(url).pathname.split('/').pop()
+  const { post_id } = query
   const queryParams = new URLSearchParams(
-    `populate=_author,_genre,_hobby&_id=${postId}`,
+    `populate=_author,_genre,_hobby&_id=${post_id}`,
   )
   const { err, res } = await getAllPosts(queryParams.toString())
 
@@ -532,10 +555,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     }
   }
 
-  let postContentPlain = ''
-  if (res?.data?.data.posts?.length) {
-    postContentPlain = htmlToPlainText(res.data.data.posts[0].content)
-  }
+  // let postContentPlain = ''
+  // if (res?.data?.data.posts?.length) {
+  //   postContentPlain = htmlToPlainText(res.data.data.posts[0].content)
+  // }
+  let postContentPlain = htmlToPlainTextAdv(res?.data?.data?.posts[0]?.content)
 
   return {
     props: {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress, useMediaQuery } from '@mui/material'
 import {
@@ -45,6 +45,7 @@ import {
 import { useRouter } from 'next/router'
 import AddHobby from '../../AddHobby/AddHobbyModal'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import TrendingHobbyItem from './TrendingHobbyItem'
 
 type Props = {
   onComplete?: () => void
@@ -132,7 +133,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   const dispatch = useDispatch()
   const router = useRouter()
   const selectedHobbyToAdd = propData && propData?.selectedHobbyToAdd
-  const { user } = useSelector((state: RootState) => state.user)
+  const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [SubmitAddress, setSubmitAddress] = useState<boolean>(false)
   const [selectedAddress, setSelectedAddress] = useState('')
@@ -140,6 +141,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   const [isError, setIsError] = useState(false)
   const [HobbyError, setHobbyError] = useState(false)
   const [focusedHobbyIndex, setFocusedHobbyIndex] = useState<number>(-1)
+  const [focusedLocationIdx, setFocusedLocationIdx] = useState<number>(-1)
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [selectedHobbies, setselectedHobbies] = useState<
     DropdownListItemHobby[]
@@ -155,6 +157,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   const hobbyDropDownWrapperRef = useRef<HTMLDivElement>(null)
   const [userHobbies, setUserHobbies]: any = useState([])
   const hobbyDropdownRef = useRef<HTMLDivElement>(null)
+  const locationDropdownRef = useRef<HTMLDivElement>(null)
   const [urlSpanLength, setUrlSpanLength] = useState<number>(0)
   const [dropdownList, setShowDropdownList] = useState<DropdownListItem[]>([])
   const urlSpanRef = useRef<HTMLSpanElement>(null)
@@ -163,7 +166,9 @@ const SimpleOnboarding: React.FC<Props> = ({
   const [ShowAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   const [showHobbyDowpdown, setShowHobbyDowpdown] = useState<boolean>(false)
   const [errorOrmsg, setErrorOrmsg] = useState<string | null>(null)
-  const [trendingHobbies, setTrendingHobbies] = useState([])
+  const [trendingHobbies, setTrendingHobbies] = useState<
+    DropdownListItemHobby[]
+  >([])
   const [Addressdata, setAddressData] = useState<ProfileAddressPayload>({
     street: '',
     society: '',
@@ -177,6 +182,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     longitude: '',
     set_as_primary: true,
   })
+  const [addressDataString, setAddressDataString] = useState<string>('')
 
   const [data, setData] = useState<ProfileGeneralData>({
     full_name: '',
@@ -189,7 +195,7 @@ const SimpleOnboarding: React.FC<Props> = ({
 
     completed_onboarding_steps: 'General',
   })
-
+  const [profileUrl, setProfileUrl] = useState('')
   const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({
     full_name: null,
     public_email: null,
@@ -200,7 +206,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   const [showSnackbar, setShowSnackbar] = useState<Snackbar>({
     triggerOpen: false,
     message: '',
-    type: 'success' || 'error',
+    type: 'success',
   })
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
@@ -208,15 +214,38 @@ const SimpleOnboarding: React.FC<Props> = ({
   >([])
 
   const handleInputChangeAddress = async (event: any) => {
+    /** Clear the selected address value when typing to prevent inconsistency between selectedAddress and Addressdata.
+     * We are not submitting if there's no selectedAddress from the dropdown.
+     */
+    setSelectedAddress('')
+    setAddressData({
+      street: '',
+      society: '',
+      locality: '',
+      city: '',
+      pin_code: '',
+      post_code: '',
+      state: '',
+      country: '',
+      latitude: '',
+      longitude: '',
+      set_as_primary: true,
+    })
+
+    setInputErrs((prev) => ({ ...prev, location: '' }))
     setShowDropdown(false)
+    setFocusedLocationIdx(-1)
     const { name, value } = event.target
-    setAddressData((prev) => ({ ...prev, [name]: value }))
+    // setAddressData((prev) => ({ ...prev, [name]: value }))
+    setAddressDataString(value)
     setInputErrs((prev) => ({ ...prev, [name]: null }))
-    if (Addressdata.street?.length > 1) {
+    // if (Addressdata.street?.length > 1) {
+    if (addressDataString?.length > 1) {
       setShowAutoAddress(true)
       try {
         const { res, err } = await getAutocompleteAddressFromGoogle(
-          Addressdata.street,
+          // Addressdata.street,
+          addressDataString,
         )
         const data = res.data
 
@@ -237,6 +266,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     } else {
       setSuggestions([])
     }
+    /** The logic below is doubtful. State 'initialData' doesn't contain any address field */
     const { set_as_primary: set_as_primary, ...currentData } = {
       ...Addressdata,
       [name]: value,
@@ -273,13 +303,18 @@ const SimpleOnboarding: React.FC<Props> = ({
     const formattedSociety = details.society?.trim() || ''
     const formattedLocality = details.locality?.trim() || ''
 
+    setAddressDataString(
+      terms.join(', ').trim(),
+    ) /** setting the input value to the selected value */
+
     setAddressData((prev) => ({
       ...prev,
-      street: `${formattedStreet ? formattedStreet + ',' : ''} ${
-        formattedSociety ? formattedSociety + ',' : ''
-      } ${formattedLocality ? formattedLocality + ',' : ''} ${
-        details.city ? details.city + ',' : ''
-      } ${details.state ? details.state + ',' : ''} ${details.country}`,
+      // street: `${formattedStreet ? formattedStreet + ',' : ''} ${
+      //   formattedSociety ? formattedSociety + ',' : ''
+      // } ${formattedLocality ? formattedLocality + ',' : ''} ${
+      //   details.city ? details.city + ',' : ''
+      // } ${details.state ? details.state + ',' : ''} ${details.country}`,
+      street: formattedStreet || '',
       locality: formattedLocality || '',
       city: details.city || '',
       state: details.state || '',
@@ -293,22 +328,39 @@ const SimpleOnboarding: React.FC<Props> = ({
     setShowAutoAddress(false)
   }
 
-  const updateStreet = async () => {
-    const detail: any = {}
-    const terms = selectedAddress.split(',').map((term) => term.trim())
+  const updateStreet = () => {
+    if (!selectedAddress) return null
 
-    if (terms.length >= 1) detail.country = terms[terms.length - 1]
-    if (terms.length >= 2) detail.state = terms[terms.length - 2]
-    if (terms.length >= 3) detail.city = terms[terms.length - 3]
-    if (terms.length >= 4) detail.locality = terms[terms.length - 4]
-    if (terms.length >= 5) detail.society = terms[terms.length - 5]
-    if (terms.length >= 6)
+    const detail: ProfileAddressPayload = {
+      street: '',
+      society: '',
+      locality: '',
+      city: '',
+      pin_code: '',
+      post_code: '',
+      state: '',
+      country: '',
+      latitude: '',
+      longitude: '',
+      set_as_primary: true,
+    }
+
+    const terms = selectedAddress?.split(',')?.map((term) => term.trim())
+
+    if (terms?.length >= 1) detail.country = terms[terms.length - 1]
+    if (terms?.length >= 2) detail.state = terms[terms.length - 2]
+    if (terms?.length >= 3) detail.city = terms[terms.length - 3]
+    if (terms?.length >= 4) detail.locality = terms[terms.length - 4]
+    if (terms?.length >= 5) detail.society = terms[terms.length - 5]
+    if (terms?.length >= 6)
       detail.street = terms.slice(0, terms.length - 5).join(', ')
 
     setAddressData((prev) => ({
       ...prev,
       street: detail.street?.trimStart() || '',
     }))
+
+    return detail
   }
 
   const handleInputChange = (event: any) => {
@@ -334,10 +386,11 @@ const SimpleOnboarding: React.FC<Props> = ({
     }
   }
 
-  const handleSubmit = async (checkErrors: boolean) => {
+  const handleSubmit = async (checkErrors = true) => {
     let inputhobby = null
     let hasErrors = false
-
+    const validateurl = await checkProfileUrl()
+    console.warn('validatwrulll', inputErrs)
     if (checkErrors) {
       if (
         hobbyInputValue?.includes(',') ||
@@ -346,9 +399,14 @@ const SimpleOnboarding: React.FC<Props> = ({
       ) {
         setInputErrs((prev) => ({
           ...prev,
-          hobbies:
-            'Please Type and Select hobbies individually. Added ones will appear below the Hobbies* label',
+          hobbies: 'no-error-text',
         }))
+        setShowSnackbar({
+          triggerOpen: true,
+          message:
+            'Please Type and Select hobbies individually. Added ones will appear in the Hobbies box.',
+          type: 'error',
+        })
         return
       } else {
         setInputErrs((prev) => ({
@@ -381,13 +439,14 @@ const SimpleOnboarding: React.FC<Props> = ({
         emailRef?.current?.focus()
         setInputErrs((prev) => ({
           ...prev,
-          public_email: 'This field is required',
+          public_email: 'This field is required!',
         }))
         hasErrors = true
         setIsError(true)
       }
 
-      if (isEmptyField(Addressdata?.street)) {
+      // if (isEmptyField(Addressdata?.street)) {
+      if (isEmptyField(addressDataString)) {
         AddressRef?.current?.focus()
         setInputErrs((prev) => ({
           ...prev,
@@ -409,6 +468,26 @@ const SimpleOnboarding: React.FC<Props> = ({
 
       if (hasErrors) {
         if (confirmationModal) setConfirmationModal(false)
+        return
+      }
+
+      /** show error if user does not select, instead writes manually */
+      if (!selectedAddress) {
+        AddressRef.current?.focus()
+        setShowSnackbar({
+          message:
+            'Please select your Location from the list, at least till City.',
+          triggerOpen: true,
+          type: 'error',
+        })
+
+        setInputErrs((prev) => ({
+          ...prev,
+          location:
+            'Please select your Location from the list, at least till City.',
+        }))
+
+        setSubmitBtnLoading(false)
         return
       }
     }
@@ -439,9 +518,11 @@ const SimpleOnboarding: React.FC<Props> = ({
       return
     }
 
-    await updateStreet()
+    // updateStreet()
 
     let reqBody: any = { ...Addressdata }
+    // let reqBody: any = updateStreet()
+
     if (!user?._addresses?.length && reqBody?.label === '') {
       reqBody.label = 'Default'
     }
@@ -484,8 +565,9 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (error || !response?.data?.success) return
 
     dispatch(updateUser(response?.data?.data?.user))
-    window.location.href = '/community'
+    // window.location.href = '/community'
     dispatch(closeModal())
+    router.reload()
   }
 
   useEffect(() => {
@@ -500,19 +582,18 @@ const SimpleOnboarding: React.FC<Props> = ({
     }
   }, [data])
 
-  const checkProfileUrl = () => {
+  const checkProfileUrl = async () => {
     const token = localStorage.getItem('token')
-    if (!user.profile_url) return
+    if (!profileUrl) return
 
     const headers = { Authorization: `Bearer ${token}` }
-    if (user.profile_url !== data.profile_url) {
+    if (user.profile_url !== profileUrl) {
       axios
         .get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${data.profile_url}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${profileUrl}`,
           { headers },
         )
         .then((res) => {
-          console.log('res', res)
           setInputErrs((prev) => {
             return { ...prev, profile_url: null }
           })
@@ -551,24 +632,22 @@ const SimpleOnboarding: React.FC<Props> = ({
   }, [data.profile_url, user.profile_url])
 
   useEffect(() => {
-    if (onComplete !== undefined && /^\d+$/.test(user.profile_url)) {
-      let profileUrl = data.full_name
-      profileUrl = profileUrl
-        ?.toLowerCase()
-        .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
-        .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
-        .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
-      setData((prev) => ({ ...prev, profile_url: profileUrl }))
-      if (!user.display_name) {
-        setData((prev) => ({
-          ...prev,
-          display_name: profileUrl.split('-')[0], // Use modified profileUrl for display_name
-        }))
-      }
+    let profileUrl = data.full_name
+    profileUrl = profileUrl
+      ?.toLowerCase()
+      .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
+      .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
+      .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
+    setProfileUrl(profileUrl)
+    if (!user.display_name) {
+      setData((prev) => ({
+        ...prev,
+        display_name: profileUrl.split('-')[0], // Use modified profileUrl for display_name
+      }))
     }
   }, [data.full_name])
 
-  console.warn('userdataa', user)
+  console.warn('userdataa', profileUrl)
   useEffect(() => {
     // Set initial data with user's current profile data
     const initialProfileData = {
@@ -612,9 +691,10 @@ const SimpleOnboarding: React.FC<Props> = ({
       addressText += `${user?.primary_address?.country} `
     }
     setSelectedAddress(addressText)
+    setAddressDataString(addressText)
     setAddressData({
       ...Addressdata,
-      street: addressText,
+      street: user?.primary_address?.street,
       society: user?.primary_address?.society,
       locality: user?.primary_address?.locality,
       city: user?.primary_address?.city,
@@ -665,22 +745,44 @@ const SimpleOnboarding: React.FC<Props> = ({
   }, [isError])
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
-  useEffect(() => {
-    const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
-        if (event?.srcElement?.tagName === 'svg') {
-          return
-        }
-        nextButtonRef.current?.click()
+
+  const handleKeyboardClose = useCallback(
+    (e: KeyboardEvent) => {
+      if (
+        e.target instanceof HTMLButtonElement ||
+        e.target instanceof HTMLDivElement
+      ) {
+        return
       }
-    }
 
-    window.addEventListener('keydown', handleKeyPress)
+      switch (e.key) {
+        case 'Escape':
+          if (showHobbyDowpdown || ShowAutoAddress) {
+            e.stopPropagation() // keydown event will not propagate (bubble) to the parent
+            setShowAutoAddress(false)
+            setShowHobbyDowpdown(false)
+          }
+          break
+        case 'Tab':
+          setShowAutoAddress(false)
+          setShowHobbyDowpdown(false)
+          break
+        case 'Enter':
+          nextButtonRef?.current?.click()
+          break
+        default:
+          break
+      }
+    },
+    [showHobbyDowpdown, ShowAutoAddress, isChanged], // these changes are to be tracked, so in dependency array
+  )
 
+  useEffect(() => {
+    document.body.addEventListener('keydown', handleKeyboardClose) // had to make it child of document (body) to take advantage of the flow
     return () => {
-      window.removeEventListener('keydown', handleKeyPress)
+      document.body.removeEventListener('keydown', handleKeyboardClose)
     }
-  }, [])
+  }, [showHobbyDowpdown, ShowAutoAddress, isChanged]) // these changes are to be tracked, so in dependency array
 
   const handleGeocode = (lat: any, long: any) => {
     setShowDropdown(true)
@@ -849,7 +951,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   }
 
   const handleHobbySelection = async (selectedHobby: DropdownListItemHobby) => {
-    const isAlreadySelected = selectedHobbies.some(
+    const isAlreadySelected = selectedHobbies?.some(
       (hobby) => hobby?.display === selectedHobby?.display,
     )
 
@@ -974,6 +1076,63 @@ const SimpleOnboarding: React.FC<Props> = ({
     setFocusedHobbyIndex(-1)
   }
 
+  const handleLocationKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        setFocusedLocationIdx((prevIndex) =>
+          prevIndex < suggestions.length - 1 ? prevIndex + 1 : prevIndex,
+        )
+        break
+      case 'ArrowUp':
+        setFocusedLocationIdx((prevIndex) =>
+          prevIndex > 0 ? prevIndex - 1 : prevIndex,
+        )
+        break
+      case 'Enter':
+        e.preventDefault()
+        e.stopPropagation()
+        // if (Addressdata.street.trim().length !== 0 && !ShowAutoAddress) {
+        // } else
+        if (focusedLocationIdx !== -1 && ShowAutoAddress) {
+          handleSelectAddressTwo(
+            suggestions[focusedLocationIdx]?.description,
+            suggestions[focusedLocationIdx]?.place_id,
+          )
+          setSelectedAddress(suggestions[focusedLocationIdx]?.description)
+        } else if (
+          focusedLocationIdx === -1 &&
+          Addressdata.street.trim().length !== 0
+        ) {
+          setShowAutoAddress(false)
+        }
+        e.stopPropagation()
+        break
+      default:
+        break
+    }
+
+    // Scroll into view logic
+    const container = locationDropdownRef.current
+    const selectedItem = container?.children[focusedHobbyIndex] as HTMLElement
+
+    if (selectedItem && container) {
+      const containerRect = container.getBoundingClientRect()
+      const itemRect = selectedItem.getBoundingClientRect()
+
+      // Check if the item is out of view and adjust the scroll position
+      if (itemRect.bottom + selectedItem.offsetHeight >= containerRect.bottom) {
+        container.scrollTop +=
+          itemRect.bottom - containerRect.bottom + selectedItem.offsetHeight + 5
+      } else if (
+        itemRect.top <=
+        containerRect.top + selectedItem.offsetHeight
+      ) {
+        container.scrollTop -=
+          containerRect.top - itemRect.top + selectedItem.offsetHeight + 5
+      }
+    }
+  }
+
   const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     switch (e.key) {
       case 'ArrowDown':
@@ -986,24 +1145,52 @@ const SimpleOnboarding: React.FC<Props> = ({
           prevIndex > 0 ? prevIndex - 1 : prevIndex,
         )
         break
+      case 'Backspace':
+        if (!hobbyInputValue)
+          setselectedHobbies((prev) => (prev.length ? prev.slice(0, -1) : prev))
       case 'Enter':
-        if (hobbyInputValue.length !== 0 && !showHobbyDowpdown) {
-          //AddButtonRef.current?.click()
-        } else if (focusedHobbyIndex !== -1 && showHobbyDowpdown) {
+        e.stopPropagation()
+        // if (hobbyInputValue.length !== 0 && !showHobbyDowpdown) {
+        //   //AddButtonRef.current?.click()
+        // } else
+        if (focusedHobbyIndex !== -1 && showHobbyDowpdown) {
           handleHobbySelection(hobbyDropdownList[focusedHobbyIndex]).finally(
             () => {
               setShowHobbyDowpdown(false)
             },
           )
-        } else if (focusedHobbyIndex === -1 && hobbyInputValue.length !== 0) {
-          setShowHobbyDowpdown(false)
-          // handleGenreInputFocus();
         }
+        //  else if (focusedHobbyIndex === -1 && hobbyInputValue.length !== 0) {
+        //   setShowHobbyDowpdown(false)
+        //   // handleGenreInputFocus();
+        // }
         break
       default:
         break
     }
+
+    // Scroll into view logic
+    const container = hobbyDropdownRef.current
+    const selectedItem = container?.children[focusedHobbyIndex] as HTMLElement
+
+    if (selectedItem && container) {
+      const containerRect = container.getBoundingClientRect()
+      const itemRect = selectedItem.getBoundingClientRect()
+
+      // Check if the item is out of view and adjust the scroll position
+      if (itemRect.bottom + selectedItem.offsetHeight >= containerRect.bottom) {
+        container.scrollTop +=
+          itemRect.bottom - containerRect.bottom + selectedItem.offsetHeight + 5
+      } else if (
+        itemRect.top <=
+        containerRect.top + selectedItem.offsetHeight
+      ) {
+        container.scrollTop -=
+          containerRect.top - itemRect.top + selectedItem.offsetHeight + 5
+      }
+    }
   }
+
   const fetchTrendingHobbies = async () => {
     const { err, res } = await TrendingHobbiesByUser()
 
@@ -1088,9 +1275,14 @@ const SimpleOnboarding: React.FC<Props> = ({
             const { err, res } = await SendHobbyRequest(jsonData)
             if (res?.data.success) {
               setShowAddHobbyModal(false)
-              setErrorOrmsg(
-                `${hobbyInputValue} has been requested. You can add it later if approved.`,
-              )
+              // setErrorOrmsg(
+              //   `${hobbyInputValue} has been requested. You can add it later if approved.`,
+              // )
+              setShowSnackbar({
+                triggerOpen: true,
+                type: 'success',
+                message: `"${hobbyInputValue}" has been requested. You can add it later if approved.`,
+              })
               setHobbyInputValue('')
             } else if (err) {
               setShowSnackbar({
@@ -1138,6 +1330,33 @@ const SimpleOnboarding: React.FC<Props> = ({
     )
   }
 
+  const handleTrendingClick = (item: any) => {
+    // if (isAlreadySelected) {
+    //   setInputErrs((prev) => ({
+    //     ...prev,
+    //     hobbies: 'Hobby already exists in your list',
+    //   }))
+    // } else {
+    //   setselectedHobbies((prev) => [...prev, item])
+    //   setInputErrs((prev) => ({
+    //     ...prev,
+    //     hobbies: null,
+    //   }))
+    //   setIsChanged(true)
+    //   dispatch(setHasChanges(true))
+    // }
+    setselectedHobbies((prev) =>
+      prev.some((el) => el.display === item.display) ? prev : [...prev, item],
+    )
+    setInputErrs((prev) => ({
+      ...prev,
+      hobbies: null,
+    }))
+    setIsChanged(true)
+    dispatch(setHasChanges(true))
+    hobbysearchref.current?.focus()
+  }
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -1167,7 +1386,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                 <input
                   type="text"
                   placeholder=""
-                  autoComplete="name"
+                  autoComplete="off"
                   required
                   value={data.full_name}
                   name="full_name"
@@ -1189,7 +1408,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                   value={data.public_email}
                   ref={emailRef}
                   name="public_email"
-                  autoComplete="email"
+                  autoComplete="off"
                   onChange={handleInputChange}
                 />
                 <p className={styles['helper-text']}>
@@ -1210,11 +1429,13 @@ const SimpleOnboarding: React.FC<Props> = ({
                   type="text"
                   placeholder={`Type in your Society, Locality, or City`}
                   required
-                  value={Addressdata.street}
+                  // value={Addressdata.street.trimStart()}
+                  value={addressDataString}
                   name="street"
                   ref={AddressRef}
                   onChange={handleInputChangeAddress}
-                  autoComplete="off"
+                  autoComplete="new"
+                  onKeyDown={handleLocationKeyDown}
                 />
                 <Image
                   src={LocationIcon}
@@ -1237,27 +1458,32 @@ const SimpleOnboarding: React.FC<Props> = ({
                   }}
                 />
               </div>
-              <div>
-                {ShowAutoAddress && (
-                  <div className={styles['dropdown']}>
-                    {suggestions.map((suggestion, index) => (
-                      <p
-                        onClick={() => {
-                          handleSelectAddressTwo(
-                            suggestion.description,
-                            suggestion.place_id,
-                          )
-                          setSelectedAddress(suggestion.description)
-                        }}
-                        key={index}
-                      >
-                        {suggestion.description}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </div>
-              {ShowDropdown && dropdownList.length !== 0 && (
+              {/* <div> */}
+              {ShowAutoAddress && (
+                <div className={styles['dropdown']} ref={locationDropdownRef}>
+                  {suggestions.map((suggestion, index) => (
+                    <p
+                      onClick={() => {
+                        handleSelectAddressTwo(
+                          suggestion.description,
+                          suggestion.place_id,
+                        )
+                        setSelectedAddress(suggestion.description)
+                      }}
+                      key={index}
+                      className={
+                        index === focusedLocationIdx
+                          ? styles['dropdown-option-focus']
+                          : ''
+                      }
+                    >
+                      {suggestion.description}
+                    </p>
+                  ))}
+                </div>
+              )}
+              {/* </div> */}
+              {/* {ShowDropdown && dropdownList.length !== 0 && (
                 <div className={styles['dropdown']}>
                   {dropdownList.map((location) => {
                     return location.formatted_address ? (
@@ -1272,7 +1498,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                     ) : null
                   })}
                 </div>
-              )}
+              )} */}
               <p className={styles['helper-text']}>{inputErrs.location}</p>
             </div>
 
@@ -1287,44 +1513,65 @@ const SimpleOnboarding: React.FC<Props> = ({
                 }`}
               >
                 <label className={styles['label-required']}>Hobbies</label>
-                <ul className={`${styles['hobby-list']}`}>
-                  {selectedHobbies?.map((item: any) => {
-                    if (typeof item === 'string') return
-                    return (
-                      <div key={item._id}>
-                        <li>
-                          {item?.display}
-
-                          <Image
-                            src={CrossIcon}
-                            style={{ cursor: 'pointer' }}
-                            width={18}
-                            height={18}
-                            alt="cancel"
+                <div
+                  className={styles.hobbyInput}
+                  onClick={() => hobbysearchref?.current?.focus()}
+                >
+                  {
+                    selectedHobbies?.length > 0 &&
+                      // <ul className={styles.selectedHobbies}>
+                      selectedHobbies?.map((item: any) => {
+                        if (typeof item === 'string') return
+                        return (
+                          <button
+                            key={item?.display}
                             onClick={() => removeSelectedHobby(item)}
-                          />
-                        </li>
-                      </div>
-                    )
-                  })}
-                </ul>
-                <input
-                  type="text"
-                  placeholder="Type and select..."
-                  autoComplete="off"
-                  required
-                  value={hobbyInputValue}
-                  onFocus={() => setShowHobbyDowpdown(true)}
-                  // onBlur={() =>
-                  //   setTimeout(() => {
-                  //     if (!isMobile) setShowHobbyDowpdown(false)
-                  //   }, 300)
-                  // }
-                  ref={hobbysearchref}
-                  onChange={handleHobbyInputChange}
-                  onKeyDown={handleHobbyKeyDown}
-                />
-                {inputErrs.hobbies || errorOrmsg ? (
+                            style={{
+                              cursor: 'pointer',
+                              borderRadius: 24,
+                              border: 'none',
+                            }}
+                          >
+                            <li>
+                              {item?.display}
+
+                              <Image
+                                src={CrossIcon}
+                                width={18}
+                                height={18}
+                                alt="cancel"
+                              />
+                            </li>
+                          </button>
+                        )
+                      })
+                    // </ul>
+                  }
+
+                  <input
+                    type="text"
+                    placeholder="Type and select..."
+                    autoComplete="new"
+                    className={`${styles.inputDefault} ${
+                      selectedHobbies?.length > 0
+                        ? styles.inputShort
+                        : styles.inputLong
+                    }`}
+                    required
+                    value={hobbyInputValue}
+                    onFocus={() => setShowHobbyDowpdown(true)}
+                    // onBlur={() =>
+                    //   setTimeout(() => {
+                    //     if (!isMobile) setShowHobbyDowpdown(false)
+                    //   }, 300)
+                    // }
+                    ref={hobbysearchref}
+                    onChange={handleHobbyInputChange}
+                    onKeyDown={handleHobbyKeyDown}
+                  />
+                </div>
+                {(inputErrs.hobbies && inputErrs.hobbies !== 'no-error-text') ||
+                errorOrmsg ? (
                   <p
                     className={
                       inputErrs.hobbies
@@ -1364,46 +1611,21 @@ const SimpleOnboarding: React.FC<Props> = ({
                 )}
               </div>
             </div>
-            <label className={styles['label']}>Trending - click to add</label>
 
             <ul
               className={`${styles['hobby-list']} ${styles['trending-hobbies-list']}`}
             >
+              <label className={styles['label']}>Click to add : </label>
               {trendingHobbies?.map((item: any) => {
                 if (typeof item === 'string') return
 
-                const isAlreadySelected = selectedHobbies?.some(
-                  (hobby) => hobby?._id === item?._id,
-                )
-
-                const handleClick = () => {
-                  if (isAlreadySelected) {
-                    setInputErrs((prev) => ({
-                      ...prev,
-                      hobbies: 'Hobby already exists in your list',
-                    }))
-                  } else {
-                    setselectedHobbies((prev) => [...prev, item])
-                    setInputErrs((prev) => ({
-                      ...prev,
-                      hobbies: null,
-                    }))
-                    setIsChanged(true)
-                    dispatch(setHasChanges(true))
-                  }
-                }
-
                 return (
-                  <div
-                    className={styles.trendingHobby}
-                    onClick={handleClick}
-                    key={item._id}
-                  >
-                    <li>
-                      {item?.display}
-                      {item?.genre && ` - ${item?.genre?.display} `}
-                    </li>
-                  </div>
+                  <TrendingHobbyItem
+                    item={item}
+                    key={item?.slug}
+                    handleTrendingClick={handleTrendingClick}
+                    selectedHobbies={selectedHobbies}
+                  />
                 )
               })}
             </ul>
@@ -1462,6 +1684,17 @@ const SimpleOnboarding: React.FC<Props> = ({
           )}
         </footer>
       </div>
+      <CustomSnackbar
+        message={showSnackbar.message}
+        type={showSnackbar.type}
+        triggerOpen={showSnackbar.triggerOpen}
+        closeSnackbar={() => {
+          setShowSnackbar({
+            ...showSnackbar,
+            triggerOpen: false,
+          })
+        }}
+      />
     </>
   )
 }

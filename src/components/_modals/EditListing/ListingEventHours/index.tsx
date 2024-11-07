@@ -547,6 +547,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                       </label>
 
                       <input
+                        autoComplete="new"
                         value={obj.from_date}
                         className={styles.inputField}
                         type="date"
@@ -574,6 +575,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                       </label>
 
                       <input
+                        autoComplete="new"
                         value={obj.to_date}
                         className={styles.inputField}
                         type="date"

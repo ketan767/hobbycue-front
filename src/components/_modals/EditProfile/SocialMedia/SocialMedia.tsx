@@ -617,10 +617,10 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
               <div className={styles['input-box']}>
                 <input
                   type="text"
+                  autoComplete="new"
                   placeholder={`URL`}
                   value={item.url}
                   name="url"
-                  autoComplete="url"
                   onChange={(e) => {
                     let val = e.target.value
                     onChange(idx, 'url', val)

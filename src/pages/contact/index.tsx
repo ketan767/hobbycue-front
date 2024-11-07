@@ -493,6 +493,7 @@ const Contact: React.FC<Props> = ({}) => {
                     <input hidden required />
                     <input
                       type="text"
+                      autoComplete="new"
                       placeholder={`Name`}
                       value={data.name.value}
                       ref={inputRef}
@@ -513,11 +514,11 @@ const Contact: React.FC<Props> = ({}) => {
                     <label>Email ID</label>
                     <input
                       type="text"
+                      autoComplete="new"
                       placeholder={`Email ID`}
                       value={data.public_email.value}
                       ref={inputEmailRef}
                       name="public_email"
-                      autoComplete="email"
                       onChange={handleInputChange}
                     />
                     <p className={styles['helper-text']}>
@@ -553,10 +554,10 @@ const Contact: React.FC<Props> = ({}) => {
                     />
                     <input
                       type="text"
+                      autoComplete="new"
                       placeholder={`Phone Number`}
                       value={data.phone.number}
                       name="phone"
-                      autoComplete="phone"
                       onChange={handleInputChange}
                       ref={phoneRef}
                       className={styles['phone-input']}
@@ -661,9 +662,9 @@ const Contact: React.FC<Props> = ({}) => {
                     />
                     <input
                       type="text"
+                      autoComplete="new"
                       placeholder={`WhatsApp Number`}
                       value={data.whatsapp_number.number}
-                      autoComplete="phone"
                       name="whatsapp_number"
                       onChange={handleInputChange}
                       ref={WhtphoneRef}
@@ -902,7 +903,7 @@ const Contact: React.FC<Props> = ({}) => {
               {/* Message */}
               <div className={`${styles['input-box']}`}>
                 <label>Message</label>
-                    <input hidden required />
+                <input hidden required />
                 <div className={styles['street-input-container']}>
                   <textarea
                     ref={messageRef}

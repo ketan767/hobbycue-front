@@ -24,6 +24,7 @@ import {
   updateMyProfileDetail,
 } from '@/services/user.service'
 import { CircularProgress } from '@mui/material'
+import VerticalBar from '@/assets/icons/VerticalBar'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -114,13 +115,14 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
         >
           {data?.profile_image ? (
             <div className={styles['border-div-small']}>
-            <img
-              className={styles['profile-img-small']}
-              src={data.profile_image}
-              alt=""
-              width={160}
-              height={160}
-            /></div>
+              <img
+                className={styles['profile-img-small']}
+                src={data.profile_image}
+                alt=""
+                width={160}
+                height={160}
+              />
+            </div>
           ) : (
             <div className={`${styles['profile-img']}`}>
               <Image
@@ -136,17 +138,33 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
             <h1 className={styles['name']}>{data?.display}</h1>
 
             <p className={styles['category']}>
-              {data?.level === 0
-                ? 'Category'
-                : data?.level === 1
-                ? 'Sub-Category'
-                : data?.level === 2
-                ? 'Hobby Tag'
-                : data?.level === 3
-                ? 'Hobby'
-                : data?.level === 5
-                ? 'Genre/Style'
-                : 'Hobby'}
+              <span>
+                {data?.level === 0
+                  ? 'Category'
+                  : data?.level === 1
+                  ? 'Sub-Category'
+                  : data?.level === 2
+                  ? 'Hobby Tag'
+                  : data?.level === 3
+                  ? 'Hobby'
+                  : data?.level === 5
+                  ? 'Genre/Style'
+                  : 'Hobby'}
+              </span>
+              {data?.level !== 0 && (
+                <>
+                  <VerticalBar />
+                  <span>
+                    {data?.category?.display}
+                    {data?.level > 1 && (
+                      <>
+                        ,{` `}
+                        {data?.sub_category?.display}
+                      </>
+                    )}
+                  </span>
+                </>
+              )}
             </p>
           </section>
           <div className={styles['action-btn-wrapper']}>

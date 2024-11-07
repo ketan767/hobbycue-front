@@ -16,11 +16,11 @@ import { updateListingLayoutMode } from '@/redux/slices/site'
 import { useRouter } from 'next/router'
 import RedCartIcon from '@/assets/icons/RedCartIcon'
 import HobbyIconHexagon from '@/assets/icons/HobbyIconHexagon'
-
+import { Inter } from 'next/font/google'
 export const rupeesIcon = (
   <svg
-    width="16"
-    height="16"
+    width="14"
+    height="14"
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -63,6 +63,10 @@ type Props = {
   isMobile?: boolean
   style?: React.CSSProperties
 }
+const inter = Inter({
+  subsets: ['latin'], // Choose subsets like 'latin' or others as per your needs
+  weight: ['400','500','600', '700'], // Select the weights you want to use (optional)
+})
 
 const ListingCardProduct: React.FC<Props> = ({
   data,
@@ -137,11 +141,22 @@ const ListingCardProduct: React.FC<Props> = ({
 
                 {data?.product_variant?.variations?.[0]?.value ? (
                   <p className={styles.price}>
-                    {rupeesIcon}
+                    <span
+                      className={`${inter.className} ${styles.rupeeSymbol}`}
+                    >
+                      ₹
+                    </span>
                     {data?.product_variant?.variations?.[0]?.value}
                   </p>
                 ) : (
-                  <p className={styles.price}>{rupeesIcon}0</p>
+                  <p className={styles.price}>
+                    <span
+                      className={`${inter.className} ${styles.rupeeSymbol}`}
+                    >
+                      ₹
+                    </span>
+                    0
+                  </p>
                 )}
 
                 {/* Add cart icon here */}
@@ -216,7 +231,7 @@ const ListingCardProduct: React.FC<Props> = ({
                 )}
               </div> */}
               <div className="">
-                <button className={styles.cta_button}>{data?.cta_text}</button>
+                <button className={styles.cta_button}>{data?.cta_text || "Buy Now"}</button>
               </div>
             </div>
           </div>

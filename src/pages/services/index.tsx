@@ -15,6 +15,14 @@ import { showProfileError } from '@/redux/slices/user'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import Head from 'next/head'
 import hobbycue4p from '@/assets/image/hobbycue_4p.png'
+import {
+  setCategory,
+  setHobby,
+  setKeyword,
+  setLocation,
+  setSearching,
+  setSub_category,
+} from '@/redux/slices/explore'
 
 export default function Index() {
   const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
@@ -67,7 +75,15 @@ export default function Index() {
             </p>
             <div className={addListingStyles['cards-wrapper']}>
               <section
-                onClick={() => router.push('/explore/people')}
+                onClick={() => {
+                  dispatch(setCategory('People'))
+                  dispatch(setSearching(true))
+                  dispatch(setSub_category(''))
+                  dispatch(setKeyword(''))
+                  dispatch(setHobby(''))
+                  dispatch(setLocation(''))
+                  router.push('/explore/people?category=People')
+                }}
                 className={`${addListingStyles['card']} ${addListingStyles['people']}`}
               >
                 <h3>
@@ -91,7 +107,15 @@ export default function Index() {
                 </p>
               </section>
               <section
-                onClick={() => router.push('/explore/places')}
+                onClick={() => {
+                  dispatch(setCategory('Place'))
+                  dispatch(setSearching(true))
+                  dispatch(setSub_category(''))
+                  dispatch(setKeyword(''))
+                  dispatch(setHobby(''))
+                  dispatch(setLocation(''))
+                  router.push('/explore/places?category=Place')
+                }}
                 className={`${addListingStyles['card']} ${addListingStyles['place']}`}
               >
                 <h3>
@@ -115,7 +139,15 @@ export default function Index() {
                 </p>
               </section>
               <section
-                onClick={() => router.push('/explore/products')}
+                onClick={() => {
+                  dispatch(setCategory('Product'))
+                  dispatch(setSearching(true))
+                  dispatch(setSub_category(''))
+                  dispatch(setKeyword(''))
+                  dispatch(setHobby(''))
+                  dispatch(setLocation(''))
+                  router.push('/explore/products?category=Product')
+                }}
                 className={`${addListingStyles['card']} ${addListingStyles['product']}`}
               >
                 <h3>
@@ -148,7 +180,15 @@ export default function Index() {
                 </p>
               </section>
               <section
-                onClick={() => router.push('/explore/programs')}
+                onClick={() => {
+                  dispatch(setCategory('Program'))
+                  dispatch(setSearching(true))
+                  dispatch(setSub_category(''))
+                  dispatch(setKeyword(''))
+                  dispatch(setHobby(''))
+                  dispatch(setLocation(''))
+                  router.push('/explore/programs?category=Program')
+                }}
                 className={`${addListingStyles['card']} ${addListingStyles['program']}`}
               >
                 <h3>

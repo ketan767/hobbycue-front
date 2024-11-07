@@ -162,7 +162,7 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
 
   return (
     <>
-      {showPreLoader && <PreLoader />}
+      {/* {showPreLoader && <PreLoader />} */}
       <Navbar />
       <ModalManager />
       <main className="main-site-wrapper">{children}</main>

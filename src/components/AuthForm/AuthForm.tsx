@@ -229,7 +229,7 @@ const AuthForm: React.FC<Props> = (props) => {
           if (router.pathname === '/') {
             router.push('/community', undefined, { shallow: false })
           } else {
-            window.location.reload()
+            // window.location.reload()
           }
         } else {
           dispatch(
@@ -239,7 +239,7 @@ const AuthForm: React.FC<Props> = (props) => {
               propData: { showError: true },
             }),
           )
-          router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
+          // router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
         }
       }
     }
@@ -360,7 +360,7 @@ const AuthForm: React.FC<Props> = (props) => {
               propData: { showError: true },
             }),
           )
-          router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
+          // router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
           dispatch(showProfileError(true))
         }
       } else {
@@ -426,7 +426,7 @@ const AuthForm: React.FC<Props> = (props) => {
               propData: { showError: true },
             }),
           )
-          router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
+          // router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
         }
 
         console.log('user', user)
@@ -546,6 +546,7 @@ const AuthForm: React.FC<Props> = (props) => {
         <FormControl className={styles['form-body']}>
           <div className={styles['email-field']}>
             <TextField
+              autoComplete="off"
               inputRef={emailRef}
               fullWidth
               label="Email"
@@ -584,7 +585,8 @@ const AuthForm: React.FC<Props> = (props) => {
               }}
               variant="outlined"
               autoComplete={
-                selectedTab === 'join-in' ? 'new-password' : 'current-password'
+                // selectedTab === 'join-in' ? 'new-password' : 'current-password'
+                'off'
               }
               size="small"
               name="password"

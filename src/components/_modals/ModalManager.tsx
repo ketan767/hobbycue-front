@@ -265,8 +265,8 @@ const ModalManager: React.FC = () => {
 
   const escFunction = useCallback(
     (event: KeyboardEvent) => {
-      if (!showAddGenreModal && !showAddHobbyModal) {
-        if (event.key === 'Escape') {
+      if (event.key === 'Escape') {
+        if (!showAddGenreModal && !showAddHobbyModal) {
           if (activeModal === 'user-onboarding-welcome') {
             localStorage.setItem('modal-shown-after-login', 'true')
             dispatch(closeModal())
@@ -282,7 +282,7 @@ const ModalManager: React.FC = () => {
           }
 
           if (
-            ['View-Image-Modal', 'CopyProfileDataModal'].includes(
+            ['View-Image-Modal', 'CopyProfileDataModal', 'Add'].includes(
               String(activeModal),
             )
           ) {
@@ -297,14 +297,15 @@ const ModalManager: React.FC = () => {
           } else {
             dispatch(closeModal())
           }
-        }
-      } else {
-        if (
-          activeModal === 'listing-hobby-edit' ||
-          activeModal === 'profile-hobby-edit'
-        ) {
-          setShowAddHobbyModal(false)
-          setShowAddGenreModal(false)
+        } else {
+          if (
+            activeModal === 'listing-hobby-edit' ||
+            activeModal === 'SimpleOnboarding' ||
+            activeModal === 'profile-hobby-edit'
+          ) {
+            setShowAddHobbyModal(false)
+            setShowAddGenreModal(false)
+          }
         }
       }
     },
@@ -319,9 +320,9 @@ const ModalManager: React.FC = () => {
   )
 
   useEffect(() => {
-    document.addEventListener('keydown', escFunction, { capture: true })
+    document.addEventListener('keydown', escFunction)
     return () => {
-      document.removeEventListener('keydown', escFunction, { capture: true })
+      document.removeEventListener('keydown', escFunction)
     }
   }, [escFunction])
 
@@ -398,11 +399,31 @@ const ModalManager: React.FC = () => {
                 ` ${
                   (activeModal === 'add-event' || activeModal === 'auth') &&
                   styles['self-centre']
+                } ${
+                  (activeModal === 'Verify-ActionModal' ||
+                    activeModal === 'email-verify' ||
+                    activeModal === 'Set-PasswordModal' ||
+                    activeModal === 'change-password' ||
+                    activeModal === 'confirm-email' ||
+                    activeModal === 'reset-password' ||
+                    activeModal === 'email-forget-password' ||
+                    activeModal === 'View-Image-Modal' ||
+                    activeModal === 'CopyProfileDataModal') &&
+                  styles['responsive-popup']
                 }`
               }
               ref={mainRef}
             >
-              {activeModal !== 'listing-onboarding' &&
+              {activeModal !== 'Verify-ActionModal' &&
+                activeModal !== 'email-verify' &&
+                activeModal !== 'Set-PasswordModal' &&
+                activeModal !== 'change-password' &&
+                activeModal !== 'CopyProfileDataModal' &&
+                activeModal !== 'confirm-email' &&
+                activeModal !== 'reset-password' &&
+                activeModal !== 'email-forget-password' &&
+                activeModal !== 'View-Image-Modal' &&
+                activeModal !== 'listing-onboarding' &&
                 activeModal !== 'user-onboarding-welcome' &&
                 activeModal !== 'add-event' &&
                 activeModal !== 'auth' &&

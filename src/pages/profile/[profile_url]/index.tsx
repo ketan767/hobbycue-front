@@ -38,12 +38,14 @@ import {
 import ErrorPage from '@/components/ErrorPage'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { useMediaQuery } from '@mui/material'
+import { htmlToPlainTextAdv } from '@/utils'
 
 interface Props {
   data: ProfilePageData
+  unformattedAbout?: string
 }
 
-const ProfileHome: React.FC<Props> = ({ data }) => {
+const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
   console.warn({ data })
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
@@ -212,11 +214,18 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
           `/profile/${router.query.profile_url}/${tab !== 'home' ? tab : ''}`,
         )
       } else {
-        setSnackbar({
-          display: true,
-          type: 'warning',
-          message: 'Fill up the mandatory fields.',
-        })
+        // setSnackbar({
+        //   display: true,
+        //   type: 'warning',
+        //   message: 'Fill up the mandatory fields.',
+        // })
+        dispatch(
+          openModal({
+            type: 'SimpleOnboarding',
+            closable: true,
+            propData: { showError: true },
+          }),
+        )
       }
     } else {
       router.push(
@@ -238,13 +247,6 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
     let hasError = false
 
     if (profileLayoutMode === 'edit') {
-      dispatch(
-        openModal({
-          type: 'SimpleOnboarding',
-          closable: true,
-          propData: { showError: true },
-        }),
-      )
       setHobbyError(false)
       setLocationError(false)
       setTitleError(false)
@@ -272,18 +274,34 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
       //   setContactError(true)
       //   hasError = true
       // }
+
+      /** ⬆️ UPDATE THE ONBOARDING STATUS IN DB */
+      // updateMyProfileDetail({
+      //   ...data.pageData,
+      //   is_onboarded: !hasError,
+      // })
+      //   .then(({ res, err }) => {
+      //     console.log('asifs res', res)
+      //     if (!err && res?.data?.success) {
+      //       return getMyProfileDetail()
+      //     }
+      //   })
+      //   .then((response) => {
+      //     dispatch(updateUser(response?.res?.data.data.user))
+      //   })
       if (hasError) {
-        setSnackbar({
-          display: true,
-          type: 'warning',
-          message: 'Fill up the mandatory fields.',
-        })
+        dispatch(
+          openModal({
+            type: 'SimpleOnboarding',
+            closable: true,
+            propData: { showError: true },
+          }),
+        )
       }
     }
     return hasError
   }
-  console.log({ pageData: data.pageData })
-  // if(!user.is_onboarded && pageData?.email!==user?.email) {return(<ErrorPage/>)}
+
   return (
     <>
       <Head>
@@ -297,7 +315,11 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
         />
         <meta
           property="og:description"
-          content={`${data?.pageData?.tagline ?? ''}`}
+          content={`${
+            (data?.pageData?.tagline || '') +
+            (data?.pageData?.tagline && unformattedAbout ? ' | ' : '') +
+            (unformattedAbout || '')
+          }`}
         />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data.pageData.full_name} | HobbyCue`}</title>
@@ -320,7 +342,8 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
               }`}
             >
               <div className={styles['display-mobile-initial']}>
-                {data?.pageData?.description?.length > 0 && (
+                {htmlToPlainTextAdv(data?.pageData?.description).trim().length >
+                  0 && (
                   <PageContentBox
                     showEditButton={profileLayoutMode === 'edit'}
                     onEditBtnClick={() =>
@@ -392,6 +415,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
 
             <main>
               {/* User About for desktop view*/}
+
               <div className={styles['display-desktop']}>
                 <PageContentBox
                   showEditButton={profileLayoutMode === 'edit'}
@@ -402,11 +426,14 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                   }
                   setDisplayData={setDisplayAbout}
                 >
-                  <h4>About</h4>
-                  <div
-                    className={`${styles['color-light']} ${styles['about-text']}`}
-                    dangerouslySetInnerHTML={{ __html: pageData?.about }}
-                  ></div>
+                  <h4 className={styles['no-margin']}>About</h4>
+
+                  <div className={`ql-snow`}>
+                    <div
+                      className={`ql-editor ${styles['ql-editor']} ${styles['fontFouteen']}`}
+                      dangerouslySetInnerHTML={{ __html: pageData?.about }}
+                    ></div>
+                  </div>
                 </PageContentBox>
               </div>
 
@@ -537,10 +564,16 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 >
                   <h4>About</h4>
                   {pageData?.about && (
-                    <div
-                      className={`${styles['color-light']} ${styles['about-text']} ${styles['about-text-mobile']}`}
-                      dangerouslySetInnerHTML={{ __html: pageData?.about }}
-                    ></div>
+                    // <div
+                    //   className={`${styles['color-light']} ${styles['about-text']} ${styles['about-text-mobile']}`}
+                    //   dangerouslySetInnerHTML={{ __html: pageData?.about }}
+                    // ></div>
+                    <div className={`ql-snow`}>
+                      <div
+                        className={`ql-editor ${styles['ql-editor']}`}
+                        dangerouslySetInnerHTML={{ __html: pageData?.about }}
+                      ></div>
+                    </div>
                   )}
                 </PageContentBox>
               </div>
@@ -693,9 +726,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     listingsData: uniqueListingsData,
     blogsData: null,
   }
+
+  const unformattedAbout = htmlToPlainTextAdv(res.data.data.users[0]?.about)
+
   return {
     props: {
       data,
+      unformattedAbout,
     },
   }
 }

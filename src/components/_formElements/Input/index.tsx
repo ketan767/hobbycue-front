@@ -29,6 +29,7 @@ const FormInput: React.FC<Props> = (props) => {
   return (
     <>
       <TextField
+        autoComplete="off"
         className={`${styles['input-field']} ${className} textFieldClass`}
         fullWidth
         placeholder={placeholder}

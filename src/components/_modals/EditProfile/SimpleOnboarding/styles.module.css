@@ -3,7 +3,7 @@
   border-radius: var(--spacing-8);
   max-width: 50rem;
   height: 92.5%;
-  
+
   width: 38rem;
   display: flex;
   flex-direction: column;
@@ -50,7 +50,8 @@
   line-height: 22px;
   color: #6d747a;
 }
-.input-box input[type='text'] {
+.input-box > input[type='text'],
+.street-input-container > input[type='text'] {
   width: 100%;
   /* all: unset; */
   background: #f8f9fa;
@@ -68,7 +69,8 @@
   /* color: #878c90; */
   min-width: 6.25rem;
 }
-.input-box input[type='text']:focus-within {
+.input-box > input[type='text']:focus-within,
+.street-input-container > input[type='text']:focus-within {
   outline: none;
   border: 1px solid rgb(var(--primary-50-rgb));
   outline: 1px solid rgb(var(--primary-10-rgb));
@@ -77,7 +79,6 @@
   content: '*';
   color: rgba(192, 80, 77, 1);
 }
-
 .input-box .helper-text {
   position: absolute;
   top: calc(100% + var(--spacing-4));
@@ -89,6 +90,59 @@
   font-size: 12px;
   line-height: 16px;
   color: #c0504d;
+}
+.hobbyInput {
+  width: 100%;
+  background: #f8f9fa;
+  border: 1px solid #ebedf0;
+  border-radius: 8px;
+  padding: 7px 12px;
+  min-height: 42.5px;
+  min-width: 6.25rem;
+
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: var(--spacing-8);
+  column-gap: var(--spacing-8);
+  animation: fadeDown 0.3s ease forwards;
+}
+.inputDefault {
+  height: 26.5px;
+  background: #f8f9fa;
+  border: none;
+  outline: none;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+}
+.inputLong {
+  width: 100%;
+}
+.inputShort {
+  width: 100px;
+}
+.hobbyInput li {
+  list-style: none;
+  padding: var(--spacing-4) calc(var(--spacing-8) + var(--spacing-4));
+  background: #f7f5f9;
+  border-radius: 24px;
+  border: 1px solid #8064a2;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+  color: #8064a2;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.hobbyInput li.active {
+  color: #8064a2;
+  font-weight: 500;
+}
+.hobbyInput button:focus {
+  outline: 2px solid #8064a2;
 }
 
 /* General Profile */
@@ -142,18 +196,18 @@
 .profile-url-input input {
   flex-grow: 1;
 }
-.input-box-error input {
+.input-box-error > input,
+.input-box-error > div {
   border: 1px solid #c0504d !important;
 }
 
 .gender-radio-btns p svg:focus-visible {
-  
   border: 1px solid rgb(var(--primary-100-rgb)) !important;
   border-radius: 50%;
   outline: none;
 }
 .gender-radio-btns p svg:focus {
-outline: none;
+  outline: none;
 }
 .street-input-container {
   position: relative;
@@ -168,7 +222,7 @@ outline: none;
 }
 
 .locationImg:focus,
-.locationImg:focus-visible{
+.locationImg:focus-visible {
   outline: none;
   border: 1px solid #8064a2;
   border-radius: 50%;
@@ -210,8 +264,12 @@ outline: none;
   color: #8064a2;
 }
 
+.dropdown-option-focus {
+  background: #f7f5f9;
+  color: #8064a2;
+}
+
 .hobby-list {
- 
   list-style: none;
   padding-bottom: 8px;
   display: flex;
@@ -219,11 +277,11 @@ outline: none;
   row-gap: var(--spacing-16);
   column-gap: var(--spacing-8);
   animation: fadeDown 0.3s ease forwards;
-  
 }
-.trending-hobbies-list {
+
+/* .trending-hobbies-list {
   padding-top: 14px;
-}
+} */
 
 .hobby-list li {
   padding: var(--spacing-4) calc(var(--spacing-8) + var(--spacing-4));
@@ -243,12 +301,11 @@ outline: none;
   color: #8064a2;
   display: flex;
   align-items: center;
-  gap: 4px
+  gap: 4px;
 }
 .hobby-list li.active {
   color: #8064a2;
   font-weight: 500;
-  
 }
 
 @media screen and (min-width: 1100px) {
@@ -281,9 +338,12 @@ outline: none;
   color: #6d747a;
 }
 .label {
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 22px;
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 24px;
+  text-align: left;
   color: #6d747a;
 }
 
@@ -305,6 +365,12 @@ outline: none;
 }
 .trendingHobby {
   cursor: pointer;
+  border: none;
+  background-color: transparent;
+  border-radius: 24px;
+}
+.trendingHobby:focus {
+  outline: 2px solid #8064a2;
 }
 .helper-text-green {
   font-weight: 400;
@@ -326,11 +392,10 @@ outline: none;
   .modal-wrapper .body {
     padding: 12px 16px 16px;
   }
-  .modal-wrapper .header{
+  .modal-wrapper .header {
     padding: 16px 16px 0px;
   }
-  .modal-wrapper 
-  .year-gender-wrapper {
+  .modal-wrapper .year-gender-wrapper {
     column-gap: 8px;
   }
   .modal-wrapper .footer {
@@ -365,5 +430,4 @@ outline: none;
   .input-box {
     margin-bottom: 24px;
   }
-  
 }

@@ -206,6 +206,7 @@ const ListingProductVariantsModal: React.FC<Props> = ({
             <div className={styles['input-and-label']}>
               <p>Variation Tag</p>
               <TextField
+                autoComplete="off"
                 placeholder="eg: Size + Color"
                 value={data.variant_tag === 'No value' ? '' : data.variant_tag}
                 className={styles['input']}
@@ -235,6 +236,7 @@ const ListingProductVariantsModal: React.FC<Props> = ({
                 {data.variations.map((obj, i) => (
                   <div key={i} className={styles['variant']}>
                     <TextField
+                      autoComplete="off"
                       placeholder="Variant name  eg:  Large Blue"
                       value={obj.name === 'No value' ? '' : obj.name}
                       className={styles['input']}
@@ -243,6 +245,7 @@ const ListingProductVariantsModal: React.FC<Props> = ({
                       }}
                     />
                     <TextField
+                      autoComplete="off"
                       placeholder="₹"
                       value={formatPrice(obj.value)}
                       className={styles['input']}

@@ -244,6 +244,7 @@ const AdminDashboard: React.FC = () => {
             >
               <input
                 type="text"
+                autoComplete="new"
                 value={data.search.value}
                 onChange={handleInputChange}
                 placeholder="Search users..."
@@ -320,23 +321,20 @@ const AdminDashboard: React.FC = () => {
                         </div>
                       </div>
                     </td>
-                    <td 
-                      dangerouslySetInnerHTML={{ __html: post?.content.slice(0,30)+"..." ?? '' }}
-                    
-                    className={styles.userEmail}>
-                      
-                    </td>
                     <td
-                      className={styles.userPhone}
-                    >
+                      dangerouslySetInnerHTML={{
+                        __html: post?.content.slice(0, 30) + '...' ?? '',
+                      }}
+                      className={styles.userEmail}
+                    ></td>
+                    <td className={styles.userPhone}>
                       {formatDate(post?.createdAt)}
                     </td>
                     <td className={styles.LoginType}>
-                    {post?._hobby?.display}{`${post?._genre?` - ${post?._genre?.display}`:''}`} 
+                      {post?._hobby?.display}
+                      {`${post?._genre ? ` - ${post?._genre?.display}` : ''}`}
                     </td>
-                    <td className={styles.lastLoggedIn}>
-                      {post?.visibility}
-                    </td>
+                    <td className={styles.lastLoggedIn}>{post?.visibility}</td>
                     <td className={styles.pagesLength}>
                       {post?.up_votes?.count}
                     </td>

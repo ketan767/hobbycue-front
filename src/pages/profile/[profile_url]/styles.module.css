@@ -1,4 +1,4 @@
-.main{
+.main {
   display: grid;
   grid-template-columns: 50% 50%;
   row-gap: 12px;
@@ -13,26 +13,29 @@
 }
 
 .uploadVideoContainer {
+  width: 510px;
+  margin-left: -12px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   border-radius: 8px;
-  border: 1px solid var(--Grey-Lighter, #EBEDF0);
-  background: var(--Base-White, #FFF);
+  border: 1px solid var(--Grey-Lighter, #ebedf0);
+  background: var(--Base-White, #fff);
 }
 
-.uploadContainer{
-  grid-column: span 2;
-    display: grid;
-    gap: 24px;
-    grid-template-columns: 50% 50%;
-width: 100%;
+.uploadContainer {
+  /* grid-column: span 2;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 50% 50%;
+  width: 100%; */
 }
 
 .videos {
   height: 100%;
   border-radius: 8px;
   width: 100%;
+  overflow: hidden;
 }
 
 .image {
@@ -76,7 +79,7 @@ width: 100%;
   grid-template-columns: 50% 50%;
 }
 
-.uploadContainer>div {
+.uploadContainer > div {
   flex: 1;
 }
 
@@ -151,7 +154,7 @@ width: 100%;
 }
 
 .addvidText {
-  color: var(--Grey-Dark, #939CA3);
+  color: var(--Grey-Dark, #939ca3);
   font-family: 'Poppins';
   font-size: 14px;
   font-style: normal;
@@ -168,8 +171,8 @@ width: 100%;
   padding: 2.4px 10px;
   align-items: flex-start;
   gap: 10px;
-  border: 2px solid #0096C8;
-  color: #0096C8;
+  border: 2px solid #0096c8;
+  color: #0096c8;
   font-family: 'Poppins';
   font-size: 12px;
   font-style: normal;
@@ -184,10 +187,10 @@ width: 100%;
 
 .uploadButtonDescktop {
   border-radius: 8px;
-  border: 1px dashed var(--Primary-Full, #8064A2);
-  background: #FFF;
+  border: 1px dashed var(--Primary-Full, #8064a2);
+  background: #fff;
   display: flex;
-  /* width: 482px; */
+  width: 510px;
   height: 100px;
   justify-content: center;
   align-items: center;
@@ -206,7 +209,7 @@ width: 100%;
 }
 
 .uploadButtonDescktop {
-  color: var(--Purple-1, #8064A2);
+  color: var(--Purple-1, #8064a2);
   font-family: Poppins;
   font-size: 14px;
   font-style: normal;
@@ -214,7 +217,6 @@ width: 100%;
   line-height: 20px;
   /* 142.857% */
 }
-
 
 .video {
   width: 100%;
@@ -255,7 +257,6 @@ width: 100%;
   gap: 24px;
 }
 
-
 .display-mobile {
   display: none !important;
 }
@@ -264,15 +265,14 @@ width: 100%;
   display: none !important;
 }
 
-.error{
-  border: 1px solid #C0504D !important;
+.error {
+  border: 1px solid #c0504d !important;
 }
 
-.medias{
+.medias {
   width: 100%;
   aspect-ratio: 16 / 9;
   border-radius: 0px 0px 8px 8px;
-
 }
 
 .three-column-grid {
@@ -289,7 +289,10 @@ width: 100%;
 }
 .display-mobile-initial {
   display: none !important;
- }
+}
+.no-margin {
+  margin: 0 !important;
+}
 
 @media screen and (max-width: 1100px) {
   .main-media {
@@ -308,7 +311,6 @@ width: 100%;
 
   .image {
     width: auto;
-    
   }
   .image img {
     border-radius: 0;
@@ -328,7 +330,7 @@ width: 100%;
   .display-mobile {
     display: initial !important;
   }
-  .videoAndImages{
+  .videoAndImages {
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -338,25 +340,24 @@ width: 100%;
     width: 100%;
     padding: 12px;
     border-radius: 0;
-    border: 1px dashed var(--Primary-Full, #8064A2);
-    background: #FFF;
+    border: 1px dashed var(--Primary-Full, #8064a2);
+    background: #fff;
   }
-  .uploadVideo{
+  .uploadVideo {
     padding: 0;
   }
-  .addvidText{
+  .addvidText {
     padding: 0;
   }
-  .no-posts-div{
+  .no-posts-div {
     /* margin-top: 8px; */
     border-radius: 0;
   }
-  .profile-left-aside{
+  .profile-left-aside {
     position: static;
     height: auto;
   }
   .dual-section-wrapper {
-    
     height: 90vh;
   }
   .uploadContainer {
@@ -366,18 +367,17 @@ width: 100%;
   }
   .three-column-grid {
     margin-top: 8px;
-    grid-template-columns: 1fr ;
+    grid-template-columns: 1fr;
     row-gap: 8px;
   }
   .three-column-grid-blogs {
-   
-    grid-template-columns: 1fr ;
+    grid-template-columns: 1fr;
     row-gap: 8px;
   }
- .display-mobile-initial {
-  display: block !important;
- }
- .display-none-responsive {
-  display: none !important;
-}
+  .display-mobile-initial {
+    display: block !important;
+  }
+  .display-none-responsive {
+    display: none !important;
+  }
 }

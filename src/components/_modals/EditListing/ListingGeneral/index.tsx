@@ -100,12 +100,13 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   const handleInputChange = (event: any) => {
     const { name, value } = event.target
 
-    if (name === 'tagline') {
-      const limitedValue = value.slice(0, 81)
+    if (name === 'tagline' || name === 'title') {
+      // const limitedValue = value.slice(0, 81)
 
-      if (limitedValue.length > 80) {
-        return
-      }
+      // if (limitedValue.length > 80) {
+      //   return
+      // }
+      if (value.length > 100) return
     }
     setData((prev) => ({
       ...prev,
@@ -496,8 +497,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
               <label>Title</label>
               <input
                 type="text"
+                autoComplete="new"
                 placeholder="Title"
-                autoComplete="title"
                 required
                 value={data.title.value as string}
                 name="title"
@@ -516,6 +517,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
               <label>Tagline</label>
               <input
                 type="text"
+                autoComplete="new"
                 placeholder="Something catchy... that also appears in search results"
                 value={data.tagline.value as string}
                 name="tagline"
@@ -534,6 +536,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
               <div className={styles['profile-url-input']}>
                 <input
                   type="text"
+                  autoComplete="new"
                   placeholder="page-url"
                   required
                   value={data.page_url.value as string}
@@ -569,8 +572,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                   </label>
                   <input
                     type="text"
+                    autoComplete="new"
                     placeholder="Year"
-                    autoComplete="year"
                     value={data.year.value}
                     name="year"
                     onChange={handleInputChange}
@@ -646,7 +649,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
               <textarea
                 className={styles['long-input-box']}
                 placeholder="This information is visible only to Admins of this Page"
-                autoComplete="nickname"
+                autoComplete="new"
                 value={data.admin_note.value}
                 name="admin_note"
                 onChange={handleInputChange}

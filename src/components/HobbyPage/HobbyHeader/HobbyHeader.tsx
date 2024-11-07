@@ -27,6 +27,7 @@ import { updateHobbyCover, updateHobbyProfile } from '@/services/admin.service'
 import { updatePhotoEditModalData } from '@/redux/slices/site'
 import CameraIcon from '@/assets/icons/CameraIcon'
 import EditIcon from '@/assets/svg/edit-colored.svg'
+import VerticalBar from '@/assets/icons/VerticalBar'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -124,7 +125,6 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
   }
 
   const OpenProfileImage = () => {
-    console.log('pro', data.profile_image)
     dispatch(updateImageUrl(data?.profile_image))
     dispatch(
       openModal({
@@ -199,8 +199,6 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
       )
     }
   }
-  console.warn('hobby page data', data)
-  
 
   return (
     <>
@@ -225,17 +223,33 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
                 <div className={styles['name-container-mobile']}>
                   <h1 className={styles['name']}>{data?.display}</h1>
                   <p className={styles['category']}>
-                    {data?.level === 0
-                      ? 'Category'
-                      : data?.level === 1
-                      ? 'Sub-Category'
-                      : data?.level === 2
-                      ? 'Hobby Tag'
-                      : data?.level === 3
-                      ? 'Hobby'
-                      : data?.level === 5
-                      ? 'Genre/Style'
-                      : 'Hobby'}
+                    <span>
+                      {data?.level === 0
+                        ? 'Category'
+                        : data?.level === 1
+                        ? 'Sub-Category'
+                        : data?.level === 2
+                        ? 'Hobby Tag'
+                        : data?.level === 3
+                        ? 'Hobby'
+                        : data?.level === 5
+                        ? 'Genre/Style'
+                        : 'Hobby'}
+                    </span>
+                    {data?.level !== 0 && (
+                      <>
+                        <VerticalBar />
+                        <span>
+                          {data?.category?.display}
+                          {data?.level > 1 && (
+                            <>
+                              ,{` `}
+                              {data?.sub_category?.display}
+                            </>
+                          )}
+                        </span>
+                      </>
+                    )}
                   </p>
                 </div>
               </div>
@@ -251,17 +265,33 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
                 <div className={styles['name-container-mobile']}>
                   <h1 className={styles['name']}>{data?.display}</h1>
                   <p className={styles['category']}>
-                    {data?.level === 0
-                      ? 'Category'
-                      : data?.level === 1
-                      ? 'Sub-Category'
-                      : data?.level === 2
-                      ? 'Hobby Tag'
-                      : data?.level === 3
-                      ? 'Hobby'
-                      : data?.level === 5
-                      ? 'Genre/Style'
-                      : 'Hobby'}
+                    <span>
+                      {data?.level === 0
+                        ? 'Category'
+                        : data?.level === 1
+                        ? 'Sub-Category'
+                        : data?.level === 2
+                        ? 'Hobby Tag'
+                        : data?.level === 3
+                        ? 'Hobby'
+                        : data?.level === 5
+                        ? 'Genre/Style'
+                        : 'Hobby'}
+                    </span>
+                    {data?.level !== 0 && (
+                      <>
+                        <VerticalBar />
+                        <span>
+                          {data?.category?.display}
+                          {data?.level > 1 && (
+                            <>
+                              ,{` `}
+                              {data?.sub_category?.display}
+                            </>
+                          )}
+                        </span>
+                      </>
+                    )}
                   </p>
                 </div>
               </div>
@@ -324,17 +354,33 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
                 )}
               </h1>{' '}
               <p className={styles['category']}>
-                {data?.level === 0
-                  ? 'Category'
-                  : data?.level === 1
-                  ? 'Sub-Category'
-                  : data?.level === 2
-                  ? 'Hobby Tag'
-                  : data?.level === 3
-                  ? 'Hobby'
-                  : data?.level === 5
-                  ? 'Genre/Style'
-                  : 'Hobby'}
+                <span>
+                  {data?.level === 0
+                    ? 'Category'
+                    : data?.level === 1
+                    ? 'Sub-Category'
+                    : data?.level === 2
+                    ? 'Hobby Tag'
+                    : data?.level === 3
+                    ? 'Hobby'
+                    : data?.level === 5
+                    ? 'Genre/Style'
+                    : 'Hobby'}
+                </span>
+                {data?.level !== 0 && (
+                  <>
+                    <VerticalBar />
+                    <span>
+                      {data?.category?.display}
+                      {data?.level > 1 && (
+                        <>
+                          ,{` `}
+                          {data?.sub_category?.display}
+                        </>
+                      )}
+                    </span>
+                  </>
+                )}
               </p>
             </div>
             <FilledButton

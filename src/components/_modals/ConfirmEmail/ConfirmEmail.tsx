@@ -21,10 +21,18 @@ import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { changePassword, forgotPassword } from '@/services/auth.service'
+import { useRouter } from 'next/router'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+}
+
+type Snackbar = {
+  message: string
+  triggerOpen: boolean
+  type: 'error' | 'success'
 }
 
 const ConfirmEmail: React.FC<Props> = ({}) => {
@@ -34,6 +42,14 @@ const ConfirmEmail: React.FC<Props> = ({}) => {
   const [nextDisabled, setNextDisabled] = useState(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [email, setEmail] = useState('')
+  const [showSnackbar, setShowSnackbar] = useState<Snackbar>({
+    message: '',
+    triggerOpen: false,
+    type: 'success',
+  })
+  const router = useRouter()
+
+  const is5XXPage = /^\/5\d{2}$/.test(router.asPath);
 
   const [errors, setErrors] = useState({
     email: '',
@@ -50,6 +66,18 @@ const ConfirmEmail: React.FC<Props> = ({}) => {
       setSubmitBtnLoading(false)
       setErrors({ email: 'Email is invalid!' })
       elementRef.current?.focus()
+      return
+    }
+    if (is5XXPage) {
+      setSubmitBtnLoading(false)
+      setShowSnackbar({
+        message: "You will receive an e-mail as soon as we're back",
+        triggerOpen: true,
+        type: 'success',
+      })
+      setTimeout(() => {
+        dispatch(closeModal())
+      }, 3 * 1000)
       return
     }
     const { err, res } = await forgotPassword({
@@ -96,6 +124,7 @@ const ConfirmEmail: React.FC<Props> = ({}) => {
       email: '',
     })
   }, [email])
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -106,8 +135,10 @@ const ConfirmEmail: React.FC<Props> = ({}) => {
         <section className={styles['body']}>
           <div className={styles.inputField}>
             <label className={styles.label}>
-              Enter the email address of the account, and we will send you a
-              verification code to set a password.
+              {is5XXPage
+                ? `Enter your email address, and we will notify you as soon as we are back.`
+                : `Enter the email address of the account, and we will send you a
+              verification code to set a password.`}
             </label>
             <div
               className={`${styles['input-box']} ${
@@ -115,6 +146,7 @@ const ConfirmEmail: React.FC<Props> = ({}) => {
               }`}
             >
               <input
+                autoComplete="new"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={styles.input}
@@ -152,6 +184,14 @@ const ConfirmEmail: React.FC<Props> = ({}) => {
           </button>
         </footer>
       </div>
+      <CustomSnackbar
+        message={showSnackbar.message}
+        triggerOpen={showSnackbar.triggerOpen}
+        type={showSnackbar.type}
+        closeSnackbar={() =>
+          setShowSnackbar({ ...showSnackbar, triggerOpen: false })
+        }
+      />
     </>
   )
 }

@@ -1,103 +1,179 @@
 .rest-container {
-    background: var(--Grey-Hover, #F8F9FA);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
-    gap: 40px;
-    padding: 0 0 16px 0;
+  background: var(--Grey-Hover, #f8f9fa);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  gap: 40px;
+  padding: 0 0 16px 0;
 }
 
-.notfound-container{
-    background: var(--Grey-Hover, #F8F9FA);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
-    gap: 40px;
-    padding: 34px 0 8px 0;
+.notfound-container {
+  background: var(--Grey-Hover, #f8f9fa);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  gap: 28px;
+  padding: 34px 0 8px 0;
 }
 
-
-.notfoundImg{
-    height: 280px;
-    width: auto;
+.notfoundImg {
+  height: 230px;
+  width: 420px;
+  object-fit: contain;
 }
 
 .contentContainer {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    max-width: 825px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 725px;
 }
 
 .moveUp {
-    margin-top: -54px;
+  margin-top: -54px;
 }
 
 .contentContainer h1 {
-    color: #203048;
-    font-family: Poppins;
-    font-size: 32px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
+  color: #203048;
+  font-family: Poppins;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 38.73px;
 }
 
 .contentContainer p {
-    color: #263238;
-    text-align: center;
-    font-family: Poppins;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 26px;
-    /* 144.444% */
+  color: #263238;
+  text-align: center;
+  font-family: Poppins;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 26px;
+  /* 144.444% */
 }
 
 .contentContainer a {
-    color: var(--Primary-Full, #8064A2);
-    font-family: Poppins;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 26px;
+  color: var(--Primary-Full, #8064a2);
+  font-family: Poppins;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 26px;
 }
 
 .flexColContainer {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .flexRowContainer {
-    display: inline-flex;
-    align-items: flex-start;
-    gap: 16px;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 20px;
 }
 
 .btnSecondary {
-  width: 200% !important;
-  max-width: 150px;
+  width: 150px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #8064a2;
+  background-color: transparent;
 
+  color: #8064a2;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+  transition: 0.3s;
+  cursor: pointer;
 }
+
+/* .btnSecondary:hover {
+    background-color: #8064a2;
+    color: white;
+    cursor: pointer;
+  } */
 
 .btnPrimary {
-    width: 200% !important;
-    max-width: 150px;
-  
+  width: 150px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: #8064a2;
+
+  color: white;
+  border: none;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+  transition: 0.3s;
+  cursor: pointer;
 }
 
-@media screen and (max-width:1100px) {
-    .heroImg {
-        max-width: 96vw;
-        max-width: 96vw;
-    }
-    .container{
-        padding: 119px 0 119px 0;
-    }
+/* .btnPrimary:hover {
+    background-color: white;
+    color: #8064a2;
+    cursor: pointer;
+    border: 1px solid #8064a2;
+  } */
+
+@media screen and (max-width: 1100px) {
+  .heroImg {
+    max-width: 96vw;
+    max-width: 96vw;
+  }
+  .container {
+    padding: 119px 0 119px 0;
+  }
+  .notfound-container {
+    min-height: calc(100vh - 48px);
+    padding-inline: 16px;
+    padding-top: 12px;
+    gap: 12px;
+  }
+  .notfoundImg {
+    width: 328px;
+    height: 227px;
+    object-fit: contain;
+  }
+  .contentContainer h1 {
+    font-size: 30px;
+  }
+  .contentContainer p {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    text-align: center;
+  }
+  .contentContainer a {
+    font-family: Poppins;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+  }
+  .flexColContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: calc(65px - 12px);
+  }
+  .flexRowContainer {
+    flex-direction: column;
+    width: 100%;
+  }
+  .btnSecondary,
+  .btnPrimary {
+    width: 100%;
+  }
 }

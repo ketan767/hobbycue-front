@@ -12,6 +12,9 @@
 
   color: #0096c8;
 }
+.no-margin {
+  margin: 0 !important;
+}
 
 .hobby-list {
   margin-top: var(--spacing-16);
@@ -154,7 +157,7 @@ ul.seller-info-wrapper li svg:last-child {
 
 .about-text ol,
 .about-text ul{
-  padding-left: 1rem;
+  padding-left: 30px;
 }
 .errorBorder {
   border: 1px solid #C0504D;
@@ -169,6 +172,34 @@ ul.seller-info-wrapper li svg:last-child {
 }
 .display-none{
   display: none !important;
+}
+.ql-editor.ql-indent-1 {
+  padding-left: 4px;
+}
+.ql-editor ul,
+.ql-editor ol {
+  font-family: 'Poppins';
+
+  padding-left: 4px;
+  font-size: 14px;
+  text-align: justify;
+}
+
+.ql-editor a {
+  font-family: 'Poppins';
+
+  color: rgb(128, 100, 162);
+  text-decoration: none !important;
+  font-size: 14px;
+  text-align: justify;
+}
+.ql-editor p {
+  font-family: 'Poppins';
+  font-size: 14px;
+  text-align: justify;
+}
+.ql-editor {
+  padding-inline: 0px;
 }
 
 @media screen and (max-width:1100px) {

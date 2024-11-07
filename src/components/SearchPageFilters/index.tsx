@@ -25,6 +25,7 @@ import Posts from '../../assets/svg/Search/Posts.svg'
 import styles from './styles.module.css'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
+import { setCategory } from '@/redux/slices/explore'
 
 const SearchPageFilter = () => {
   const dispatch = useDispatch()
@@ -46,7 +47,7 @@ const SearchPageFilter = () => {
   // const showAllPosts = useSelector((state: any) => state.search.showAllPosts)
   // const showAllBlogs = useSelector((state: any) => state.search.showAllBlogs)
 
-  const showAll = filter === 'all' || filter === undefined || filter === ''
+  const showAll = filter === 'all'
   const showAllUsers = filter === 'users'
   const showAllPeople = filter === 'people'
   const showAllPlace = filter === 'places'
@@ -130,13 +131,23 @@ const SearchPageFilter = () => {
         default:
           break
       }
-      router.push({
-        pathname: '/search',
-        query: {
-          ...router.query,
-          filter: filterType === 'all' ? '' : filterType,
-        },
-      })
+      if (filterType === 'all') {
+        const { filter, ...rest } = router.query
+        router.push({
+          pathname: '/search',
+          query: {
+            ...rest,
+          },
+        })
+      } else {
+        router.push({
+          pathname: '/search',
+          query: {
+            ...router.query,
+            filter: filterType,
+          },
+        })
+      }
     }
   }
 
@@ -182,21 +193,30 @@ const SearchPageFilter = () => {
 
           <div
             className={getFilterItemClass('people')}
-            onClick={() => handleFilterClick('people')}
+            onClick={() => {
+              dispatch(setCategory('People'))
+              handleFilterClick('people')
+            }}
           >
             <Image src={People} alt="People" />
             People Pages
           </div>
           <div
             className={getFilterItemClass('places')}
-            onClick={() => handleFilterClick('places')}
+            onClick={() => {
+              dispatch(setCategory('Place'))
+              handleFilterClick('places')
+            }}
           >
             <Image src={Place} alt="Place" />
             Places
           </div>
           <div
             className={getFilterItemClass('events')}
-            onClick={() => handleFilterClick('programs')}
+            onClick={() => {
+              dispatch(setCategory('Program'))
+              handleFilterClick('programs')
+            }}
           >
             <Image src={Program} alt="Program" />
             Programs
@@ -204,7 +224,11 @@ const SearchPageFilter = () => {
 
           <div
             className={getFilterItemClass('products')}
-            onClick={() => handleFilterClick('products')}
+            onClick={() => {
+              dispatch(setCategory('Product'))
+
+              handleFilterClick('products')
+            }}
           >
             <Image src={Product} alt="Product" />
             Products
