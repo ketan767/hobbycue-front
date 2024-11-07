@@ -605,18 +605,18 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
   // }, [currKeyword, currHobby, currLocation, currCategory, currSub_category])
   useEffect(() => {
     if (keyword) {
-      dispatch(setKeyword(encodeURIComponent(keyword.toString())))
+      dispatch(setKeyword(keyword.toString()))
     }
     if (hobby) {
-      dispatch(setHobby(encodeURIComponent(hobby.toString())))
+      dispatch(setHobby(hobby.toString()))
     }
     if (category) {
-      dispatch(setCategory(encodeURIComponent(category.toString())))
+      dispatch(setCategory(category.toString()))
     } else if (sub_category) {
-      dispatch(setSub_category(encodeURIComponent(sub_category.toString())))
+      dispatch(setSub_category(sub_category.toString()))
     }
     if (location) {
-      dispatch(setLocation(encodeURIComponent(location.toString())))
+      dispatch(setLocation(location.toString()))
     }
   }, [])
 

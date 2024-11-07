@@ -380,7 +380,7 @@ const NoResult = () => {
 
   useEffect(() => {
     if (q) {
-      dispatch(setKeyword(encodeURIComponent(q.toString())))
+      dispatch(setKeyword(q.toString()))
     }
   }, [])
 

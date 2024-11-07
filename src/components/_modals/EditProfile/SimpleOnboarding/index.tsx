@@ -195,7 +195,7 @@ const SimpleOnboarding: React.FC<Props> = ({
 
     completed_onboarding_steps: 'General',
   })
-
+  const [profileUrl, setProfileUrl] = useState('')
   const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({
     full_name: null,
     public_email: null,
@@ -389,7 +389,8 @@ const SimpleOnboarding: React.FC<Props> = ({
   const handleSubmit = async (checkErrors = true) => {
     let inputhobby = null
     let hasErrors = false
-
+    const validateurl = await checkProfileUrl()
+    console.warn('validatwrulll', inputErrs)
     if (checkErrors) {
       if (
         hobbyInputValue?.includes(',') ||
@@ -581,19 +582,18 @@ const SimpleOnboarding: React.FC<Props> = ({
     }
   }, [data])
 
-  const checkProfileUrl = () => {
+  const checkProfileUrl = async () => {
     const token = localStorage.getItem('token')
-    if (!user.profile_url) return
+    if (!profileUrl) return
 
     const headers = { Authorization: `Bearer ${token}` }
-    if (user.profile_url !== data.profile_url) {
+    if (user.profile_url !== profileUrl) {
       axios
         .get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${data.profile_url}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${profileUrl}`,
           { headers },
         )
         .then((res) => {
-          console.log('res', res)
           setInputErrs((prev) => {
             return { ...prev, profile_url: null }
           })
@@ -632,24 +632,22 @@ const SimpleOnboarding: React.FC<Props> = ({
   }, [data.profile_url, user.profile_url])
 
   useEffect(() => {
-    if (onComplete !== undefined && /^\d+$/.test(user.profile_url)) {
-      let profileUrl = data.full_name
-      profileUrl = profileUrl
-        ?.toLowerCase()
-        .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
-        .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
-        .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
-      setData((prev) => ({ ...prev, profile_url: profileUrl }))
-      if (!user.display_name) {
-        setData((prev) => ({
-          ...prev,
-          display_name: profileUrl.split('-')[0], // Use modified profileUrl for display_name
-        }))
-      }
+    let profileUrl = data.full_name
+    profileUrl = profileUrl
+      ?.toLowerCase()
+      .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
+      .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
+      .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
+    setProfileUrl(profileUrl)
+    if (!user.display_name) {
+      setData((prev) => ({
+        ...prev,
+        display_name: profileUrl.split('-')[0], // Use modified profileUrl for display_name
+      }))
     }
   }, [data.full_name])
 
-  console.warn('userdataa', user)
+  console.warn('userdataa', profileUrl)
   useEffect(() => {
     // Set initial data with user's current profile data
     const initialProfileData = {
@@ -1410,9 +1408,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                   value={data.public_email}
                   ref={emailRef}
                   name="public_email"
-
                   autoComplete="off"
-
                   onChange={handleInputChange}
                 />
                 <p className={styles['helper-text']}>
