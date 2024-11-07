@@ -161,8 +161,8 @@ const PostVotes: React.FC<Props> = ({
         >
           <svg
             width="24"
-            height="21"
-            viewBox="0 0 24 21"
+            height="24"
+            viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -191,9 +191,9 @@ const PostVotes: React.FC<Props> = ({
                 : HandleNotOnboard()
               : dispatch(openModal({ type: 'auth', closable: true }))
           }}
-          width="24"
-          height="22"
-          viewBox="0 0 24 22"
+          width="25"
+          height="24"
+          viewBox="0 0 25 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >

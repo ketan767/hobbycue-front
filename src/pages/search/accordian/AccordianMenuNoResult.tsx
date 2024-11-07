@@ -145,7 +145,8 @@ const AccordianMenuNoResult: React.FC<AccordianMenuProps> = ({
         } else if (categoryIndex !== -1 && showCategoryDropdown) {
           setShowCategoryDropdown(false)
 
-          setCategoryValue(filteredDropdownList[categoryIndex].listingCategory)
+          // setCategoryValue(filteredDropdownList[categoryIndex].listingCategory)
+          setSubCategory(filteredDropdownList[categoryIndex].listingCategory)
           // searchResult(
           //   undefined,
           //   undefined,

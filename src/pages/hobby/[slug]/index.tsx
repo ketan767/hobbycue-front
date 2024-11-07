@@ -241,9 +241,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
                 >
                   <h4>
                     {data?.level === 0
-                      ? 'Sub-Categories'
+                      ? 'Sub-Categories and Tags'
                       : data?.level === 1
-                      ? 'Hobbies'
+                      ? 'Tags and Hobbies'
                       : data?.level === 2
                       ? 'Hobbies'
                       : data?.level === 3

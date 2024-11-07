@@ -322,7 +322,7 @@ const PostCard: React.FC<Props> = (props) => {
                     style={{
                       width: '100%',
                       height: '100%',
-                      objectFit: 'cover',
+                      objectFit: 'contain',
                     }}
                   />
                 </div>
@@ -444,7 +444,7 @@ const PostCard: React.FC<Props> = (props) => {
                   } else setOpenAction(true)
                 }}
               >
-                <g clip-path="url(#clip0_173_72891)">
+                <g clipPath="url(#clip0_173_72891)">
                   <path
                     d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
                     fill="#8064A2"
@@ -695,7 +695,7 @@ const PostCard: React.FC<Props> = (props) => {
                         viewBox="0 0 18 18"
                         fill="none"
                       >
-                        <g clip-path="url(#clip0_10350_4296)">
+                        <g clipPath="url(#clip0_10350_4296)">
                           <path
                             d="M15 12.8775L14.1225 12H3V3H15V12.8775ZM15 1.5H3C2.175 1.5 1.5 2.175 1.5 3V12C1.5 12.825 2.175 13.5 3 13.5H13.5L16.5 16.5V3C16.5 2.175 15.825 1.5 15 1.5Z"
                             fill="#8064A2"
@@ -757,13 +757,13 @@ const PostCard: React.FC<Props> = (props) => {
               {/* Comment Icon */}
               <svg
                 onClick={() => setShowComments(!showComments)}
-                width="25"
+                width="24"
                 height="24"
-                viewBox="0 0 25 24"
+                viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <g clip-path="url(#clip0_18724_19460)">
+                <g clipPath="url(#clip0_18724_19460)">
                   <path
                     d="M6.21582 18.685H6.16653L6.13254 18.7207L2.33082 22.7125V4.1C2.33082 3.00316 3.18456 2.115 4.21582 2.115H20.2158C21.2471 2.115 22.1008 3.00316 22.1008 4.1V16.7C22.1008 17.7968 21.2471 18.685 20.2158 18.685H6.21582ZM20.2158 16.815H20.3308V16.7V4.1V3.985H20.2158H4.21582H4.10082V4.1V18.8V19.0875L4.2991 18.8793L6.26511 16.815H20.2158Z"
                     fill="#8064A2"
@@ -805,31 +805,26 @@ const PostCard: React.FC<Props> = (props) => {
               <svg
                 onClick={showFeatureUnderDevelopment}
                 className={styles['bookmark-icon']}
-                xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
                 fill="none"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <g clip-path="url(#clip0_18724_19457)">
+                <g clipPath="url(#clip0_21673_249325)">
                   <path
-                    d="M11.8435 19.441L11.7695 19.4065L11.6955 19.441L4.44453 22.8248V4.43294C4.44453 3.23193 5.3442 2.27461 6.41239 2.27461H17.1267C18.1949 2.27461 19.0945 3.23193 19.0945 4.43294V22.8248L11.8435 19.441ZM17.0516 19.7577L17.3017 19.8764V19.5996V5.59961C17.3017 4.87562 16.7549 4.25794 16.0552 4.25794H7.48382C6.78415 4.25794 6.23739 4.87562 6.23739 5.59961V19.5996V19.8764L6.48744 19.7577L11.7695 17.25L17.0516 19.7577Z"
-                    fill="#8064A2"
-                    stroke="white"
-                    stroke-width="0.35"
+                    d="M11.8172 17.8204L11.5 17.6724L11.1828 17.8204L4.75 20.8224V3.33333C4.75 2.40281 5.43735 1.75 6.14286 1.75H16.8571C17.5627 1.75 18.25 2.40281 18.25 3.33333V20.8224L11.8172 17.8204Z"
+                    stroke="#8064A2"
+                    stroke-width="1.5"
                   />
                 </g>
                 <defs>
-                  <clipPath id="clip0_18724_19457">
-                    <rect
-                      width="24"
-                      height="24"
-                      fill="white"
-                      transform="translate(0.21582)"
-                    />
+                  <clipPath id="clip0_21673_249325">
+                    <rect width="24" height="24" fill="white" />
                   </clipPath>
                 </defs>
               </svg>
+
               {/* </CustomizedTooltips> */}
             </section>
 
