@@ -125,7 +125,7 @@
 }
 
 .border-div {
-  width: 59.81px;
+  width: 57.16px;
   height: 66px;
   display: flex;
   justify-content: center;
@@ -701,7 +701,23 @@
   outline: 2px solid #8064a2;
 }
 
+.btnDisabled {
+  background: var(--Primary-Half, rgba(128, 100, 162, 0.5)) !important;
+  color: white !important;
+  border: none !important;
+}
+
 @media screen and (max-width: 1100px) {
+  .responsiveMenuItem {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .responsiveMenuItem img {
+    width: 22px;
+    height: 22px;
+  }
+
   .member {
     padding-inline: 0;
   }

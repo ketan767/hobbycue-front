@@ -116,7 +116,11 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
         </header>
 
         {/* Content */}
-        <CommentCheckWithUrl>{comment.content}</CommentCheckWithUrl>
+        <CommentCheckWithUrl>
+          {comment.content.split('\n').map((line: any, index: number) => (
+            <div key={index}>{line}</div>
+          ))}
+        </CommentCheckWithUrl>
 
         {/* Footer */}
         <footer>

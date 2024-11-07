@@ -34,9 +34,10 @@
   height: 160px;
   filter: drop-shadow(0px 2px 12px rgba(0, 0, 0, 0.08));
   border-radius: var(--spacing-8);
-  object-fit: cover;
+  object-fit: contain;
   border: 2px solid rgb(var(--primary-100-rgb));
-  background-color: rgb(var(--gray-50-rgb), 0.2);
+  /* background-color: rgb(var(--gray-50-rgb), 0.2); */
+  background-color: white;
 }
 
 .profile-img-wrapper .edit-btn {
@@ -481,8 +482,8 @@
   gap: 8px;
   justify-content: space-between;
 }
-.p-relative {
-}
+/* .p-relative {
+} */
 .price-laptop {
   width: 100%;
   align-self: flex-end;
@@ -752,6 +753,7 @@
     font-weight: 600;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     font-size: 14px;
@@ -783,6 +785,7 @@
     max-width: 64vw; */
     display: -webkit-box !important;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -791,6 +794,7 @@
   }
   .tagline.full {
     -webkit-line-clamp: unset;
+    line-clamp: unset;
   }
 
   .center-container .name-container {
