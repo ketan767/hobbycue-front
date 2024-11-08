@@ -302,6 +302,24 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
     return hasError
   }
 
+  useEffect(() => {
+    if (router.asPath.includes('showGeneral=true')) {
+      router.replace(`/profile/${user.profile_url}`)
+      dispatch(
+        openModal({
+          type: 'profile-general-edit',
+          closable: true,
+        }),
+      )
+    } else if (router.asPath.includes('showHobby=true')) {
+      router.replace(`/profile/${user.profile_url}`)
+      dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
+    } else if (router.asPath.includes('showLocation=true')) {
+      router.replace(`/profile/${user.profile_url}`)
+      dispatch(openModal({ type: 'profile-address-edit', closable: true }))
+    }
+  }, [router.asPath])
+
   return (
     <>
       <Head>

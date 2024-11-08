@@ -44,7 +44,7 @@ import {
   setKeyword,
   setLocation,
   setSearching,
-  setSub_category,
+  setPageType,
 } from '@/redux/slices/explore'
 
 const Home: React.FC<PropTypes> = function () {
@@ -240,15 +240,15 @@ const Home: React.FC<PropTypes> = function () {
               className={styles['card-btn']}
               onClick={async (e: any) => {
                 e.preventDefault()
-                dispatch(setCategory('People'))
+                dispatch(setCategory(''))
+                dispatch(setPageType('People'))
                 dispatch(setSearching(true))
-                dispatch(setSub_category(''))
                 dispatch(setKeyword(''))
                 dispatch(setHobby(''))
                 dispatch(setLocation(''))
                 router.push({
                   pathname: '/explore/people',
-                  query: { category: 'People' },
+                  query: { ['page-type']: 'People' },
                 })
               }}
             >
@@ -277,15 +277,15 @@ const Home: React.FC<PropTypes> = function () {
               className={styles['card-btn']}
               onClick={async (e: any) => {
                 e.preventDefault()
-                dispatch(setCategory('Place'))
+                dispatch(setCategory(''))
+                dispatch(setPageType('Place'))
                 dispatch(setSearching(true))
-                dispatch(setSub_category(''))
                 dispatch(setKeyword(''))
                 dispatch(setHobby(''))
                 dispatch(setLocation(''))
                 router.push({
                   pathname: '/explore/places',
-                  query: { category: 'Place' },
+                  query: { ['page-type']: 'Place' },
                 })
               }}
             >
@@ -327,15 +327,15 @@ const Home: React.FC<PropTypes> = function () {
               className={styles['card-btn']}
               onClick={async (e: any) => {
                 e.preventDefault()
-                dispatch(setCategory('Product'))
+                dispatch(setCategory(''))
+                dispatch(setPageType('Product'))
                 dispatch(setSearching(true))
-                dispatch(setSub_category(''))
                 dispatch(setKeyword(''))
                 dispatch(setHobby(''))
                 dispatch(setLocation(''))
                 router.push({
                   pathname: '/explore/products',
-                  query: { category: 'Product' },
+                  query: { ['page-type']: 'Product' },
                 })
               }}
             >
@@ -373,15 +373,15 @@ const Home: React.FC<PropTypes> = function () {
               className={styles['card-btn']}
               onClick={async (e: any) => {
                 e.preventDefault()
-                dispatch(setCategory('Program'))
+                dispatch(setCategory(''))
+                dispatch(setPageType('Program'))
                 dispatch(setSearching(true))
-                dispatch(setSub_category(''))
                 dispatch(setKeyword(''))
                 dispatch(setHobby(''))
                 dispatch(setLocation(''))
                 router.push({
                   pathname: '/explore/programs',
-                  query: { category: 'Program' },
+                  query: { ['page-type']: 'Program' },
                 })
               }}
             >
