@@ -192,28 +192,28 @@ const ExploreMoreBtn: React.FC<PropsExploreMoreBtn> = ({ text, icon }) => {
     keyword,
     hobby,
     category,
-    sub_category,
+    page_type,
     location: currLocation,
   } = useSelector((state: RootState) => state.explore)
 
   const getLink = () => {
     let link = '/explore'
-    if (category) {
-      if (category === 'Place' || category === 'place') {
+    if (page_type) {
+      if (page_type === 'Place' || page_type === 'place') {
         link += '/places?'
-      } else if (category === 'People' || category === 'people') {
+      } else if (page_type === 'People' || page_type === 'people') {
         link += '/people?'
-      } else if (category === 'Program' || category === 'program') {
+      } else if (page_type === 'Program' || page_type === 'program') {
         link += '/programs?'
-      } else if (category === 'Product' || category === 'product') {
+      } else if (page_type === 'Product' || page_type === 'product') {
         link += '/products?'
       }
-      link += `category=${category}`
-    } else if (sub_category) {
-      link += `?sub_category=${sub_category}`
+      link += `page-type=${page_type}`
+    } else if (category) {
+      link += `?category=${category}`
     }
     if (hobby) {
-      if (category || sub_category) {
+      if (category || page_type) {
         link += '&'
       } else {
         link += '?'
@@ -222,7 +222,7 @@ const ExploreMoreBtn: React.FC<PropsExploreMoreBtn> = ({ text, icon }) => {
     }
 
     if (currLocation) {
-      if (hobby || category || sub_category) {
+      if (hobby || category || page_type) {
         link += '&'
       } else {
         link += '?'
@@ -230,7 +230,7 @@ const ExploreMoreBtn: React.FC<PropsExploreMoreBtn> = ({ text, icon }) => {
       link += `location=${currLocation}`
     }
     if (keyword) {
-      if (hobby || category || sub_category || currLocation) {
+      if (hobby || category || page_type || currLocation) {
         link += '&'
       } else {
         link += '?'

@@ -23,7 +23,7 @@ const Explore: React.FC<Props> = ({ data: initialData, isBlog }) => {
   const { hobby } = query
   const { category } = query
   const { location } = query
-  const { sub_category } = query
+  const page_type = query['page-type']
 
   const [data, setData] = useState(initialData || [])
   const [page, setPage] = useState(1) // Tracks the current page
@@ -41,20 +41,19 @@ const Explore: React.FC<Props> = ({ data: initialData, isBlog }) => {
     let queryString = `sort=-createdAt&is_published=true&populate=_hobbies,_address,product_variant,seller&page=${
       page + 1
     }&limit=20`
-    if (category && category !== 'All') {
+    if (page_type && page_type !== 'All') {
       let type = 1
-      if (category === 'Place') {
+      if (page_type === 'Place') {
         type = 2
-      } else if (category === 'Program') {
+      } else if (page_type === 'Program') {
         type = 3
-      } else if (category === 'Product') {
+      } else if (page_type === 'Product') {
         type = 4
       }
       queryString = `type=${encodeURIComponent(type.toString())}&` + queryString
-    } else if (sub_category) {
+    } else if (category) {
       queryString =
-        `page_type=${encodeURIComponent(sub_category.toString())}&` +
-        queryString
+        `page_type=${encodeURIComponent(category.toString())}&` + queryString
     }
 
     if (keyword) {
@@ -76,24 +75,6 @@ const Explore: React.FC<Props> = ({ data: initialData, isBlog }) => {
     // console.log('Query', queryString)
 
     setLoading(true)
-
-    // try {
-    //   // const { res, err } = await getListingPages(queryString)
-    //   const { res, err } = await getListingSearch(queryString)
-    //   const data = res?.data?.data?.listings || []
-    //   if (err) {
-    //     setHasMore(false)
-    //     return { notFound: true }
-    //   } else {
-    //     setData((prevData: any) => [...prevData, ...data])
-    //     setPage((prevPage) => prevPage + 1)
-    //   }
-    // } catch (error) {
-    //   console.error('Error fetching data:', error)
-    //   setHasMore(false)
-    // } finally {
-    //   setLoading(false)
-    // }
     try {
       const { res, err } = await getListingSearch(queryString)
 
@@ -109,7 +90,7 @@ const Explore: React.FC<Props> = ({ data: initialData, isBlog }) => {
     } finally {
       setLoading(false)
     }
-  }, [page, loading, hasMore, keyword, category, hobby, location, sub_category])
+  }, [page, loading, hasMore, keyword, category, hobby, location, page_type])
 
   useEffect(() => {
     // setIsSearching(true)
@@ -117,7 +98,7 @@ const Explore: React.FC<Props> = ({ data: initialData, isBlog }) => {
     setShowHobbyDropdown(false)
     setShowAutoAddress(false)
     setData(initialData)
-  }, [keyword, category, hobby, location, sub_category])
+  }, [keyword, category, hobby, location, page_type])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -217,74 +198,22 @@ const Explore: React.FC<Props> = ({ data: initialData, isBlog }) => {
   )
 }
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   let queryString = `sort=-createdAt&is_published=true&populate=_hobbies,_address,product_variant,seller&page=1&limit=20`
-//   const { query } = context
-//   console.log('query==>', query)
-//   if (query.category && query.category !== 'All') {
-//     let type = 1
-//     if (query.category === 'Place') {
-//       type = 2
-//     } else if (query.category === 'Program') {
-//       type = 3
-//     } else if (query.category === 'Product') {
-//       type = 4
-//     }
-//     queryString = `type=${encodeURIComponent(type.toString())}&` + queryString
-//   } else if (query.sub_category) {
-//     queryString =
-//       `page_type=${encodeURIComponent(query.sub_category.toString())}&` +
-//       queryString
-//   }
-//   if (query.keyword) {
-//     queryString =
-//       `title=${encodeURIComponent(query.keyword.toString())}&` + queryString
-//   }
-//   if (query.hobby) {
-//     queryString =
-//       `hobby=${encodeURIComponent(query.hobby.toString())}&` + queryString
-//   }
-//   if (query.location) {
-//     queryString =
-//       `city=${encodeURIComponent(query.location.toString())}&` + queryString
-//   }
-
-//   console.log('titleContext', query.keyword)
-//   console.log('query.category', query.category)
-//   console.log('query.sub_category', query.sub_category)
-//   console.log('query.hobby', query.hobby)
-//   console.log('query.location', query.location)
-
-//   // const { res, err } = await getListingPages(queryString)
-//   const { res, err } = await getListingSearch(queryString)
-//   console.log('queryString===>', queryString)
-
-//   if (err) return { notFound: true }
-//   const data = res?.data?.data?.listings || []
-//   // console.log('Data===>', data)
-//   return {
-//     props: {
-//       data: data,
-//       isBlog: false,
-//     },
-//   }
-// }
 export const getServerSideProps: GetServerSideProps = async (context) => {
   let queryString = `sort=-createdAt&is_published=true&populate=_hobbies,_address,product_variant,seller&page=1&limit=20`
   const { query } = context
-  if (query.category && query.category !== 'All') {
+  if (query['page-type'] && query['page-type'] !== 'All') {
     let type = 1
-    if (query.category === 'Place') {
+    if (query['page-type'] === 'Place') {
       type = 2
-    } else if (query.category === 'Program') {
+    } else if (query['page-type'] === 'Program') {
       type = 3
-    } else if (query.category === 'Product') {
+    } else if (query['page-type'] === 'Product') {
       type = 4
     }
     queryString = `type=${encodeURIComponent(type.toString())}&` + queryString
-  } else if (query.sub_category) {
+  } else if (query.category) {
     queryString =
-      `page_type=${encodeURIComponent(query.sub_category.toString())}&` +
+      `page_type=${encodeURIComponent(query.category.toString())}&` +
       queryString
   }
   if (query.keyword) {
@@ -323,18 +252,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   }
 }
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   const { res, err } = await getListingPages(
-//     `&sort=-createdAt&is_published=true&populate=_hobbies,_address,product_variant,seller&page=1&limit=20`,
-//   )
-//   if (err) return { notFound: true }
-//   const data = res?.data?.data?.listings || []
-//   return {
-//     props: {
-//       data: data,
-//       isBlog: false,
-//     },
-//   }
-// }
 
 export default Explore

@@ -49,7 +49,7 @@ const NoResult = () => {
     keyword,
     hobby,
     category,
-    sub_category,
+    page_type,
     location: currLocation,
   } = useSelector((state: RootState) => state.explore)
   const dispatch = useDispatch()
@@ -65,6 +65,7 @@ const NoResult = () => {
 
   const [focusedHobbyIndex, setFocusedHobbyIndex] = useState<number>(-1)
   const [focusedLocationIdx, setFocusedLocationIdx] = useState<number>(-1)
+  const [isHobbySelected, setIsHobbySelected] = useState<boolean>(false)
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     ExtendedDropdownListItem[]
@@ -74,11 +75,7 @@ const NoResult = () => {
   >([])
 
   const [categoryValue, setCategoryValue] = useState(
-    sub_category
-      ? sub_category.toString()
-      : category
-      ? category.toString()
-      : '',
+    page_type ? page_type.toString() : category ? category.toString() : '',
   )
 
   const [Addressdata, setAddressData] = useState<ProfileAddressPayload>({
@@ -102,7 +99,7 @@ const NoResult = () => {
 
     if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
 
-    const query = `fields=display,genre&level=5&level=3&level=2&search=${e.target.value}`
+    const query = `fields=display,genre&level=5&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
 
     if (err) return console.log(err)
@@ -143,14 +140,17 @@ const NoResult = () => {
         if (hobby.length !== 0 && focusedHobbyIndex === -1) {
           //AddButtonRef.current?.click()
           handleSubmit()
-        } else if (focusedHobbyIndex !== -1 && showHobbyDropdown) {
+        } else if (focusedHobbyIndex !== -1) {
           setShowHobbyDropdown(false)
-          const val = hobbyDropdownList[focusedHobbyIndex]?.display || hobby
-          // if (val) {
-          //   setHobby(val)
-          // }
-          dispatch(setHobby(val))
-          handleSubmit()
+          if (showHobbyDropdown) {
+            const val = hobbyDropdownList[focusedHobbyIndex]?.display || hobby
+            dispatch(setHobby(val))
+          }
+
+          if (isHobbySelected) {
+            handleSubmit()
+          }
+          setIsHobbySelected(true)
           // searchResult(undefined, val, undefined)
           console.log('hobbyDropdownList', hobbyDropdownList)
         } else if (focusedHobbyIndex === -1 && hobby.length !== 0) {
@@ -328,22 +328,22 @@ const NoResult = () => {
 
   const getLink = () => {
     let link = '/explore'
-    if (category) {
-      if (category === 'Place' || category === 'place') {
+    if (page_type) {
+      if (page_type === 'Place' || page_type === 'place') {
         link += '/places?'
-      } else if (category === 'People' || category === 'people') {
+      } else if (page_type === 'People' || page_type === 'people') {
         link += '/people?'
-      } else if (category === 'Program' || category === 'program') {
+      } else if (page_type === 'Program' || page_type === 'program') {
         link += '/programs?'
-      } else if (category === 'Product' || category === 'product') {
+      } else if (page_type === 'Product' || page_type === 'product') {
         link += '/products?'
       }
-      link += `category=${category}`
-    } else if (sub_category) {
-      link += `?sub_category=${sub_category}`
+      link += `page-type=${page_type}`
+    } else if (category) {
+      link += `?category=${category}`
     }
     if (hobby) {
-      if (category || sub_category) {
+      if (category || page_type) {
         link += '&'
       } else {
         link += '?'
@@ -352,7 +352,7 @@ const NoResult = () => {
     }
 
     if (currLocation) {
-      if (hobby || category || sub_category) {
+      if (hobby || category || page_type) {
         link += '&'
       } else {
         link += '?'
@@ -360,7 +360,7 @@ const NoResult = () => {
       link += `location=${currLocation}`
     }
     if (keyword) {
-      if (hobby || category || sub_category || currLocation) {
+      if (hobby || category || page_type || currLocation) {
         link += '&'
       } else {
         link += '?'
@@ -377,12 +377,6 @@ const NoResult = () => {
     // }
     router.push(`${getLink()}`)
   }
-
-  useEffect(() => {
-    if (q) {
-      dispatch(setKeyword(q.toString()))
-    }
-  }, [])
 
   return (
     <div className={styles['no-results-wrapper']}>
@@ -438,7 +432,10 @@ const NoResult = () => {
                   setShowHobbyDropdown(true)
                 }}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  setShowHobbyDropdown(true)
+                  if (e.key !== 'Enter') {
+                    setShowHobbyDropdown(true)
+                    setIsHobbySelected(false)
+                  }
                   handleHobbyKeyDown(e)
                   // handleSubmit(true)
                 }}
