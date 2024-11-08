@@ -34,9 +34,10 @@
   height: 160px;
   filter: drop-shadow(0px 2px 12px rgba(0, 0, 0, 0.08));
   border-radius: var(--spacing-8);
-  object-fit: cover;
+  object-fit: contain;
   border: 2px solid rgb(var(--primary-100-rgb));
-  background-color: rgb(var(--gray-50-rgb), 0.2);
+  /* background-color: rgb(var(--gray-50-rgb), 0.2); */
+  background-color: white;
 }
 
 .profile-img-wrapper .edit-btn {
@@ -256,6 +257,7 @@
   padding-top: 12px;
   display: flex;
   gap: 12px;
+  position: relative;
 }
 .about-text ol,
 .about-text ul {
@@ -464,14 +466,35 @@
 .product-header-content {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
 }
 
 .product-name-container {
   display: flex;
   flex-direction: column;
   padding-left: 24px;
-  width: 500px;
+  /* width: 500px; */
+  width: 712px;
+  justify-content: space-between;
+}
+.publish-laptop {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+/* .p-relative {
+} */
+.price-laptop {
+  width: 100%;
+  align-self: flex-end;
+  /* position: absolute;
+  bottom: 0; */
+}
+.aboutEditIcon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
 }
 
 .product-name-container .name {
@@ -587,6 +610,12 @@
   justify-content: center;
   align-items: center;
 }
+.rupeeSymbol {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 24px;
+  text-align: left;
+}
 
 @media screen and (max-width: 1100px) {
   .product-name-container {
@@ -637,7 +666,7 @@
     display: inline-flex;
     align-items: center;
   }
-  
+
   .dropdown-svg {
     margin-left: 5px;
     width: 10px;
@@ -676,6 +705,10 @@
 }
 
 @media screen and (max-width: 1100px) {
+  .product-header-content {
+    flex-wrap: wrap;
+  }
+
   .display-desktop {
     display: none;
   }
@@ -720,6 +753,7 @@
     font-weight: 600;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     font-size: 14px;
@@ -739,7 +773,7 @@
   }
   .tagline {
     font-size: 12px;
-   
+
     gap: 12px !important;
     /* display: inline-block !important;
     -webkit-line-clamp: 2; 
@@ -751,15 +785,16 @@
     max-width: 64vw; */
     display: -webkit-box !important;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 64vw;
     margin-top: 2px;
-  
   }
   .tagline.full {
-    -webkit-line-clamp: unset; 
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
   }
 
   .center-container .name-container {

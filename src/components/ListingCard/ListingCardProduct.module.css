@@ -214,6 +214,12 @@
   left: 12px;
   z-index: 2;
 }
+.rupeeSymbol {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: left;
+}
 
 @media screen and (max-width: 1100px) {
   .container {

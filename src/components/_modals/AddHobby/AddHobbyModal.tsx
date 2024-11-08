@@ -24,6 +24,22 @@ const AddHobby: React.FC<Props> = ({
   selectedHobbyText,
 }) => {
   const dispatch = useDispatch()
+  const buttonRef = useRef<HTMLButtonElement | null>(null)
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        event.preventDefault()
+        buttonRef.current?.click()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [selectedHobbyText])
 
   const [snackbar, setSnackbar] = useState({
     type: 'success',
@@ -69,6 +85,7 @@ const AddHobby: React.FC<Props> = ({
             <FilledButton
               className={styles['button1']}
               onClick={handleSubmit()}
+              inviteBtnRef={buttonRef}
             >
               Send
             </FilledButton>

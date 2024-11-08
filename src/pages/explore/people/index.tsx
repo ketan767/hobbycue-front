@@ -7,6 +7,9 @@ import { GetServerSideProps } from 'next'
 import PagesLoader from '@/components/PagesLoader/PagesLoader'
 import Head from 'next/head'
 import ExploreSearchContainer from '../searchBar/ExploreSearchContainer'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
+import { setSearching } from '@/redux/slices/explore'
 
 type Props = {
   data?: any
@@ -28,6 +31,8 @@ const People: React.FC<Props> = ({ data: initialData }) => {
   const [hasMore, setHasMore] = useState(true) // Tracks if there are more listings to load
   const [ShowAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
+  const { isSearching } = useSelector((state: RootState) => state.explore)
+  const dispatch = useDispatch()
 
   const locationDropdownRef = useRef<HTMLDivElement>(null)
 
@@ -128,6 +133,10 @@ const People: React.FC<Props> = ({ data: initialData }) => {
     return () => window.removeEventListener('mousedown', handleClickOutside)
   }, [ShowAutoAddress])
 
+  useEffect(() => {
+    dispatch(setSearching(false))
+  }, [data])
+
   return (
     <>
       <Head>
@@ -148,16 +157,33 @@ const People: React.FC<Props> = ({ data: initialData }) => {
         setShowHobbyDropdown={setShowHobbyDropdown}
       />
       <div className={styles.container}>
-        <div className={styles.gridContainer}>
-          {data?.map((el: any) => (
-            <ListingCard
-              column={4}
-              key={el._id}
-              data={el}
-              style={{ minWidth: 271, maxWidth: 700 }}
-            />
-          ))}
-        </div>
+        {isSearching ? (
+          <div className={styles.gridContainer}>
+            <PagesLoader />
+            <PagesLoader />
+            <PagesLoader />
+            <PagesLoader />
+            <PagesLoader />
+            <PagesLoader />
+            <PagesLoader />
+            <PagesLoader />
+            <PagesLoader />
+            <PagesLoader />
+            <PagesLoader />
+            <PagesLoader />
+          </div>
+        ) : (
+          <div className={styles.gridContainer}>
+            {data?.map((el: any) => (
+              <ListingCard
+                column={4}
+                key={el._id}
+                data={el}
+                style={{ minWidth: 271, maxWidth: 700 }}
+              />
+            ))}
+          </div>
+        )}
         {loading && (
           <div className={styles.gridContainer}>
             <PagesLoader />

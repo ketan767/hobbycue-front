@@ -75,6 +75,14 @@ import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import { useMediaQuery } from '@mui/material'
 import { getAllPosts, searchPosts } from '@/services/post.service'
 import { getAllBlogs, searchBlogs } from '@/services/blog.services'
+import {
+  setCategory,
+  setHobby,
+  setKeyword,
+  setLocation,
+  setSearching,
+  setSub_category,
+} from '@/redux/slices/explore'
 
 type Props = {}
 
@@ -150,6 +158,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
+    dispatch(setKeyword(value))
   }
 
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -825,7 +834,17 @@ export const Navbar: React.FC<Props> = ({}) => {
                 onMouseOver={() => setShowDropdown('explore-list')}
                 onMouseLeave={() => setShowDropdown(null)}
               >
-                <Link href={'/explore'}>
+                <Link
+                  href={'/explore'}
+                  onClick={() => {
+                    dispatch(setCategory(''))
+                    dispatch(setSub_category(''))
+                    dispatch(setKeyword(''))
+                    dispatch(setHobby(''))
+                    dispatch(setLocation(''))
+                    dispatch(setSearching(true))
+                  }}
+                >
                   <Image src={ExploreIcon} alt="" />
                   <span>Explore</span>
                   <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
@@ -839,7 +858,12 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
-
+                            dispatch(setCategory('People'))
+                            dispatch(setSearching(true))
+                            dispatch(setSub_category(''))
+                            dispatch(setKeyword(''))
+                            dispatch(setHobby(''))
+                            dispatch(setLocation(''))
                             const query = { category: 'People' }
                             router.push({
                               pathname: '/explore/people',
@@ -863,9 +887,15 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
+                            dispatch(setCategory('Place'))
+                            dispatch(setSearching(true))
+                            dispatch(setSub_category(''))
+                            dispatch(setKeyword(''))
+                            dispatch(setHobby(''))
+                            dispatch(setLocation(''))
                             const query = { category: 'Place' }
                             router.push({
-                              pathname: '/explore/place',
+                              pathname: '/explore/places',
                               query: query,
                             })
                           }}
@@ -881,9 +911,15 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
+                            dispatch(setCategory('Product'))
+                            dispatch(setSearching(true))
+                            dispatch(setSub_category(''))
+                            dispatch(setKeyword(''))
+                            dispatch(setHobby(''))
+                            dispatch(setLocation(''))
                             const query = { category: 'Product' }
                             router.push({
-                              pathname: '/explore/product',
+                              pathname: '/explore/products',
                               query: query,
                             })
                           }}
@@ -899,9 +935,15 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
+                            dispatch(setCategory('Program'))
+                            dispatch(setSearching(true))
+                            dispatch(setSub_category(''))
+                            dispatch(setKeyword(''))
+                            dispatch(setHobby(''))
+                            dispatch(setLocation(''))
                             const query = { category: 'Program' }
                             router.push({
-                              pathname: '/explore/program',
+                              pathname: '/explore/programs',
                               query: query,
                             })
                           }}

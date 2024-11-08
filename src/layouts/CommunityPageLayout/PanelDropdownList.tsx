@@ -33,6 +33,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   const [open, setOpen] = useState(initialOpen ?? false)
   const router = useRouter()
   const [seeMore, setSeeMore] = useState(true)
+  const [seeMoreHobbies, setSeeMoreHobbies] = useState(0)
   const membersContainerRef = useRef<HTMLDivElement>(null)
   // const [email, setEmail] = useState('')
   // const [errorMessage, setErrorMessage] = useState('')
@@ -42,11 +43,11 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   useEffect(() => {
     if (type === 'members') {
       if (membersContainerRef.current) {
-        const requiredHeight = options.length * 38 + 47
+        const requiredHeight = options.length * (38 + 16) + 47
         if (options.length <= 2) {
           membersContainerRef.current.style.height = 'auto'
         } else if (seeMore) {
-          membersContainerRef.current.style.height = '161px'
+          membersContainerRef.current.style.height = '208px'
         } else {
           membersContainerRef.current.style.height = requiredHeight + 'px'
         }
@@ -103,7 +104,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   return (
     <div className={styles['parent-list']}>
       <div className={styles['list']}>
-        <p>{name}</p>
+        <p className={!open ? styles.activeP : ''}>{name}</p>
         <ArrowSvg rotate={open} />
       </div>
       {open && (
@@ -146,6 +147,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
             }
           >
             {type !== 'members' &&
+              type !== 'user members' &&
               options
                 .slice(0, seeMore ? 3 : options.length)
                 .map((obj: any, idx: number) => (
@@ -190,6 +192,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                     ) : null}
                   </div>
                 ))}
+
             {type === 'members' &&
               options
                 .slice(0, seeMore ? 3 : options.length)
@@ -223,7 +226,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                 ))}
             {type === 'user members' &&
               options
-                .slice(0, seeMore ? 3 : options.length)
+                .slice(0, seeMoreHobbies === 0 ? 3 : options.length)
                 .map((obj: any, idx: number) => (
                   <div key={idx} className={styles['option']}>
                     <div
@@ -259,11 +262,11 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                 <div className={styles['member-container']}>
                   <p
                     onClick={() => {
-                      setSeeMore((prev) => !prev)
+                      setSeeMoreHobbies((prev) => prev + 1)
                     }}
                     className={styles['see-more']}
                   >
-                    {seeMore ? 'See more' : 'See less'}
+                    {'See more'}
                   </p>
                 </div>
               </div>

@@ -64,6 +64,14 @@ import ExploreIcon from '@/assets/icons/ExploreIcon'
 import QuestionIcon from '@/assets/icons/QuestionIcon'
 import InterestedDiv from './InterestedDiv'
 import DoubleDownArrow from '@/assets/icons/DoubleDownArrow'
+import hobbycue from '../../assets/svg/Search/hobbycue.svg'
+import People from '../../assets/svg/Search/People.svg'
+import UserSvg from '../../assets/svg/Search/User.svg'
+import Hobby from '../../assets/svg/Search/Hobbies.svg'
+import Place from '../../assets/svg/Search/Place.svg'
+import Program from '../../assets/svg/Search/Program.svg'
+import Product from '../../assets/svg/Search/Product.svg'
+import Blogs from '../../assets/svg/Search/blogs.svg'
 
 type Props = {
   data?: any
@@ -157,6 +165,10 @@ type PropsExploreSidebarBtn = {
   text: string
   icon?: React.ReactNode
 }
+type PropsExploreMoreBtn = {
+  text: string
+  icon?: React.ReactNode
+}
 
 const ExploreSidebarBtn: React.FC<PropsExploreSidebarBtn> = ({
   href,
@@ -171,6 +183,80 @@ const ExploreSidebarBtn: React.FC<PropsExploreSidebarBtn> = ({
           {text}
         </button>
       </Link>
+    </div>
+  )
+}
+const ExploreMoreBtn: React.FC<PropsExploreMoreBtn> = ({ text, icon }) => {
+  const router = useRouter()
+  const {
+    keyword,
+    hobby,
+    category,
+    sub_category,
+    location: currLocation,
+  } = useSelector((state: RootState) => state.explore)
+
+  const getLink = () => {
+    let link = '/explore'
+    if (category) {
+      if (category === 'Place' || category === 'place') {
+        link += '/places?'
+      } else if (category === 'People' || category === 'people') {
+        link += '/people?'
+      } else if (category === 'Program' || category === 'program') {
+        link += '/programs?'
+      } else if (category === 'Product' || category === 'product') {
+        link += '/products?'
+      }
+      link += `category=${category}`
+    } else if (sub_category) {
+      link += `?sub_category=${sub_category}`
+    }
+    if (hobby) {
+      if (category || sub_category) {
+        link += '&'
+      } else {
+        link += '?'
+      }
+      link += `hobby=${hobby}`
+    }
+
+    if (currLocation) {
+      if (hobby || category || sub_category) {
+        link += '&'
+      } else {
+        link += '?'
+      }
+      link += `location=${currLocation}`
+    }
+    if (keyword) {
+      if (hobby || category || sub_category || currLocation) {
+        link += '&'
+      } else {
+        link += '?'
+      }
+      link += `keyword=${keyword}`
+    }
+
+    return link
+  }
+  const handleExploreMore = () => {
+    router.push(`${getLink()}`)
+  }
+  const filter = router.query?.filter || ''
+  const btnDisabled = !filter || filter === 'users' ? true : false
+  return (
+    <div className={styles['explore-sidebar']}>
+      <button
+        onClick={handleExploreMore}
+        className={
+          'modal-footer-btn' + ' ' + (btnDisabled ? styles.btnDisabled : '')
+        }
+        disabled={btnDisabled}
+      >
+        {btnDisabled ? null : icon}
+        {text}
+      </button>
     </div>
   )
 }
@@ -1410,22 +1496,35 @@ const MainContent: React.FC<SearchResultsProps> = ({
 }
 
 const FilterDropdown: React.FC<Props> = () => {
+  const router = useRouter()
+  const { q, filter } = router.query
   const [activeFilter, setActiveFilter] = useState('all')
   const dispatch = useDispatch()
   const isExplore = useSelector((state: RootState) => state.search.explore)
-  const showAll = useSelector((state: any) => state.search.showAll)
-  const showAllUsers = useSelector((state: any) => state.search.showAllUsers)
-  const showAllhobbies = useSelector(
-    (state: any) => state.search.showAllhobbies,
-  )
-  const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
-  const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
-  const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
-  const showAllProducts = useSelector(
-    (state: any) => state.search.showAllProducts,
-  )
-  const showAllPosts = useSelector((state: any) => state.search.showAllPosts)
-  const showAllBlogs = useSelector((state: any) => state.search.showAllBlogs)
+  // const showAll = useSelector((state: any) => state.search.showAll)
+  // const showAllUsers = useSelector((state: any) => state.search.showAllUsers)
+  // const showAllhobbies = useSelector(
+  //   (state: any) => state.search.showAllhobbies,
+  // )
+  // const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
+  // const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
+  // const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
+  // const showAllProducts = useSelector(
+  //   (state: any) => state.search.showAllProducts,
+  // )
+  // const showAllPosts = useSelector((state: any) => state.search.showAllPosts)
+  // const showAllBlogs = useSelector((state: any) => state.search.showAllBlogs)
+
+  const showAll = !filter || filter === 'all' || filter === ''
+  const showAllUsers = filter === 'users'
+  const showAllPeople = filter === 'people'
+  const showAllPlace = filter === 'places'
+  const showAllEvent = filter === 'programs'
+  const showAllProducts = filter === 'products'
+  const showAllPosts = filter === 'posts'
+  const showAllBlogs = filter === 'blogs'
+  const showAllHobbies = filter === 'hobby'
+
   useEffect(() => {
     if (showAll) {
       setActiveFilter('all')
@@ -1437,10 +1536,10 @@ const FilterDropdown: React.FC<Props> = () => {
     }
   }, [showAllUsers])
   useEffect(() => {
-    if (showAllhobbies) {
+    if (showAllHobbies) {
       setActiveFilter('hobby')
     }
-  }, [showAllhobbies])
+  }, [showAllHobbies])
   useEffect(() => {
     if (showAllPeople) {
       setActiveFilter('people')
@@ -1471,6 +1570,39 @@ const FilterDropdown: React.FC<Props> = () => {
       setActiveFilter('blogs')
     }
   }, [showAllBlogs])
+
+  useEffect(() => {
+    if (showAll === true) {
+      setActiveFilter('all')
+    } else if (showAllUsers === true) {
+      setActiveFilter('users')
+    } else if (showAllHobbies === true) {
+      setActiveFilter('hobby')
+    } else if (showAllPeople === true) {
+      setActiveFilter('people')
+    } else if (showAllPlace === true) {
+      setActiveFilter('places')
+    } else if (showAllEvent === true) {
+      setActiveFilter('events')
+    } else if (showAllProducts === true) {
+      setActiveFilter('products')
+    } else if (showAllBlogs === true) {
+      setActiveFilter('blogs')
+    } else if (showAllPosts === true) {
+      setActiveFilter('posts')
+    }
+  }, [
+    showAll,
+    showAllEvent,
+    showAllPeople,
+    showAllPlace,
+    showAllProducts,
+    showAllUsers,
+    showAllHobbies,
+    showAllBlogs,
+    showAllPosts,
+  ])
+
   const handleFilterClick = (filterType: any) => {
     if (activeFilter === filterType) {
       setActiveFilter('all')
@@ -1509,6 +1641,23 @@ const FilterDropdown: React.FC<Props> = () => {
           break
       }
     }
+    if (filterType === 'all') {
+      const { filter, ...rest } = router.query
+      router.push({
+        pathname: '/search',
+        query: {
+          ...rest,
+        },
+      })
+    } else {
+      router.push({
+        pathname: '/search',
+        query: {
+          ...router.query,
+          filter: filterType,
+        },
+      })
+    }
   }
 
   return (
@@ -1522,36 +1671,55 @@ const FilterDropdown: React.FC<Props> = () => {
         value="all"
         // style={{ display: 'flex', alignItems: 'center', gap: 16 }}
       >
-        {/* <img
-          src="/HobbyCueLogoFilter.png"
-          alt=""
-          style={{ width: 22, height: 22 }}
-        /> */}
-        All of HobbyCue
+        <div className={styles.responsiveMenuItem}>
+          <Image src={hobbycue} alt="hobbycue" />
+          <span>All of HobbyCue</span>
+        </div>
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('users')} value="users">
-        Users
+        <div className={styles.responsiveMenuItem}>
+          <Image src={UserSvg} alt="User" />
+          <span>Users</span>
+        </div>
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('hobby')} value="hobby">
-        Hobbies
+        <div className={styles.responsiveMenuItem}>
+          <Image src={Hobby} alt="hobby" />
+          <span>Hobbies</span>
+        </div>
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('people')} value="people">
-        People Pages
+        <div className={styles.responsiveMenuItem}>
+          <Image src={People} alt="People" />
+          <span>People Pages</span>
+        </div>
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('places')} value="places">
-        Places
+        <div className={styles.responsiveMenuItem}>
+          <Image src={Place} alt="Place" />
+          <span>Places</span>
+        </div>
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('events')} value="events">
-        Programs
+        <div className={styles.responsiveMenuItem}>
+          <Image src={Program} alt="Program" />
+          <span>Programs</span>
+        </div>
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('products')} value="products">
-        Products
+        <div className={styles.responsiveMenuItem}>
+          <Image src={Product} alt="Product" />
+          <span>Products</span>
+        </div>
       </MenuItem>
       {/* <MenuItem onClick={() => handleFilterClick('posts')} value="posts">
         Posts
       </MenuItem> */}
       <MenuItem onClick={() => handleFilterClick('blogs')} value="blogs">
-        Blogs
+        <div className={styles.responsiveMenuItem}>
+          <Image src={Blogs} alt="Blogs" />
+          <span>Blogs</span>
+        </div>
       </MenuItem>
     </Select>
   )
@@ -1701,9 +1869,9 @@ const Search: React.FC<Props> = ({ data, children }) => {
             ref={exploreMoreRef}
           >
             <aside className={styles['aside-two']} ref={mainContentRef}>
-              <ExploreSidebarBtn
+              <ExploreMoreBtn
                 text="Explore More"
-                href="/explore"
+                // href="/explore"
                 icon={<ExploreIcon />}
               />
               <InterestedDiv
@@ -1719,11 +1887,7 @@ const Search: React.FC<Props> = ({ data, children }) => {
           </div>
         ) : (
           <aside className={styles['aside-two']}>
-            <ExploreSidebarBtn
-              text="Explore More"
-              href="/explore"
-              icon={<ExploreIcon />}
-            />
+            <ExploreMoreBtn text="Explore More" icon={<ExploreIcon />} />
             <InterestedDiv
               seeMoreWhatsNew={seeMoreWhatsNew}
               setSeeMoreWhatsNew={setSeeMoreWhatsNew}

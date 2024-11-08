@@ -53,7 +53,10 @@ const index = () => {
       </div>
       <div className={styles['flexRowContainer']}>
         <button
-          onClick={() => router.refresh()}
+          onClick={() => {
+            router.refresh()
+            router.back()
+          }}
           className={styles.btnSecondary}
         >
           Refresh

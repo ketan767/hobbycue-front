@@ -50,14 +50,17 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
             border-bottom:none;
           }
           .ql-container.ql-snow {
-            width: 87vw;
+            width: 100%;
+            max-width: 100%;
             border:none;
           }
           .ql-editor{
             border: none !important;
-            width: 87vw;
+            width: 100%;
+            max-width: 100%;
             border-top:1px solid #ccc;
-
+            padding-right:16px;
+            margin-inline: auto;
           }
           .ql-editor.ql-indent-1{
             padding-left:4px;
@@ -65,11 +68,31 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
           .ql-editor ul, 
           .ql-editor ol {
             padding-left: 4px;  
+            text-align:justify; 
           }
 
           .ql-editor a {
             color: rgb(128, 100, 162);  
-             text-decoration: none !important;
+            text-decoration: none !important;
+            text-align:justify;
+          }
+          .ql-editor p {
+            text-align:justify;
+          }
+          @media screen and (max-width:1100px) {
+            .ql-editor{
+              width:99vw;
+              max-width: 115%;
+            }
+            .ql-toolbar.ql-snow {
+              width: 100%;
+              border-left:none;
+              border-right:none;
+              border-bottom:none;
+              padding:8px;
+              flex-wrap: wrap;
+              height:100px;   
+            }
           }
           
         `}

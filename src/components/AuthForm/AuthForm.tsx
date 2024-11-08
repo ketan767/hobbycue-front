@@ -585,7 +585,8 @@ const AuthForm: React.FC<Props> = (props) => {
               }}
               variant="outlined"
               autoComplete={
-                selectedTab === 'join-in' ? 'new-password' : 'current-password'
+                // selectedTab === 'join-in' ? 'new-password' : 'current-password'
+                'off'
               }
               size="small"
               name="password"

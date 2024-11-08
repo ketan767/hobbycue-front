@@ -46,6 +46,14 @@ import { setFilters } from '@/redux/slices/post'
 import { getAllEvents, getListingPages } from '@/services/listing.service'
 import { getAllPosts } from '@/services/post.service'
 import { getAllBlogs } from '@/services/blog.services'
+import {
+  setCategory,
+  setHobby,
+  setKeyword,
+  setLocation,
+  setSearching,
+  setSub_category,
+} from '@/redux/slices/explore'
 type Props = {
   handleClose: any
 }
@@ -113,7 +121,16 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         dispatch(resetSearch())
         await ExplorePeople()
         dispatch(showAllPeopleTrue())
-        router.push('/explore/people')
+        dispatch(setCategory('People'))
+        dispatch(setSearching(true))
+        dispatch(setSub_category(''))
+        dispatch(setKeyword(''))
+        dispatch(setHobby(''))
+        dispatch(setLocation(''))
+        router.push({
+          pathname: '/explore/people',
+          query: { category: 'People' },
+        })
         dispatch(setExplore(true))
         handleClose()
         break
@@ -122,7 +139,16 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         await ExplorePlaces()
         dispatch(showAllPlaceTrue())
         dispatch(setExplore(true))
-        router.push('/explore/places')
+        dispatch(setCategory('Place'))
+        dispatch(setSearching(true))
+        dispatch(setSub_category(''))
+        dispatch(setKeyword(''))
+        dispatch(setHobby(''))
+        dispatch(setLocation(''))
+        router.push({
+          pathname: '/explore/places',
+          query: { category: 'Place' },
+        })
         handleClose()
         break
       case 'Programs - Events':
@@ -130,7 +156,16 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         await ExploreEvents()
         dispatch(showAllEventTrue())
         dispatch(setExplore(true))
-        router.push('/explore/programs')
+        dispatch(setCategory('Program'))
+        dispatch(setSearching(true))
+        dispatch(setSub_category(''))
+        dispatch(setKeyword(''))
+        dispatch(setHobby(''))
+        dispatch(setLocation(''))
+        router.push({
+          pathname: '/explore/programs',
+          query: { category: 'Program' },
+        })
         handleClose()
         break
       case 'Products - Store':
@@ -138,7 +173,16 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         await ExploreProducts()
         dispatch(showAllProductsTrue())
         dispatch(setExplore(true))
-        router.push('/explore/products')
+        dispatch(setCategory('Product'))
+        dispatch(setSearching(true))
+        dispatch(setSub_category(''))
+        dispatch(setKeyword(''))
+        dispatch(setHobby(''))
+        dispatch(setLocation(''))
+        router.push({
+          pathname: '/explore/products',
+          query: { category: 'Product' },
+        })
         handleClose()
         break
       case 'Perspectives - Blogs':

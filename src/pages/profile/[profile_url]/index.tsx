@@ -301,8 +301,7 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
     }
     return hasError
   }
-  console.log({ pageData: data.pageData })
-  // if(!user.is_onboarded && pageData?.email!==user?.email) {return(<ErrorPage/>)}
+
   return (
     <>
       <Head>
@@ -343,7 +342,8 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
               }`}
             >
               <div className={styles['display-mobile-initial']}>
-                {data?.pageData?.description?.trim()?.length > 0 && (
+                {htmlToPlainTextAdv(data?.pageData?.description).trim().length >
+                  0 && (
                   <PageContentBox
                     showEditButton={profileLayoutMode === 'edit'}
                     onEditBtnClick={() =>
@@ -415,6 +415,7 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
 
             <main>
               {/* User About for desktop view*/}
+
               <div className={styles['display-desktop']}>
                 <PageContentBox
                   showEditButton={profileLayoutMode === 'edit'}
@@ -426,10 +427,13 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
                   setDisplayData={setDisplayAbout}
                 >
                   <h4>About</h4>
-                  <div
-                    className={`${styles['color-light']} ${styles['about-text']} `}
-                    dangerouslySetInnerHTML={{ __html: pageData?.about }}
-                  ></div>
+
+                  <div className={`ql-snow`}>
+                    <div
+                      className={`ql-editor ${styles['ql-editor']} ${styles['fontFouteen']}`}
+                      dangerouslySetInnerHTML={{ __html: pageData?.about }}
+                    ></div>
+                  </div>
                 </PageContentBox>
               </div>
 
@@ -560,10 +564,16 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
                 >
                   <h4>About</h4>
                   {pageData?.about && (
-                    <div
-                      className={`${styles['color-light']} ${styles['about-text']} ${styles['about-text-mobile']}`}
-                      dangerouslySetInnerHTML={{ __html: pageData?.about }}
-                    ></div>
+                    // <div
+                    //   className={`${styles['color-light']} ${styles['about-text']} ${styles['about-text-mobile']}`}
+                    //   dangerouslySetInnerHTML={{ __html: pageData?.about }}
+                    // ></div>
+                    <div className={`ql-snow`}>
+                      <div
+                        className={`ql-editor ${styles['ql-editor']}`}
+                        dangerouslySetInnerHTML={{ __html: pageData?.about }}
+                      ></div>
+                    </div>
                   )}
                 </PageContentBox>
               </div>
