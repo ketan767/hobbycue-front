@@ -539,6 +539,9 @@ line-height: 22px; /* 169.231% */
   position: relative;
   margin-left: auto;
   z-index: 1;
+  display: flex;
+  gap: 16px;
+  align-items: center;
 }
 .count {
   display: inline-block;
