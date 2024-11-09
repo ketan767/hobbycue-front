@@ -23,11 +23,7 @@ import { getAllListingCategories } from '@/services/listing.service'
 import { isEmptyField } from '@/utils'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  setCategory,
-  setSearching,
-  setSub_category,
-} from '@/redux/slices/explore'
+import { setCategory, setSearching, setPageType } from '@/redux/slices/explore'
 import { RootState } from '@/redux/store'
 
 interface AccordianMenuProps {
@@ -76,10 +72,11 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
   // const [subCategory, setSubCategory] = useState('')
   const searchCategoryRef = useRef<HTMLDivElement>(null)
   const dispatch = useDispatch()
-  const { category: currCategory, sub_category } = useSelector(
+  const { category: currCategory, page_type: currPageType } = useSelector(
     (state: RootState) => state.explore,
   )
-  const [categoryInput, setCategoryInput] = useState('')
+  // const [categoryInput, setCategoryInput] = useState('')
+  const [isCategoryFilled, setIsCategoryFilled] = useState(false)
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget)
@@ -97,24 +94,24 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
   }
 
   const handleValueChange = (
-    name?: string | undefined,
-    subCategory?: string | undefined,
+    page_type?: string | undefined,
+    category?: string | undefined,
   ) => {
-    if (subCategory) {
-      //   setSubCategory({ value: subCategory, error: null })
-      //   setValue({ value: '', error: null })
+    if (category) {
+      // setSubCategory({ value: subCategory, error: null })
+      // setValue({ value: '', error: null })
 
       // searchResult(undefined, undefined, subCategory)
-      dispatch(setSub_category(subCategory))
-      dispatch(setCategory(''))
-    } else if (name) {
-      //   setSubCategory({ value: '', error: null })
+      dispatch(setCategory(category))
+      dispatch(setPageType(''))
+    } else if (page_type) {
+      // setSubCategory({ value: '', error: null })
       // setCategoryValue(name)
-      setCategoryInput(name)
-      //   setValue({ value: name, error: null })
+      // setCategoryInput(page_type)
+      // setValue({ value: name, error: null })
       // searchResult(name)
-      dispatch(setSub_category(''))
-      dispatch(setCategory(name))
+      dispatch(setCategory(''))
+      dispatch(setPageType(page_type))
     }
   }
   const handleCategoryInputChange = (e: any) => {
@@ -123,13 +120,17 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
     // setCategoryInput(e.target.value)
 
     // whille typing we always setting the subCategory
-    dispatch(setSub_category(e.target.value))
-    dispatch(setCategory(''))
+    dispatch(setCategory(e.target.value))
+    dispatch(setPageType(''))
+    if (e.target.value === '') {
+      setIsCategoryFilled(false)
+      // alert('false')
+    }
 
     if (isEmptyField(e.target.value)) {
       // dispatch(setSearching(true))
+      dispatch(setPageType(''))
       dispatch(setCategory(''))
-      dispatch(setSub_category(''))
       return setFilteredDropdownList(categoryDropdownList)
     }
 
@@ -159,22 +160,25 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
         break
       case 'Enter':
         // e.stopPropagation()
-        if (sub_category.length !== 0 && categoryIndex === -1) {
+        if (currCategory.length !== 0 && categoryIndex === -1) {
           //AddButtonRef.current?.click()
           handleSubmit()
-        } else if (categoryIndex !== -1 && showCategoryDropdown) {
-          setShowCategoryDropdown(false)
+        } else if (categoryIndex !== -1) {
           // setCategoryValue(filteredDropdownList[categoryIndex].listingCategory)
-          setCategoryInput(filteredDropdownList[categoryIndex].listingCategory)
-
-          dispatch(
-            setSub_category(
-              filteredDropdownList[categoryIndex].listingCategory,
-            ),
-          )
+          // setCategoryInput(filteredDropdownList[categoryIndex].listingCategory)
+          setShowCategoryDropdown(false)
+          if (showCategoryDropdown) {
+            dispatch(
+              setCategory(filteredDropdownList[categoryIndex].listingCategory),
+            )
+          }
+          if (isCategoryFilled) {
+            handleSubmit()
+          }
+          setIsCategoryFilled(true)
+          // alert('True')
           //   searchResult()
-          handleSubmit()
-        } else if (categoryIndex === -1 && sub_category.length === 0) {
+        } else if (categoryIndex === -1 && currCategory.length === 0) {
           setShowCategoryDropdown(false)
           //   setValue({ value: '', error: null })
 
@@ -223,22 +227,33 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
       })
 
       const peoplesSubCat = sortedCategories.filter(
-        (category: DropdownListItem) => category.pageType === 'People',
+        (category: DropdownListItem) =>
+          category.pageType === 'People' && category.Show === 'Y',
       )
       const placeSubCat = sortedCategories.filter(
-        (category: DropdownListItem) => category.pageType === 'Place',
+        (category: DropdownListItem) =>
+          category.pageType === 'Place' && category.Show === 'Y',
       )
       const programSubCat = sortedCategories.filter(
-        (category: DropdownListItem) => category.pageType === 'Program',
+        (category: DropdownListItem) =>
+          category.pageType === 'Program' && category.Show === 'Y',
       )
       const productSubCat = sortedCategories.filter(
-        (category: DropdownListItem) => category.pageType === 'Product',
+        (category: DropdownListItem) =>
+          category.pageType === 'Product' && category.Show === 'Y',
       )
       setPeopleSubcategory(peoplesSubCat)
       setPlaceSubcategory(placeSubCat)
       setProgramSubcategory(programSubCat)
       setProductSubcategory(productSubCat)
-      setCategoryDropdownList(sortedCategories)
+      setCategoryDropdownList(
+        [
+          ...peoplesSubCat,
+          ...placeSubCat,
+          ...programSubCat,
+          ...productSubCat,
+        ].sort(),
+      )
     }
     fetchCategories()
   }, [])
@@ -265,14 +280,16 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
               setShowCategoryDropdown(true)
             }}
             onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-              setShowCategoryDropdown(true)
-
-              handleCategoryKeyDown(e)
-              if (e.key === 'Enter') {
-                handleSubmit()
+              if (!isCategoryFilled) {
+                setShowCategoryDropdown(true)
               }
+              handleCategoryKeyDown(e)
+              // if (e.key === 'Enter') {
+              // handleSubmit()
+              // alert('Enter')
+              // }
             }}
-            value={currCategory ? currCategory : sub_category}
+            value={currCategory ? currCategory : currPageType}
             onBlur={() =>
               setTimeout(() => {
                 setShowCategoryDropdown(false)
@@ -322,7 +339,7 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
                     key={category._id}
                     onClick={() => {
                       // setCategoryValue(category.listingCategory)
-                      setCategoryInput(category.listingCategory)
+                      // setCategoryInput(category.listingCategory)
                       //   setValue({ value: '', error: null })
 
                       // searchResult(
@@ -330,14 +347,14 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
                       //   undefined,
                       //   category.listingCategory,
                       // )
-                      dispatch(setSub_category(category.listingCategory))
-                      dispatch(setCategory(''))
+                      dispatch(setCategory(category.listingCategory))
+                      dispatch(setPageType(''))
                     }}
-                    className={
+                    className={`${styles['text-left']} ${
                       index === categoryIndex
                         ? styles['dropdown-option-focus']
                         : ''
-                    }
+                    }`}
                   >
                     {category.listingCategory}
                   </p>
@@ -422,7 +439,7 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
                           setIsProgramOpened(false)
                           setIsProductOpened(false)
                           // setCategoryValue(subcategory.listingCategory)
-                          setCategoryInput(subcategory.listingCategory)
+                          // setCategoryInput(subcategory.listingCategory)
                           handleClose()
                           //   setValue({ value: '', error: null })
 
@@ -451,7 +468,7 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
                         setIsProgramOpened(false)
                         setIsProductOpened(false)
                         // setCategoryValue(subcategory.listingCategory)
-                        setCategoryInput(subcategory.listingCategory)
+                        // setCategoryInput(subcategory.listingCategory)
                         handleClose()
                         // setValue({ value: '', error: null })
 
@@ -525,7 +542,7 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
                           setIsProgramOpened(false)
                           setIsProductOpened(false)
                           // setCategoryValue(subcategory.listingCategory)
-                          setCategoryInput(subcategory.listingCategory)
+                          // setCategoryInput(subcategory.listingCategory)
                           handleClose()
                           //   setValue({ value: '', error: null })
 
@@ -554,7 +571,7 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
                         setIsProgramOpened(false)
                         setIsProductOpened(false)
                         // setCategoryValue(subcategory.listingCategory)
-                        setCategoryInput(subcategory.listingCategory)
+                        // setCategoryInput(subcategory.listingCategory)
                         handleClose()
                         // setValue({ value: '', error: null })
 
@@ -633,7 +650,7 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
                           setIsProgramOpened(false)
                           setIsProductOpened(false)
                           // setCategoryValue(subcategory.listingCategory)
-                          setCategoryInput(subcategory.listingCategory)
+                          // setCategoryInput(subcategory.listingCategory)
                           handleClose()
                           //   setValue({ value: '', error: null })
 
@@ -662,7 +679,7 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
                         setIsProgramOpened(false)
                         setIsProductOpened(false)
                         // setCategoryValue(subcategory.listingCategory)
-                        setCategoryInput(subcategory.listingCategory)
+                        // setCategoryInput(subcategory.listingCategory)
                         // setValue({ value: '', error: null })
 
                         handleClose()
@@ -741,7 +758,7 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
                           setIsProgramOpened(false)
                           setIsProductOpened(false)
                           // setCategoryValue(subcategory.listingCategory)
-                          setCategoryInput(subcategory.listingCategory)
+                          // setCategoryInput(subcategory.listingCategory)
                           //   setValue({ value: '', error: null })
                           handleClose()
                           handleValueChange(
@@ -769,7 +786,7 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
                         setIsProgramOpened(false)
                         setIsProductOpened(false)
                         // setCategoryValue(subcategory.listingCategory)
-                        setCategoryInput(subcategory.listingCategory)
+                        // setCategoryInput(subcategory.listingCategory)
                         // setValue({ value: '', error: null })
 
                         handleClose()

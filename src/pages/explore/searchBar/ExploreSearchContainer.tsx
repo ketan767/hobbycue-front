@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './ExploreSearchContainer.module.css'
 
-import { IconButton, InputAdornment, MenuItem, TextField } from '@mui/material'
+import { TextField } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { RootState } from '@/redux/store'
@@ -31,7 +31,7 @@ import {
   setKeyword,
   setLocation,
   setSearching,
-  setSub_category,
+  setPageType,
 } from '@/redux/slices/explore'
 import { ParsedUrlQueryInput } from 'querystring'
 
@@ -101,9 +101,10 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
   const { hobby } = query
   const { category } = query
   const { location } = query
-  const { sub_category } = query
+  const { page_type } = query
   const searchInputRef = useRef<HTMLInputElement>(null)
   const searchHobbyRef = useRef<HTMLInputElement>(null)
+  const [isHobbySelected, setIsHobbySelected] = useState<boolean>(false)
   // const searchPageRef = useRef<HTMLInputElement>(null)
   // const locationDropdownArrowRef = useRef<HTMLDivElement>(null)
   // const [isWriting, setIsWriting] = useState(false)
@@ -113,7 +114,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     keyword: currKeyword,
     hobby: currHobby,
     category: currCategory,
-    sub_category: currSub_category,
+    page_type: currPageType,
     location: currLocation,
   } = useSelector((state: RootState) => state.explore)
 
@@ -154,9 +155,11 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     if (e.target.value === '') {
       setFilterData((prev) => ({ ...prev, hobby: '' }))
     }
+    setIsHobbySelected(false)
+
     if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
 
-    const query = `fields=display,genre&level=5&level=3&level=2&search=${e.target.value}`
+    const query = `fields=display,genre&level=5&level=4&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
 
     if (err) return console.log(err)
@@ -180,21 +183,20 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     setHobbyDropdownList(sortedHobbies)
   }
 
-  const [currentCategory, setCurrentCategory] = useState({
-    value: defaultCategory ? (category ? category.toString() : '') : 'All',
-    error: null,
-  })
-  const [subCategory, setSubCategory] = useState({
-    value: sub_category ? sub_category.toString() : '',
-    error: null,
-  })
-  const [categoryValue, setCategoryValue] = useState(
-    sub_category
-      ? sub_category.toString()
-      : category
-      ? category.toString()
-      : '',
-  )
+  // ----commented out start--------- 8/11/24
+  // const [currentCategory, setCurrentCategory] = useState({
+  //   value: defaultCategory ? (category ? category.toString() : '') : 'All',
+  //   error: null,
+  // })
+  // const [subCategory, setSubCategory] = useState({
+  //   value: page_type ? page_type.toString() : '',
+  //   error: null,
+  // })
+  // const [categoryValue, setCategoryValue] = useState(
+  //   page_type ? page_type.toString() : category ? category.toString() : '',
+  // )
+  // ----commented out start--------- 8/11/24
+
   // const [data, setData] = useState<SearchInput>({
   //   search: { value: '', error: null },
   //   hobby: { value: '', error: null },
@@ -308,6 +310,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
             suggestions[focusedLocationIdx]?.place_id,
           )
           dispatch(setLocation(suggestions[focusedLocationIdx]?.description[0]))
+          // console.log('Enter is pressed in location')
           // setSelectedAddress(
           //   suggestions[focusedLocationIdx]?.description.toString(),
           // )
@@ -358,38 +361,30 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
 
       case 'Enter':
         e.stopPropagation()
-        // if (hobbyInputValue.length !== 0 && !showHobbyDropdown) {
-        //   //AddButtonRef.current?.click()
-        // } else if (focusedHobbyIndex !== -1 && showHobbyDropdown) {
-        //   setShowHobbyDropdown(false)
-        //   const val =
-        //     hobbyDropdownList[focusedHobbyIndex]?.display || hobbyInputValue
-        //   if (val) {
-        //     setHobbyInputValue(val)
-        //   }
-
-        //   // searchResult(undefined, val, undefined)
-        //   searchResult()
-        //   console.log('hobbyDropdownList', hobbyDropdownList)
-        // } else if (focusedHobbyIndex === -1 && hobbyInputValue.length == 0) {
-        //   setShowHobbyDropdown(false)
-        //   // handleGenreInputFocus();
-        // }
-        if (currHobby.length !== 0 && !showHobbyDropdown) {
+        if (currHobby.length !== 0 && focusedHobbyIndex === -1) {
           //AddButtonRef.current?.click()
-        } else if (focusedHobbyIndex !== -1 && showHobbyDropdown) {
+        } else if (focusedHobbyIndex !== -1) {
           setShowHobbyDropdown(false)
-          const val = hobbyDropdownList[focusedHobbyIndex]?.display || currHobby
-          if (val) {
-            dispatch(setHobby(val))
+          if (showHobbyDropdown) {
+            const val =
+              hobbyDropdownList[focusedHobbyIndex]?.display || currHobby
+            if (val) {
+              dispatch(setHobby(val))
+            }
           }
 
           // searchResult(undefined, val, undefined)
-          searchResult()
+          if (isHobbySelected) {
+            searchResult()
+          }
+          alert('Enter')
+
+          setIsHobbySelected(true)
           console.log('hobbyDropdownList', hobbyDropdownList)
         } else if (focusedHobbyIndex === -1 && currHobby.length == 0) {
           setShowHobbyDropdown(false)
           // handleGenreInputFocus();
+          searchResult()
         }
         break
       default:
@@ -417,52 +412,19 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
       }
     }
   }
-
-  const containsFourPs = (categoryValue: string) => {
-    return (
-      categoryValue === 'People' ||
-      categoryValue === 'Place' ||
-      categoryValue === 'Product' ||
-      categoryValue === 'Program'
-    )
-  }
   const searchResult = () => {
-    // const keyword = data.search.value.trim()
-    // const hobby = hobby.value.trim()
-    // let cate = currentCategory.value
-    // if (containsFourPs(categoryValue)) {
-    //   cate = categoryValue
-    // }
-    // if (category) {
-    //   cate = category
-    // }
-    // let subCate = subCategory.value
-    // if (sub_category) {
-    //   subCate = sub_category
-    // } else if (categoryValue.length > 0 && !containsFourPs(categoryValue)) {
-    //   subCate = categoryValue
-    // }
-    // alert(
-    //   'Cate:' + cate + ' sub:' + subCate + ' categoryValue:' + categoryValue,
-    // )
-
-    // let hobb = hobbyInputValue
-    // if (hobby) {
-    //   hobb = hobby
-    // }
-    // alert(currHobby)
-    // alert('Searching...')
     dispatch(setSearching(true))
     if (
       !currKeyword &&
       !currHobby &&
       !currLocation &&
       !currCategory &&
-      !currSub_category
+      !currPageType
     ) {
       redirect('')
       return
     }
+    // alert(currLocation)
     let query = {}
     if (currKeyword) {
       query = { ...query, keyword: currKeyword }
@@ -472,7 +434,11 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     }
 
     if (currLocation) {
-      query = { ...query, location: currLocation }
+      query = {
+        ...query,
+        location:
+          suggestions[focusedLocationIdx]?.description[0] || currLocation,
+      }
     }
     if (currCategory) {
       // alert('category....'+cate)
@@ -480,31 +446,9 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
         ...query,
         category: currCategory,
       }
-    } else if (currSub_category) {
-      query = { ...query, sub_category: currSub_category }
+    } else if (currPageType) {
+      query = { ...query, ['page-type']: currPageType }
     }
-    // if ((sub_category && subCate !== '') || (subCate && subCate !== '')) {
-    //   // alert('sub.....'+subCate)
-    //   if (category) {
-    //     // alert('category....'+cate)
-    //     query = {
-    //       ...query,
-    //       category: cate,
-    //     }
-    //   } else {
-    //     query = { ...query, sub_category: subCate }
-    //   }
-    // } else if (cate === categoryValue && subCate && subCate !== '') {
-    //   query = { ...query, sub_category: subCate }
-    // } else if (cate && cate !== 'All' && cate !== 'Empty') {
-    //   // alert('all.....')
-    //   query = { ...query, category: cate }
-    // }
-
-    // alert(
-    //   'Cate:' + cate + ' sub:' + subCate + ' categoryValue:' + categoryValue,
-    // )
-    // if (keyword || hobby || cate || subCate) {
     redirect(query)
   }
   const redirect = (query: string | ParsedUrlQueryInput | null | undefined) => {
@@ -520,89 +464,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
       })
     }
   }
-  // const searchResult = (
-  //   category?: string,
-  //   hobby?: string,
-  //   sub_category?: string,
-  // ) => {
-  //   const keyword = data.search.value.trim()
-  //   // const hobby = hobby.value.trim()
-  //   let cate = currentCategory.value
-  //   if (containsFourPs(categoryValue)) {
-  //     cate = categoryValue
-  //   }
-  //   if (category) {
-  //     cate = category
-  //   }
-  //   let subCate = subCategory.value
-  //   if (sub_category) {
-  //     subCate = sub_category
-  //   } else if (categoryValue.length > 0 && !containsFourPs(categoryValue)) {
-  //     subCate = categoryValue
-  //   }
-  //   // alert(
-  //   //   'Cate:' + cate + ' sub:' + subCate + ' categoryValue:' + categoryValue,
-  //   // )
 
-  //   let hobb = hobbyInputValue
-  //   if (hobby) {
-  //     hobb = hobby
-  //   }
-  //   let query = {}
-  //   if (keyword) {
-  //     query = { ...query, keyword: keyword }
-  //   }
-  //   if (hobb) {
-  //     query = { ...query, hobby: hobb }
-  //   }
-
-  //   if (Addressdata.street) {
-  //     query = { ...query, location: Addressdata.street.trim() }
-  //   }
-  //   if ((sub_category && subCate !== '') || (subCate && subCate !== '')) {
-  //     // alert('sub.....'+subCate)
-  //     if (category) {
-  //       // alert('category....'+cate)
-  //       query = {
-  //         ...query,
-  //         category: cate,
-  //       }
-  //     } else {
-  //       query = { ...query, sub_category: subCate }
-  //     }
-  //   } else if (cate === categoryValue && subCate && subCate !== '') {
-  //     query = { ...query, sub_category: subCate }
-  //   } else if (cate && cate !== 'All' && cate !== 'Empty') {
-  //     // alert('all.....')
-  //     query = { ...query, category: cate }
-  //   }
-
-  //   // alert(
-  //   //   'Cate:' + cate + ' sub:' + subCate + ' categoryValue:' + categoryValue,
-  //   // )
-  //   // if (keyword || hobby || cate || subCate) {
-  //   if (defaultCategory && defaultCategory !== 'People') {
-  //     router.push({
-  //       pathname: `/explore/${defaultCategory?.toLowerCase() + 's'}`,
-  //       query: query,
-  //     })
-  //   } else {
-  //     router.push({
-  //       pathname: `/explore/${defaultCategory?.toLowerCase()}`,
-  //       query: query,
-  //     })
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   // Set up a debounce timeout
-  //   const timer = setTimeout(() => {
-  //     searchResult()
-  //   }, 500)
-
-  //   // Clear the timeout if dependencies change before the delay is over
-  //   return () => clearTimeout(timer)
-  // }, [currKeyword, currHobby, currLocation, currCategory, currSub_category])
   useEffect(() => {
     if (keyword) {
       dispatch(setKeyword(keyword.toString()))
@@ -612,8 +474,8 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     }
     if (category) {
       dispatch(setCategory(category.toString()))
-    } else if (sub_category) {
-      dispatch(setSub_category(sub_category.toString()))
+    } else if (page_type) {
+      dispatch(setPageType(page_type.toString()))
     }
     if (location) {
       dispatch(setLocation(location.toString()))
@@ -708,13 +570,15 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                   setShowHobbyDropdown(true)
                 }}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  setShowHobbyDropdown(true)
-
-                  handleHobbyKeyDown(e)
-                  if (e.key === 'Enter') {
-                    setShowHobbyDropdown(false)
-                    searchResult()
+                  if (e.key !== 'Enter') {
+                    setShowHobbyDropdown(true)
+                    setIsHobbySelected(false)
                   }
+                  handleHobbyKeyDown(e)
+                  // if (e.key === 'Enter') {
+                  //   setShowHobbyDropdown(false)
+                  //   searchResult()
+                  // }
                 }}
                 value={currHobby}
                 onBlur={() =>
@@ -754,20 +618,13 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                       <p
                         key={hobby._id}
                         onClick={() => {
-                          // setData((prev) => ({
-                          //   ...prev,
-                          //   hobby: { value: hobby.display, error: null },
-                          // }))
                           dispatch(setHobby(hobby.display))
-
-                          // console.warn({ hobby })
                           setFilterData((prev) => ({
                             category: hobby.category?._id ?? prev.category,
                             subCategory:
                               hobby.sub_category?._id ?? prev.subCategory,
                             hobby: hobby._id,
                           }))
-                          // searchResult(undefined, hobby.display)
                           // searchResult()
                         }}
                         className={
@@ -786,13 +643,9 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
 
             <div className={styles.locationHiddenMobile}>
               <AccordionMenu
-                value={currentCategory.value}
-                setValue={setCurrentCategory}
-                subCategory={subCategory.value}
-                setSubCategory={setSubCategory}
+                // setValue={setCurrentCategory}
+                // setSubCategory={setSubCategory}
                 searchResult={searchResult}
-                categoryValue={categoryValue}
-                setCategoryValue={setCategoryValue}
               />
             </div>
             <div className={styles.hobbySuggestion}>
@@ -877,13 +730,9 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
           <div className={styles.searchFlex}>
             <div className={styles.locationMobile}>
               <AccordionMenu
-                value={currentCategory.value}
-                setValue={setCurrentCategory}
-                subCategory={subCategory.value}
-                setSubCategory={setSubCategory}
+                // setValue={setCurrentCategory}
+                // setSubCategory={setSubCategory}
                 searchResult={searchResult}
-                categoryValue={categoryValue}
-                setCategoryValue={setCategoryValue}
               />
             </div>
             <div>

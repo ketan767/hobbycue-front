@@ -23,7 +23,7 @@ const People: React.FC<Props> = ({ data: initialData }) => {
   const { hobby } = query
   const { category } = query
   const { location } = query
-  const { sub_category } = query
+  const page_type = query['page-type']
 
   const [data, setData] = useState(initialData || [])
   const [page, setPage] = useState(1) // Tracks the current page
@@ -41,20 +41,19 @@ const People: React.FC<Props> = ({ data: initialData }) => {
     let queryString = `sort=-createdAt&is_published=true&populate=_hobbies,_address,product_variant,seller&page=${
       page + 1
     }&limit=20`
-    if (category && category !== 'All') {
+    if (page_type && page_type !== 'All') {
       let type = 1
-      if (category === 'Place') {
+      if (page_type === 'Place') {
         type = 2
-      } else if (category === 'Program') {
+      } else if (page_type === 'Program') {
         type = 3
-      } else if (category === 'Product') {
+      } else if (page_type === 'Product') {
         type = 4
       }
       queryString = `type=${encodeURIComponent(type.toString())}&` + queryString
-    } else if (sub_category) {
+    } else if (category) {
       queryString =
-        `page_type=${encodeURIComponent(sub_category.toString())}&` +
-        queryString
+        `page_type=${encodeURIComponent(category.toString())}&` + queryString
     }
 
     if (keyword) {
@@ -91,14 +90,14 @@ const People: React.FC<Props> = ({ data: initialData }) => {
     } finally {
       setLoading(false)
     }
-  }, [page, loading, hasMore, keyword, category, hobby, location, sub_category])
+  }, [page, loading, hasMore, keyword, category, hobby, location, page_type])
 
   useEffect(() => {
     setPage(1)
     setShowHobbyDropdown(false)
     setShowAutoAddress(false)
     setData(initialData)
-  }, [keyword, category, hobby, location, sub_category])
+  }, [keyword, category, hobby, location, page_type])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -201,19 +200,19 @@ const People: React.FC<Props> = ({ data: initialData }) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   let queryString = `sort=-createdAt&is_published=true&populate=_hobbies,_address,product_variant,seller&page=1&limit=20`
   const { query } = context
-  if (query.category && query.category !== 'All') {
+  if (query['page-type'] && query['page-type'] !== 'All') {
     let type = 1
-    if (query.category === 'Place') {
+    if (query['page-type'] === 'Place') {
       type = 2
-    } else if (query.category === 'Program') {
+    } else if (query['page-type'] === 'Program') {
       type = 3
-    } else if (query.category === 'Product') {
+    } else if (query['page-type'] === 'Product') {
       type = 4
     }
     queryString = `type=${encodeURIComponent(type.toString())}&` + queryString
-  } else if (query.sub_category) {
+  } else if (query.category) {
     queryString =
-      `page_type=${encodeURIComponent(query.sub_category.toString())}&` +
+      `page_type=${encodeURIComponent(query.category.toString())}&` +
       queryString
   }
   if (query.keyword) {

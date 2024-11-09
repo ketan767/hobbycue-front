@@ -5,7 +5,7 @@ interface SearchFields {
   keyword: string
   hobby: string
   category: string
-  sub_category: string
+  page_type: string
   location: string
   isSearching: boolean
 }
@@ -15,7 +15,7 @@ const initialState: SearchFields = {
   keyword: '',
   hobby: '',
   category: '',
-  sub_category: '',
+  page_type: '',
   location: '',
   isSearching: false,
 }
@@ -36,8 +36,8 @@ export const exploreSlice = createSlice({
     setCategory: (state, action: { payload: string }) => {
       state.category = action.payload
     },
-    setSub_category: (state, action: { payload: string }) => {
-      state.sub_category = action.payload
+    setPageType: (state, action: { payload: string }) => {
+      state.page_type = action.payload
     },
     setLocation: (state, action: { payload: string }) => {
       state.location = action.payload
@@ -53,7 +53,7 @@ export const {
   setKeyword,
   setHobby,
   setCategory,
-  setSub_category,
+  setPageType,
   setLocation,
   setSearching,
 } = exploreSlice.actions

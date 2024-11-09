@@ -21,7 +21,7 @@ import {
   setKeyword,
   setLocation,
   setSearching,
-  setSub_category,
+  setPageType,
 } from '@/redux/slices/explore'
 
 export default function Index() {
@@ -76,13 +76,13 @@ export default function Index() {
             <div className={addListingStyles['cards-wrapper']}>
               <section
                 onClick={() => {
-                  dispatch(setCategory('People'))
+                  dispatch(setCategory(''))
+                  dispatch(setPageType('People'))
                   dispatch(setSearching(true))
-                  dispatch(setSub_category(''))
                   dispatch(setKeyword(''))
                   dispatch(setHobby(''))
                   dispatch(setLocation(''))
-                  router.push('/explore/people?category=People')
+                  router.push('/explore/people?page-type=People')
                 }}
                 className={`${addListingStyles['card']} ${addListingStyles['people']}`}
               >
@@ -108,13 +108,13 @@ export default function Index() {
               </section>
               <section
                 onClick={() => {
-                  dispatch(setCategory('Place'))
+                  dispatch(setCategory(''))
+                  dispatch(setPageType('Place'))
                   dispatch(setSearching(true))
-                  dispatch(setSub_category(''))
                   dispatch(setKeyword(''))
                   dispatch(setHobby(''))
                   dispatch(setLocation(''))
-                  router.push('/explore/places?category=Place')
+                  router.push('/explore/places?page-type=Place')
                 }}
                 className={`${addListingStyles['card']} ${addListingStyles['place']}`}
               >
@@ -140,13 +140,13 @@ export default function Index() {
               </section>
               <section
                 onClick={() => {
-                  dispatch(setCategory('Product'))
+                  dispatch(setCategory(''))
+                  dispatch(setPageType('Product'))
                   dispatch(setSearching(true))
-                  dispatch(setSub_category(''))
                   dispatch(setKeyword(''))
                   dispatch(setHobby(''))
                   dispatch(setLocation(''))
-                  router.push('/explore/products?category=Product')
+                  router.push('/explore/products?page-type=Product')
                 }}
                 className={`${addListingStyles['card']} ${addListingStyles['product']}`}
               >
@@ -181,13 +181,13 @@ export default function Index() {
               </section>
               <section
                 onClick={() => {
-                  dispatch(setCategory('Program'))
+                  dispatch(setCategory(''))
+                  dispatch(setPageType('Program'))
                   dispatch(setSearching(true))
-                  dispatch(setSub_category(''))
                   dispatch(setKeyword(''))
                   dispatch(setHobby(''))
                   dispatch(setLocation(''))
-                  router.push('/explore/programs?category=Program')
+                  router.push('/explore/programs?page-type=Program')
                 }}
                 className={`${addListingStyles['card']} ${addListingStyles['program']}`}
               >
