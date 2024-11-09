@@ -796,6 +796,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             search: { ...prev.search, value: '' },
                           }))
                           searchInputRef?.current?.focus()
+                          router.replace('/search')
                         }}
                         className={styles['search-cross-icon']}
                       >
@@ -1459,6 +1460,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           search: { ...prev.search, value: '' },
                         }))
                         searchInputRef?.current?.focus()
+                        router.replace('/search')
                       }}
                       className={styles['search-cross-icon-inside']}
                     >
