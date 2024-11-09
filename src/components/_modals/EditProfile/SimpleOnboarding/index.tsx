@@ -565,7 +565,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     dispatch(updateUser(response?.data?.data?.user))
     // window.location.href = '/community'
     dispatch(closeModal())
-    router.reload()
+    router.push(`/profile/${response?.data?.data?.user.profile_url}`)
   }
 
   useEffect(() => {
@@ -582,7 +582,6 @@ const SimpleOnboarding: React.FC<Props> = ({
 
   const checkProfileUrl = async () => {
     const token = localStorage.getItem('token')
-    if (!profileUrl) return false
 
     const headers = { Authorization: `Bearer ${token}` }
 
@@ -623,10 +622,6 @@ const SimpleOnboarding: React.FC<Props> = ({
       window.removeEventListener('click', handleClickOutside)
     }
   }, [ShowDropdown, ShowAutoAddress])
-
-  useEffect(() => {
-    checkProfileUrl()
-  }, [data.profile_url, user.profile_url])
 
   useEffect(() => {
     let profileUrl = data.full_name
