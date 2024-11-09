@@ -565,7 +565,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     dispatch(updateUser(response?.data?.data?.user))
     // window.location.href = '/community'
     dispatch(closeModal())
-    // router.reload()
+    router.reload()
   }
 
   useEffect(() => {
