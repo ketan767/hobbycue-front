@@ -290,15 +290,16 @@ const AuthForm: React.FC<Props> = (props) => {
   // Social Login Handle
   const googleAuthSuccess = async (e: any) => {
     dispatch(setShowPageLoader(true))
+    const gImgUrl = e.profileObj.imageUrl?.replace('s96-c', 's400-c')
     const { err, res } = await googleAuth({
       googleId: e.profileObj.googleId,
       tokenId: e.tokenId,
       name: e.profileObj.name,
-      imageUrl: e.profileObj.imageUrl,
+      imageUrl: gImgUrl,
       browser: deviceInfo?.browser,
       device: deviceInfo.device,
     })
-    console.log('g-image', e.profileObj.imageUrl)
+    console.log('g-image', gImgUrl)
     console.log('resgoogle', res)
     dispatch(setShowPageLoader(false))
     if (err) return console.log(err)
@@ -372,6 +373,7 @@ const AuthForm: React.FC<Props> = (props) => {
   const googleAuthFailure = (e: any) => console.log('Error in google login', e)
 
   const handleFacebookAuth = async (e: any) => {
+    console.log('Facebook image url : ', e.picture?.data?.url)
     if (!e.email) {
       return dispatch(openModal({ type: 'FBNoEmail', closable: true }))
     }

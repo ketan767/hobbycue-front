@@ -7,7 +7,8 @@ import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 import MailIcon from '@/assets/svg/mailicon.svg'
-import ShareIcon from '@/assets/svg/share-outlined.svg'
+// import ShareIcon from '@/assets/svg/share-outlined.svg'
+import ShareIcon from '@/assets/icons/ShareIcon'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import DefaultProfile from '@/assets/svg/default-images/default-hobbies.svg'
@@ -25,6 +26,7 @@ import {
 } from '@/services/user.service'
 import { CircularProgress } from '@mui/material'
 import VerticalBar from '@/assets/icons/VerticalBar'
+import CustomizedTooltips from '@/components/Tooltip/ToolTip'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -179,32 +181,39 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
               )}
             </FilledButton>
             {/* Send Email Button  */}
-            <div onClick={handleRepost} className={styles['action-btn']}>
-              <Image src={MailIcon} alt="share" />
-            </div>
+            <CustomizedTooltips title="Repost">
+              <div onClick={handleRepost} className={styles['action-btn']}>
+                <Image src={MailIcon} alt="share" />
+              </div>
+            </CustomizedTooltips>
 
             {/* Bookmark Button */}
-            <div
-              onClick={showFeatureUnderDevelopment}
-              className={styles['action-btn']}
-            >
-              <Tooltip title="Bookmark">
+            <CustomizedTooltips title="Bookmark">
+              <div
+                onClick={showFeatureUnderDevelopment}
+                className={styles['action-btn']}
+              >
                 <BookmarkBorderRoundedIcon color="primary" />
-              </Tooltip>
-            </div>
+              </div>
+            </CustomizedTooltips>
 
             {/* Share Button */}
-            <div onClick={handleShare} className={styles['action-btn']}>
-              <Image src={ShareIcon} alt="share" />
-            </div>
+            <CustomizedTooltips title="Share">
+              <div onClick={handleShare} className={styles['action-btn']}>
+                {/* <Image src={ShareIcon} alt="share" /> */}
+                <ShareIcon />
+              </div>
+            </CustomizedTooltips>
 
             {/* More Options Button */}
-            <div
-              onClick={(e) => showFeatureUnderDevelopment()}
-              className={styles['action-btn']}
-            >
-              <MoreHorizRoundedIcon color="primary" />
-            </div>
+            <CustomizedTooltips title="Click to view options">
+              <div
+                onClick={(e) => showFeatureUnderDevelopment()}
+                className={styles['action-btn']}
+              >
+                <MoreHorizRoundedIcon color="primary" />
+              </div>
+            </CustomizedTooltips>
           </div>
         </header>
 
