@@ -523,9 +523,9 @@ const SimpleOnboarding: React.FC<Props> = ({
     let reqBody: any = { ...Addressdata }
     // let reqBody: any = updateStreet()
 
-    if (!user?._addresses?.length && reqBody?.label === '') {
-      reqBody.label = 'Default'
-    }
+    // if (!user?._addresses?.length && reqBody?.label === '') {
+    reqBody.label = 'Default'
+    // }
 
     if (user?.primary_address?._id) {
       await updateUserAddress(user.primary_address._id, reqBody, (err, res) => {
