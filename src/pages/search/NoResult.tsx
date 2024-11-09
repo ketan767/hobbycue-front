@@ -99,7 +99,8 @@ const NoResult = () => {
 
     if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
 
-    const query = `fields=display,genre&level=5&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
+    // const query = `fields=display,genre&level=5&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
+    const query = `fields=display,genre&level=5&level=3&level=2&level=1&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
 
     if (err) return console.log(err)
