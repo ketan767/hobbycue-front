@@ -261,7 +261,7 @@ const ModalManager: React.FC = () => {
       }, 500)
   }, [activeModal])
 
-  console.log('showaddhobby', showAddHobbyModal)
+  // console.log('showaddhobby', showAddHobbyModal)
 
   const escFunction = useCallback(
     (event: KeyboardEvent) => {
