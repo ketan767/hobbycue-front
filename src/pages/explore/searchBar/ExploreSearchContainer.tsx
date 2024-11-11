@@ -439,9 +439,39 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     }
     if (currCategory) {
       // alert('category....'+cate)
-      query = {
-        ...query,
-        category: currCategory,
+      if (currCategory === 'People' || currCategory === 'people') {
+        query = {
+          ...query,
+          ['page-type']: 'People',
+        }
+        dispatch(setCategory(''))
+        dispatch(setPageType('People'))
+      } else if (currCategory === 'Place' || currCategory === 'place') {
+        query = {
+          ...query,
+          ['page-type']: 'Place',
+        }
+        dispatch(setCategory(''))
+        dispatch(setPageType('Place'))
+      } else if (currCategory === 'Product' || currCategory === 'product') {
+        query = {
+          ...query,
+          ['page-type']: 'Product',
+        }
+        dispatch(setCategory(''))
+        dispatch(setPageType('Product'))
+      } else if (currCategory === 'Program' || currCategory === 'program') {
+        query = {
+          ...query,
+          ['page-type']: 'Program',
+        }
+        dispatch(setCategory(''))
+        dispatch(setPageType('Program'))
+      } else {
+        query = {
+          ...query,
+          category: currCategory,
+        }
       }
     } else if (currPageType) {
       query = { ...query, ['page-type']: currPageType }
