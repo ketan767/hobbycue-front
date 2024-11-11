@@ -19,7 +19,13 @@ import {
 } from '@/services/auth.service'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { setHobby, setKeyword, setLocation } from '@/redux/slices/explore'
+import {
+  setCategory,
+  setHobby,
+  setKeyword,
+  setLocation,
+  setPageType,
+} from '@/redux/slices/explore'
 import AccordionMenu2 from '../explore/nestedDropdown/AccordionMenu2'
 type DropdownListItem = {
   _id: string
@@ -71,7 +77,7 @@ const NoResult = () => {
     ExtendedDropdownListItem[]
   >([])
   const [suggestions, setSuggestions] = useState<
-    { description: string; place_id: string }[]
+    { description: string[]; place_id: string }[]
   >([])
 
   const [categoryValue, setCategoryValue] = useState(
@@ -199,10 +205,14 @@ const NoResult = () => {
         if (data.predictions) {
           console.warn('suggestionsssss', data)
           setSuggestions(
-            data.predictions.map((prediction: any) => ({
-              description: prediction.description,
-              place_id: prediction.place_id,
-            })),
+            data.predictions.map(({ structured_formatting, place_id }: any) => {
+              const { main_text, secondary_text } = structured_formatting
+              const arr = [main_text, secondary_text]
+              return {
+                description: arr,
+                place_id: place_id,
+              }
+            }),
           )
         } else {
           console.error('Error fetching suggestions:', data.error)
@@ -259,29 +269,43 @@ const NoResult = () => {
   const handleLocationKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     switch (e.key) {
       case 'ArrowDown':
+        const downIndex =
+          focusedLocationIdx < suggestions.length - 1
+            ? focusedLocationIdx + 1
+            : focusedLocationIdx
         setFocusedLocationIdx((prevIndex) =>
           prevIndex < suggestions.length - 1 ? prevIndex + 1 : prevIndex,
         )
+        dispatch(setLocation(suggestions[downIndex]?.description[0]))
+
         break
       case 'ArrowUp':
+        const upIndex =
+          focusedLocationIdx > 0 ? focusedLocationIdx - 1 : focusedLocationIdx
         setFocusedLocationIdx((prevIndex) =>
           prevIndex > 0 ? prevIndex - 1 : prevIndex,
         )
+        dispatch(setLocation(suggestions[upIndex]?.description[0]))
         break
       case 'Enter':
         if (Addressdata.street.trim().length !== 0 && !showAutoAddress) {
         } else if (focusedLocationIdx !== -1 && showAutoAddress) {
           handleSelectAddressTwo(
-            suggestions[focusedLocationIdx]?.description,
+            suggestions[focusedLocationIdx]?.description?.join(', '),
             suggestions[focusedLocationIdx]?.place_id,
           )
-          setLocation(suggestions[focusedLocationIdx]?.description)
+          console.log(
+            'Changed location',
+            suggestions[focusedLocationIdx]?.description[0],
+          )
+          dispatch(setLocation(suggestions[focusedLocationIdx]?.description[0]))
         } else if (
           focusedLocationIdx === -1 &&
           Addressdata.street.trim().length !== 0
         ) {
           setShowAutoAddress(false)
         }
+        handleSubmit()
         break
       default:
         break
@@ -358,6 +382,7 @@ const NoResult = () => {
       } else {
         link += '?'
       }
+      console.log('curr location', currLocation)
       link += `location=${currLocation}`
     }
     if (keyword) {
@@ -378,6 +403,14 @@ const NoResult = () => {
     // }
     router.push(`${getLink()}`)
   }
+
+  useEffect(() => {
+    dispatch(setKeyword(''))
+    dispatch(setHobby(''))
+    dispatch(setLocation(''))
+    dispatch(setCategory(''))
+    dispatch(setPageType(''))
+  }, [])
 
   return (
     <div className={styles['no-results-wrapper']}>
@@ -532,10 +565,6 @@ const NoResult = () => {
                   handleLocationKeyDown(e)
                   if (e.key === 'Enter') {
                     setShowAutoAddress(false)
-                    // searchResult()
-                    if (e.key === 'Enter') {
-                      handleSubmit()
-                    }
                   }
                 }}
                 sx={{
@@ -569,10 +598,10 @@ const NoResult = () => {
                     <p
                       onClick={() => {
                         handleSelectAddressTwo(
-                          suggestion.description,
+                          suggestion.description.join(', '),
                           suggestion.place_id,
                         )
-                        setLocation(suggestion.description)
+                        setLocation(suggestion.description[0])
                       }}
                       key={index}
                       className={
@@ -581,7 +610,7 @@ const NoResult = () => {
                           : ''
                       }
                     >
-                      {suggestion.description}
+                      {suggestion.description.join(', ')}
                     </p>
                   ))}
                 </div>

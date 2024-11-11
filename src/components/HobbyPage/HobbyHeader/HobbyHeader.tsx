@@ -312,10 +312,14 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
 
         <section className={styles['center-container']}>
           <div className={styles['cover-img-wrapper']}>
+            <div
+              className={styles['background']}
+              style={{ backgroundImage: `url(${data?.cover_image})` }}
+            ></div>
             {data?.cover_image ? (
               <img
                 onClick={OpenCoverImage}
-                className={styles['cover-img']}
+                className={styles['img']}
                 src={data.cover_image}
                 alt=""
                 height={296}
@@ -323,7 +327,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
               />
             ) : (
               <div
-                className={`${styles['cover-img']} default-user-cover`}
+                className={`${styles['img']} default-user-cover`}
               ></div>
             )}
             {user?.is_admin && (

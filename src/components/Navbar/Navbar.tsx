@@ -158,9 +158,6 @@ export const Navbar: React.FC<Props> = ({}) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
-    if (router.asPath.includes('search') && value === '') {
-      router.replace('/search')
-    }
   }
 
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -796,7 +793,6 @@ export const Navbar: React.FC<Props> = ({}) => {
                             search: { ...prev.search, value: '' },
                           }))
                           searchInputRef?.current?.focus()
-                          router.replace('/search')
                         }}
                         className={styles['search-cross-icon']}
                       >
@@ -1460,7 +1456,6 @@ export const Navbar: React.FC<Props> = ({}) => {
                           search: { ...prev.search, value: '' },
                         }))
                         searchInputRef?.current?.focus()
-                        router.replace('/search')
                       }}
                       className={styles['search-cross-icon-inside']}
                     >

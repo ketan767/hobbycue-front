@@ -7,10 +7,23 @@
   padding-top: 12px;
   /* background-color: white; */
 }
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(10px);
+  z-index: -1;
+}
 .cover-img-wrapper {
   position: relative;
-  overflow: hidden;
   max-height: 310px;
+  overflow: hidden;
+  border-radius: 8px;
+  aspect-ratio: 3 / 1;
 }
 .profile-img {
   border-radius: 8px;
@@ -38,7 +51,7 @@
   overflow: hidden;
 }
 
-.border-div-small{
+.border-div-small {
   background-color: #8064a2;
   display: flex;
   justify-content: center;
@@ -104,13 +117,26 @@
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
 }
 
-.center-container .cover-img {
+.center-container .cover-img-wrapper {
+  position: relative;
+  max-height: 310px;
+  overflow: hidden;
+  border-radius: 8px;
+  aspect-ratio: 3 / 1;
+}
+.center-container .cover-img-wrapper .img {
   width: 100%;
   height: auto;
   aspect-ratio: 3/1;
   border-radius: 8px;
-  object-fit: cover;
-  background-color: #96969680;
+  object-fit: contain;
+  background-color: rgb(var(--gray-50-rgb), 0.2);
+}
+.center-container .cover-img-wrapper .edit-btn {
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  right: var(--spacing-8);
 }
 .center-container .name {
   margin-top: 9px;
@@ -132,6 +158,17 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+.center-container .name img {
+  margin-left: 6px;
+  cursor: pointer;
+}
+.center-container .tagline {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #08090a;
+  margin-top: var(--spacing-12);
 }
 
 .action-btn-wrapper {

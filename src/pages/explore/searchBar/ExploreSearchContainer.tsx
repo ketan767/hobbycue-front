@@ -311,10 +311,6 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
             suggestions[focusedLocationIdx]?.place_id,
           )
           dispatch(setLocation(suggestions[focusedLocationIdx]?.description[0]))
-          // console.log('Enter is pressed in location')
-          // setSelectedAddress(
-          //   suggestions[focusedLocationIdx]?.description.toString(),
-          // )
         } else if (
           focusedLocationIdx === -1 &&
           Addressdata.street.trim().length !== 0

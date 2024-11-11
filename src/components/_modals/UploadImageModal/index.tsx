@@ -42,7 +42,7 @@ export const UploadImageModal: React.FC<Props> = (props) => {
             ref={cropperRef}
             className={styles['cropper']}
             initialAspectRatio={
-              editPhotoModalData.type === 'profile' || 'array' ? 1 : 3
+              editPhotoModalData.type === 'profile' ? 1 : 3
             }
             src={editPhotoModalData.image}
             viewMode={1}
