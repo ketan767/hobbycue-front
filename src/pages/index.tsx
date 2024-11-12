@@ -160,6 +160,18 @@ const Home: React.FC<PropTypes> = function () {
     }
   }
 
+  useEffect(() => {
+    if (router.asPath.includes('showAuth=true')) {
+      router.replace(`/`)
+      dispatch(
+        openModal({
+          type: 'auth',
+          closable: true,
+        }),
+      )
+    }
+  }, [])
+
   return (
     <>
       <Head>

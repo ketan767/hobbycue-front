@@ -114,7 +114,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
 
     // setHobbyDropdownList(filteredHobbies)
 
-    const query = `fields=display,genre&level=5&level=3&level=2&search=${e.target.value}`
+    const query = `fields=display,genre&level=5&level=3&level=2&level=1&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
 
     if (err) return console.log(err)

@@ -159,7 +159,8 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
 
     if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
 
-    const query = `fields=display,genre&level=5&level=4&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
+    // const query = `fields=display,genre&level=5&level=4&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
+    const query = `fields=display,genre&level=5&level=3&level=2&level=1&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
 
     if (err) return console.log(err)
@@ -310,10 +311,6 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
             suggestions[focusedLocationIdx]?.place_id,
           )
           dispatch(setLocation(suggestions[focusedLocationIdx]?.description[0]))
-          // console.log('Enter is pressed in location')
-          // setSelectedAddress(
-          //   suggestions[focusedLocationIdx]?.description.toString(),
-          // )
         } else if (
           focusedLocationIdx === -1 &&
           Addressdata.street.trim().length !== 0
@@ -377,7 +374,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
           if (isHobbySelected) {
             searchResult()
           }
-          alert('Enter')
+          // alert('Enter')
 
           setIsHobbySelected(true)
           console.log('hobbyDropdownList', hobbyDropdownList)
@@ -442,9 +439,39 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     }
     if (currCategory) {
       // alert('category....'+cate)
-      query = {
-        ...query,
-        category: currCategory,
+      if (currCategory === 'People' || currCategory === 'people') {
+        query = {
+          ...query,
+          ['page-type']: 'People',
+        }
+        dispatch(setCategory(''))
+        dispatch(setPageType('People'))
+      } else if (currCategory === 'Place' || currCategory === 'place') {
+        query = {
+          ...query,
+          ['page-type']: 'Place',
+        }
+        dispatch(setCategory(''))
+        dispatch(setPageType('Place'))
+      } else if (currCategory === 'Product' || currCategory === 'product') {
+        query = {
+          ...query,
+          ['page-type']: 'Product',
+        }
+        dispatch(setCategory(''))
+        dispatch(setPageType('Product'))
+      } else if (currCategory === 'Program' || currCategory === 'program') {
+        query = {
+          ...query,
+          ['page-type']: 'Program',
+        }
+        dispatch(setCategory(''))
+        dispatch(setPageType('Program'))
+      } else {
+        query = {
+          ...query,
+          category: currCategory,
+        }
       }
     } else if (currPageType) {
       query = { ...query, ['page-type']: currPageType }
