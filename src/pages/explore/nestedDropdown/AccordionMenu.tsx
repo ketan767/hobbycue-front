@@ -60,6 +60,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
 
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
   const [isCategoryBoxOpened, setIsCategoryBoxOpened] = useState(false)
+  const [selectedByClick, setSelectedByClick] = useState<boolean>(false)
   const [categoryDropdownList, setCategoryDropdownList] = useState<
     DropdownListItem[]
   >([])
@@ -162,11 +163,14 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
             ? prevIndex + 1
             : prevIndex,
         )
+        setSelectedByClick(false)
         break
       case 'ArrowUp':
         setCategoryIndex((prevIndex) =>
           prevIndex > 0 ? prevIndex - 1 : prevIndex,
         )
+        setSelectedByClick(false)
+
         break
       case 'Enter':
         // e.stopPropagation()
@@ -179,7 +183,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           // setCategoryValue(filteredDropdownList[categoryIndex].listingCategory)
           // setCategoryInput(filteredDropdownList[categoryIndex].listingCategory)
           setShowCategoryDropdown(false)
-          if (showCategoryDropdown) {
+          if (showCategoryDropdown && !selectedByClick) {
             dispatch(
               setCategory(filteredDropdownList[categoryIndex].listingCategory),
             )
@@ -188,6 +192,8 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
             searchResult()
           }
           setIsCategoryFilled(true)
+          setSelectedByClick(false)
+          console.log('Enter inside !==-1')
         } else if (categoryIndex === -1 && currCategory.length === 0) {
           setShowCategoryDropdown(false)
           // alert('0 length')
@@ -304,7 +310,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
               // alert('Enter')
               // }
             }}
-            value={currCategory ? currCategory : currPageType}
+            value={currPageType ? currPageType : currCategory}
             onBlur={() =>
               setTimeout(() => {
                 setShowCategoryDropdown(false)
@@ -362,7 +368,14 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                       //   undefined,
                       //   category.listingCategory,
                       // )
+                      console.log(
+                        'category.listingCategory',
+                        category.listingCategory,
+                      )
                       dispatch(setCategory(category.listingCategory))
+                      setCategoryIndex(index)
+                      setIsCategoryFilled(true)
+                      setSelectedByClick(true)
                       dispatch(setPageType(''))
                     }}
                     className={
@@ -491,6 +504,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                           undefined,
                           subcategory.listingCategory,
                         )
+                        setSelectedByClick(true)
                       }}
                       sx={{
                         marginLeft: '-16px',
@@ -565,6 +579,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                             undefined,
                             subcategory.listingCategory,
                           )
+                          setSelectedByClick(true)
                         }}
                         sx={{
                           marginLeft: '-16px',
@@ -594,6 +609,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                           undefined,
                           subcategory.listingCategory,
                         )
+                        setSelectedByClick(true)
                       }}
                       sx={{
                         marginLeft: '-16px',
@@ -673,6 +689,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                             undefined,
                             subcategory.listingCategory,
                           )
+                          setSelectedByClick(true)
                         }}
                         sx={{
                           marginLeft: '-16px',
@@ -702,6 +719,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                           undefined,
                           subcategory.listingCategory,
                         )
+                        setSelectedByClick(true)
                       }}
                       sx={{
                         marginLeft: '-16px',
@@ -780,6 +798,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                             undefined,
                             subcategory.listingCategory,
                           )
+                          setSelectedByClick(true)
                         }}
                         sx={{
                           marginLeft: '-16px',
@@ -809,6 +828,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                           undefined,
                           subcategory.listingCategory,
                         )
+                        setSelectedByClick(true)
                       }}
                       sx={{
                         marginLeft: '-16px',

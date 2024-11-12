@@ -79,7 +79,7 @@ export type ModalType =
     onVerify?: (() => void) | null
     verified?: boolean
     imageUrl: string
-    propData?:object
+    propData?:any
     hasChanges?:boolean
   }
   
@@ -114,7 +114,7 @@ export type ModalType =
           imageurl?: string | undefined
           propData?:any
           modalType?: any
-          
+
         }>
       ) {
         state.activeModal = action.payload.type

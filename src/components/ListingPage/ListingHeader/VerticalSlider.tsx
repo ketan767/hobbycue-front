@@ -97,6 +97,9 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
         openModal({
           type: 'upload-image',
           closable: true,
+          propData: {
+            isProduct: true,
+          },
         }),
       )
     }
