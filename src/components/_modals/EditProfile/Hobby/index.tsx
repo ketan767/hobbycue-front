@@ -20,7 +20,7 @@ import addhobby from '@/assets/svg/addhobby.svg'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { showProfileError, updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
-import { SendHobbyRequest, getAllHobbies } from '@/services/hobby.service'
+import { SendHobbyRequest, getAllHobbies, getAllHobbiesWithoutPagi } from '@/services/hobby.service'
 import { isEmptyField } from '@/utils'
 import { FormControl, MenuItem, Select } from '@mui/material'
 import Image from 'next/image'
@@ -199,7 +199,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
     const query2 = `fields=display,genre&level=5&level=4&level=3&level=2&level=1&level=0&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
-    const { err: err2, res: res2 } = await getAllHobbies(query2)
+    const { err: err2, res: res2 } = await getAllHobbiesWithoutPagi(query2)
     if (err) return console.log(err)
     if (err2) return console.log(err2)
 
@@ -281,7 +281,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
-    const { err: err2, res: res2 } = await getAllHobbies(query2)
+    const { err: err2, res: res2 } = await getAllHobbiesWithoutPagi(query2)
     if (err2) return console.log(err2)
 
     // Step 1: Filter the data based on the search query

@@ -76,7 +76,17 @@ const Home: React.FC<PropTypes> = function () {
       console.warn('profileurl', res?.data?.data?.user)
       router.push(`/profile/${res?.data?.data?.user?.profile_url}`)
     } else {
-      router.push(`/community`)
+      if (router.asPath.includes('me=true')) {
+        router.push(`/me`)
+      } else if (router.asPath.includes('showGeneral=true')) {
+        router.push(`/me/general`)
+      } else if (router.asPath.includes('showHobby=true')) {
+        router.push(`/me/hobby`)
+      } else if (router.asPath.includes('showLocation=true')) {
+        router.push(`/me/location`)
+      } else {
+        router.push(`/community`)
+      }
     }
   }
 
@@ -161,8 +171,12 @@ const Home: React.FC<PropTypes> = function () {
   }
 
   useEffect(() => {
-    if (router.asPath.includes('showAuth=true')) {
-      router.replace(`/`)
+    if (
+      router.asPath.includes('me=true') ||
+      router.asPath.includes('showGeneral=true') ||
+      router.asPath.includes('showHobby=true') ||
+      router.asPath.includes('showLocation=true')
+    ) {
       dispatch(
         openModal({
           type: 'auth',
