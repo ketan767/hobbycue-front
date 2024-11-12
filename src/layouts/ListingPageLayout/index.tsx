@@ -273,45 +273,56 @@ const ListingPageLayout: React.FC<Props> = ({
       )}
       {/* Navigation Links */}
       <nav className={styles['nav']}>
-        <div className={`${styles['navigation-tabs']}`}>
-          {tabs.map((tab) => {
-            if (['posts', 'store'].includes(tab)) {
-              if (data.pageData.type === 4) {
-                return
+        <div className={styles.navContainer}>
+          <div className={`${styles['navigation-tabs']}`}>
+            {tabs.map((tab) => {
+              if (['posts', 'store'].includes(tab)) {
+                if (data.pageData.type === 4) {
+                  return
+                }
               }
-            }
 
-            if (tab === 'related') {
-              if (data.pageData.type !== 4) {
-                return
+              if (tab === 'related') {
+                if (data.pageData.type !== 4) {
+                  return
+                }
               }
-            }
 
-            if (tab === 'events') {
-              if (![3, 4].includes(data.pageData.type))
-                return (
-                  <a
-                    key={tab}
-                    onClick={() => navigationTabs(tab)}
-                    className={
-                      activeTab === tab
-                        ? styles['active']
-                        : '' + ` ${styles['event-tab']}`
-                    }
-                  >
-                    {totalEvents > 0 && (
-                      <button className={styles['event-count']}>
-                        {totalEvents}
-                      </button>
-                    )}
-                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                  </a>
+              if (tab === 'events') {
+                if (![3, 4].includes(data.pageData.type))
+                  return (
+                    <a
+                      key={tab}
+                      onClick={() => navigationTabs(tab)}
+                      className={
+                        activeTab === tab
+                          ? styles['active']
+                          : '' + ` ${styles['event-tab']}`
+                      }
+                    >
+                      {totalEvents > 0 && (
+                        <button className={styles['event-count']}>
+                          {totalEvents}
+                        </button>
+                      )}
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </a>
+                  )
+              } else if (tab === 'orders') {
+                if (
+                  [3, 4].includes(data.pageData.type) &&
+                  listingLayoutMode === 'edit'
                 )
-            } else if (tab === 'orders') {
-              if (
-                [3, 4].includes(data.pageData.type) &&
-                listingLayoutMode === 'edit'
-              )
+                  return (
+                    <a
+                      key={tab}
+                      onClick={() => navigationTabs(tab)}
+                      className={activeTab === tab ? styles['active'] : ''}
+                    >
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </a>
+                  )
+              } else {
                 return (
                   <a
                     key={tab}
@@ -321,24 +332,15 @@ const ListingPageLayout: React.FC<Props> = ({
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
                   </a>
                 )
-            } else {
-              return (
-                <a
-                  key={tab}
-                  onClick={() => navigationTabs(tab)}
-                  className={activeTab === tab ? styles['active'] : ''}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </a>
-              )
-            }
-          })}
-          {/* Add a condition to include a blank tab if 'events' tab is not present */}
-          {data.pageData.type === 3 && (
-            <a key="blank-tab" href="#" className={styles.disabledtab}>
-              {' '}
-            </a>
-          )}
+              }
+            })}
+            {/* Add a condition to include a blank tab if 'events' tab is not present */}
+            {data.pageData.type === 3 && (
+              <a key="blank-tab" href="#" className={styles.disabledtab}>
+                {' '}
+              </a>
+            )}
+          </div>
         </div>
       </nav>
       <nav className={styles['nav-mobile']}>

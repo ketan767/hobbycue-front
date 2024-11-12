@@ -169,12 +169,19 @@
 }
 
 /* Navigation Tabs */
+.nav {
+  padding: 0 24px;
+}
+.navContainer {
+  margin: auto;
+  width: 1240px;
+}
 .navigation-tabs {
   display: flex;
   width: 43%;
-  margin: 0 0 0 21.60%;
+  margin: 0 0 0 calc(229px + 24px);
   gap: 20px;
-  justify-content: center;
+  /* justify-content: center; */
   margin-top: 14px;
   position: sticky;
   min-height: 40px;
@@ -458,6 +465,10 @@
     margin: auto;
     padding: 0 12px;
     width: 100%;
+  }
+  .navContainer {
+    margin: 0;
+    width: auto;
   }
   .navigation-tabs {
     gap: 16px;

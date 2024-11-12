@@ -781,76 +781,81 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
           </div>
         </header>
 
-        <nav>
-          <div className={styles['navigation-tabs']}>
-            {tabs.map((tab) => {
-              if (['posts', 'store'].includes(tab)) {
-                if (data.type === 4) {
-                  return
+        <nav className={styles.nav}>
+          <div className={styles.navContainer}>
+            <div className={styles['navigation-tabs']}>
+              {tabs.map((tab) => {
+                if (['posts', 'store'].includes(tab)) {
+                  if (data.type === 4) {
+                    return
+                  }
                 }
-              }
 
-              if (tab === 'related') {
-                if (data.type !== 4) {
-                  return
+                if (tab === 'related') {
+                  if (data.type !== 4) {
+                    return
+                  }
                 }
-              }
 
-              if (tab === 'events') {
-                if (![3, 4].includes(data.type))
-                  return (
-                    <Link
-                      key={tab}
-                      href={`/${pageType(data?.type)}/${
-                        router.query.page_url
-                      }/${tab}`}
-                      className={
-                        activeTab === tab
-                          ? styles['active']
-                          : '' + ` ${styles['event-tab']}`
-                      }
-                    >
-                      {totalEvents > 0 && (
-                        <button className={styles['event-count']}>
-                          {totalEvents}
-                        </button>
-                      )}
-                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                    </Link>
+                if (tab === 'events') {
+                  if (![3, 4].includes(data.type))
+                    return (
+                      <Link
+                        key={tab}
+                        href={`/${pageType(data?.type)}/${
+                          router.query.page_url
+                        }/${tab}`}
+                        className={
+                          activeTab === tab
+                            ? styles['active']
+                            : '' + ` ${styles['event-tab']}`
+                        }
+                      >
+                        {totalEvents > 0 && (
+                          <button className={styles['event-count']}>
+                            {totalEvents}
+                          </button>
+                        )}
+                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                      </Link>
+                    )
+                } else if (tab === 'orders') {
+                  if (
+                    [3, 4].includes(data.type) &&
+                    listingLayoutMode === 'edit'
                   )
-              } else if (tab === 'orders') {
-                if ([3, 4].includes(data.type) && listingLayoutMode === 'edit')
+                    return (
+                      <Link
+                        key={tab}
+                        href={`/${pageType(data?.type)}/${
+                          router.query.page_url
+                        }/${tab}`}
+                        className={activeTab === tab ? styles['active'] : ''}
+                      >
+                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                      </Link>
+                    )
+                } else {
                   return (
                     <Link
                       key={tab}
                       href={`/${pageType(data?.type)}/${
                         router.query.page_url
-                      }/${tab}`}
+                      }/${tab !== 'home' ? tab : ''}`}
                       className={activeTab === tab ? styles['active'] : ''}
                     >
                       {tab.charAt(0).toUpperCase() + tab.slice(1)}
                     </Link>
                   )
-              } else {
-                return (
-                  <Link
-                    key={tab}
-                    href={`/${pageType(data?.type)}/${router.query.page_url}/${
-                      tab !== 'home' ? tab : ''
-                    }`}
-                    className={activeTab === tab ? styles['active'] : ''}
-                  >
-                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                  </Link>
-                )
-              }
-            })}
-            {/* Add a condition to include a blank tab if 'events' tab is not present */}
-            {data.type === 3 && (
-              <Link key="blank-tab" href="#" className={styles.disabledtab}>
-                {' '}
-              </Link>
-            )}
+                }
+              })}
+              {/* Add a condition to include a blank tab if 'events' tab is not present */}
+              {data.type === 3 && (
+                <Link key="blank-tab" href="#" className={styles.disabledtab}>
+                  {' '}
+                </Link>
+              )}
+            </div>
           </div>
         </nav>
       </div>

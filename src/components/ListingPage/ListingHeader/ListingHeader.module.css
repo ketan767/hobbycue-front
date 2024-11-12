@@ -364,12 +364,19 @@
 
   box-shadow: none;
 }
+.nav {
+  padding: 0 24px;
+}
+.navContainer {
+  margin: auto;
+  width: 1240px;
+}
 .container:has(.header).small .navigation-tabs {
   display: flex;
 
   gap: 20px;
   justify-content: flex-start;
-  margin: 4px 0 0 23.96%;
+  margin: 4px 0 0 calc(229px + 24px);
   position: sticky;
   min-height: 40px;
 }
@@ -637,6 +644,10 @@
     display: flex;
 
     padding: 0 14px;
+  }
+  .navContainer {
+    margin: 0;
+    width: auto;
   }
   .navigation-tabs {
     gap: 8px;
