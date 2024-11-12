@@ -15,6 +15,7 @@ type Props = {
   handleSubmit?: any
   propData?: any
   selectedHobbyText?: string
+  existsButNotEnabled?: boolean
 }
 
 const AddHobby: React.FC<Props> = ({
@@ -22,6 +23,7 @@ const AddHobby: React.FC<Props> = ({
   handleSubmit,
   propData,
   selectedHobbyText,
+  existsButNotEnabled,
 }) => {
   const dispatch = useDispatch()
   const buttonRef = useRef<HTMLButtonElement | null>(null)
@@ -58,7 +60,7 @@ const AddHobby: React.FC<Props> = ({
     <>
       <div className={`${styles['add-hobby']}`}>
         <div className={styles['header']}>
-          <p>{'Request Hobby'}</p>
+          <p>{`${existsButNotEnabled ? 'Enable' : 'Request'} Hobby`}</p>
           <CloseIcon
             className={styles['modal-close-icon']}
             onClick={() => {
@@ -70,13 +72,15 @@ const AddHobby: React.FC<Props> = ({
         <div className={styles['content']}>
           {selectedHobbyText ? (
             <p>
-              Request HobbyCue Admin to add{' '}
+              Request HobbyCue Admin to{' '}
+              {existsButNotEnabled ? 'enable adding' : 'add'}{' '}
               <span>{selectedHobbyText ?? 'Typed Hobby'}</span> as a hobby so
               that we can grow this as a community
             </p>
           ) : (
             <p>
-              Request HobbyCue Admin to add{' '}
+              Request HobbyCue Admin to{' '}
+              {existsButNotEnabled ? 'enable adding' : 'add'}{' '}
               <span>{propData?.defaultValue ?? 'Typed Hobby'}</span> as a hobby
               so that we can grow this as a community
             </p>
