@@ -52,7 +52,7 @@ import {
   setKeyword,
   setLocation,
   setSearching,
-  setSub_category,
+  setPageType,
 } from '@/redux/slices/explore'
 type Props = {
   handleClose: any
@@ -121,15 +121,15 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         dispatch(resetSearch())
         await ExplorePeople()
         dispatch(showAllPeopleTrue())
-        dispatch(setCategory('People'))
+        dispatch(setCategory(''))
+        dispatch(setPageType('People'))
         dispatch(setSearching(true))
-        dispatch(setSub_category(''))
         dispatch(setKeyword(''))
         dispatch(setHobby(''))
         dispatch(setLocation(''))
         router.push({
           pathname: '/explore/people',
-          query: { category: 'People' },
+          query: { ['page-type']: 'People' },
         })
         dispatch(setExplore(true))
         handleClose()
@@ -139,15 +139,15 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         await ExplorePlaces()
         dispatch(showAllPlaceTrue())
         dispatch(setExplore(true))
-        dispatch(setCategory('Place'))
+        dispatch(setCategory(''))
+        dispatch(setPageType('Place'))
         dispatch(setSearching(true))
-        dispatch(setSub_category(''))
         dispatch(setKeyword(''))
         dispatch(setHobby(''))
         dispatch(setLocation(''))
         router.push({
           pathname: '/explore/places',
-          query: { category: 'Place' },
+          query: { ['page-type']: 'Place' },
         })
         handleClose()
         break
@@ -156,15 +156,15 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         await ExploreEvents()
         dispatch(showAllEventTrue())
         dispatch(setExplore(true))
-        dispatch(setCategory('Program'))
+        dispatch(setCategory(''))
+        dispatch(setPageType('Program'))
         dispatch(setSearching(true))
-        dispatch(setSub_category(''))
         dispatch(setKeyword(''))
         dispatch(setHobby(''))
         dispatch(setLocation(''))
         router.push({
           pathname: '/explore/programs',
-          query: { category: 'Program' },
+          query: { ['page-type']: 'Program' },
         })
         handleClose()
         break
@@ -173,15 +173,15 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         await ExploreProducts()
         dispatch(showAllProductsTrue())
         dispatch(setExplore(true))
-        dispatch(setCategory('Product'))
+        dispatch(setCategory(''))
+        dispatch(setPageType('Product'))
         dispatch(setSearching(true))
-        dispatch(setSub_category(''))
         dispatch(setKeyword(''))
         dispatch(setHobby(''))
         dispatch(setLocation(''))
         router.push({
           pathname: '/explore/products',
-          query: { category: 'Product' },
+          query: { ['page-type']: 'Product' },
         })
         handleClose()
         break
@@ -626,6 +626,8 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               <header className={styles['dropdown-header']}>
                 <div
                   onClick={() => {
+                    dispatch(setCategory(''))
+                    dispatch(setPageType(''))
                     router.push('/explore')
                     handleClose()
                   }}

@@ -86,6 +86,10 @@
     top: 48px;
   } */
 
+  .modal-wrapper main .modal-close-icon:hover {
+    background: transparent;
+  }
+
   .modal-wrapper {
     display: grid;
     place-items: stretch;

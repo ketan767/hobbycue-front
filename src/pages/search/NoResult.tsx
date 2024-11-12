@@ -19,7 +19,13 @@ import {
 } from '@/services/auth.service'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { setHobby, setKeyword, setLocation } from '@/redux/slices/explore'
+import {
+  setCategory,
+  setHobby,
+  setKeyword,
+  setLocation,
+  setPageType,
+} from '@/redux/slices/explore'
 import AccordionMenu2 from '../explore/nestedDropdown/AccordionMenu2'
 type DropdownListItem = {
   _id: string
@@ -49,7 +55,7 @@ const NoResult = () => {
     keyword,
     hobby,
     category,
-    sub_category,
+    page_type,
     location: currLocation,
   } = useSelector((state: RootState) => state.explore)
   const dispatch = useDispatch()
@@ -65,20 +71,17 @@ const NoResult = () => {
 
   const [focusedHobbyIndex, setFocusedHobbyIndex] = useState<number>(-1)
   const [focusedLocationIdx, setFocusedLocationIdx] = useState<number>(-1)
+  const [isHobbySelected, setIsHobbySelected] = useState<boolean>(false)
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     ExtendedDropdownListItem[]
   >([])
   const [suggestions, setSuggestions] = useState<
-    { description: string; place_id: string }[]
+    { description: string[]; place_id: string }[]
   >([])
 
   const [categoryValue, setCategoryValue] = useState(
-    sub_category
-      ? sub_category.toString()
-      : category
-      ? category.toString()
-      : '',
+    page_type ? page_type.toString() : category ? category.toString() : '',
   )
 
   const [Addressdata, setAddressData] = useState<ProfileAddressPayload>({
@@ -102,7 +105,8 @@ const NoResult = () => {
 
     if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
 
-    const query = `fields=display,genre&level=5&level=3&level=2&search=${e.target.value}`
+    // const query = `fields=display,genre&level=5&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
+    const query = `fields=display,genre&level=5&level=3&level=2&level=1&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
 
     if (err) return console.log(err)
@@ -143,14 +147,17 @@ const NoResult = () => {
         if (hobby.length !== 0 && focusedHobbyIndex === -1) {
           //AddButtonRef.current?.click()
           handleSubmit()
-        } else if (focusedHobbyIndex !== -1 && showHobbyDropdown) {
+        } else if (focusedHobbyIndex !== -1) {
           setShowHobbyDropdown(false)
-          const val = hobbyDropdownList[focusedHobbyIndex]?.display || hobby
-          // if (val) {
-          //   setHobby(val)
-          // }
-          dispatch(setHobby(val))
-          handleSubmit()
+          if (showHobbyDropdown) {
+            const val = hobbyDropdownList[focusedHobbyIndex]?.display || hobby
+            dispatch(setHobby(val))
+          }
+
+          if (isHobbySelected) {
+            handleSubmit()
+          }
+          setIsHobbySelected(true)
           // searchResult(undefined, val, undefined)
           console.log('hobbyDropdownList', hobbyDropdownList)
         } else if (focusedHobbyIndex === -1 && hobby.length !== 0) {
@@ -198,10 +205,14 @@ const NoResult = () => {
         if (data.predictions) {
           console.warn('suggestionsssss', data)
           setSuggestions(
-            data.predictions.map((prediction: any) => ({
-              description: prediction.description,
-              place_id: prediction.place_id,
-            })),
+            data.predictions.map(({ structured_formatting, place_id }: any) => {
+              const { main_text, secondary_text } = structured_formatting
+              const arr = [main_text, secondary_text]
+              return {
+                description: arr,
+                place_id: place_id,
+              }
+            }),
           )
         } else {
           console.error('Error fetching suggestions:', data.error)
@@ -258,29 +269,43 @@ const NoResult = () => {
   const handleLocationKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     switch (e.key) {
       case 'ArrowDown':
+        const downIndex =
+          focusedLocationIdx < suggestions.length - 1
+            ? focusedLocationIdx + 1
+            : focusedLocationIdx
         setFocusedLocationIdx((prevIndex) =>
           prevIndex < suggestions.length - 1 ? prevIndex + 1 : prevIndex,
         )
+        dispatch(setLocation(suggestions[downIndex]?.description[0]))
+
         break
       case 'ArrowUp':
+        const upIndex =
+          focusedLocationIdx > 0 ? focusedLocationIdx - 1 : focusedLocationIdx
         setFocusedLocationIdx((prevIndex) =>
           prevIndex > 0 ? prevIndex - 1 : prevIndex,
         )
+        dispatch(setLocation(suggestions[upIndex]?.description[0]))
         break
       case 'Enter':
         if (Addressdata.street.trim().length !== 0 && !showAutoAddress) {
         } else if (focusedLocationIdx !== -1 && showAutoAddress) {
           handleSelectAddressTwo(
-            suggestions[focusedLocationIdx]?.description,
+            suggestions[focusedLocationIdx]?.description?.join(', '),
             suggestions[focusedLocationIdx]?.place_id,
           )
-          setLocation(suggestions[focusedLocationIdx]?.description)
+          console.log(
+            'Changed location',
+            suggestions[focusedLocationIdx]?.description[0],
+          )
+          dispatch(setLocation(suggestions[focusedLocationIdx]?.description[0]))
         } else if (
           focusedLocationIdx === -1 &&
           Addressdata.street.trim().length !== 0
         ) {
           setShowAutoAddress(false)
         }
+        handleSubmit()
         break
       default:
         break
@@ -328,22 +353,22 @@ const NoResult = () => {
 
   const getLink = () => {
     let link = '/explore'
-    if (category) {
-      if (category === 'Place' || category === 'place') {
+    if (page_type) {
+      if (page_type === 'Place' || page_type === 'place') {
         link += '/places?'
-      } else if (category === 'People' || category === 'people') {
+      } else if (page_type === 'People' || page_type === 'people') {
         link += '/people?'
-      } else if (category === 'Program' || category === 'program') {
+      } else if (page_type === 'Program' || page_type === 'program') {
         link += '/programs?'
-      } else if (category === 'Product' || category === 'product') {
+      } else if (page_type === 'Product' || page_type === 'product') {
         link += '/products?'
       }
-      link += `category=${category}`
-    } else if (sub_category) {
-      link += `?sub_category=${sub_category}`
+      link += `page-type=${page_type}`
+    } else if (category) {
+      link += `?category=${category}`
     }
     if (hobby) {
-      if (category || sub_category) {
+      if (category || page_type) {
         link += '&'
       } else {
         link += '?'
@@ -352,15 +377,16 @@ const NoResult = () => {
     }
 
     if (currLocation) {
-      if (hobby || category || sub_category) {
+      if (hobby || category || page_type) {
         link += '&'
       } else {
         link += '?'
       }
+      console.log('curr location', currLocation)
       link += `location=${currLocation}`
     }
     if (keyword) {
-      if (hobby || category || sub_category || currLocation) {
+      if (hobby || category || page_type || currLocation) {
         link += '&'
       } else {
         link += '?'
@@ -379,9 +405,11 @@ const NoResult = () => {
   }
 
   useEffect(() => {
-    if (q) {
-      dispatch(setKeyword(q.toString()))
-    }
+    dispatch(setKeyword(''))
+    dispatch(setHobby(''))
+    dispatch(setLocation(''))
+    dispatch(setCategory(''))
+    dispatch(setPageType(''))
   }, [])
 
   return (
@@ -438,7 +466,10 @@ const NoResult = () => {
                   setShowHobbyDropdown(true)
                 }}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  setShowHobbyDropdown(true)
+                  if (e.key !== 'Enter') {
+                    setShowHobbyDropdown(true)
+                    setIsHobbySelected(false)
+                  }
                   handleHobbyKeyDown(e)
                   // handleSubmit(true)
                 }}
@@ -534,10 +565,6 @@ const NoResult = () => {
                   handleLocationKeyDown(e)
                   if (e.key === 'Enter') {
                     setShowAutoAddress(false)
-                    // searchResult()
-                    if (e.key === 'Enter') {
-                      handleSubmit()
-                    }
                   }
                 }}
                 sx={{
@@ -571,10 +598,10 @@ const NoResult = () => {
                     <p
                       onClick={() => {
                         handleSelectAddressTwo(
-                          suggestion.description,
+                          suggestion.description.join(', '),
                           suggestion.place_id,
                         )
-                        setLocation(suggestion.description)
+                        setLocation(suggestion.description[0])
                       }}
                       key={index}
                       className={
@@ -583,7 +610,7 @@ const NoResult = () => {
                           : ''
                       }
                     >
-                      {suggestion.description}
+                      {suggestion.description.join(', ')}
                     </p>
                   ))}
                 </div>

@@ -7,7 +7,8 @@ import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 import MailIcon from '@/assets/svg/mailicon.svg'
-import ShareIcon from '@/assets/svg/share-outlined.svg'
+// import ShareIcon from '@/assets/svg/share-outlined.svg'
+import ShareIcon from '@/assets/icons/ShareIcon'
 import CameraIcon from '@/assets/icons/CameraIcon'
 import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
@@ -316,7 +317,8 @@ const ProfileHeaderSmall: React.FC<Props> = ({
                 onClick={(e) => handleShare()}
                 className={styles['action-btn']}
               >
-                <Image src={ShareIcon} alt="share" />
+                {/* <Image src={ShareIcon} alt="share" /> */}
+                <ShareIcon />
               </div>
             </Tooltip>
 

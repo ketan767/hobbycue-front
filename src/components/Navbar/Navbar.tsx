@@ -80,8 +80,8 @@ import {
   setHobby,
   setKeyword,
   setLocation,
+  setPageType,
   setSearching,
-  setSub_category,
 } from '@/redux/slices/explore'
 
 type Props = {}
@@ -158,7 +158,6 @@ export const Navbar: React.FC<Props> = ({}) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
-    dispatch(setKeyword(value))
   }
 
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -838,7 +837,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                   href={'/explore'}
                   onClick={() => {
                     dispatch(setCategory(''))
-                    dispatch(setSub_category(''))
+                    dispatch(setPageType(''))
                     dispatch(setKeyword(''))
                     dispatch(setHobby(''))
                     dispatch(setLocation(''))
@@ -858,13 +857,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
-                            dispatch(setCategory('People'))
+                            dispatch(setPageType('People'))
                             dispatch(setSearching(true))
-                            dispatch(setSub_category(''))
+                            dispatch(setCategory(''))
                             dispatch(setKeyword(''))
                             dispatch(setHobby(''))
                             dispatch(setLocation(''))
-                            const query = { category: 'People' }
+                            const query = { ['page-type']: 'People' }
                             router.push({
                               pathname: '/explore/people',
                               query: query,
@@ -887,13 +886,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
-                            dispatch(setCategory('Place'))
+                            dispatch(setCategory(''))
+                            dispatch(setPageType('Place'))
                             dispatch(setSearching(true))
-                            dispatch(setSub_category(''))
                             dispatch(setKeyword(''))
                             dispatch(setHobby(''))
                             dispatch(setLocation(''))
-                            const query = { category: 'Place' }
+                            const query = { ['page-type']: 'Place' }
                             router.push({
                               pathname: '/explore/places',
                               query: query,
@@ -911,13 +910,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
-                            dispatch(setCategory('Product'))
+                            dispatch(setCategory(''))
+                            dispatch(setPageType('Product'))
                             dispatch(setSearching(true))
-                            dispatch(setSub_category(''))
                             dispatch(setKeyword(''))
                             dispatch(setHobby(''))
                             dispatch(setLocation(''))
-                            const query = { category: 'Product' }
+                            const query = { ['page-type']: 'Product' }
                             router.push({
                               pathname: '/explore/products',
                               query: query,
@@ -935,13 +934,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
-                            dispatch(setCategory('Program'))
+                            dispatch(setCategory(''))
+                            dispatch(setPageType('Program'))
                             dispatch(setSearching(true))
-                            dispatch(setSub_category(''))
                             dispatch(setKeyword(''))
                             dispatch(setHobby(''))
                             dispatch(setLocation(''))
-                            const query = { category: 'Program' }
+                            const query = { ['page-type']: 'Program' }
                             router.push({
                               pathname: '/explore/programs',
                               query: query,
