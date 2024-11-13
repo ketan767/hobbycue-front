@@ -28,6 +28,7 @@ import { updatePhotoEditModalData } from '@/redux/slices/site'
 import CameraIcon from '@/assets/icons/CameraIcon'
 import EditIcon from '@/assets/svg/edit-colored.svg'
 import VerticalBar from '@/assets/icons/VerticalBar'
+import CustomizedTooltips from '@/components/Tooltip/ToolTip'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -434,12 +435,14 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
           </Tooltip>
 
           {/* More Options Button */}
-          <div
-            onClick={(e) => showFeatureUnderDevelopment()}
-            className={styles['action-btn']}
-          >
-            <MoreHorizRoundedIcon color="primary" />
-          </div>
+          <Tooltip title="Click to view options">
+            <div
+              onClick={(e) => showFeatureUnderDevelopment()}
+              className={styles['action-btn']}
+            >
+              <MoreHorizRoundedIcon color="primary" />
+            </div>
+          </Tooltip>
         </div>
       </header>
 
@@ -448,30 +451,38 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
         className={`${styles['action-btn-wrapper']} ${styles['display-flex-mobile']}`}
       >
         {/* Send Email Button  */}
-        <div onClick={(e) => handleRepost()} className={styles['action-btn']}>
-          <Image src={MailIcon} alt="share" />
-        </div>
+        <CustomizedTooltips title="Repost">
+          <div onClick={(e) => handleRepost()} className={styles['action-btn']}>
+            <Image src={MailIcon} alt="share" />
+          </div>
+        </CustomizedTooltips>
 
         {/* Bookmark Button */}
-        <div
-          onClick={() => showFeatureUnderDevelopment()}
-          className={styles['action-btn']}
-        >
-          <BookmarkBorderRoundedIcon color="primary" />
-        </div>
+        <CustomizedTooltips title="Bookmark">
+          <div
+            onClick={() => showFeatureUnderDevelopment()}
+            className={styles['action-btn']}
+          >
+            <BookmarkBorderRoundedIcon color="primary" />
+          </div>
+        </CustomizedTooltips>
 
         {/* Share Button */}
-        <div onClick={handleShare} className={styles['action-btn']}>
-          <ShareIcon />
-        </div>
+        <CustomizedTooltips title="Share">
+          <div onClick={handleShare} className={styles['action-btn']}>
+            <ShareIcon />
+          </div>
+        </CustomizedTooltips>
 
         {/* More Options Button */}
-        <div
-          onClick={(e) => showFeatureUnderDevelopment()}
-          className={styles['action-btn']}
-        >
-          <MoreHorizRoundedIcon color="primary" />
-        </div>
+        <CustomizedTooltips title="Click to view options">
+          <div
+            onClick={(e) => showFeatureUnderDevelopment()}
+            className={styles['action-btn']}
+          >
+            <MoreHorizRoundedIcon color="primary" />
+          </div>
+        </CustomizedTooltips>
         {/*  */}
         <FilledButton className={styles['add-mine']} onClick={handleAddhobby}>
           {addBtnLoading ? (

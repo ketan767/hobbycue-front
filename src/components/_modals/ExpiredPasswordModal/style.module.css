@@ -218,4 +218,7 @@
 .modal-hr{
   display: none;
 }
+.footer button {
+  margin-right: 0;
+}
 }

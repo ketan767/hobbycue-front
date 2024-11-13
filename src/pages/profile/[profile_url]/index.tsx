@@ -444,7 +444,7 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
                   }
                   setDisplayData={setDisplayAbout}
                 >
-                  <h4>About</h4>
+                  <h4 className={styles['no-margin']}>About</h4>
 
                   <div className={`ql-snow`}>
                     <div

@@ -83,7 +83,9 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr, expandAll }) => {
               )
             }
           >
-            <h4>{data.type === 4 ? 'Description' : 'About'}</h4>
+            <h4 className={styles['no-margin']}>
+              {data.type === 4 ? 'Description' : 'About'}
+            </h4>
             <div className={`ql-snow`}>
               <div
                 className={`ql-editor ${styles['ql-editor']}`}

@@ -227,6 +227,16 @@ export const getServerSideProps: GetServerSideProps = async () => {
       loc: 'https://hobbycue.com/blog/balance-in-life-for-holistic-wellness-development/',
       name: `https://hobbycue.com/blog/balance-in-life-for-holistic-wellness-development/`,
     },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://hobbycue.com/blog/the-4-ps-of-a-hobby',
+      name: `https://hobbycue.com/blog/the-4-ps-of-a-hobby`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://hobbycue.com/blog/my-2024-french-open-experience',
+      name: `https://hobbycue.com/blog/my-2024-french-open-experience`,
+    },
   ]
   return {
     props: {

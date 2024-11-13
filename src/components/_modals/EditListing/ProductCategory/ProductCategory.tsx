@@ -23,6 +23,7 @@ import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import {
   createNewListing,
+  getAllListingCategories,
   getListingPages,
   getListingTags,
   getPages,
@@ -68,14 +69,14 @@ const ProductCategoryModal: React.FC<Props> = ({
   const { page_url } = router.query
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
-
-  const categories = [
-    { name: 'Item Sale', description: 'Shippable Product' },
+  const [categories, secategories] = useState<
     {
-      name: 'Online Access',
-      description: 'To view or download digital content',
-    },
-  ]
+      Description: string
+      Show: 'Y' | 'N' | ''
+      pageType: string
+      listingCategory: string
+    }[]
+  >([])
   const [selectedCategory, setSelectedCategory] = useState<any>([])
   const [selectedCategoryError, setSelectedCategoryError] = useState(false)
   const [selectedPage, setSelectedPage] = useState<any | []>([])
@@ -83,7 +84,7 @@ const ProductCategoryModal: React.FC<Props> = ({
   const [myPages, setMyPages] = useState<any[]>([])
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdownRef: any = useRef()
-
+  const [error, setError] = useState<string | null>(null)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   useOutsideAlerter(dropdownRef, () => setShowDropdown(false))
   const [initialData, setInitialData] = useState<any | null>(null)
@@ -140,6 +141,21 @@ const ProductCategoryModal: React.FC<Props> = ({
   }, [])
 
   useEffect(() => {
+    getAllListingCategories()
+      .then((result) => {
+        const { res, err } = result
+        if (err) {
+          console.log({ err })
+        } else if (res?.data && res?.data?.data) {
+          secategories(res.data.data)
+        }
+      })
+      .catch((err) => {
+        console.log({ err })
+      })
+  }, [])
+
+  useEffect(() => {
     if (user?._id) {
       const getAllPages = async () => {
         const { res, err } = await getListingPages(`admin=${user?._id}`)
@@ -160,14 +176,20 @@ const ProductCategoryModal: React.FC<Props> = ({
       onStatusChange(hasChanges)
     }
   }, [selectedCategory, initialData, onStatusChange])
-
   const handleCategoryChange = (idToChange: any) => {
-    if (!selectedCategory?.includes(idToChange)) {
-      setSelectedCategory([...selectedCategory, idToChange])
-    } else {
-      setSelectedCategory(
-        selectedCategory.filter((id: any) => id !== idToChange),
+    setError('')
+
+    if (
+      selectedCategory?.length >= 2 &&
+      !selectedCategory.includes(idToChange)
+    ) {
+      setError('You can select only two Categories')
+    } else if (selectedCategory.includes(idToChange)) {
+      setSelectedCategory((prev: any) =>
+        prev.filter((item: any) => item !== idToChange),
       )
+    } else {
+      setSelectedCategory([...selectedCategory, idToChange])
     }
   }
 
@@ -296,11 +318,7 @@ const ProductCategoryModal: React.FC<Props> = ({
                 className={styles['select-input']}
                 onClick={() => setShowDropdown(!showDropdown)}
               >
-                <p
-                  className={
-                    selectedCategory?.length !== 0 ? styles['color-black'] : ''
-                  }
-                >
+                <p>
                   {/* {' '}
                   {selectedCategory?.length === 0
                     ? 'Select Category'
@@ -312,39 +330,45 @@ const ProductCategoryModal: React.FC<Props> = ({
               {showDropdown && (
                 <div className={styles['options-container']}>
                   <div className={styles['vertical-line']}></div>
-                  {categories.map((item, idx: number) => {
-                    return (
-                      <div
-                        className={`${styles['single-option']} ${
-                          selectedCategory?.includes(item.name)
-                            ? `${styles['chosen-option']} ${styles['selcted-option']}`
-                            : ''
-                        }`}
-                        key={idx}
-                        onClick={() => {
-                          handleCategoryChange(item.name)
-                          setShowDropdown(false)
-                        }}
-                      >
-                        {selectedCategory === item.name ? (
-                          <div className={styles['selected-bg']}></div>
-                        ) : null}
-                        <p className={`${styles.tagText}`}>{item.name}</p>
-                        <p className={styles.tagDesc}>
-                          {item.description}
-                          <Image
-                            src={TickIcon}
-                            alt="down"
-                            className={styles['tick-icon']}
-                          />
-                        </p>
-                      </div>
+                  {categories
+                    .filter(
+                      (cat) => cat.pageType === 'Product' && cat.Show === 'Y',
                     )
-                  })}
+                    .map((item, idx: number) => {
+                      return (
+                        <div
+                          className={`${styles['single-option']} ${
+                            selectedCategory?.includes(item.listingCategory)
+                              ? `${styles['chosen-option']} ${styles['selcted-option']}`
+                              : ''
+                          }`}
+                          key={idx}
+                          onClick={() => {
+                            handleCategoryChange(item.listingCategory)
+                            setShowDropdown(false)
+                          }}
+                        >
+                          {selectedCategory === item.listingCategory ? (
+                            <div className={styles['selected-bg']}></div>
+                          ) : null}
+                          <p className={`${styles.tagText}`}>
+                            {item.listingCategory}
+                          </p>
+                          <p className={styles.tagDesc}>
+                            {item.Description}
+                            <Image
+                              src={TickIcon}
+                              alt="down"
+                              className={styles['tick-icon']}
+                            />
+                          </p>
+                        </div>
+                      )
+                    })}
                 </div>
               )}
             </div>
-
+            <p className={styles.error}>{error}</p>
             {/* <FormControl variant="outlined" size="small" sx={{ width: '100%' }}>
               <Select
                 value={selectedCategory}

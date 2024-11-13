@@ -1,3 +1,8 @@
+.all button:focus-visible {
+  outline: #8064a2 2px solid;
+  border: white 1px solid;
+}
+
 .container {
   max-width: 1296px;
   margin: 0 auto;
@@ -122,7 +127,8 @@
   margin: auto 0 0 auto;
 }
 
-.actions > button {
+.actions > button,
+.btn {
   width: 48px;
   height: 40px;
   border-radius: 10px;
@@ -131,6 +137,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  outline: none;
 }
 
 @keyframes fadeDownWithScale {
@@ -171,6 +178,7 @@
   background: transparent;
   text-align: left;
   color: var(--Grey-Darker, #6d747a);
+  border-radius: 4px;
 
   /* Text sm/Regular */
   font-family: Poppins;
@@ -182,7 +190,6 @@
 }
 
 .menu button:hover {
-  border-radius: 4px;
   background: rgba(128, 100, 162, 0.25);
 }
 

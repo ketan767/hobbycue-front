@@ -365,16 +365,9 @@ const SimpleOnboarding: React.FC<Props> = ({
 
   const handleInputChange = (event: any) => {
     const { name, value } = event.target
-    if (name === 'profile_url') {
-      // Only apply this modification for the profile_url field
-      // Replace special characters with '-'
-      const modifiedValue = value.replace(/[^a-zA-Z0-9-]/g, '-')
-      setData((prev) => ({ ...prev, [name]: modifiedValue }))
-      setInputErrs((prev) => ({ ...prev, [name]: null }))
-    } else {
-      setData((prev) => ({ ...prev, [name]: value }))
-      setInputErrs((prev) => ({ ...prev, [name]: null }))
-    }
+
+    setData((prev) => ({ ...prev, [name]: value }))
+    setInputErrs((prev) => ({ ...prev, [name]: null }))
 
     // Compare current data with initial data to check for changes
     const currentData = { ...data, [name]: value }
@@ -389,8 +382,13 @@ const SimpleOnboarding: React.FC<Props> = ({
   const handleSubmit = async (checkErrors = true) => {
     let inputhobby = null
     let hasErrors = false
-    const validateurl = await checkProfileUrl()
-    console.warn('validatwrulll', inputErrs)
+    const isProfileUrlValid = await checkProfileUrl()
+
+    if (!isProfileUrlValid) {
+      console.log('Profile URL is invalid')
+    }
+
+    console.log('Profile URL is valid, proceeding')
     if (checkErrors) {
       if (
         hobbyInputValue?.includes(',') ||
@@ -523,9 +521,9 @@ const SimpleOnboarding: React.FC<Props> = ({
     let reqBody: any = { ...Addressdata }
     // let reqBody: any = updateStreet()
 
-    if (!user?._addresses?.length && reqBody?.label === '') {
-      reqBody.label = 'Default'
-    }
+    // if (!user?._addresses?.length && reqBody?.label === '') {
+    reqBody.label = 'Default'
+    // }
 
     if (user?.primary_address?._id) {
       await updateUserAddress(user.primary_address._id, reqBody, (err, res) => {
@@ -567,7 +565,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     dispatch(updateUser(response?.data?.data?.user))
     // window.location.href = '/community'
     dispatch(closeModal())
-    router.reload()
+    router.push(`/profile/${response?.data?.data?.user.profile_url}`)
   }
 
   useEffect(() => {
@@ -584,32 +582,30 @@ const SimpleOnboarding: React.FC<Props> = ({
 
   const checkProfileUrl = async () => {
     const token = localStorage.getItem('token')
-    if (!profileUrl) return
 
     const headers = { Authorization: `Bearer ${token}` }
-    if (user.profile_url !== profileUrl) {
-      axios
-        .get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${profileUrl}`,
-          { headers },
-        )
-        .then((res) => {
-          setInputErrs((prev) => {
-            return { ...prev, profile_url: null }
-          })
-        })
-        .catch((err) => {
-          console.log('err', err)
-          setInputErrs((prev) => {
-            return { ...prev, profile_url: 'This profile url is already taken' }
-          })
-        })
-    } else {
-      setInputErrs((prev) => {
-        return { ...prev, profile_url: null }
-      })
+
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${profileUrl}`,
+        { headers },
+      )
+
+      setData((prev) => ({
+        ...prev,
+        profile_url: data?.full_name?.replace(/[^a-zA-Z0-9-]/g, '-') || '',
+      }))
+      return true
+    } catch (err) {
+      console.log('err', err)
+      setInputErrs((prev) => ({
+        ...prev,
+        profile_url: 'This profile URL is already taken',
+      }))
+      return false
     }
   }
+
   useEffect(() => {
     const handleClickOutside = (event: any) => {
       if (AddressRef.current && !AddressRef.current.contains(event.target)) {
@@ -626,10 +622,6 @@ const SimpleOnboarding: React.FC<Props> = ({
       window.removeEventListener('click', handleClickOutside)
     }
   }, [ShowDropdown, ShowAutoAddress])
-
-  useEffect(() => {
-    checkProfileUrl()
-  }, [data.profile_url, user.profile_url])
 
   useEffect(() => {
     let profileUrl = data.full_name
