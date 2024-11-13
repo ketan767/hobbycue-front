@@ -87,7 +87,8 @@ button:disabled {
 } */
 
 .site-container {
-  max-width: var(--max-width);
+  /* max-width: var(--max-width); */
+  max-width: 1240px;
   margin: auto;
 }
 
