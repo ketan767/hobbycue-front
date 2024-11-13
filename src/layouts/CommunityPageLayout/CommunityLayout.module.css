@@ -660,7 +660,9 @@
 
 .location-dropdown {
   border: none !important;
-  border-radius: 0;
+  border-radius: 8px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 .location-side-wrapper {
   border-bottom-left-radius: 0;
@@ -673,14 +675,16 @@
   max-height: 1000px;
   top: 0;
   box-shadow: none;
-  border: 1px solid #ebedf0;
+  /* border: 1px solid #ebedf0; */
   border-top: none;
   padding-bottom: 12px;
 }
 .location-dropdown > div > div {
   border-bottom: 0;
 }
-
+.location-dropdown-container {
+  padding-bottom: 0 !important;
+}
 .location-dropdown-container p {
   line-height: 18px;
 }
