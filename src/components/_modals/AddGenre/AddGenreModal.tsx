@@ -13,6 +13,7 @@ type Props = {
   handleSubmit?: any
   propData?: any
   HobbyValue?: any
+  existsButNotEnabled?: boolean
 }
 
 const AddGenre: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const AddGenre: React.FC<Props> = ({
   handleSubmit,
   propData,
   HobbyValue,
+  existsButNotEnabled,
 }) => {
   const dispatch = useDispatch()
   const [snackbar, setSnackbar] = useState({
@@ -32,7 +34,7 @@ const AddGenre: React.FC<Props> = ({
     <>
       <div className={`${styles['add-hobby']}`}>
         <div className={styles['header']}>
-          <p>Request Genre/Style</p>
+          <p>{`${existsButNotEnabled ? 'Enable' : 'Request'} Genre/Style`}</p>
           <CloseIcon
             className={styles['modal-close-icon']}
             onClick={() => {
@@ -43,7 +45,8 @@ const AddGenre: React.FC<Props> = ({
         <hr className={styles['modal-hr']} />
         <div className={styles['content']}>
           <p>
-            Request HobbyCue Admin to add{' '}
+            Request HobbyCue Admin to{' '}
+            {existsButNotEnabled ? 'enable adding' : 'add'}{' '}
             <span>{propData?.defaultValue ?? 'genre'}</span> as a Genre/Style
             under <span>{HobbyValue?.defaultValue ?? 'Hobby'}</span> so that we
             can grow this as a community

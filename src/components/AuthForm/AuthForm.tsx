@@ -225,21 +225,31 @@ const AuthForm: React.FC<Props> = (props) => {
         dispatch(updateIsLoggedIn(true))
         dispatch(closeModal())
         const { err: error, res: response } = await getMyProfileDetail()
-        if (response?.data?.data?.user?.is_onboarded) {
-          if (router.pathname === '/') {
-            router.push('/community', undefined, { shallow: false })
+        if (router.pathname === '/') {
+          if (response?.data?.data?.user?.is_onboarded) {
+            if (router.asPath.includes('me=true')) {
+              router.push(`/me`)
+            } else if (router.asPath.includes('showGeneral=true')) {
+              router.push(`/me/general`)
+            } else if (router.asPath.includes('showHobby=true')) {
+              router.push(`/me/hobby`)
+            } else if (router.asPath.includes('showLocation=true')) {
+              router.push(`/me/location`)
+            } else if (router.pathname === '/') {
+              router.push('/community', undefined, { shallow: false })
+            } else {
+              // window.location.reload()
+            }
           } else {
-            // window.location.reload()
+            dispatch(
+              openModal({
+                type: 'SimpleOnboarding',
+                closable: true,
+                propData: { showError: true },
+              }),
+            )
+            // router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
           }
-        } else {
-          dispatch(
-            openModal({
-              type: 'SimpleOnboarding',
-              closable: true,
-              propData: { showError: true },
-            }),
-          )
-          // router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
         }
       }
     }
@@ -332,10 +342,27 @@ const AuthForm: React.FC<Props> = (props) => {
 
       if (router.pathname === '/') {
         if (response?.data?.data?.user.is_admin) {
-          router.push('/admin')
-        }
-        if (response?.data?.data?.user?.is_onboarded) {
-          if (router.pathname === '/') {
+          if (router.asPath.includes('me=true')) {
+            router.push(`/me`)
+          } else if (router.asPath.includes('showGeneral=true')) {
+            router.push(`/me/general`)
+          } else if (router.asPath.includes('showHobby=true')) {
+            router.push(`/me/hobby`)
+          } else if (router.asPath.includes('showLocation=true')) {
+            router.push(`/me/location`)
+          } else {
+            router.push('/admin')
+          }
+        } else if (response?.data?.data?.user?.is_onboarded) {
+          if (router.asPath.includes('me=true')) {
+            router.push(`/me`)
+          } else if (router.asPath.includes('showGeneral=true')) {
+            router.push(`/me/general`)
+          } else if (router.asPath.includes('showHobby=true')) {
+            router.push(`/me/hobby`)
+          } else if (router.asPath.includes('showLocation=true')) {
+            router.push(`/me/location`)
+          } else if (router.pathname === '/') {
             router.push('/community', undefined, { shallow: false })
           } else {
             window.location.reload()
@@ -415,7 +442,15 @@ const AuthForm: React.FC<Props> = (props) => {
 
         const { err: error, res: response } = await getMyProfileDetail()
         if (response?.data?.data?.user?.is_onboarded) {
-          if (router.pathname === '/') {
+          if (router.asPath.includes('me=true')) {
+            router.push(`/me`)
+          } else if (router.asPath.includes('showGeneral=true')) {
+            router.push(`/me/general`)
+          } else if (router.asPath.includes('showHobby=true')) {
+            router.push(`/me/hobby`)
+          } else if (router.asPath.includes('showLocation=true')) {
+            router.push(`/me/location`)
+          } else if (router.pathname === '/') {
             router.push('/community', undefined, { shallow: false })
           } else {
             window.location.reload()

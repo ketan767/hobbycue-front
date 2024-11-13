@@ -17,7 +17,7 @@ const index = () => {
       if (isLoggedIn && user?.profile_url) {
         router.push(`/profile/${user.profile_url}?showLocation=true`)
       } else if (!isLoggedIn) {
-        router.push('/?showAuth=true')
+        router.push('/?showLocation=true')
       }
     }
 
