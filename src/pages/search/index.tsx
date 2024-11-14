@@ -552,10 +552,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
         }
         // Search by title
         dispatch(setShowPageLoader(true))
+        // const { res: titleRes, err: titleErr } = await searchPages({
+        //   title: searchValue,
+        // })
         const { res: titleRes, err: titleErr } = await searchPages({
+          sort: '-createdAt',
+          populate: '_hobbies,_address,product_variant,seller',
           title: searchValue,
+          hobby: searchValue,
+          location: searchValue,
+          page: '1',
+          limit: '1000',
         })
-
         if (titleErr) {
           console.error('An error occurred during the title search:', titleErr)
           dispatch(setSearchLoading(false))
@@ -567,86 +575,84 @@ const MainContent: React.FC<SearchResultsProps> = ({
         // Function to fetch tagline search results and process unique pages
 
         dispatch(setShowPageLoader(true))
-        const { res: taglineRes, err: taglineErr } = await searchPages({
-          tagline: searchValue,
+        // const { res: taglineRes, err: taglineErr } = await searchPages({
+        //   tagline: searchValue,
+        // })
+
+        // const taglinePages = taglineRes.data.slice(0, 50) // Get tagline search results
+
+        // Combine titlePages and taglinePages and filter out duplicate URLs
+        const uniqueUrls = new Set<string>()
+        const uniquePages: any[] = [] // Use 'any[]' if you prefer not to define a specific type
+
+        ;[...titlePages].forEach((page) => {
+          if (
+            page &&
+            page.page_url &&
+            typeof page.page_url === 'string' &&
+            !uniqueUrls.has(page.page_url)
+          ) {
+            uniqueUrls.add(page.page_url)
+            uniquePages.push(page)
+          }
+        })
+        const user_id = isLoggedIn ? user?._id : null
+        console.log('sto')
+        const { res, err } = await addSearchHistory({
+          user_id: user_id,
+          no_of_pages: uniquePages?.length,
+          search_input: searchValue,
         })
 
-        if (!taglineErr) {
-          const taglinePages = taglineRes.data.slice(0, 50) // Get tagline search results
+        // Filter uniquePages by type and is_published
+        const typeResultOne = uniquePages.filter(
+          (page) => page.type === 1 && page.is_published,
+        )
+        const typeResultTwo = uniquePages.filter(
+          (page) => page.type === 2 && page.is_published,
+        )
+        const typeResultThree = uniquePages.filter(
+          (page) => page.type === 3 && page.is_published,
+        )
 
-          // Combine titlePages and taglinePages and filter out duplicate URLs
-          const uniqueUrls = new Set<string>()
-          const uniquePages: any[] = [] // Use 'any[]' if you prefer not to define a specific type
+        const typeResultFour = uniquePages.filter(
+          (page) => page.type === 4 && page.is_published,
+        )
 
-          ;[...titlePages, ...taglinePages].forEach((page) => {
-            if (
-              page &&
-              page.page_url &&
-              typeof page.page_url === 'string' &&
-              !uniqueUrls.has(page.page_url)
-            ) {
-              uniqueUrls.add(page.page_url)
-              uniquePages.push(page)
-            }
-          })
-          const user_id = isLoggedIn ? user?._id : null
-          console.log('sto')
-          const { res, err } = await addSearchHistory({
-            user_id: user_id,
-            no_of_pages: uniquePages?.length,
-            search_input: searchValue,
-          })
+        // Dispatch the unique results to the appropriate actions
+        dispatch(
+          setTypeResultOne({
+            data: typeResultOne,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
+        dispatch(
+          setTypeResultTwo({
+            data: typeResultTwo,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
+        dispatch(
+          setTypeResultThree({
+            data: typeResultThree,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
 
-          // Filter uniquePages by type and is_published
-          const typeResultOne = uniquePages.filter(
-            (page) => page.type === 1 && page.is_published,
-          )
-          const typeResultTwo = uniquePages.filter(
-            (page) => page.type === 2 && page.is_published,
-          )
-          const typeResultThree = uniquePages.filter(
-            (page) => page.type === 3 && page.is_published,
-          )
-
-          const typeResultFour = uniquePages.filter(
-            (page) => page.type === 4 && page.is_published,
-          )
-
-          // Dispatch the unique results to the appropriate actions
-          dispatch(
-            setTypeResultOne({
-              data: typeResultOne,
-              message: 'Search completed successfully.',
-              success: true,
-            }),
-          )
-          dispatch(
-            setTypeResultTwo({
-              data: typeResultTwo,
-              message: 'Search completed successfully.',
-              success: true,
-            }),
-          )
-          dispatch(
-            setTypeResultThree({
-              data: typeResultThree,
-              message: 'Search completed successfully.',
-              success: true,
-            }),
-          )
-
-          dispatch(
-            setTypeResultFour({
-              data: typeResultFour,
-              message: 'Search completed successfully.',
-              success: true,
-            }),
-          )
-        }
+        dispatch(
+          setTypeResultFour({
+            data: typeResultFour,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
 
         dispatch(setShowPageLoader(false))
 
-        const query = `level=1&level=2&level=3&level=4&level=5&search=${searchValue}`
+        const query = `fields=display,genre&level=1&level=2&level=3&level=4&level=5&search=${searchValue}`
         dispatch(setShowPageLoader(true))
         const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
         if (hobbyErr) {
