@@ -675,6 +675,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
               .toLowerCase()
               .localeCompare(b.display.toLowerCase())
           })
+          console.log('SortedHobbies:--------------> ' + sortedHobbies.data[0].hobby)
+
           dispatch(
             setHobbiesSearchResult({
               data: sortedHobbies,

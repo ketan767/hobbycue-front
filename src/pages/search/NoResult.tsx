@@ -47,6 +47,7 @@ const NoResult = () => {
     programs: 'Programs',
     products: 'Products',
     blogs: 'Blogs',
+    posts: 'Posts',
   }
   const isMob = isMobile()
   const { query } = router
@@ -65,6 +66,7 @@ const NoResult = () => {
   // const [location, setLocation] = useState('')
   const searchHobbyRef = useRef<HTMLInputElement>(null)
   const locationDropdownRef = useRef<HTMLInputElement>(null)
+  const nameInputRef = useRef<HTMLInputElement>(null)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState(false)
   const [showAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   // const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
@@ -446,98 +448,141 @@ const NoResult = () => {
         <div className={styles.filterParent}>
           {/* <div className={styles.filter}> */}
           <div className={styles.inputsContainer}>
-            <div className={styles.hobbySuggestion}>
-              <Image
-                src={SearchIcon}
-                width={16}
-                height={16}
-                alt="SearchIcon"
-                className={styles.searchIcon}
-              />
-              <TextField
-                autoComplete="off"
-                inputRef={searchHobbyRef}
-                variant="standard"
-                label="Hobby"
-                size="small"
-                name="hobby"
-                className={styles.hobbySearch}
-                onFocus={() => {
-                  setShowHobbyDropdown(true)
-                }}
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  if (e.key !== 'Enter') {
+            {filter !== 'users' && filter !== 'Posts' && (
+              <div className={styles.hobbySuggestion}>
+                <Image
+                  src={SearchIcon}
+                  width={16}
+                  height={16}
+                  alt="SearchIcon"
+                  className={styles.searchIcon}
+                />
+                <TextField
+                  autoComplete="off"
+                  inputRef={searchHobbyRef}
+                  variant="standard"
+                  label="Hobby"
+                  size="small"
+                  name="hobby"
+                  className={styles.hobbySearch}
+                  onFocus={() => {
                     setShowHobbyDropdown(true)
-                    setIsHobbySelected(false)
+                  }}
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                    if (e.key !== 'Enter') {
+                      setShowHobbyDropdown(true)
+                      setIsHobbySelected(false)
+                    }
+                    handleHobbyKeyDown(e)
+                    // handleSubmit(true)
+                  }}
+                  value={hobby}
+                  onBlur={() =>
+                    setTimeout(() => {
+                      setShowHobbyDropdown(false)
+                    }, 300)
                   }
-                  handleHobbyKeyDown(e)
-                  // handleSubmit(true)
-                }}
-                value={hobby}
-                onBlur={() =>
-                  setTimeout(() => {
-                    setShowHobbyDropdown(false)
-                  }, 300)
-                }
-                onChange={handleHobbyInputChange}
-                sx={{
-                  '& label': {
-                    fontSize: '16px',
-                    paddingLeft: '24px',
-                  },
-                  '& label.Mui-focused': {
-                    fontSize: '14px',
-                    marginLeft: '-16px',
-                  },
-                  '& .MuiInputLabel-shrink': {
-                    marginTop: '3px',
-                    fontSize: '14px',
-                    marginLeft: '-16px',
-                  },
-                  '& .MuiInput-underline:hover:before': {
-                    borderBottomColor: '#7F63A1 !important',
-                  },
-                }}
-                InputProps={{
-                  sx: {
-                    paddingLeft: '24px',
-                  },
-                }}
-              />
-              {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
-                <div className={styles.dropdownHobby} ref={searchHobbyRef}>
-                  {hobbyDropdownList.map((hobby, index) => {
-                    return (
-                      <p
-                        key={hobby._id}
-                        onClick={() => {
-                          // setHobby(hobby.display)
-                          // searchResult(undefined, hobby.display)
-                          dispatch(setHobby(hobby.display))
-                        }}
-                        className={
-                          index === focusedHobbyIndex
-                            ? styles['dropdown-option-focus']
-                            : ''
-                        }
-                      >
-                        {hobby.display}
-                      </p>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
+                  onChange={handleHobbyInputChange}
+                  sx={{
+                    '& label': {
+                      fontSize: '16px',
+                      paddingLeft: '24px',
+                    },
+                    '& label.Mui-focused': {
+                      fontSize: '14px',
+                      marginLeft: '-16px',
+                    },
+                    '& .MuiInputLabel-shrink': {
+                      marginTop: '3px',
+                      fontSize: '14px',
+                      marginLeft: '-16px',
+                    },
+                    '& .MuiInput-underline:hover:before': {
+                      borderBottomColor: '#7F63A1 !important',
+                    },
+                  }}
+                  InputProps={{
+                    sx: {
+                      paddingLeft: '24px',
+                    },
+                  }}
+                />
+                {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
+                  <div className={styles.dropdownHobby} ref={searchHobbyRef}>
+                    {hobbyDropdownList.map((hobby, index) => {
+                      return (
+                        <p
+                          key={hobby._id}
+                          onClick={() => {
+                            // setHobby(hobby.display)
+                            // searchResult(undefined, hobby.display)
+                            dispatch(setHobby(hobby.display))
+                          }}
+                          className={
+                            index === focusedHobbyIndex
+                              ? styles['dropdown-option-focus']
+                              : ''
+                          }
+                        >
+                          {hobby.display}
+                        </p>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+            {/* {filter === 'User Profiles' &&
+              <div className={styles.searchBox}>
+                <Image
+                  src={SearchIcon}
+                  width={16}
+                  height={16}
+                  alt="SearchIcon"
+                  className={styles.searchIconKeyword}
+                />
+                <TextField
+                  autoComplete="off"
+                  inputRef={nameInputRef}
+                  variant="standard"
+                  label="Keywords"
+                  size="small"
+                  name="search"
+                  className={styles.keywords}
+                  onChange={(e) => dispatch(setKeyword(e.target.value))}
+                  value={currKeyword}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      searchResult()
+                    }
+                  }}
+                  sx={{
+                    '& label': {
+                      fontSize: '16px',
+                      paddingLeft: '24px',
+                    },
+                    '& label.Mui-focused': {
+                      fontSize: '14px',
+                      marginLeft: '-16px',
+                    },
+                    '& .MuiInputLabel-shrink': {
+                      marginTop: '3px',
+                      fontSize: '14px',
+                      marginLeft: '-16px',
+                    },
+                    '& .MuiInput-underline:hover:before': {
+                      borderBottomColor: '#7F63A1 !important',
+                    },
+                  }}
+                  InputProps={{
+                    sx: {
+                      paddingLeft: '24px',
+                    },
+                  }}
+                />
+              </div>
+            } */}
             <div className={styles.locationHiddenMobile}>
-              {/* <AccordianMenuNoResult
-                value={category}
-                setValue={setCategory}
-                subCategory={subCategory}
-                setSubCategory={setSubCategory}
-                handleSubmit={handleSubmit}
-                setShowCategoryDropdown={setShowCategoryDropdown}
-                showCategoryDropdown={showCategoryDropdown}
-              /> */}
               <AccordionMenu2
                 categoryValue={categoryValue}
                 handleSubmit={handleSubmit}
