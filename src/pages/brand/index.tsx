@@ -83,8 +83,8 @@ const index: FC<indexProps> = ({}) => {
       const result = await getBrand()
       // console.log('result------>', result.res.data[0])
       // console.log('id------>', result.res.data[0]._id)
-      setContent(result.res.data[0].content)
-      setId(result.res.data[0]._id)
+      setContent(result.res.data[0]?.content)
+      setId(result.res.data[0]?._id)
     }
     fetchBrands()
   }, [])
