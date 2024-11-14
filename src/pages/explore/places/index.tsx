@@ -29,6 +29,7 @@ const Places: React.FC<Props> = ({ data: initialData }) => {
   const [page, setPage] = useState(1) // Tracks the current page
   const [loading, setLoading] = useState(false) // Indicates if more data is being loaded
   const [hasMore, setHasMore] = useState(true) // Tracks if there are more listings to load
+  const [hasNoDataPerma, setHasNoDataPerma] = useState(false) 
   const [ShowAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const { isSearching } = useSelector((state: RootState) => state.explore)
@@ -80,6 +81,7 @@ const Places: React.FC<Props> = ({ data: initialData }) => {
 
       if (err || !res?.data?.data?.length) {
         setHasMore(false)
+        setHasNoDataPerma(true)
       } else {
         setData((prevData: any) => [...prevData, ...res.data.data])
         setPage((prevPage) => prevPage + 1)
@@ -105,7 +107,9 @@ const Places: React.FC<Props> = ({ data: initialData }) => {
         window.innerHeight + document.documentElement.scrollTop >=
         document.documentElement.offsetHeight - 100
       ) {
-        setHasMore(true)
+         if (!hasNoDataPerma) {
+          setHasMore(true)
+        }
         fetchMoreData()
       }
     }
@@ -180,16 +184,13 @@ const Places: React.FC<Props> = ({ data: initialData }) => {
                 style={{ minWidth: 271, maxWidth: 700 }}
               />
             ))}
+            <>{loading && <PagesLoader />}</>
+            <>{loading && <PagesLoader />}</>
+            <>{loading && <PagesLoader />}</>
+            <>{loading && <PagesLoader />}</>
           </div>
         )}
-        {loading && (
-          <div className={styles.gridContainer}>
-            <PagesLoader />
-            <PagesLoader />
-            <PagesLoader />
-            <PagesLoader />
-          </div>
-        )}
+        
         {!hasMore && <p>No more listings available.</p>}
       </div>
     </>
