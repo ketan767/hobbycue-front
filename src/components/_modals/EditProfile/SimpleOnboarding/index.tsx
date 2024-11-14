@@ -69,6 +69,10 @@ type Props = {
   }
 }
 
+interface ResponseData {
+  message: string
+}
+
 type AddressObj = {
   street_number?: string
   subpremise?: string
@@ -379,16 +383,66 @@ const SimpleOnboarding: React.FC<Props> = ({
     }
   }
 
+  const checkProfileUrl = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      const headers = { Authorization: `Bearer ${token}` }
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${profileUrl}`,
+        { headers },
+      )
+
+      if (!res.data.success) {
+        let profileurlname =
+          data?.full_name?.replace(/[^a-zA-Z0-9-]/g, '-') || ''
+        let profileUrlExistId = data.profile_url
+        const newProfileUrl = profileurlname + '-' + profileUrlExistId
+        setData((prev) => ({
+          ...prev,
+          profile_url: newProfileUrl,
+        }))
+        return newProfileUrl
+      } else {
+        const newProfileUrl =
+          data?.full_name?.replace(/[^a-zA-Z0-9-]/g, '-') || ''
+        setData((prev) => ({
+          ...prev,
+          profile_url: newProfileUrl,
+        }))
+        return true
+      }
+    } catch (error) {
+      if (error) {
+        let profileurlname =
+          data?.full_name?.replace(/[^a-zA-Z0-9-]/g, '-') || ''
+        let profileUrlExistId = data.profile_url
+        const newProfileUrl = profileurlname + '-' + profileUrlExistId
+        setData((prev) => ({
+          ...prev,
+          profile_url: newProfileUrl,
+        }))
+        return newProfileUrl
+      } else {
+        console.error('An error occurred:', error)
+      }
+      return false
+    }
+  }
+
   const handleSubmit = async (checkErrors = true) => {
     let inputhobby = null
     let hasErrors = false
-    const isProfileUrlValid = await checkProfileUrl()
+    const profileUrlResult = await checkProfileUrl()
 
-    if (!isProfileUrlValid) {
+    if (!profileUrlResult) {
       console.log('Profile URL is invalid')
+    } else if (typeof profileUrlResult === 'string') {
+      setData((prev) => ({
+        ...prev,
+        profile_url: profileUrlResult,
+      }))
     }
 
-    console.log('Profile URL is valid, proceeding')
     if (checkErrors) {
       if (
         hobbyInputValue?.includes(',') ||
@@ -563,9 +617,12 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (error || !response?.data?.success) return
 
     dispatch(updateUser(response?.data?.data?.user))
-    // window.location.href = '/community'
+    if (response?.data?.data?.user?.is_onboarded) {
+      router.push(`/community`)
+    } else {
+      router.push(`/profile/${response?.data?.data?.user.profile_url}`)
+    }
     dispatch(closeModal())
-    router.push(`/profile/${response?.data?.data?.user.profile_url}`)
   }
 
   useEffect(() => {
@@ -579,32 +636,6 @@ const SimpleOnboarding: React.FC<Props> = ({
       setNextDisabled(false)
     }
   }, [data])
-
-  const checkProfileUrl = async () => {
-    const token = localStorage.getItem('token')
-
-    const headers = { Authorization: `Bearer ${token}` }
-
-    try {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${profileUrl}`,
-        { headers },
-      )
-
-      setData((prev) => ({
-        ...prev,
-        profile_url: data?.full_name?.replace(/[^a-zA-Z0-9-]/g, '-') || '',
-      }))
-      return true
-    } catch (err) {
-      console.log('err', err)
-      setInputErrs((prev) => ({
-        ...prev,
-        profile_url: 'This profile URL is already taken',
-      }))
-      return false
-    }
-  }
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
