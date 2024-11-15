@@ -5,18 +5,24 @@ import { openModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
 import { showProfileError } from '@/redux/slices/user'
 import { useRouter } from 'next/router'
+import { updateListingLayoutMode, updateViewAs } from '@/redux/slices/site'
 
 type Props = {
   handleClose?: any
   userType: 'edit' | 'anonymous' | 'page'
   showFeatureUnderDevelopment?: () => void
+  setViewAs?: React.Dispatch<
+    React.SetStateAction<'' | 'signed-in' | 'not-signed-in' | 'print'>
+  >
 }
 
 const Dropdown: React.FC<Props> = ({
   handleClose,
   userType,
   showFeatureUnderDevelopment,
+  setViewAs,
 }) => {
+  const [showViewAsOptions, setShowViewAsOptions] = useState(false)
   const dispatch = useDispatch()
   const ref = useRef<HTMLDivElement>(null)
   const Claimref = useRef<HTMLLIElement>(null)
@@ -24,6 +30,7 @@ const Dropdown: React.FC<Props> = ({
   const supportRef = useRef<HTMLLIElement>(null)
   const reportRef = useRef<HTMLLIElement>(null)
   const transferRef = useRef<HTMLLIElement>(null)
+  const viewAsRef = useRef<HTMLLIElement>(null)
   const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
   const router = useRouter()
 
@@ -110,6 +117,10 @@ const Dropdown: React.FC<Props> = ({
             dispatch(showProfileError(true))
           }
         } else dispatch(openModal({ type: 'auth', closable: true }))
+      } else if (
+        event.target.nodeName === viewAsRef.current?.nodeName ||
+        event.target.textContent === viewAsRef.current?.textContent
+      ) {
       } else if (ref.current && !ref.current.contains(event.target)) {
         handleClose()
         return
@@ -123,6 +134,25 @@ const Dropdown: React.FC<Props> = ({
     }
   }, [ref])
 
+  const handleClickViewAs = (option: string) => {
+    dispatch(updateListingLayoutMode('view'))
+    switch (option) {
+      case 'signed-in':
+        setViewAs?.('signed-in')
+        break
+      case 'not-signed-in':
+        setViewAs?.('not-signed-in')
+        dispatch(updateViewAs('not-signed-in')) // for hiding the contact details in page
+        break
+      case 'print':
+        setViewAs?.('print')
+        break
+      default:
+        console.log('Wrong view as option in handleClickViewAs()')
+    }
+    handleClose()
+  }
+
   return (
     <>
       <div className={styles['dropdown']} ref={ref}>
@@ -131,6 +161,26 @@ const Dropdown: React.FC<Props> = ({
             <>
               <li ref={supportRef}>Support</li>
               <li ref={transferRef}>Transfer</li>
+              <li ref={viewAsRef} className={styles.viewAsLi}>
+                <div onClick={() => setShowViewAsOptions((prev) => !prev)}>
+                  View As
+                </div>
+                {showViewAsOptions ? (
+                  <ul className={styles.viewAsOptions}>
+                    <li onClick={() => handleClickViewAs('signed-in')}>
+                      User Signed In
+                    </li>
+                    <li onClick={() => handleClickViewAs('not-signed-in')}>
+                      User Not Signed In
+                    </li>
+                    <li onClick={() => handleClickViewAs('print')}>
+                      Print Ready
+                    </li>
+                  </ul>
+                ) : (
+                  <></>
+                )}
+              </li>
             </>
           )}
           {userType === 'anonymous' && (

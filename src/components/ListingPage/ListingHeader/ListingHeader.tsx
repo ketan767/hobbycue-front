@@ -14,7 +14,11 @@ import {
   updateListingCover,
   updateListingProfile,
 } from '@/services/listing.service'
-import { updatePhotoEditModalData } from '@/redux/slices/site'
+import {
+  updateListingLayoutMode,
+  updatePhotoEditModalData,
+  updateViewAs,
+} from '@/redux/slices/site'
 import { openModal, updateImageUrl, updateShareUrl } from '@/redux/slices/modal'
 import { dateFormat } from '@/utils'
 import CustomTooltip from '@/components/Tooltip/ToolTip'
@@ -45,6 +49,8 @@ import ReactPlayer from 'react-player'
 import InputSelect from '@/components/InputSelect/inputSelect'
 import ProductImageSlider from './ProductImageSlider'
 import { Inter } from 'next/font/google'
+import PrintIcon from '@/assets/icons/PrintIcon'
+import printViewLogo from '@/assets/image/PrintViewLogo.png'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -72,6 +78,9 @@ const ListingHeader: React.FC<Props> = ({
   setpageTypeErr,
   setTitleError,
 }) => {
+  const [viewAs, setViewAs] = useState<
+    '' | 'signed-in' | 'not-signed-in' | 'print'
+  >('')
   const dispatch = useDispatch()
   const router = useRouter()
   const [snackbar, setSnackbar] = useState({
@@ -721,6 +730,7 @@ const ListingHeader: React.FC<Props> = ({
       />
     </svg>
   )
+  console.log('asifs viewAs', viewAs)
   return (
     <>
       <header
@@ -1268,7 +1278,9 @@ const ListingHeader: React.FC<Props> = ({
                 ) : (
                   <></>
                 )}
-                <div className={styles['display-desktop']}>{button}</div>
+                {viewAs !== 'print' && (
+                  <div className={styles['display-desktop']}>{button}</div>
+                )}
               </div>
             </div>
           </section>
@@ -1597,6 +1609,36 @@ const ListingHeader: React.FC<Props> = ({
         )}
         {data.type !== 4 ? (
           <div className={styles['actions-container-desktop']}>
+            {listingLayoutMode !== 'edit' && viewAs && (
+              <>
+                {viewAs === 'print' ? (
+                  // <button className={styles.viewButton}></button>
+                  <FilledButton className={styles.viewButtonPrint} onClick={()=> window.print()}>
+                    <PrintIcon /> Print
+                  </FilledButton>
+                ) : (
+                  <button className={styles.viewButton}>
+                    You are viewing this page as a <br />
+                    <span>
+                      {viewAs === 'signed-in'
+                        ? 'User Signed In'
+                        : 'User Not Signed In'}
+                    </span>
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    dispatch(updateListingLayoutMode('edit'))
+                    dispatch(updateViewAs('')) // for the contact details
+                    setViewAs('')
+                  }}
+                  className={styles.viewButton}
+                  style={{ textAlign: 'center', fontWeight: 600 }}
+                >
+                  View as Admin
+                </button>
+              </>
+            )}
             {listingLayoutMode === 'edit' && (
               <FilledButton
                 className={
@@ -1608,73 +1650,82 @@ const ListingHeader: React.FC<Props> = ({
               </FilledButton>
             )}
             {/* Action Buttons */}
-            <div className={styles['action-btn-wrapper']}>
-              {/* Send Email Button  */}
-              <div onClick={handleRepost}>
-                <CustomTooltip title="Repost">
+            {viewAs === 'print' ? (
+              <img
+                src={printViewLogo.src}
+                alt="Print Logo"
+                className={styles.printViewLogo}
+              />
+            ) : (
+              <div className={styles['action-btn-wrapper']}>
+                {/* Send Email Button  */}
+                <div onClick={handleRepost}>
+                  <CustomTooltip title="Repost">
+                    <div
+                      onClick={(e) => console.log(e)}
+                      className={styles['action-btn']}
+                    >
+                      <RepostIcon />
+                    </div>
+                  </CustomTooltip>
+                </div>
+
+                {/* Bookmark Button */}
+                <CustomTooltip title="Bookmark">
                   <div
-                    onClick={(e) => console.log(e)}
+                    onClick={showFeatureUnderDevelopment}
                     className={styles['action-btn']}
                   >
-                    <RepostIcon />
+                    <BookmarkBorderRoundedIcon color="primary" />
                   </div>
                 </CustomTooltip>
-              </div>
 
-              {/* Bookmark Button */}
-              <CustomTooltip title="Bookmark">
-                <div
-                  onClick={showFeatureUnderDevelopment}
-                  className={styles['action-btn']}
-                >
-                  <BookmarkBorderRoundedIcon color="primary" />
-                </div>
-              </CustomTooltip>
-
-              {/* Share Button */}
-              <CustomTooltip title="Share">
-                <div
-                  onClick={(e) => handleShare()}
-                  className={styles['action-btn']}
-                >
-                  <ShareIcon />
-                </div>
-              </CustomTooltip>
-
-              {/* More Options Button */}
-              <div
-                className={styles['action-btn-dropdown-wrapper']}
-                ref={Dropdownref}
-              >
-                <CustomTooltip title="Click to view options">
+                {/* Share Button */}
+                <CustomTooltip title="Share">
                   <div
-                    onClick={(e) => handleDropdown()}
+                    onClick={(e) => handleShare()}
                     className={styles['action-btn']}
                   >
-                    <MoreHorizRoundedIcon color="primary" />
+                    <ShareIcon />
                   </div>
                 </CustomTooltip>
-                {listingLayoutMode === 'edit'
-                  ? open && (
-                      <Dropdown
-                        userType={'edit'}
-                        handleClose={handleDropdown}
-                        showFeatureUnderDevelopment={
-                          showFeatureUnderDevelopment
-                        }
-                      />
-                    )
-                  : open && (
-                      <Dropdown
-                        userType={'anonymous'}
-                        handleClose={handleDropdown}
-                        showFeatureUnderDevelopment={
-                          showFeatureUnderDevelopment
-                        }
-                      />
-                    )}
+
+                {/* More Options Button */}
+                <div
+                  className={styles['action-btn-dropdown-wrapper']}
+                  ref={Dropdownref}
+                >
+                  <CustomTooltip title="Click to view options">
+                    <div
+                      onClick={(e) => handleDropdown()}
+                      className={styles['action-btn']}
+                    >
+                      <MoreHorizRoundedIcon color="primary" />
+                    </div>
+                  </CustomTooltip>
+                  {listingLayoutMode === 'edit'
+                    ? open && (
+                        <Dropdown
+                          userType={'edit'}
+                          setViewAs={setViewAs}
+                          handleClose={handleDropdown}
+                          showFeatureUnderDevelopment={
+                            showFeatureUnderDevelopment
+                          }
+                        />
+                      )
+                    : open && (
+                        <Dropdown
+                          userType={'anonymous'}
+                          handleClose={handleDropdown}
+                          showFeatureUnderDevelopment={
+                            showFeatureUnderDevelopment
+                          }
+                        />
+                      )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         ) : (
           <></>
