@@ -327,7 +327,7 @@ export const searchPages = async (searchCriteria: any) => {
       queryParams.append(key, searchCriteria[key])
     }
     const response = await axiosInstance.get(
-      `/listing/listing-search?${queryParams}`,
+      `/listing/listing-search-all?${queryParams}`,
     )
     return { res: response.data, err: null }
   } catch (error) {

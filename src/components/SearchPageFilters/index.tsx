@@ -233,13 +233,13 @@ const SearchPageFilter = () => {
             <Image src={Product} alt="Product" />
             Products
           </div>
-          {/* <div
+          <div
             className={getFilterItemClass('posts')}
             onClick={() => handleFilterClick('posts')}
           >
             <Image src={Posts} alt="Posts" />
             Posts
-          </div> */}
+          </div>
           <div
             className={getFilterItemClass('blogs')}
             onClick={() => handleFilterClick('blogs')}
