@@ -102,10 +102,10 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     const { name, value } = event.target
 
     if (name === 'full_name') {
-      if (value?.length > 100) {
+      if (value?.length > 64) {
         setInputErrs((prev) => ({
           ...prev,
-          [name]: 'Full Name cannot exceed 100 characters',
+          [name]: 'Full Name cannot exceed 64 characters',
         }))
         return
       }

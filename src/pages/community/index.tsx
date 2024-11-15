@@ -64,7 +64,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
   return (
     <>
       <CommunityPageLayout activeTab="posts">
-        <section className={styles['posts-container']}>
+        <section style={{padding:`${loading && "0"}`}} className={loading ? "":styles['posts-container']}>
           {loading ? (
             <>
               <PostCardSkeletonLoading />
