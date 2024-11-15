@@ -318,22 +318,22 @@ const AuthForm: React.FC<Props> = (props) => {
       dispatch(updateIsLoggedIn(true))
       dispatch(closeModal())
 
-      if (e.profileObj.imageUrl) {
-        const googleImageUrl = e.profileObj.imageUrl
-        try {
-          const imageBlob = await fetch(googleImageUrl).then((res) =>
-            res.blob(),
-          )
-          const formData = new FormData()
-          formData.append('user-profile', imageBlob)
-          const updateResponse = await updateUserProfile(formData)
-          console.log('Update Profile Image Response:', updateResponse)
-        } catch (uploadError) {
-          console.error('Error uploading profile image:', uploadError)
-        }
-      } else {
-        console.log('else', e.profileObj.imageUrl)
-      }
+      // if (e.profileObj.imageUrl) {
+      //   const googleImageUrl = e.profileObj.imageUrl
+      //   try {
+      //     const imageBlob = await fetch(googleImageUrl).then((res) =>
+      //       res.blob(),
+      //     )
+      //     const formData = new FormData()
+      //     formData.append('user-profile', imageBlob)
+      //     // const updateResponse = await updateUserProfile(formData)
+      //     // console.log('Update Profile Image Response:', updateResponse)
+      //   } catch (uploadError) {
+      //     console.error('Error uploading profile image:', uploadError)
+      //   }
+      // } else {
+      //   console.log('else', e.profileObj.imageUrl)
+      // }
 
       if (res?.data?.message === 'User registered successfully') {
         dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
