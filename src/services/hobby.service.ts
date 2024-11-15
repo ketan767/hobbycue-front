@@ -20,6 +20,15 @@ export const getAllHobbiesWithoutPagi = async (query: string | null): Promise<Ap
     return { err: error, res: null }
   }
 }
+export const searchAllHobbies = async (query: string | null): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.get(`/hobby/searchAllHobbies?${query}`)
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
 
 export const getTrendingHobbies = async (query: string | null): Promise<ApiReturnObject> => {
   try {

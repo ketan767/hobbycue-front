@@ -46,7 +46,11 @@ import Link from 'next/link'
 import SearchLoader from '@/components/SearchLoader'
 
 import { addSearchHistory, searchUsers } from '@/services/user.service'
-import { getAllHobbies } from '@/services/hobby.service'
+import {
+  getAllHobbies,
+  getAllHobbiesWithoutPagi,
+  searchAllHobbies,
+} from '@/services/hobby.service'
 
 import {
   convertDateToString,
@@ -534,21 +538,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
       try {
         dispatch(setSearchLoading(true))
         const { res: userRes, err: userErr } = await searchUsers({
-          full_name: searchValue,
+          searchValue: searchValue,
         })
         if (userErr) {
         } else {
-          if (userRes?.length < 10) {
-            const { res: taglineRes, err: taglineErr } = await searchUsers({
-              tagline: searchValue,
-            })
-            if (!taglineErr) {
-              const combinedResults = userRes.concat(taglineRes)
-              dispatch(setUserSearchResults(combinedResults))
-            }
-          } else {
-            dispatch(setUserSearchResults(userRes))
-          }
+          console.log('User result----------------->', userRes)
+          dispatch(setUserSearchResults(userRes))
         }
         // Search by title
         dispatch(setShowPageLoader(true))
@@ -562,7 +557,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
           hobby: searchValue,
           location: searchValue,
           page: '1',
-          limit: '1000',
+          limit: '10000',
         })
         if (titleErr) {
           console.error('An error occurred during the title search:', titleErr)
@@ -570,7 +565,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
           return
         }
 
-        const titlePages = titleRes.data.slice(0, 100) // Get title search results
+        // const titlePages = titleRes.data.slice(0, 100) // Get title search results
+        const titlePages = titleRes.data // Get title search results
 
         // Function to fetch tagline search results and process unique pages
 
@@ -654,30 +650,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
         const query = `fields=display,genre&level=1&level=2&level=3&level=4&level=5&search=${searchValue}`
         dispatch(setShowPageLoader(true))
-        const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
-        if (hobbyErr) {
-          console.error('An error occurred during the page search:', hobbyErr)
-        } else {
-          const sortedHobbies = hobbyRes.data.hobbies.sort((a: any, b: any) => {
-            const indexA = a.display
-              .toLowerCase()
-              .indexOf(searchValue.toLowerCase())
-            const indexB = b.display
-              .toLowerCase()
-              .indexOf(searchValue.toLowerCase())
-
-            if (indexA === 0 && indexB !== 0) {
-              return -1
-            } else if (indexB === 0 && indexA !== 0) {
-              return 1
-            }
-            return a.display
-              .toLowerCase()
-              .localeCompare(b.display.toLowerCase())
-          })
+        // const { res: hobbyRes, err: hobbyErr } = await getAllHobbiesWithoutPagi(
+        //   query,
+        // )
+        const query2 = `show=true&keyword=${searchValue}`
+        const { res: hobbyRes, err: hobbyErr } = await searchAllHobbies(query2)
+        console.log('response----------->', hobbyRes)
+        console.log('response----------->', hobbyRes.status)
+        if (hobbyRes.status === 200) {
+          console.log('SortedHobbies:--------------> ' + hobbyRes.data[0])
           dispatch(
             setHobbiesSearchResult({
-              data: sortedHobbies,
+              data: hobbyRes.data,
               message: 'Search completed successfully.',
               success: true,
             }),
