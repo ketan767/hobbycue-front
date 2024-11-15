@@ -28,6 +28,8 @@ export interface Page {
 
 interface hobbies {
   _id: string
+  add_count: number
+  cover_image: string | null
   profile_image: string | null
   genre: string[]
   slug: string
@@ -35,6 +37,12 @@ interface hobbies {
   category: { display: string }
   sub_category: { display: string }
   description: string
+  keywords: string[]
+  level: number
+  related_hobbies: string[]
+  search_key: string[]
+  show: boolean
+  tags: string[]
 }
 
 interface blogs {
@@ -64,6 +72,10 @@ export interface SearchResults<T> {
 }
 
 interface SearchState {
+  userName: string
+  userHobby: string
+  userLocation: string
+  postedBy: string
   userSearchResults: SearchResults<User>
   typeResultOne: SearchResults<Page>
   typeResultTwo: SearchResults<Page>
@@ -132,6 +144,10 @@ const initialState: SearchState = {
     message: '',
     success: false,
   },
+  userName: '',
+  userHobby: '',
+  userLocation: '',
+  postedBy: '',
   searchString: '',
   hasMore: true,
   showAll: true,
@@ -151,6 +167,18 @@ export const searchSlice = createSlice({
   name: 'search',
   initialState,
   reducers: {
+    setUserName: (state, action: PayloadAction<string>) => {
+      state.userName = action.payload
+    },
+    setUserHobby: (state, action: PayloadAction<string>) => {
+      state.userHobby = action.payload
+    },
+    setUserLocation: (state, action: PayloadAction<string>) => {
+      state.userLocation = action.payload
+    },
+    setPostedBy: (state, action: PayloadAction<string>) => {
+      state.postedBy = action.payload
+    },
     setUserSearchResults: (
       state,
       action: PayloadAction<SearchResults<User>>,
@@ -432,6 +460,10 @@ export const searchSlice = createSlice({
 })
 
 export const {
+  setUserName,
+  setUserHobby,
+  setUserLocation,
+  setPostedBy,
   setUserSearchResults,
   setTypeResultOne,
   setTypeResultTwo,

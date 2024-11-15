@@ -27,6 +27,11 @@ import {
   setPageType,
 } from '@/redux/slices/explore'
 import AccordionMenu2 from '../explore/nestedDropdown/AccordionMenu2'
+import {
+  setUserHobby,
+  setUserLocation,
+  setUserName,
+} from '@/redux/slices/search'
 type DropdownListItem = {
   _id: string
   display: string
@@ -59,6 +64,7 @@ const NoResult = () => {
     page_type,
     location: currLocation,
   } = useSelector((state: RootState) => state.explore)
+  const { userName } = useSelector((state: RootState) => state.search)
   const dispatch = useDispatch()
   // const [hobby, setHobby] = useState('')
   // const [category, setCategory] = useState('')
@@ -74,6 +80,7 @@ const NoResult = () => {
   const [focusedHobbyIndex, setFocusedHobbyIndex] = useState<number>(-1)
   const [focusedLocationIdx, setFocusedLocationIdx] = useState<number>(-1)
   const [isHobbySelected, setIsHobbySelected] = useState<boolean>(false)
+  const [isLocationSelected, setIsLocationSelected] = useState<boolean>(false)
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     ExtendedDropdownListItem[]
@@ -148,7 +155,15 @@ const NoResult = () => {
         e.stopPropagation()
         if (hobby.length !== 0 && focusedHobbyIndex === -1) {
           //AddButtonRef.current?.click()
-          handleSubmit()
+          if (filter === 'users') {
+            // dispatch(
+            //   setUserHobby(
+            //      hobby,
+            //   ),
+            // )
+          } else {
+            handleSubmit()
+          }
         } else if (focusedHobbyIndex !== -1) {
           setShowHobbyDropdown(false)
           if (showHobbyDropdown) {
@@ -157,7 +172,16 @@ const NoResult = () => {
           }
 
           if (isHobbySelected) {
-            handleSubmit()
+            if (filter === 'users') {
+              alert('Hiii')
+              dispatch(
+                setUserHobby(
+                  hobbyDropdownList[focusedHobbyIndex]?.display || hobby,
+                ),
+              )
+            } else {
+              handleSubmit()
+            }
           }
           setIsHobbySelected(true)
           // searchResult(undefined, val, undefined)
@@ -290,24 +314,55 @@ const NoResult = () => {
         dispatch(setLocation(suggestions[upIndex]?.description[0]))
         break
       case 'Enter':
-        if (Addressdata.street.trim().length !== 0 && !showAutoAddress) {
-        } else if (focusedLocationIdx !== -1 && showAutoAddress) {
-          handleSelectAddressTwo(
-            suggestions[focusedLocationIdx]?.description?.join(', '),
-            suggestions[focusedLocationIdx]?.place_id,
-          )
-          console.log(
-            'Changed location',
-            suggestions[focusedLocationIdx]?.description[0],
-          )
-          dispatch(setLocation(suggestions[focusedLocationIdx]?.description[0]))
+        if (
+          Addressdata.street.trim().length !== 0 &&
+          focusedLocationIdx === -1
+        ) {
+          if (filter === 'users') {
+            alert('Hiii')
+          } else {
+            handleSubmit()
+          }
+        } else if (focusedLocationIdx !== -1) {
+          setShowAutoAddress(false)
+          if (showAutoAddress) {
+            handleSelectAddressTwo(
+              suggestions[focusedLocationIdx]?.description?.join(', '),
+              suggestions[focusedLocationIdx]?.place_id,
+            )
+            console.log(
+              'Changed location',
+              suggestions[focusedLocationIdx]?.description[0],
+            )
+            dispatch(
+              setLocation(suggestions[focusedLocationIdx]?.description[0]),
+            )
+          }
+
+          if (isLocationSelected) {
+            if (filter === 'users') {
+              // alert('Hiii')
+              dispatch(
+                setUserLocation(
+                  suggestions[focusedLocationIdx]?.description[0],
+                ),
+              )
+            } else {
+              handleSubmit()
+            }
+          }
+          setIsLocationSelected(true)
         } else if (
           focusedLocationIdx === -1 &&
           Addressdata.street.trim().length !== 0
         ) {
           setShowAutoAddress(false)
         }
-        handleSubmit()
+        // if (filter === 'users') {
+        //   alert('hiiii')
+        // } else {
+        //   handleSubmit()
+        // }
         break
       default:
         break
@@ -448,6 +503,225 @@ const NoResult = () => {
         <div className={styles.filterParent}>
           {/* <div className={styles.filter}> */}
           <div className={styles.inputsContainer}>
+            {filter === 'users' && (
+              <div className={styles.hobbySuggestion}>
+                <Image
+                  src={SearchIcon}
+                  width={16}
+                  height={16}
+                  alt="SearchIcon"
+                  className={styles.searchIcon}
+                />
+                <TextField
+                  autoComplete="off"
+                  inputRef={nameInputRef}
+                  variant="standard"
+                  label="Name"
+                  size="small"
+                  name="name"
+                  className={styles.hobbySearch}
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                    if (e.key !== 'Enter') {
+                    }
+                    // handleSubmit(true)
+                  }}
+                  value={userName}
+                  onBlur={() =>
+                    setTimeout(() => {
+                      setShowHobbyDropdown(false)
+                    }, 300)
+                  }
+                  onChange={(e) => dispatch(setUserName(e.target.value))}
+                  sx={{
+                    '& label': {
+                      fontSize: '16px',
+                      paddingLeft: '24px',
+                    },
+                    '& label.Mui-focused': {
+                      fontSize: '14px',
+                      marginLeft: '-16px',
+                    },
+                    '& .MuiInputLabel-shrink': {
+                      marginTop: '3px',
+                      fontSize: '14px',
+                      marginLeft: '-16px',
+                    },
+                    '& .MuiInput-underline:hover:before': {
+                      borderBottomColor: '#7F63A1 !important',
+                    },
+                  }}
+                  InputProps={{
+                    sx: {
+                      paddingLeft: '24px',
+                    },
+                  }}
+                />
+              </div>
+            )}
+
+            {filter === 'users' && (
+              <div className={styles.hobbySuggestion}>
+                <Image
+                  src={SearchIcon}
+                  width={16}
+                  height={16}
+                  alt="SearchIcon"
+                  className={styles.searchIcon}
+                />
+                <TextField
+                  autoComplete="off"
+                  inputRef={searchHobbyRef}
+                  variant="standard"
+                  label="Hobby"
+                  size="small"
+                  name="hobby"
+                  className={styles.hobbySearch}
+                  onFocus={() => {
+                    setShowHobbyDropdown(true)
+                  }}
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                    if (e.key !== 'Enter') {
+                      setShowHobbyDropdown(true)
+                      setIsHobbySelected(false)
+                    }
+                    handleHobbyKeyDown(e)
+                    // handleSubmit(true)
+                  }}
+                  value={hobby}
+                  onBlur={() =>
+                    setTimeout(() => {
+                      setShowHobbyDropdown(false)
+                    }, 300)
+                  }
+                  onChange={handleHobbyInputChange}
+                  sx={{
+                    '& label': {
+                      fontSize: '16px',
+                      paddingLeft: '24px',
+                    },
+                    '& label.Mui-focused': {
+                      fontSize: '14px',
+                      marginLeft: '-16px',
+                    },
+                    '& .MuiInputLabel-shrink': {
+                      marginTop: '3px',
+                      fontSize: '14px',
+                      marginLeft: '-16px',
+                    },
+                    '& .MuiInput-underline:hover:before': {
+                      borderBottomColor: '#7F63A1 !important',
+                    },
+                  }}
+                  InputProps={{
+                    sx: {
+                      paddingLeft: '24px',
+                    },
+                  }}
+                />
+                {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
+                  <div className={styles.dropdownHobby} ref={searchHobbyRef}>
+                    {hobbyDropdownList.map((hobby, index) => {
+                      return (
+                        <p
+                          key={hobby._id}
+                          onClick={() => {
+                            // setHobby(hobby.display)
+                            // searchResult(undefined, hobby.display)
+                            dispatch(setHobby(hobby.display))
+                          }}
+                          className={
+                            index === focusedHobbyIndex
+                              ? styles['dropdown-option-focus']
+                              : ''
+                          }
+                        >
+                          {hobby.display}
+                        </p>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+            {filter === 'users' && (
+              <div className={styles.categorySuggestion}>
+                <Image
+                  src={SearchIcon}
+                  width={16}
+                  height={16}
+                  alt="SearchIcon"
+                  className={styles.searchIconCategory}
+                />
+                <TextField
+                  label="Location"
+                  autoComplete="off"
+                  inputRef={locationDropdownRef}
+                  variant="standard"
+                  name="street"
+                  size="small"
+                  className={styles.locationSearch}
+                  onChange={handleInputChangeAddress}
+                  value={currLocation}
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                    // if (e.key === 'Enter') {
+                    //   setShowAutoAddress(false)
+                    // }
+                    if (e.key !== 'Enter') {
+                      setShowAutoAddress(true)
+                      setIsLocationSelected(false)
+                    }
+                    handleLocationKeyDown(e)
+                  }}
+                  sx={{
+                    '& .MuiInput-underline:hover:before': {
+                      borderBottomColor: '#7F63A1 !important',
+                    },
+                    '& label': {
+                      fontSize: '16px',
+                      paddingLeft: '24px',
+                    },
+                    '& label.Mui-focused': {
+                      fontSize: '14px',
+                      marginLeft: '-16px',
+                    },
+                    '& .MuiInputLabel-shrink': {
+                      marginTop: '3px',
+                      fontSize: '14px',
+                      marginLeft: '-16px',
+                    },
+                  }}
+                  InputProps={{
+                    sx: {
+                      paddingLeft: '24px',
+                    },
+                  }}
+                />
+
+                {showAutoAddress && (
+                  <div className={styles['dropdown']} ref={locationDropdownRef}>
+                    {suggestions.map((suggestion, index) => (
+                      <p
+                        onClick={() => {
+                          handleSelectAddressTwo(
+                            suggestion.description.join(', '),
+                            suggestion.place_id,
+                          )
+                          setLocation(suggestion.description[0])
+                        }}
+                        key={index}
+                        className={
+                          index === focusedLocationIdx
+                            ? styles['dropdown-option-focus']
+                            : ''
+                        }
+                      >
+                        {suggestion.description.join(', ')}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
             {filter !== 'users' && filter !== 'Posts' && (
               <div className={styles.hobbySuggestion}>
                 <Image
@@ -532,31 +806,48 @@ const NoResult = () => {
                 )}
               </div>
             )}
-            {/* {filter === 'User Profiles' &&
-              <div className={styles.searchBox}>
+            {filter !== 'users' && filter !== 'Posts' && (
+              <div className={styles.locationHiddenMobile}>
+                <AccordionMenu2
+                  categoryValue={categoryValue}
+                  handleSubmit={handleSubmit}
+                />
+              </div>
+            )}
+            {filter !== 'users' && filter !== 'Posts' && (
+              <div className={styles.categorySuggestion}>
                 <Image
                   src={SearchIcon}
                   width={16}
                   height={16}
                   alt="SearchIcon"
-                  className={styles.searchIconKeyword}
+                  className={styles.searchIconCategory}
                 />
                 <TextField
+                  label="Location"
                   autoComplete="off"
-                  inputRef={nameInputRef}
+                  inputRef={locationDropdownRef}
                   variant="standard"
-                  label="Keywords"
+                  name="street"
                   size="small"
-                  name="search"
-                  className={styles.keywords}
-                  onChange={(e) => dispatch(setKeyword(e.target.value))}
-                  value={currKeyword}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      searchResult()
+                  className={styles.locationSearch}
+                  onChange={handleInputChangeAddress}
+                  value={currLocation}
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                    // handleLocationKeyDown(e)
+                    // if (e.key === 'Enter') {
+                    //   setShowAutoAddress(false)
+                    // }
+                    if (e.key !== 'Enter') {
+                      setShowAutoAddress(true)
+                      setIsLocationSelected(false)
                     }
+                    handleLocationKeyDown(e)
                   }}
                   sx={{
+                    '& .MuiInput-underline:hover:before': {
+                      borderBottomColor: '#7F63A1 !important',
+                    },
                     '& label': {
                       fontSize: '16px',
                       paddingLeft: '24px',
@@ -570,9 +861,6 @@ const NoResult = () => {
                       fontSize: '14px',
                       marginLeft: '-16px',
                     },
-                    '& .MuiInput-underline:hover:before': {
-                      borderBottomColor: '#7F63A1 !important',
-                    },
                   }}
                   InputProps={{
                     sx: {
@@ -580,98 +868,56 @@ const NoResult = () => {
                     },
                   }}
                 />
-              </div>
-            } */}
-            <div className={styles.locationHiddenMobile}>
-              <AccordionMenu2
-                categoryValue={categoryValue}
-                handleSubmit={handleSubmit}
-              />
-            </div>
-            <div className={styles.categorySuggestion}>
-              <Image
-                src={SearchIcon}
-                width={16}
-                height={16}
-                alt="SearchIcon"
-                className={styles.searchIconCategory}
-              />
-              <TextField
-                label="Location"
-                autoComplete="off"
-                inputRef={locationDropdownRef}
-                variant="standard"
-                name="street"
-                size="small"
-                className={styles.locationSearch}
-                onChange={handleInputChangeAddress}
-                value={currLocation}
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  handleLocationKeyDown(e)
-                  if (e.key === 'Enter') {
-                    setShowAutoAddress(false)
-                  }
-                }}
-                sx={{
-                  '& .MuiInput-underline:hover:before': {
-                    borderBottomColor: '#7F63A1 !important',
-                  },
-                  '& label': {
-                    fontSize: '16px',
-                    paddingLeft: '24px',
-                  },
-                  '& label.Mui-focused': {
-                    fontSize: '14px',
-                    marginLeft: '-16px',
-                  },
-                  '& .MuiInputLabel-shrink': {
-                    marginTop: '3px',
-                    fontSize: '14px',
-                    marginLeft: '-16px',
-                  },
-                }}
-                InputProps={{
-                  sx: {
-                    paddingLeft: '24px',
-                  },
-                }}
-              />
 
-              {showAutoAddress && (
-                <div className={styles['dropdown']} ref={locationDropdownRef}>
-                  {suggestions.map((suggestion, index) => (
-                    <p
-                      onClick={() => {
-                        handleSelectAddressTwo(
-                          suggestion.description.join(', '),
-                          suggestion.place_id,
-                        )
-                        setLocation(suggestion.description[0])
-                      }}
-                      key={index}
-                      className={
-                        index === focusedLocationIdx
-                          ? styles['dropdown-option-focus']
-                          : ''
-                      }
-                    >
-                      {suggestion.description.join(', ')}
-                    </p>
-                  ))}
-                </div>
-              )}
-            </div>
-            <button
-              className="modal-footer-btn"
-              style={{
-                width: isMob ? '100%' : 71,
-                height: 32,
-                marginLeft: 'auto',
-              }}
-              onClick={() => handleSubmit()}
-            >
-              Explore
-            </button>
+                {showAutoAddress && (
+                  <div className={styles['dropdown']} ref={locationDropdownRef}>
+                    {suggestions.map((suggestion, index) => (
+                      <p
+                        onClick={() => {
+                          handleSelectAddressTwo(
+                            suggestion.description.join(', '),
+                            suggestion.place_id,
+                          )
+                          setLocation(suggestion.description[0])
+                        }}
+                        key={index}
+                        className={
+                          index === focusedLocationIdx
+                            ? styles['dropdown-option-focus']
+                            : ''
+                        }
+                      >
+                        {suggestion.description.join(', ')}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+            {filter !== 'users' && filter !== 'Posts' ? (
+              <button
+                className="modal-footer-btn"
+                style={{
+                  width: isMob ? '100%' : 71,
+                  height: 32,
+                  marginLeft: 'auto',
+                }}
+                onClick={() => handleSubmit()}
+              >
+                Explore
+              </button>
+            ) : (
+              <button
+                className="modal-footer-btn"
+                style={{
+                  width: isMob ? '100%' : 71,
+                  height: 32,
+                  marginLeft: 'auto',
+                }}
+              >
+                Search
+              </button>
+            )}
             {/* </div> */}
           </div>
         </div>
