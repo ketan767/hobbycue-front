@@ -11,16 +11,12 @@ type Props = {
   handleClose?: any
   userType: 'edit' | 'anonymous' | 'page'
   showFeatureUnderDevelopment?: () => void
-  setViewAs?: React.Dispatch<
-    React.SetStateAction<'' | 'signed-in' | 'not-signed-in' | 'print'>
-  >
 }
 
 const Dropdown: React.FC<Props> = ({
   handleClose,
   userType,
   showFeatureUnderDevelopment,
-  setViewAs,
 }) => {
   const [showViewAsOptions, setShowViewAsOptions] = useState(false)
   const dispatch = useDispatch()
@@ -119,7 +115,7 @@ const Dropdown: React.FC<Props> = ({
         } else dispatch(openModal({ type: 'auth', closable: true }))
       } else if (
         event.target.nodeName === viewAsRef.current?.nodeName ||
-        event.target.textContent === viewAsRef.current?.textContent
+        event.target.textContent === viewAsRef.current?.textContent 
       ) {
       } else if (ref.current && !ref.current.contains(event.target)) {
         handleClose()
@@ -136,20 +132,7 @@ const Dropdown: React.FC<Props> = ({
 
   const handleClickViewAs = (option: string) => {
     dispatch(updateListingLayoutMode('view'))
-    switch (option) {
-      case 'signed-in':
-        setViewAs?.('signed-in')
-        break
-      case 'not-signed-in':
-        setViewAs?.('not-signed-in')
-        dispatch(updateViewAs('not-signed-in')) // for hiding the contact details in page
-        break
-      case 'print':
-        setViewAs?.('print')
-        break
-      default:
-        console.log('Wrong view as option in handleClickViewAs()')
-    }
+    dispatch(updateViewAs(option))
     handleClose()
   }
 
