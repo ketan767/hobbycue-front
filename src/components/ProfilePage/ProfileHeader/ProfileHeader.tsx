@@ -283,7 +283,7 @@ const ProfileHeader: React.FC<Props> = ({
   }
 
   const OpenProfileImage = () => {
-    console.log('pro', data.profile_image)
+    console.log('pro asifs', data.profile_image)
     dispatch(updateImageUrl(data?.profile_image))
     dispatch(
       openModal({

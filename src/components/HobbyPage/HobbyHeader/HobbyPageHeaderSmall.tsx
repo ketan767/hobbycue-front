@@ -218,20 +218,24 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
         </header>
 
         {/* Tabs */}
-        <div className={styles['navigation-links']}>
-          {tabs.map((tab) => {
-            return (
-              <Link
-                key={tab}
-                href={`/hobby/${router.query.slug}/${
-                  tab !== 'home' ? tab : ''
-                }`}
-                className={activeTab === tab ? styles['active'] : ''}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </Link>
-            )
-          })}
+        <div className={styles['display-desktop']}>
+          <div className={styles.navContainer}>
+            <div className={styles['navigation-links']}>
+              {tabs.map((tab) => {
+                return (
+                  <Link
+                    key={tab}
+                    href={`/hobby/${router.query.slug}/${
+                      tab !== 'home' ? tab : ''
+                    }`}
+                    className={activeTab === tab ? styles['active'] : ''}
+                  >
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
         </div>
       </div>
       {

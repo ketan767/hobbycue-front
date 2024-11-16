@@ -1,3 +1,58 @@
+@media print {
+  @page {
+      /* size: A3; */
+  }
+  .viewButtonPrint {
+    display: none !important;
+  }
+  .viewButton {
+    display: none !important;
+  }
+}
+
+.viewButton {
+  cursor: pointer;
+  width: 100%;
+  background-color: transparent;
+  padding: 10px 9px;
+  text-align: left;
+  border-radius: 8px;
+  border: 1px solid var(--Blue1, #0096C8);
+  background: var(--background-white, #FFF);
+  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.12);
+  margin-bottom: 10px;
+
+  /* Typography */
+  color: var(--Blue1, #0096C8);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.56px;
+}
+
+.viewButton span {
+  font-weight: 600;
+}
+
+.viewButtonPrint {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.printViewLogo {
+  width: 160px;
+  height: 160px;
+  scale: 1.2;
+  margin-top: 5px;
+}
+
 /* Header */
 .header {
   margin: auto;
@@ -364,12 +419,19 @@
 
   box-shadow: none;
 }
+.nav {
+  padding: 0 24px;
+}
+.navContainer {
+  margin: auto;
+  width: 1240px;
+}
 .container:has(.header).small .navigation-tabs {
   display: flex;
 
   gap: 20px;
   justify-content: flex-start;
-  margin: 4px 0 0 23.96%;
+  margin: 4px 0 0 calc(229px + 24px);
   position: sticky;
   min-height: 40px;
 }
@@ -637,6 +699,10 @@
     display: flex;
 
     padding: 0 14px;
+  }
+  .navContainer {
+    margin: 0;
+    width: auto;
   }
   .navigation-tabs {
     gap: 8px;

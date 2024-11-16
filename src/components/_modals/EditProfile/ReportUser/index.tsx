@@ -10,7 +10,7 @@ import {
 } from '@/services/user.service'
 
 import styles from './styles.module.css'
-import { isEmpty, isEmptyField } from '@/utils'
+import { isEmpty, isEmptyField, isMobile } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
@@ -253,6 +253,7 @@ const UserReport: React.FC<Props> = ({
       />
     )
   }
+  const isMob = isMobile()
 
   return (
     <>
@@ -263,13 +264,15 @@ const UserReport: React.FC<Props> = ({
       >
         {/* Modal Header */}
         <header className={styles['header']}>
-          <CloseIcon
-            className={styles['modal-close-icon']}
-            onClick={() =>
-              isChanged ? setConfirmationModal(true) : handleClose()
-            }
-          />
           <h4 className={styles['heading']}>{'Report'}</h4>
+          {true && (
+            <CloseIcon
+              className={styles['modal-close-icon']}
+              onClick={() =>
+                isChanged ? setConfirmationModal(true) : handleClose()
+              }
+            />
+          )}
         </header>
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>

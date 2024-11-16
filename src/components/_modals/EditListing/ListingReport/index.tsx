@@ -262,13 +262,13 @@ const ListingReport: React.FC<Props> = ({
       >
         {/* Modal Header */}
         <header className={styles['header']}>
+          <h4 className={styles['heading']}>{'Report'}</h4>
           <CloseIcon
             className={styles['modal-close-icon']}
             onClick={() =>
               isChanged ? setConfirmationModal(true) : handleClose()
             }
           />
-          <h4 className={styles['heading']}>{'Report'}</h4>
         </header>
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>

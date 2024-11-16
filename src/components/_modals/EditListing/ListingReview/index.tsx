@@ -44,6 +44,7 @@ const ListingReview: React.FC<Props> = ({
     user_id: user._id,
     description: '',
   })
+  // const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -181,17 +182,17 @@ const ListingReview: React.FC<Props> = ({
       <div
         className={`${styles['modal-wrapper']} ${
           confirmationModal ? styles['ins-active'] : ''
-        }  `}
+        } `}
       >
         {/* Modal Header */}
         <header className={styles['header']}>
+          <h4 className={styles['heading']}>{'Review'}</h4>
           <CloseIcon
             className={styles['modal-close-icon']}
             onClick={() =>
               isChanged ? setConfirmationModal(true) : handleClose()
             }
           />
-          <h4 className={styles['heading']}>{'Review'}</h4>
         </header>
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
@@ -211,6 +212,7 @@ const ListingReview: React.FC<Props> = ({
                 name="message"
                 onChange={handleInputChange}
                 value={data.description}
+                // onFocus={() => setIsKeyboardOpen(true)}
               />
             </div>
             {inputErrs.error ? (
