@@ -350,12 +350,14 @@ const BlogComments = ({
           <p
             className={styles['see-more-comments']}
             onClick={() => {
-              setDisplayMoreComments(false)
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setDisplayMoreComments(false);
             }}
           >
-            See less comments
+            Go to top
           </p>
         )}
+
       </div>
     </>
   )

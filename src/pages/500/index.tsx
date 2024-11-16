@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import Link from 'next/link'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { openModal } from '@/redux/slices/modal'
 
 type Snackbar = {
@@ -24,6 +24,32 @@ const index = () => {
     type: 'success',
   })
   const dispatch = useDispatch()
+
+  const focusableRefs = useRef<(HTMLButtonElement | HTMLAnchorElement)[]>([]); 
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+  const handleKeyDown = (event: KeyboardEvent): void => {
+    if (event.key === 'Tab') {
+      event.preventDefault(); // Prevent default tabbing behavior
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % focusableRefs.current.length); // Cycle focus
+    }
+  };
+
+  useEffect(() => {
+    // Set focus to the current element
+    focusableRefs.current[currentIndex]?.focus();
+  }, [currentIndex]);
+
+  useEffect(() => {
+    // Attach keydown listener on mount
+    const handleKey = (e: KeyboardEvent) => handleKeyDown(e);
+    window.addEventListener('keydown', handleKey);
+
+    // Cleanup listener on unmount
+    return () => {
+      window.removeEventListener('keydown', handleKey);
+    };
+  }, []);
 
   const handleNotify = () => {
     if (user?.email) {
@@ -58,10 +84,17 @@ const index = () => {
             router.back()
           }}
           className={styles.btnSecondary}
+          ref={(el) => {
+            if (el) focusableRefs.current[0] = el;
+          }}
         >
           Refresh
         </button>
-        <button onClick={handleNotify} className={`${styles['btnPrimary']}`}>
+        <button
+        ref={(el) => {
+          if (el) focusableRefs.current[2] = el;
+        }}
+        onClick={handleNotify} className={`${styles['btnPrimary']}`}>
           Notify
         </button>
       </div>

@@ -744,7 +744,7 @@ export const CreatePost: React.FC<Props> = ({
                               (item?.genre ? ` - ${item?.genre?.display} ` : '')
                             }
                             value={
-                              item.hobby?._id + '-' + item?.genre?._id ?? ''
+                              item.hobby?._id + '-' + item?.genre?._id
                             }
                             options={null}
                             key={idx}

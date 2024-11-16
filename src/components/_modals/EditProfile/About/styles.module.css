@@ -1,8 +1,12 @@
 .modal-wrapper {
+  /* transform: translateX(calc( 50vw - 24px - 7.15rem - 9.15rem - 1.5rem - 16px + 7.5px + 12px + 24px + 1px - 40.5rem + 7.9rem + 1px) ); */
   background-color: white;
   border-radius: var(--spacing-8);
-  max-width: 50rem;
-  width: 780px;
+  /* max-width: 50rem; */
+  width: calc(100vw - 48px - 14.3rem - 18.3rem - 3rem - 32px + 15px + 24px + 48px + 2px);
+  max-width: calc(81rem - 14.3rem - 18.3rem - 3rem - 32px + 15px + 24px + 48px + 2px );
+  /* 14.3rem auto 18.3rem and both side padding 24px and 1.5rem gaps*/
+  /* x + 9  = x  */
   display: flex;
   flex-direction: column;
 }

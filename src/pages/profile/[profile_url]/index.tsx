@@ -444,8 +444,8 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
                   }
                   setDisplayData={setDisplayAbout}
                 >
-                  <h4 className={styles['no-margin']}>About</h4>
-
+                  <h4 className={styles['no-margin']}>About</h4> 
+                  {/* About of profile page */}
                   <div className={`ql-snow`}>
                     <div
                       className={`ql-editor ${styles['ql-editor']} ${styles['fontFouteen']}`}

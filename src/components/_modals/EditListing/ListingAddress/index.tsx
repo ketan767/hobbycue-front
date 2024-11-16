@@ -215,6 +215,25 @@ const ListingAddressEditModal: React.FC<Props> = ({
       onStatusChange(hasChanges)
     }
   }, [data, initialData, onStatusChange])
+
+  function validateVirtualUrl(url: string) {
+    // General URL validation regex
+    const genericUrlRegex = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/;
+  
+    // Specific platform regexes
+    const zoomRegex = /^(https?:\/\/)?(www\.)?zoom\.us\/(j\/\d+|s\/\d+)(\?.*)?$/;
+    const youtubeLiveRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w-]+(\?.*live_stream=1)?$/;
+    const facebookLiveRegex = /^(https?:\/\/)?(www\.)?facebook\.com\/.*\/videos\/[\d]+(\/.*)?$/;
+  
+    // Return true if it matches any valid URL pattern
+    return (
+      genericUrlRegex.test(url) ||
+      zoomRegex.test(url) ||
+      youtubeLiveRegex.test(url) ||
+      facebookLiveRegex.test(url)
+    );
+  }
+
   const handleSubmit = async () => {
     // if (isChanged) {
     if (data.virtual.value === false) {
@@ -314,6 +333,14 @@ const ListingAddressEditModal: React.FC<Props> = ({
           return {
             ...prev,
             url: { ...prev.url, error: 'This field is required!' },
+          }
+        })
+      } else if (!validateVirtualUrl(data.url.value)) {
+        urlRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            url: { ...prev.url, error: 'Invalid URL!' },
           }
         })
       }
@@ -545,7 +572,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if (event?.srcElement?.tagName === 'svg') {
+        console.log('event', event?.srcElement)
+        if (event?.srcElement?.tagName === 'svg' || event?.srcElement?.name === 'description') {
           return
         }
         nextButtonRef.current?.click()
@@ -821,10 +849,11 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   }`}
                 >
                   <input
+                    style={{fontSize: '14px'}}
                     type="text"
                     autoComplete="new"
                     placeholder={`Zoom, YouTube Live, Facebook Live, etc.`}
-                    value={data.url.value}
+                    value={data.url.value || ""}
                     name="url"
                     required
                     onChange={handleInputChange}
@@ -841,6 +870,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   }`}
                 >
                   <textarea
+                    style={{fontSize: '14px'}}
                     placeholder={`This could be sent out to registered participants.  You may include instructions to access, etc.`}
                     value={data.description.value}
                     name="description"

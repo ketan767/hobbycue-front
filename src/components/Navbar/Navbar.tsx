@@ -1272,6 +1272,11 @@ export const Navbar: React.FC<Props> = ({}) => {
                   {showDropdown === 'user-menu' && (
                     <div className={styles['user-menu-dropdown']}>
                       <section className={styles['general-info']}>
+                      <Link
+                          style={{display: 'flex', flexDirection: 'column', alignItems:"start"}}
+                          prefetch={true}
+                          href={`/profile/${user.profile_url}`}
+                        >
                         <div className={styles['profile-name']}>
                           {user?.profile_image ? (
                             <img
@@ -1288,10 +1293,6 @@ export const Navbar: React.FC<Props> = ({}) => {
                           )}
                           <h4>{user.full_name}</h4>
                         </div>
-                        <Link
-                          prefetch={true}
-                          href={`/profile/${user.profile_url}`}
-                        >
                           <button className={styles['view-profile-btn']}>
                             View Profile
                           </button>
