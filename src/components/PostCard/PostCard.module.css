@@ -685,6 +685,10 @@ background: rgba(128, 100, 162, 0.25);
   .content{
     font-size: 12px;
   }
+  .posts-meta-loader{
+    height: 100%;
+    width: 100%;
+  }
 .posts-meta-parent {
   display: flex;
   align-items: center;

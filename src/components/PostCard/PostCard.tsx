@@ -490,7 +490,6 @@ const PostCard: React.FC<Props> = (props) => {
           </header>
         )}
         {/* Card Body */}
-
         <section className={styles['body']}>
           <style>{`
           .ql-editor.ql-indent-1{
@@ -564,9 +563,13 @@ const PostCard: React.FC<Props> = (props) => {
               {has_link && props.currentSection !== 'links' && (
                 <div
                   className={
-                    isVideoLink(url)
+                    !linkLoading ?
+                    (isVideoLink(url)
                       ? styles['post-video-link']
                       : styles['posts-meta-parent']
+                    ) : (
+                      styles['posts-meta-loader']
+                    )
                   }
                 >
                   {linkLoading ? (

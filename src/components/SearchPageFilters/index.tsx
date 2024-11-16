@@ -57,6 +57,42 @@ const SearchPageFilter = () => {
   const showAllBlogs = filter === 'blogs'
   const showAllHobbies = filter === 'hobby'
 
+  const userSearchResults = useSelector(
+    (state: RootState) => state.search.userSearchResults.data,
+  )
+  const PeopleSearch = useSelector(
+    (state: RootState) => state.search.typeResultOne.data,
+  )
+  const PlaceSearch = useSelector(
+    (state: RootState) => state.search.typeResultTwo.data,
+  )
+  const EventSearch = useSelector(
+    (state: RootState) => state.search.typeResultThree.data,
+  )
+  const ProductSearch = useSelector(
+    (state: RootState) => state.search.typeResultFour.data,
+  )
+  const PostsSearch = useSelector(
+    (state: RootState) => state.search.postsSearchResults.data,
+  )
+  const BlogsSearch = useSelector(
+    (state: RootState) => state.search.blogsSearchResults.data,
+  )
+  const searchLoading = useSelector((state: RootState) => state.search.loading)
+  const hobbySearchResults = useSelector(
+    (state: RootState) => state.search.hobbiesSearchResults.data,
+  )
+
+  const noResultsFound =
+    userSearchResults.length === 0 &&
+    hobbySearchResults.length === 0 &&
+    PeopleSearch.length === 0 &&
+    PlaceSearch.length === 0 &&
+    EventSearch.length === 0 &&
+    ProductSearch.length === 0 &&
+    PostsSearch.length === 0 &&
+    BlogsSearch.length === 0
+
   useEffect(() => {
     if (showAll === true) {
       setActiveFilter('all')
@@ -178,7 +214,17 @@ const SearchPageFilter = () => {
           </div>
           <div
             className={getFilterItemClass('hobby')}
-            onClick={() => handleFilterClick('hobby')}
+            onClick={() => {
+              // console.log(
+              //   'No result found-------------------------------->',
+              //   noResultsFound,
+              // )
+              if (noResultsFound || hobbySearchResults.length === 0) {
+                router.push('/hobbies')
+              } else {
+                handleFilterClick('hobby')
+              }
+            }}
           >
             <Image src={Hobby} alt="hobby" />
             Hobbies
@@ -242,7 +288,13 @@ const SearchPageFilter = () => {
           </div>
           <div
             className={getFilterItemClass('blogs')}
-            onClick={() => handleFilterClick('blogs')}
+            onClick={() => {
+              if (noResultsFound || BlogsSearch.length === 0) {
+                router.push('/blogs')
+              } else {
+                handleFilterClick('blogs')
+              }
+            }}
           >
             <Image src={Blogs} alt="Blogs" />
             Blogs
