@@ -284,9 +284,10 @@
 
 .links-container {
   display: grid;
-  grid-template-columns: 50% 50%;
-  grid-gap: var(--spacing-16);
-  gap: var(--spacing-16);
+  grid-template-columns: 1fr 1fr;
+  /* grid-gap: var(--spacing-16); */
+  row-gap: var(--spacing-16);
+  column-gap: 24px;
 }
 .noMembers {
   font-size: 14px;

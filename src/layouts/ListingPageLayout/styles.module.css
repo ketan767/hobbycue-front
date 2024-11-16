@@ -1,9 +1,16 @@
+.nav {
+  padding: 0 24px;
+}
+.navContainer {
+  margin: auto;
+  width: 1240px;
+}
 .navigation-tabs {
   display: flex;
   gap: 20px;
   justify-content: start;
 
-  margin: 14px 0 0 24.05%;
+  margin: 14px 0 0 calc(229px + 24px);
   position: -webkit-sticky;
   position: sticky;
   min-height: 40px;

@@ -327,9 +327,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
                 width={1000}
               />
             ) : (
-              <div
-                className={`${styles['img']} default-user-cover`}
-              ></div>
+              <div className={`${styles['img']} default-user-cover`}></div>
             )}
             {user?.is_admin && (
               <label className={styles['edit-btn']}>
@@ -495,7 +493,9 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
 
       {/* Tabs */}
       <div className={styles['display-desktop']}>
-        <HobbyNavigationLinks activeTab={activeTab} />
+        <div className={styles.navContainer}>
+          <HobbyNavigationLinks activeTab={activeTab} />
+        </div>
       </div>
       {
         <CustomSnackbar

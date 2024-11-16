@@ -17,7 +17,7 @@ const CloseIcon: React.FC<Props> = (props) => {
         viewBox="0 0 32 32"
         fill="none"
         onClick={props.onClick}
-        onKeyPress={(e) => {
+        onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             props.onClick && props.onClick()
           }

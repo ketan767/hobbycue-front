@@ -75,6 +75,10 @@
     width: 20px;
   }
 
+  .img {
+    border-bottom: 2px solid #f7f5f9;
+  }
+
   /* .modal-close-icon {
     position: fixed;
     top: 10px;

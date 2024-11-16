@@ -277,13 +277,13 @@ const ListingSupportModal: React.FC<Props> = ({
       >
         {/* Modal Header */}
         <header className={styles['header']}>
+          <h4 className={styles['heading']}>{'Support'}</h4>
           <CloseIcon
             className={styles['modal-close-icon']}
             onClick={() =>
               isChanged ? setConfirmationModal(true) : handleClose()
             }
           />
-          <h4 className={styles['heading']}>{'Support'}</h4>
         </header>
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>

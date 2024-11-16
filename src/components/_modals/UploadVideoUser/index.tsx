@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  Dispatch,
+  SetStateAction,
+} from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
@@ -15,6 +21,7 @@ import { closeModal, setVerified } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
+import CloseIcon from '@/assets/icons/CloseIcon'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -24,18 +31,26 @@ const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  handleClose: () => void
+  setConfirmationModal?: Dispatch<SetStateAction<boolean>>
 }
 
 type ListingAboutData = {
   description: InputData<string>
 }
 
-const UploadVideoUser: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
+const UploadVideoUser: React.FC<Props> = ({
+  onComplete,
+  onBackBtnClick,
+  handleClose,
+  setConfirmationModal,
+}) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [url, setUrl] = useState('')
   const [nextDisabled, setNextDisabled] = useState(false)
+  // const [isChanged, setIsChanged] = useState(false)
   const urlRef = useRef<HTMLInputElement>(null)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -68,12 +83,18 @@ const UploadVideoUser: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
     }
   }, [])
 
+  // useEffect(() => {
+  //   if (url) setIsChanged(true)
+  //   else setIsChanged(false)
+  // }, [url])
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Add Video Link'}</h4>
+          <CloseIcon onClick={handleClose} />
         </header>
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>

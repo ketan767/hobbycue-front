@@ -261,7 +261,7 @@ const ModalManager: React.FC = () => {
       }, 500)
   }, [activeModal])
 
-  console.log('showaddhobby', showAddHobbyModal)
+  // console.log('showaddhobby', showAddHobbyModal)
 
   const escFunction = useCallback(
     (event: KeyboardEvent) => {
@@ -408,6 +408,15 @@ const ModalManager: React.FC = () => {
                     activeModal === 'reset-password' ||
                     activeModal === 'email-forget-password' ||
                     activeModal === 'View-Image-Modal' ||
+                    activeModal === 'UserReportModal' ||
+                    activeModal === 'PostReportModal' ||
+                    activeModal === 'ListingReviewModal' ||
+                    activeModal === 'ListingReportModal' ||
+                    activeModal === 'upload-video-page' ||
+                    activeModal === 'upload-video-user' ||
+                    activeModal === 'User-Contact-To-Owner' ||
+                    activeModal === 'ListingSupportModal' ||
+                    activeModal === 'SupportUserModal' ||
                     activeModal === 'CopyProfileDataModal') &&
                   styles['responsive-popup']
                 }`
@@ -428,6 +437,15 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'add-event' &&
                 activeModal !== 'auth' &&
                 activeModal !== 'social-media-share' &&
+                activeModal !== 'UserReportModal' &&
+                activeModal !== 'PostReportModal' &&
+                activeModal !== 'ListingReviewModal' &&
+                activeModal !== 'ListingReportModal' &&
+                activeModal !== 'upload-video-user' &&
+                activeModal !== 'upload-video-page' &&
+                activeModal !== 'User-Contact-To-Owner' &&
+                activeModal !== 'ListingSupportModal' &&
+                activeModal !== 'SupportUserModal' &&
                 activeModal !== 'user-onboarding' && (
                   <>
                     <header className={styles['header']}>
@@ -566,9 +584,9 @@ const ModalManager: React.FC = () => {
               {activeModal === 'claim-listing' && (
                 <ClaimModal setSnackbar={setSnackbar} />
               )}
-              {activeModal === 'upload-video-page' && <UploadVideoPage />}
+              {activeModal === 'upload-video-page' && <UploadVideoPage handleClose={handleClose} setConfirmationModal={setConfirmationModal} />}
               {activeModal === 'upload-image-page' && <UploadImagePage />}
-              {activeModal === 'upload-video-user' && <UploadVideoUser />}
+              {activeModal === 'upload-video-user' && <UploadVideoUser handleClose={handleClose} setConfirmationModal={setConfirmationModal} />}
               {activeModal === 'ExpiredPassword' && <ExpiredPassword />}
               {activeModal === 'social-media-edit' && (
                 <SocialMediaEditModal {...props} />
@@ -617,6 +635,15 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'social-media-share' &&
                 activeModal !== 'user-onboarding-welcome' &&
                 activeModal !== 'add-event' &&
+                activeModal !== 'UserReportModal' &&
+                activeModal !== 'ListingReportModal' &&
+                activeModal !== 'PostReportModal' &&
+                activeModal !== 'ListingReviewModal' &&
+                activeModal !== 'upload-video-user' &&
+                activeModal !== 'upload-video-page' &&
+                activeModal !== 'User-Contact-To-Owner' &&
+                activeModal !== 'ListingSupportModal' &&
+                activeModal !== 'SupportUserModal' &&
                 !showAddGenreModal &&
                 !showAddHobbyModal && (
                   <CloseIcon

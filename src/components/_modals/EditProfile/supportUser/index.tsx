@@ -273,6 +273,7 @@ const SupportUserModal: React.FC<Props> = ({
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Support'}</h4>
+          <CloseIcon onClick={handleClose} />
         </header>
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>

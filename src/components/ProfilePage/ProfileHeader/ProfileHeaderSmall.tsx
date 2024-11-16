@@ -349,48 +349,50 @@ const ProfileHeaderSmall: React.FC<Props> = ({
           </div>
         </header>
         {/* Navigation Links */}
-        <nav>
-          <div className={styles['navigation-tabs']}>
-            {tabs.map((tab) => {
-              return (
-                <Link
-                  key={tab}
-                  href={`/profile/${router.query.profile_url}/${
-                    tab !== 'home' ? tab : ''
-                  }`}
-                  className={activeTab === tab ? styles['active'] : ''}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    if (!isAuthenticated) {
-                      dispatch(
-                        SetLinkviaAuth(
-                          `/profile/${router.query.profile_url}/${
-                            tab !== 'home' ? tab : ''
-                          }`,
-                        ),
-                      )
-                      dispatch(openModal({ type: 'auth', closable: true }))
-
-                      return
-                    } else {
-                      if (navigationTabs) {
-                        console.log('running nav')
-                        navigationTabs(tab)
-                      } else {
-                        router.push(
-                          `/profile/${router.query.profile_url}/${
-                            tab !== 'home' ? tab : ''
-                          }`,
+        <nav className={styles.nav}>
+          <div className={styles.navContainer}>
+            <div className={styles['navigation-tabs']}>
+              {tabs.map((tab) => {
+                return (
+                  <Link
+                    key={tab}
+                    href={`/profile/${router.query.profile_url}/${
+                      tab !== 'home' ? tab : ''
+                    }`}
+                    className={activeTab === tab ? styles['active'] : ''}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      if (!isAuthenticated) {
+                        dispatch(
+                          SetLinkviaAuth(
+                            `/profile/${router.query.profile_url}/${
+                              tab !== 'home' ? tab : ''
+                            }`,
+                          ),
                         )
+                        dispatch(openModal({ type: 'auth', closable: true }))
+
+                        return
+                      } else {
+                        if (navigationTabs) {
+                          console.log('running nav')
+                          navigationTabs(tab)
+                        } else {
+                          router.push(
+                            `/profile/${router.query.profile_url}/${
+                              tab !== 'home' ? tab : ''
+                            }`,
+                          )
+                        }
                       }
-                    }
-                  }}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </Link>
-              )
-            })}
+                    }}
+                  >
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </Link>
+                )
+              })}
+            </div>
           </div>
         </nav>
       </div>
