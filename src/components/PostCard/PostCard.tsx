@@ -155,6 +155,7 @@ const PostCard: React.FC<Props> = (props) => {
       }
     }
   }, [postData])
+  console.log('asifs metaData', metaData)
 
   const handleShare = () => {
     dispatch(updateShareUrl(`${window.location.origin}/post/${postData._id}`))
@@ -577,7 +578,8 @@ const PostCard: React.FC<Props> = (props) => {
                           <ReactPlayer
                             className={styles.reactplayer}
                             width="100%"
-                            height="410px"
+                            // height="410px"
+                            height="100%"
                             url={url}
                             controls={true}
                           />
@@ -585,23 +587,21 @@ const PostCard: React.FC<Props> = (props) => {
                       ) : (
                         <>
                           <div className={styles['posts-meta-data-container']}>
-                            <a
-                              href={url}
-                              target="_blank"
-                              className={styles['posts-meta-img']}
-                            >
-                              <img
-                                src={
-                                  (typeof metaData?.image === 'string' &&
-                                    metaData.image) ||
-                                  (typeof metaData?.icon === 'string' &&
-                                    metaData.icon) ||
-                                  defaultImg
-                                }
-                                alt="link-image"
-                                width={80}
-                                height={80}
-                              />
+                            <a href={url} target="_blank">
+                              <div className={styles['posts-meta-img']}>
+                                <img
+                                  src={
+                                    (typeof metaData?.image === 'string' &&
+                                      metaData.image) ||
+                                    (typeof metaData?.icon === 'string' &&
+                                      metaData.icon) ||
+                                    defaultImg
+                                  }
+                                  alt="link-image"
+                                  width={80}
+                                  height={80}
+                                />
+                              </div>
                             </a>
                             <div className={styles['posts-meta-content']}>
                               <a
