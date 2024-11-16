@@ -116,8 +116,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       setPostData(res.data.data.posts?.[0])
     }
 
-    /*
-    💥 asifs : if we set the postData making it a SSR rather than calling it in the frontend again,
+    /** 💥 asifs : if we set the postData making it a SSR rather than calling it in the frontend again,
     the loading UI will not be there but things will become smoother
     */
     // setPostData(data?.postsData)

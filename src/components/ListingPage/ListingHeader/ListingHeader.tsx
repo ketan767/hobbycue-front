@@ -730,7 +730,6 @@ const ListingHeader: React.FC<Props> = ({
       />
     </svg>
   )
-  console.log('asifs viewAs', viewAs)
   return (
     <>
       <header

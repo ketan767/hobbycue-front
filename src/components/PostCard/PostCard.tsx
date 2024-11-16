@@ -155,7 +155,6 @@ const PostCard: React.FC<Props> = (props) => {
       }
     }
   }, [postData])
-  console.log('asifs metaData', metaData)
 
   const handleShare = () => {
     dispatch(updateShareUrl(`${window.location.origin}/post/${postData._id}`))
