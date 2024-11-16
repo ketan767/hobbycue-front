@@ -272,6 +272,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
   return (
     <>
       <div
+      style={{ width:"671px" }}
         className={`${styles['modal-wrapper']} ${
           propData === 'productDescription' && styles['product-model-wrapper']
         }`}
