@@ -22,6 +22,8 @@ import Program from '../../assets/svg/Search/Program.svg'
 import Product from '../../assets/svg/Search/Product.svg'
 import Blogs from '../../assets/svg/Search/blogs.svg'
 import Posts from '../../assets/svg/Search/Posts.svg'
+import Classes from '../../assets/svg/Search/classes.svg'
+import Rentals from '../../assets/svg/Search/rentals.svg'
 import styles from './styles.module.css'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
@@ -56,6 +58,8 @@ const SearchPageFilter = () => {
   const showAllPosts = filter === 'posts'
   const showAllBlogs = filter === 'blogs'
   const showAllHobbies = filter === 'hobby'
+  const showAllClasses = filter === 'classes'
+  const showAllRentals = filter === 'rentals'
 
   const userSearchResults = useSelector(
     (state: RootState) => state.search.userSearchResults.data,
@@ -112,6 +116,10 @@ const SearchPageFilter = () => {
       setActiveFilter('blogs')
     } else if (showAllPosts === true) {
       setActiveFilter('posts')
+    } else if (showAllClasses === true) {
+      setActiveFilter('classes')
+    } else if (showAllRentals === true) {
+      setActiveFilter('rentals')
     }
   }, [
     showAll,
@@ -123,6 +131,8 @@ const SearchPageFilter = () => {
     showAllHobbies,
     showAllBlogs,
     showAllPosts,
+    showAllClasses,
+    showAllRentals,
   ])
 
   const handleFilterClick = (filterType: any) => {
@@ -163,6 +173,12 @@ const SearchPageFilter = () => {
           break
         case 'posts':
           dispatch(toggleShowAllPosts())
+          break
+        case 'classes':
+          dispatch(toggleShowAllEvent())
+          break
+        case 'rentals':
+          dispatch(toggleShowAllProducts())
           break
         default:
           break
@@ -278,6 +294,24 @@ const SearchPageFilter = () => {
           >
             <Image src={Product} alt="Product" />
             Products
+          </div>
+          <div
+            className={getFilterItemClass('classes')}
+            onClick={() => {
+              handleFilterClick('classes')
+            }}
+          >
+            <Image src={Classes} alt="Product" />
+            Classes
+          </div>
+          <div
+            className={getFilterItemClass('rentals')}
+            onClick={() => {
+              handleFilterClick('rentals')
+            }}
+          >
+            <Image src={Rentals} alt="Rentals" />
+            Rentals
           </div>
           <div
             className={getFilterItemClass('posts')}
