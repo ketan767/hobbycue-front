@@ -19,6 +19,8 @@ import { useDispatch } from 'react-redux'
 import { openModal, updateShareUrl } from '@/redux/slices/modal'
 import HobbyIconHexagon from '@/assets/icons/HobbyIconHexagon'
 import CustomizedTooltips from '@/components/Tooltip/ToolTip'
+import BlogActionBar from '@/components/Blog/BlogActionBar'
+import BlogStickyHeader from '@/components/Blog/BlogStickyHeader'
 
 type Props = {
   data: {
@@ -27,6 +29,7 @@ type Props = {
 }
 
 const BlogPage: React.FC<Props> = ({ data }) => {
+  const [showStickyHeader, setShowStickyHeader] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
   const blogUrl = data?.blog_url?.url || ''
   const [snackbar, setSnackbar] = useState({
@@ -78,8 +81,17 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   }
 
   useEffect(() => {
-    window.addEventListener('click', () => setShowMenu(false))
-    return window.removeEventListener('click', () => setShowMenu(false))
+    const handleScroll = () => {
+      if (window.scrollY >= 620) {
+        setShowStickyHeader(true)
+      } else {
+        setShowStickyHeader(false)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const isMobileScreen = isMobile()
@@ -193,54 +205,23 @@ const BlogPage: React.FC<Props> = ({ data }) => {
             )}
             {/* actions for desktop */}
             {!isMobileScreen && (
-              <div
-                className={styles.actions}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <CustomizedTooltips title="UpVote">
-                  <button onClick={showFeatUnderDev}>
-                    <UpvoteIcon />
-                  </button>
-                </CustomizedTooltips>
-                <CustomizedTooltips title="Bookmark">
-                  <button onClick={showFeatUnderDev}>
-                    <BookmarkIcon />
-                  </button>
-                </CustomizedTooltips>
-                <CustomizedTooltips title="Share">
-                  <button onClick={handleShare}>
-                    <ShareIcon />
-                  </button>
-                </CustomizedTooltips>
-                <div style={{ position: 'relative' }}>
-                  <CustomizedTooltips title="Click to view options">
-                    <button onClick={handleActions} className={styles.btn}>
-                      <MenuIcon />
-                    </button>
-                  </CustomizedTooltips>
-                  {showMenu && (
-                    <div className={`${styles.menu}`}>
-                      <button onClick={() => handleMenuClick('reshare')}>
-                        ReShare
-                      </button>
-                      <button onClick={() => handleMenuClick('comment')}>
-                        Comment
-                      </button>
-                      <button onClick={() => handleMenuClick('report')}>
-                        Report
-                      </button>
-                      <button onClick={() => handleMenuClick('downvote')}>
-                        Downvote
-                      </button>
-                    </div>
-                  )}
-                </div>
+              <div className={styles.desktopActions}>
+                <BlogActionBar
+                  // showFeatUnderDev={showFeatUnderDev}
+                  // handleShare={handleShare}
+                  // handleActions={handleActions}
+                  // handleMenuClick={handleMenuClick}
+                  // showMenu={showMenu}
+                  data={data}
+                />
               </div>
             )}
           </div>
         </div>
-        {/* actions for mobile */}
-        {isMobileScreen && (
+
+        {/** Actions for Mobile */}
+        {isMobileScreen && <BlogActionBar data={data} />}
+        {/* {isMobileScreen && (
           <div className={styles.actions} onClick={(e) => e.stopPropagation()}>
             <CustomizedTooltips title="UpVote">
               <button onClick={showFeatUnderDev}>
@@ -268,9 +249,6 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   <button onClick={() => handleMenuClick('reshare')}>
                     ReShare
                   </button>
-                  {/* <button onClick={() => handleMenuClick('comment')}>
-                    Comment
-                  </button> */}
                   <button onClick={() => handleMenuClick('report')}>
                     Report
                   </button>
@@ -286,6 +264,11 @@ const BlogPage: React.FC<Props> = ({ data }) => {
               </a>
             )}
           </div>
+        )} */}
+
+        {/** Sticky header */}
+        {!isMobileScreen && showStickyHeader && (
+          <BlogStickyHeader data={data} />
         )}
 
         <div className={styles['iframe-container']}>
