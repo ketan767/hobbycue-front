@@ -1285,54 +1285,57 @@ const ListingHeader: React.FC<Props> = ({
             </div>
           </section>
         ) : (
-          <section className={styles['product-header-content']}>
-            {isMobile ? (
-              <VerticalSlider data={data} />
-            ) : active_img_product?.type === 'image' && data?.profile_image ? (
-              <img
-                className={styles['active-image']}
-                src={
-                  active_img_product?.idx === 0
-                    ? data?.profile_image
-                    : data.images[active_img_product?.idx - 1]
-                }
-              />
-            ) : active_img_product?.type === 'video' ? (
-              <div className={styles['active-image']}>
-                {data?.video_url && (
-                  <div className={styles['videos']}>
-                    <ReactPlayer
-                      width="100%"
-                      height="100%"
-                      url={data?.video_url}
-                      controls={true}
-                    />
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div
-                className={`${styles.item} ${
-                  !isEditMode ? styles['item-view'] : ''
-                }`}
-              >
-                {listingLayoutMode === 'edit' ? (
-                  <>
-                    <input
-                      type="file"
-                      accept="image/png, image/gif, image/jpeg"
-                      className={styles.hidden}
-                      onChange={(e: any) => onInputChange(e, 'profile')}
-                      ref={inputRef}
-                    />
-                    {uploadIcon}
-                    <p>Add Image</p>
-                  </>
-                ) : (
-                  ''
-                )}
-              </div>
-            )}
+          <>
+            <section className={styles['product-header-content']}>
+              {isMobile ? (
+                <VerticalSlider data={data} />
+              ) : active_img_product?.type === 'image' &&
+                data?.profile_image ? (
+                <img
+                  className={styles['active-image']}
+                  src={
+                    active_img_product?.idx === 0
+                      ? data?.profile_image
+                      : data.images[active_img_product?.idx - 1]
+                  }
+                />
+              ) : active_img_product?.type === 'video' ? (
+                <div className={styles['active-image']}>
+                  {data?.video_url && (
+                    <div className={styles['videos']}>
+                      <ReactPlayer
+                        width="100%"
+                        height="100%"
+                        url={data?.video_url}
+                        controls={true}
+                      />
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div
+                  className={`${styles.item} ${
+                    !isEditMode ? styles['item-view'] : ''
+                  }`}
+                >
+                  {listingLayoutMode === 'edit' ? (
+                    <>
+                      <input
+                        type="file"
+                        accept="image/png, image/gif, image/jpeg"
+                        className={styles.hidden}
+                        onChange={(e: any) => onInputChange(e, 'profile')}
+                        ref={inputRef}
+                      />
+                      {uploadIcon}
+                      <p>Add Image</p>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              )}
+            </section>
 
             <div className={styles['product-name-container']}>
               <div>
@@ -1615,7 +1618,7 @@ const ListingHeader: React.FC<Props> = ({
                 </div>
               </div>
             </div>
-          </section>
+          </>
         )}
         {data.type !== 4 ? (
           <div className={styles['actions-container-desktop']}>

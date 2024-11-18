@@ -115,7 +115,7 @@ const Dropdown: React.FC<Props> = ({
         } else dispatch(openModal({ type: 'auth', closable: true }))
       } else if (
         event.target.nodeName === viewAsRef.current?.nodeName ||
-        event.target.textContent === viewAsRef.current?.textContent 
+        event.target.textContent === viewAsRef.current?.textContent
       ) {
       } else if (ref.current && !ref.current.contains(event.target)) {
         handleClose()
@@ -144,12 +144,20 @@ const Dropdown: React.FC<Props> = ({
             <>
               <li ref={supportRef}>Support</li>
               <li ref={transferRef}>Transfer</li>
-              <li ref={viewAsRef} className={styles.viewAsLi}>
+              <li
+                ref={viewAsRef}
+                className={styles.viewAsLi}
+                onMouseEnter={() => setShowViewAsOptions((prev) => !prev)}
+                // onMouseLeave={() => setShowViewAsOptions(false)}
+              >
                 <div onClick={() => setShowViewAsOptions((prev) => !prev)}>
                   View As
                 </div>
                 {showViewAsOptions ? (
-                  <ul className={styles.viewAsOptions}>
+                  <ul
+                    className={styles.viewAsOptions}
+                    onMouseEnter={() => setShowViewAsOptions(true)}
+                  >
                     <li onClick={() => handleClickViewAs('signed-in')}>
                       User Signed In
                     </li>
