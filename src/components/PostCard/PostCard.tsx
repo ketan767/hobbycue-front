@@ -646,7 +646,7 @@ const PostCard: React.FC<Props> = (props) => {
                   height={130}
                 />
               </a>
-              <div className={styles.metaContent}>
+              <div style={isMobile ? {height:"109px"}: {}} className={styles.metaContent}>
                 <a href={url} target="_blank" className={styles.contentHead}>
                   {' '}
                   {metaData?.title}{' '}

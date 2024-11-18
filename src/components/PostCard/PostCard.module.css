@@ -414,7 +414,7 @@ color: #939CA3;
   padding: 13px 16px;
   padding-left: 1rem;
   align-self: stretch;
-  min-height: 178px;
+  min-height: 125px;
   /* background-color: #f0f0f0; */
 }
 .metaContentText {
@@ -521,7 +521,7 @@ line-height: 22px; /* 169.231% */
 }
 
 .metadata-footer {
-  background-color: #ebedf0;
+  background-color: #F8F9FA;
   font-size: 12px;
   font-family: Poppins;
   font-style: normal;
@@ -655,20 +655,40 @@ background: rgba(128, 100, 162, 0.25);
 
 @media screen and (max-width: 1100px) {
   .metaImgContainer {
-    
-    max-height: 200px;
+    height: 125px !important;
+    width: 125px !important;
+    overflow: hidden;
+  }
+  .metaImgContainer img {
+    height: 125px !important;
+    width: 125px !important;
     overflow: hidden;
   }
   .postMetadata {
+    height: 125px !important;
     display: flex;
   }
   .metaContent{
-    min-height: unset;
+    padding: 8px 12px;
+  }
+  .contentHead{
+    font-size: 12px;
+    margin-bottom: 10px !important;
+  }
+  .author-name & .date{
+    font-size: 10px;
+  }
+  /* .postMetadata{
+    height: 161px !important;
+  } */
+  .meta-actions{
+    margin-top: 10px;
   }
   .meta-actions.links{
     position: static;
   }
   .post-card-wrapper {
+    height: 161px;
     max-width: 1017px;
     border-radius: 0;
   }

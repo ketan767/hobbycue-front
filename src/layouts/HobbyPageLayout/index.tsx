@@ -318,10 +318,12 @@ const HobbyPageLayout: React.FC<Props> = ({
                     showkeywords ? ' ' + styles['display-mobile'] : ''
                   }`}
                 >
-                  <ul className={styles['classification-items']}>
+                  <ul 
+                  style={isMobile ? {marginTop:"16px"} : {}}
+                  className={styles['classification-items']}>
                     {data?.keywords &&
                       data?.keywords.map((tag: any, idx: number) => {
-                        return tag ? <li>{tag}</li> : null
+                        return tag ? <span>{tag} {`${idx != data?.keywords.length - 1 ? ", " : ""}`}</span> : null
                       })}
                     <li className={styles['active']}></li>
                   </ul>

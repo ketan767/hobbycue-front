@@ -351,6 +351,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   return (
     <>
       <div
+      style={{ width:"671px" }}
         className={`${styles['modal-wrapper']} ${
           confirmationModal ? styles['ins-active'] : ''
         }  `}

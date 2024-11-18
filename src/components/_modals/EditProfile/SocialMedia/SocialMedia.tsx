@@ -130,6 +130,56 @@ const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
   Others: 'https://',
 }
 
+const desiredOrder = [
+  "Facebook",
+  "Instagram",
+  "Twitter",
+  "YouTube",
+  "SoundCloud",
+  "Pinterest",
+  "TripAdvisor",
+  "Ultimate Guitar",
+  "Strava",
+  "DeviantArt",
+  "Behance",
+  "GoodReads",
+  "Smule",
+  "Chess.com",
+  "BGG",
+  "Medium",
+];
+
+// Type for social media data
+type SocialMediaData1 = {
+  Mouseover: string;
+  Show: 'Y' | 'N' | ''; // This is already the expected type for Show
+  socialMedia: string;
+  urlPrompt: string;
+};
+
+const reorderSocialMedia = (data: SocialMediaData1[]): SocialMediaData1[] => {
+  const orderedData: SocialMediaData1[] = [];
+  const remainingData: SocialMediaData1[] = [];
+
+  // Iterate through the data and sort accordingly
+  data.forEach((item) => {
+    // Ensure Show is valid
+    if (!['Y', 'N', ''].includes(item.Show)) {
+      item.Show = ''; // Default to empty string if Show is invalid
+    }
+
+    const index = desiredOrder.indexOf(item.socialMedia);
+    if (index !== -1) {
+      orderedData[index] = item;
+    } else {
+      remainingData.push(item);
+    }
+  });
+
+  const compactOrderedData = orderedData.filter(Boolean); // Remove undefined items
+  return [...compactOrderedData, ...remainingData]; // Append remaining items that are not in the desired order
+};
+
 const ListingSocialMediaEditModal: React.FC<Props> = ({
   data,
   confirmationModal,
@@ -507,18 +557,19 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
   useEffect(() => {
     getSocialNetworks()
       .then((result) => {
-        const { res, err } = result
+        const { res, err } = result;
         if (err) {
-          console.log({ err })
-        } else if (res?.data && res?.data?.data) {
-          setAllOptions(res.data.data)
-          console.log({ d: res.data.data })
+          console.error({ err });
+        } else if (res?.data?.data) {
+          const reorderedData = reorderSocialMedia(res.data.data as SocialMediaData1[]);
+          setAllOptions(reorderedData);
+          console.log({ reorderedData });
         }
       })
       .catch((err) => {
-        console.log({ err })
-      })
-  }, [])
+        console.error({ err });
+      });
+  }, []);
 
   const isMobile = useMediaQuery('(max-width:1100px)')
 

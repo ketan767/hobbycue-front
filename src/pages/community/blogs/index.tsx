@@ -85,7 +85,13 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
             </>
           ) : allBlogs?.length === 0 ? (
             <>
-              <div className={styles['no-posts-div']}>
+              <div
+              style={
+                isMobile
+                  ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
+                  : undefined
+              }
+              className={styles['no-posts-div']}>
                 <p className={styles['no-posts-text']}>No Blogs available</p>
                 <div
                   style={{
@@ -95,7 +101,13 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
                   }}
                 ></div>
               </div>
-              <div className={styles['no-posts-div']}>
+              <div
+              style={
+                isMobile
+                  ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
+                  : undefined
+              }
+              className={styles['no-posts-div']}>
                 <p className={styles['no-posts-text']}>No Blogs available</p>
                 <div
                   style={{
