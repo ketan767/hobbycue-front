@@ -671,7 +671,7 @@ export const Navbar: React.FC<Props> = ({}) => {
         className={`${styles['navbar-wrappper']} ${
           hasShadow && viewAs !== 'print' ? `${styles['showShadow']}` : ''
         }`}
-        style={{ backgroundColor: viewAs === 'print' ? '#F2F0F5' : '' }}
+        // style={{ backgroundColor: viewAs === 'print' ? '#F2F0F5' : '' }}
       >
         {viewAs !== 'print' && (
           <nav className={`site-container `}>

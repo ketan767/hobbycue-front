@@ -55,6 +55,9 @@
   text-align: left;
   color: var(--Grey-Darker, #6d747a);
   border-radius: 4px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
 
   /* Text sm/Regular */
   font-family: Poppins;

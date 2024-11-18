@@ -176,7 +176,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                     <>
                       &#183;
                       {data?.blog_url?._hobbies?.map((hobby: any, idx: any) => (
-                        <span>
+                        <span key={idx}>
                           {hobby?.hobby?.display}
                           {idx !== data?.blog_url?._hobbies?.length - 1
                             ? ', '

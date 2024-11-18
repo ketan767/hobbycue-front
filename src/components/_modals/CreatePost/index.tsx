@@ -663,12 +663,12 @@ export const CreatePost: React.FC<Props> = ({
       style={{ width:"671px" }}
         className={`${styles['modal-wrapper']} ${
           confirmationModal ? styles['ins-active'] : ''
-        } ${data.media.length && !isMobile ? styles['changedWidth'] : ''}`}
+        } ${data?.media?.length && !isMobile ? styles['changedWidth'] : ''}`}
       >
         {/* Modal Header */}
         <div style={{ width:"671px" }}
           className={`${styles['modal-wrapper']} ${
-            data.media.length && !isMobile ? styles['changedWidth'] : ''
+            data?.media?.length && !isMobile ? styles['changedWidth'] : ''
           }`}
         >
           <h3 className={styles['modal-heading']}>
