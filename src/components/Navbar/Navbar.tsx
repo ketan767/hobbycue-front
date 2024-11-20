@@ -663,129 +663,801 @@ export const Navbar: React.FC<Props> = ({}) => {
     </svg>
   )
 
+  const { viewAs } = useSelector((state: RootState) => state.site)
+
   return (
     <>
       <header
         className={`${styles['navbar-wrappper']} ${
-          hasShadow ? `${styles['showShadow']}` : ''
+          hasShadow && viewAs !== 'print' ? `${styles['showShadow']}` : ''
         }`}
+        // style={{ backgroundColor: viewAs === 'print' ? '#F2F0F5' : '' }}
       >
-        <nav className={`site-container `}>
-          <section className={styles['navbar-left']}>
-            <Link
-              onClick={(e) => {
-                e.stopPropagation()
-                e.preventDefault()
-                if (isLoggedIn) {
-                  window.location.href = '/community'
-                } else {
-                  router.push('/')
-                }
-              }}
-              className={styles['pos-relative-z-2']}
-              href={isLoggedIn ? '/community' : '/'}
-            >
-              {isLoggedIn ? (
-                <Image
-                  src={LogoSmall}
-                  alt="HobbyCue Logo"
-                  className={styles['logo-full']}
-                  // placeholder="blur" // Optional blur-up while loading
-                  // height={50}
-                  priority
-                />
-              ) : (
-                <Image
-                  src={LogoFull}
-                  alt="HobbyCue Logo"
-                  className={styles['logo-full']}
-                  // placeholder="blur" // Optional blur-up while loading
-                  priority
-                />
-              )}
-              {!isLoggedIn && !data.search.value ? (
-                <Image
-                  src={LogoFull}
-                  alt="HobbyCue Logo"
-                  width={293.258}
-                  height={60}
-                  className={styles['logo-full-responsive']}
-                  // placeholder="blur" // Optional blur-up while loading
+        {viewAs !== 'print' && (
+          <nav className={`site-container `}>
+            <section className={styles['navbar-left']}>
+              <Link
+                onClick={(e) => {
+                  e.stopPropagation()
+                  e.preventDefault()
+                  if (isLoggedIn) {
+                    window.location.href = '/community'
+                  } else {
+                    router.push('/')
+                  }
+                }}
+                className={styles['pos-relative-z-2']}
+                href={isLoggedIn ? '/community' : '/'}
+              >
+                {isLoggedIn ? (
+                  <Image
+                    src={LogoSmall}
+                    alt="HobbyCue Logo"
+                    className={styles['logo-full']}
+                    // placeholder="blur" // Optional blur-up while loading
+                    // height={50}
+                    priority
+                  />
+                ) : (
+                  <Image
+                    src={LogoFull}
+                    alt="HobbyCue Logo"
+                    className={styles['logo-full']}
+                    // placeholder="blur" // Optional blur-up while loading
+                    priority
+                  />
+                )}
+                {!isLoggedIn && !data.search.value ? (
+                  <Image
+                    src={LogoFull}
+                    alt="HobbyCue Logo"
+                    width={293.258}
+                    height={60}
+                    className={styles['logo-full-responsive']}
+                    // placeholder="blur" // Optional blur-up while loading
 
-                  priority
-                />
-              ) : !isLoggedIn && data.search.value.length > 0 ? (
-                <Image
-                  src={LogoSmall}
-                  alt="HobbyCue Logo"
-                  className={styles['logo-small-responsive']}
-                  priority
-                />
-              ) : isLoggedIn && !data.search.value ? (
-                <Image
-                  src={LogoSmall}
-                  alt="HobbyCue Logo"
-                  className={styles['logo-small-responsive']}
-                  priority
-                />
-              ) : isLoggedIn && data.search.value ? (
-                <Image
-                  src={LogoSmall}
-                  alt="HobbyCue Logo"
-                  className={styles['logo-small-responsive']}
-                  priority
-                />
-              ) : (
-                ''
-              )}
-            </Link>
+                    priority
+                  />
+                ) : !isLoggedIn && data.search.value.length > 0 ? (
+                  <Image
+                    src={LogoSmall}
+                    alt="HobbyCue Logo"
+                    className={styles['logo-small-responsive']}
+                    priority
+                  />
+                ) : isLoggedIn && !data.search.value ? (
+                  <Image
+                    src={LogoSmall}
+                    alt="HobbyCue Logo"
+                    className={styles['logo-small-responsive']}
+                    priority
+                  />
+                ) : isLoggedIn && data.search.value ? (
+                  <Image
+                    src={LogoSmall}
+                    alt="HobbyCue Logo"
+                    className={styles['logo-small-responsive']}
+                    priority
+                  />
+                ) : (
+                  ''
+                )}
+              </Link>
 
-            <TextField
-              autoComplete="off"
-              inputRef={searchInputRef}
-              variant="outlined"
-              placeholder="Search for anything on your hobbies..."
-              size="small"
-              className={styles.inputField}
-              onFocus={() => {
-                setIsWriting(true)
-              }}
-              onChange={handleInputChange}
-              value={data.search.value}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  searchResult()
-                }
-              }}
-              style={isLoggedIn ? { width: '400px' } : { width: '300px' }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '8px',
-                  padding: 0,
-                  overflow: 'hidden',
-                  borderColor: 'red',
-                  background: '#f8f9fa',
-                  '& fieldset': {
-                    borderColor: '#EBEDF0',
-                    borderRight: 0,
+              <TextField
+                autoComplete="off"
+                inputRef={searchInputRef}
+                variant="outlined"
+                placeholder="Search for anything on your hobbies..."
+                size="small"
+                className={styles.inputField}
+                onFocus={() => {
+                  setIsWriting(true)
+                }}
+                onChange={handleInputChange}
+                value={data.search.value}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    searchResult()
+                  }
+                }}
+                style={isLoggedIn ? { width: '400px' } : { width: '300px' }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '8px',
+                    padding: 0,
+                    overflow: 'hidden',
+                    borderColor: 'red',
+                    background: '#f8f9fa',
+                    '& fieldset': {
+                      borderColor: '#EBEDF0',
+                      borderRight: 0,
+                    },
                   },
-                },
-                '& .MuiInputBase-input': {
-                  fontSize: '15px',
-                },
-                '& .MuiInputBase-input::placeholder': {
-                  fontSize: '12px',
-                  color: 'black',
-                },
-              }}
-              InputLabelProps={{ shrink: false }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment
-                    style={{ position: 'relative' }}
-                    position="end"
+                  '& .MuiInputBase-input': {
+                    fontSize: '15px',
+                  },
+                  '& .MuiInputBase-input::placeholder': {
+                    fontSize: '12px',
+                    color: 'black',
+                  },
+                }}
+                InputLabelProps={{ shrink: false }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment
+                      style={{ position: 'relative' }}
+                      position="end"
+                    >
+                      {data.search.value.length > 0 && isWriting && (
+                        <div
+                          onClick={() => {
+                            setData((prev) => ({
+                              ...prev,
+                              search: { ...prev.search, value: '' },
+                            }))
+                            searchInputRef?.current?.focus()
+                          }}
+                          className={styles['search-cross-icon']}
+                        >
+                          {searchCrossIcon}
+                        </div>
+                      )}
+                      <IconButton
+                        onClick={() => searchResult()}
+                        sx={{
+                          height: '40px',
+                          bgcolor: 'primary.main',
+                          borderRadius: '0px 8px 8px 0px',
+                          '&:hover': {
+                            bgcolor: 'primary.dark',
+                          },
+                        }}
+                      >
+                        <div className={styles['search-icon-container']}>
+                          <Image
+                            src={SearchIcon}
+                            alt="search"
+                            width={16}
+                            height={16}
+                          />
+                        </div>
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </section>
+
+            <section className={styles['navbar-right']}>
+              <ul className={styles['right-listing-expanded']}>
+                {/* Explore */}
+                <li
+                  className=""
+                  onMouseOver={() => setShowDropdown('explore-list')}
+                  onMouseLeave={() => setShowDropdown(null)}
+                >
+                  <Link
+                    href={'/explore'}
+                    onClick={() => {
+                      dispatch(setCategory(''))
+                      dispatch(setPageType(''))
+                      dispatch(setKeyword(''))
+                      dispatch(setHobby(''))
+                      dispatch(setLocation(''))
+                      dispatch(setSearching(true))
+                    }}
                   >
-                    {data.search.value.length > 0 && isWriting && (
+                    <Image src={ExploreIcon} alt="" />
+                    <span>Explore</span>
+                    <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
+                  </Link>
+                  {showDropdown === 'explore-list' && (
+                    <div className={styles['explore-list-dropdown']}>
+                      <section className={styles['list']}>
+                        <h4>
+                          <Link
+                            href={''}
+                            className={styles['hobbiescategory']}
+                            onClick={async (e) => {
+                              e.preventDefault()
+                              dispatch(setPageType('People'))
+                              dispatch(setSearching(true))
+                              dispatch(setCategory(''))
+                              dispatch(setKeyword(''))
+                              dispatch(setHobby(''))
+                              dispatch(setLocation(''))
+                              const query = { ['page-type']: 'People' }
+                              router.push({
+                                pathname: '/explore/people',
+                                query: query,
+                              })
+                            }}
+                          >
+                            People - Expertise
+                          </Link>
+                        </h4>
+                        {/* <ul>
+                        <Link href={'/hobby/music'}>
+                          <li>Community</li>
+                        </Link>
+                      </ul> */}
+                      </section>
+                      <section className={styles['list']}>
+                        <h4>
+                          <Link
+                            href={''}
+                            className={styles['hobbiescategory']}
+                            onClick={async (e) => {
+                              e.preventDefault()
+                              dispatch(setCategory(''))
+                              dispatch(setPageType('Place'))
+                              dispatch(setSearching(true))
+                              dispatch(setKeyword(''))
+                              dispatch(setHobby(''))
+                              dispatch(setLocation(''))
+                              const query = { ['page-type']: 'Place' }
+                              router.push({
+                                pathname: '/explore/places',
+                                query: query,
+                              })
+                            }}
+                          >
+                            Places - Venues
+                          </Link>
+                        </h4>
+                      </section>
+                      <section className={styles['list']}>
+                        <h4>
+                          <Link
+                            href={''}
+                            className={styles['hobbiescategory']}
+                            onClick={async (e) => {
+                              e.preventDefault()
+                              dispatch(setCategory(''))
+                              dispatch(setPageType('Product'))
+                              dispatch(setSearching(true))
+                              dispatch(setKeyword(''))
+                              dispatch(setHobby(''))
+                              dispatch(setLocation(''))
+                              const query = { ['page-type']: 'Product' }
+                              router.push({
+                                pathname: '/explore/products',
+                                query: query,
+                              })
+                            }}
+                          >
+                            Products - Store
+                          </Link>
+                        </h4>
+                      </section>
+                      <section className={styles['list']}>
+                        <h4>
+                          <Link
+                            href={''}
+                            className={styles['hobbiescategory']}
+                            onClick={async (e) => {
+                              e.preventDefault()
+                              dispatch(setCategory(''))
+                              dispatch(setPageType('Program'))
+                              dispatch(setSearching(true))
+                              dispatch(setKeyword(''))
+                              dispatch(setHobby(''))
+                              dispatch(setLocation(''))
+                              const query = { ['page-type']: 'Program' }
+                              router.push({
+                                pathname: '/explore/programs',
+                                query: query,
+                              })
+                            }}
+                          >
+                            Programs - Events
+                          </Link>
+                        </h4>
+                      </section>
+
+                      <section className={styles['list']}>
+                        <h4>
+                          <Link
+                            href=""
+                            className={styles['hobbiescategory']}
+                            onClick={async (e) => {
+                              e.preventDefault()
+                              router.push({
+                                pathname: '/blog',
+                              })
+                            }}
+                          >
+                            Perspectives - Blogs
+                          </Link>
+                        </h4>
+                      </section>
+                      <section className={styles['list']}>
+                        <h4>
+                          <Link
+                            href=""
+                            className={styles['hobbiescategory']}
+                            onClick={async (e) => {
+                              if (!isLoggedIn) {
+                                dispatch(
+                                  openModal({ type: 'auth', closable: true }),
+                                )
+                                return
+                              }
+                              e.preventDefault()
+                              router.push({
+                                pathname: '/community',
+                              })
+                            }}
+                          >
+                            Posts - Community
+                          </Link>
+                        </h4>
+                      </section>
+                    </div>
+                  )}
+                </li>
+
+                {/* Hobbies */}
+                <li
+                  className={styles['hobby-icon']}
+                  onMouseOver={() => setShowDropdown('hobby-list')}
+                  onMouseLeave={() => setShowDropdown(null)}
+                >
+                  <Link href={'/hobby'}>
+                    <Image src={HobbyIcon} alt="hobby" />
+                    <span>Hobbies</span>
+                    <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
+                  </Link>
+                  {showDropdown === 'hobby-list' && (
+                    <div className={styles['hobby-list-dropdown']}>
+                      <section className={styles['list']}>
+                        <h4>
+                          <Link
+                            href={'/hobby/arts'}
+                            className={styles['hobbiescategory']}
+                          >
+                            Art
+                          </Link>
+                        </h4>
+                        <ul>
+                          <Link href={'/hobby/music'}>
+                            <li>Music</li>
+                          </Link>
+
+                          <Link href={'/hobby/dance'}>
+                            <li>Dance</li>
+                          </Link>
+
+                          <Link href={'/hobby/literary'}>
+                            <li>Literary</li>
+                          </Link>
+
+                          <Link href={'/hobby/theatre'}>
+                            <li>Theatre</li>
+                          </Link>
+
+                          <Link href={'/hobby/visual'}>
+                            <li>Visual</li>
+                          </Link>
+                        </ul>
+                      </section>
+                      <section className={styles['list']}>
+                        <h4>
+                          <Link
+                            href={'/hobby/play'}
+                            className={styles['hobbiescategory']}
+                          >
+                            Play
+                          </Link>
+                        </h4>
+
+                        <ul>
+                          <Link href={'/hobby/games'}>
+                            <li>Games</li>
+                          </Link>
+
+                          <Link href={'/hobby/sports'}>
+                            <li>Sports</li>
+                          </Link>
+                        </ul>
+                      </section>
+                      <section className={styles['list']}>
+                        <h4>
+                          <Link
+                            href={'/hobby/making'}
+                            className={styles['hobbiescategory']}
+                          >
+                            Making Things
+                          </Link>
+                        </h4>
+
+                        <ul>
+                          <Link href={'/hobby/clothing'}>
+                            <li>Clothing</li>
+                          </Link>
+
+                          <Link href={'/hobby/cooking'}>
+                            <li>Cooking</li>
+                          </Link>
+
+                          <Link href={'/hobby/garden'}>
+                            <li>Garden</li>
+                          </Link>
+
+                          <Link href={'/hobby/model'}>
+                            <li>Model</li>
+                          </Link>
+
+                          <Link href={'/hobby/utility'}>
+                            <li>Utility</li>
+                          </Link>
+                        </ul>
+                      </section>
+                      <section className={styles['list']}>
+                        <h4>
+                          <Link
+                            href={'/hobby/activity'}
+                            className={styles['hobbiescategory']}
+                          >
+                            Activity
+                          </Link>
+                        </h4>
+
+                        <ul>
+                          <Link href={'/hobby/animal-fancy'}>
+                            <li>Animal-Fancy</li>
+                          </Link>
+
+                          <Link href={'/hobby/observe'}>
+                            <li>Observe</li>
+                          </Link>
+
+                          <Link href={'/hobby/outdoors'}>
+                            <li>Outdoors</li>
+                          </Link>
+
+                          <Link href={'/hobby/travel'}>
+                            <li>Travel</li>
+                          </Link>
+                          <Link href={'/hobby/wellness'}>
+                            <li>Wellness</li>
+                          </Link>
+                        </ul>
+                      </section>
+                      <section className={styles['list']}>
+                        <h4>
+                          <Link
+                            href={'/hobby/collecting'}
+                            className={styles['hobbiescategory']}
+                          >
+                            {' '}
+                            Collecting{' '}
+                          </Link>
+                        </h4>
+
+                        <ul>
+                          <Link href={'/hobby/items'}>
+                            <li>Items</li>
+                          </Link>
+
+                          <Link href={'/hobby/records'}>
+                            <li>Records</li>
+                          </Link>
+                        </ul>
+                      </section>
+                      <section className={styles['list']}>
+                        <h4>
+                          <Link
+                            href={'/hobby'}
+                            className={styles['hobbiescategory']}
+                          >
+                            All Hobbies
+                          </Link>
+                        </h4>
+
+                        <ul>
+                          <li>Hobbies Challenges</li>
+                        </ul>
+                      </section>
+                    </div>
+                  )}
+                </li>
+
+                {/* Bookmark */}
+                <li>
+                  <Link href={'/bookmarks'}>
+                    <CustomizedTooltips title="Bookmark">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g clipPath="url(#clip0_10705_1996)">
+                          <path
+                            d="M17 3H7C5.9 3 5 3.9 5 5V21L12 18L19 21V5C19 3.9 18.1 3 17 3Z"
+                            fill="#8064A2"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_10705_1996">
+                            <rect width="24" height="24" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                    </CustomizedTooltips>
+                  </Link>{' '}
+                </li>
+
+                {/* Notification */}
+                <li>
+                  <Link href={'/notifications'}>
+                    <CustomizedTooltips title="Notification">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g clipPath="url(#clip0_10705_1999)">
+                          <path
+                            d="M12.0001 22C13.1001 22 14.0001 21.1 14.0001 20H10.0001C10.0001 21.1 10.8901 22 12.0001 22ZM18.0001 16V11C18.0001 7.93 16.3601 5.36 13.5001 4.68V4C13.5001 3.17 12.8301 2.5 12.0001 2.5C11.1701 2.5 10.5001 3.17 10.5001 4V4.68C7.63005 5.36 6.00005 7.92 6.00005 11V16L4.71005 17.29C4.08005 17.92 4.52005 19 5.41005 19H18.5801C19.4701 19 19.9201 17.92 19.2901 17.29L18.0001 16Z"
+                            fill="#8064A2"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_10705_1999">
+                            <rect width="24" height="24" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                    </CustomizedTooltips>
+                  </Link>{' '}
+                </li>
+
+                {/* Cart */}
+                <li>
+                  <Link href={'/cart'}>
+                    <CustomizedTooltips title="Cart">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M21.9201 7.25002V7.38002L20.4601 12.78C20.2875 13.421 19.9073 13.9866 19.3789 14.3883C18.8505 14.79 18.2038 15.0051 17.5401 15H9.89007C9.13906 15.0031 8.41423 14.7243 7.85877 14.2189C7.30332 13.7134 6.95765 13.018 6.89007 12.27L6.24007 4.91002C6.21754 4.6607 6.10232 4.4289 5.91717 4.26041C5.73202 4.09192 5.4904 3.99901 5.24007 4.00002H3.07007C2.80485 4.00002 2.5505 3.89467 2.36296 3.70713C2.17543 3.51959 2.07007 3.26524 2.07007 3.00002C2.07007 2.73481 2.17543 2.48045 2.36296 2.29292C2.5505 2.10538 2.80485 2.00002 3.07007 2.00002H5.24007C5.99107 1.99698 6.71591 2.27572 7.27136 2.78118C7.82682 3.28665 8.17248 3.98206 8.24007 4.73002V5.00002H19.9301C20.2151 4.99779 20.4974 5.05652 20.7579 5.17228C21.0184 5.28805 21.2512 5.45816 21.4406 5.67124C21.63 5.88431 21.7716 6.1354 21.8561 6.4077C21.9405 6.67999 21.9657 6.96718 21.9301 7.25002H21.9201Z"
+                          fill="#8064A2"
+                        />
+                        <path
+                          d="M9.07007 22C10.4508 22 11.5701 20.8807 11.5701 19.5C11.5701 18.1193 10.4508 17 9.07007 17C7.68936 17 6.57007 18.1193 6.57007 19.5C6.57007 20.8807 7.68936 22 9.07007 22Z"
+                          fill="#8064A2"
+                        />
+                        <path
+                          d="M17.0701 22C18.4508 22 19.5701 20.8807 19.5701 19.5C19.5701 18.1193 18.4508 17 17.0701 17C15.6894 17 14.5701 18.1193 14.5701 19.5C14.5701 20.8807 15.6894 22 17.0701 22Z"
+                          fill="#8064A2"
+                        />
+                      </svg>
+                    </CustomizedTooltips>
+                  </Link>{' '}
+                </li>
+
+                {isLoggedIn ? (
+                  <li
+                    className={styles['user-menu']}
+                    onMouseOver={() => setShowDropdown('user-menu')}
+                    onMouseLeave={() => setShowDropdown(null)}
+                  >
+                    <Link
+                      href={'#'}
+                      onFocus={() => setShowDropdown('user-menu')}
+                      onBlur={() => setShowDropdown(null)}
+                    >
+                      {user?.profile_image ? (
+                        <img
+                          className={styles['img']}
+                          src={user.profile_image}
+                          alt=""
+                          width={48}
+                          height={48}
+                        />
+                      ) : (
+                        <div
+                          className={`${styles['img']} default-user-icon`}
+                        ></div>
+                      )}
+                      <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
+                    </Link>
+
+                    {showDropdown === 'user-menu' && (
+                      <div className={styles['user-menu-dropdown']}>
+                        <section className={styles['general-info']}>
+                          <Link
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'start',
+                            }}
+                            prefetch={true}
+                            href={`/profile/${user.profile_url}`}
+                          >
+                            <div className={styles['profile-name']}>
+                              {user?.profile_image ? (
+                                <img
+                                  className={styles['img']}
+                                  src={user.profile_image}
+                                  alt=""
+                                  width={48}
+                                  height={48}
+                                />
+                              ) : (
+                                <div
+                                  className={`${styles['img']} default-user-icon`}
+                                ></div>
+                              )}
+                              <h4>{user.full_name}</h4>
+                            </div>
+                            <button className={styles['view-profile-btn']}>
+                              View Profile
+                            </button>
+                          </Link>
+                        </section>
+
+                        <span className={styles['divider']}></span>
+
+                        <section className={styles['manage']}>
+                          <h5>Manage</h5>
+                          <Link href={`/activity`}>
+                            <p>My Activity</p>
+                          </Link>
+                          <Link href={`/orders`}>
+                            <p>My Orders</p>
+                          </Link>
+                          <Link href={`/profile/${user.profile_url}/pages`}>
+                            <p>My Pages</p>
+                          </Link>
+                        </section>
+
+                        <span className={styles['divider']}></span>
+
+                        <Link href={'/add-listing'}>
+                          <h5 className={styles['add-listing']}>
+                            Add Listing Page
+                          </h5>
+                        </Link>
+
+                        <span className={styles['divider']}></span>
+
+                        <section className={styles['account']}>
+                          <h5>Account</h5>
+                          <Link href={`/settings/login-security`}>
+                            <p>Settings</p>
+                          </Link>
+                          <p onClick={handleLogout}>Sign Out</p>
+                        </section>
+                      </div>
+                    )}
+                  </li>
+                ) : (
+                  <li>
+                    <OutlinedButton
+                      onClick={() =>
+                        dispatch(openModal({ type: 'auth', closable: true }))
+                      }
+                      className={styles.textSmall}
+                    >
+                      Sign In
+                    </OutlinedButton>{' '}
+                  </li>
+                )}
+              </ul>
+              <ul className={styles['right-listing-small']}>
+                <div
+                  className={`${styles['mobile-search-input']} ${
+                    isSearchInputVisible
+                      ? styles['mobile-search-input-visible']
+                      : styles['left-0']
+                  }`}
+                >
+                  {isSearchInputVisible ? (
+                    <form
+                      ref={mobileSearchRef}
+                      onSubmit={handleSearchSubmit}
+                      className={
+                        styles['mobile-search-input'] +
+                        ` ${
+                          isSearchInputVisible === true &&
+                          'mobile-search-input-visible'
+                        }`
+                      }
+                    >
+                      <header className={styles['header']}>
+                        <Image
+                          className={styles['responsive-logo']}
+                          src={LogoSmall}
+                          alt="hobbycue"
+                        />
+                        <h2 className={styles['modal-heading']}></h2>
+                        {searchCloseIcon}
+                      </header>
+                      <div className={styles['mobile-search-container']}>
+                        <TextField
+                          autoComplete="off"
+                          ref={mobileSearchInputRef}
+                          type="search"
+                          variant="outlined"
+                          placeholder="Search for anything on your hobbies..."
+                          size="small"
+                          autoFocus
+                          onFocus={() => {
+                            setIsWriting(true)
+                          }}
+                          className={styles.inputField}
+                          onChange={handleInputChange}
+                          value={data.search.value}
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              padding: 0,
+                              overflow: 'hidden',
+                              borderColor: 'red',
+                              background: '#f8f9fa',
+                              '& fieldset': {
+                                borderColor: '#EBEDF0',
+                                borderRight: 0,
+                              },
+                            },
+                            '& .MuiInputBase-input': {
+                              fontSize: '15px',
+                            },
+                            '& .MuiInputBase-input::placeholder': {
+                              fontSize: '12px',
+                              color: 'black',
+                            },
+                          }}
+                          InputLabelProps={{ shrink: false }}
+                        />
+
+                        <button
+                          type="submit"
+                          className={styles['search-icon-container']}
+                        >
+                          {/* Search Icon */}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="17"
+                            viewBox="0 0 16 17"
+                            fill="none"
+                          >
+                            <path
+                              d="M6.83333 2.19531C4.17185 2.19531 2 4.36717 2 7.02865C2 9.69013 4.17185 11.862 6.83333 11.862C7.92439 11.862 8.92964 11.493 9.74023 10.8789L12.862 14C12.9234 14.064 12.997 14.1151 13.0784 14.1503C13.1598 14.1854 13.2474 14.204 13.3361 14.2049C13.4248 14.2058 13.5128 14.189 13.5949 14.1555C13.6771 14.122 13.7517 14.0724 13.8144 14.0097C13.8771 13.947 13.9267 13.8724 13.9602 13.7903C13.9937 13.7081 14.0105 13.6202 14.0096 13.5315C14.0087 13.4428 13.9901 13.3551 13.9549 13.2737C13.9198 13.1923 13.8687 13.1187 13.8047 13.0573L10.6836 9.93555C11.2977 9.12495 11.6667 8.1197 11.6667 7.02865C11.6667 4.36717 9.49481 2.19531 6.83333 2.19531ZM6.83333 3.52865C8.77423 3.52865 10.3333 5.08775 10.3333 7.02865C10.3333 7.96055 9.97135 8.80218 9.38281 9.42773C9.32552 9.46921 9.2752 9.51953 9.23372 9.57682C8.60803 10.1661 7.7659 10.5286 6.83333 10.5286C4.89244 10.5286 3.33333 8.96954 3.33333 7.02865C3.33333 5.08775 4.89244 3.52865 6.83333 3.52865Z"
+                              fill="white"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </form>
+                  ) : data.search.value.length > 0 ? (
+                    <li
+                      onClick={toggleSearchInput}
+                      className={
+                        data.search.value.length > 0
+                          ? styles['topbar-search-box']
+                          : ''
+                      }
+                    >
+                      {data.search.value.length > 0 && (
+                        <input
+                          type="text"
+                          autoComplete="new"
+                          value={data.search.value}
+                        />
+                      )}
                       <div
                         onClick={() => {
                           setData((prev) => ({
@@ -794,694 +1466,31 @@ export const Navbar: React.FC<Props> = ({}) => {
                           }))
                           searchInputRef?.current?.focus()
                         }}
-                        className={styles['search-cross-icon']}
+                        className={styles['search-cross-icon-inside']}
                       >
                         {searchCrossIcon}
                       </div>
-                    )}
-                    <IconButton
-                      onClick={() => searchResult()}
-                      sx={{
-                        height: '40px',
-                        bgcolor: 'primary.main',
-                        borderRadius: '0px 8px 8px 0px',
-                        '&:hover': {
-                          bgcolor: 'primary.dark',
-                        },
-                      }}
-                    >
-                      <div className={styles['search-icon-container']}>
-                        <Image
-                          src={SearchIcon}
-                          alt="search"
-                          width={16}
-                          height={16}
-                        />
-                      </div>
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </section>
-
-          <section className={styles['navbar-right']}>
-            <ul className={styles['right-listing-expanded']}>
-              {/* Explore */}
-              <li
-                className=""
-                onMouseOver={() => setShowDropdown('explore-list')}
-                onMouseLeave={() => setShowDropdown(null)}
-              >
-                <Link
-                  href={'/explore'}
-                  onClick={() => {
-                    dispatch(setCategory(''))
-                    dispatch(setPageType(''))
-                    dispatch(setKeyword(''))
-                    dispatch(setHobby(''))
-                    dispatch(setLocation(''))
-                    dispatch(setSearching(true))
-                  }}
-                >
-                  <Image src={ExploreIcon} alt="" />
-                  <span>Explore</span>
-                  <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
-                </Link>
-                {showDropdown === 'explore-list' && (
-                  <div className={styles['explore-list-dropdown']}>
-                    <section className={styles['list']}>
-                      <h4>
-                        <Link
-                          href={''}
-                          className={styles['hobbiescategory']}
-                          onClick={async (e) => {
-                            e.preventDefault()
-                            dispatch(setPageType('People'))
-                            dispatch(setSearching(true))
-                            dispatch(setCategory(''))
-                            dispatch(setKeyword(''))
-                            dispatch(setHobby(''))
-                            dispatch(setLocation(''))
-                            const query = { ['page-type']: 'People' }
-                            router.push({
-                              pathname: '/explore/people',
-                              query: query,
-                            })
-                          }}
-                        >
-                          People - Expertise
-                        </Link>
-                      </h4>
-                      {/* <ul>
-                        <Link href={'/hobby/music'}>
-                          <li>Community</li>
-                        </Link>
-                      </ul> */}
-                    </section>
-                    <section className={styles['list']}>
-                      <h4>
-                        <Link
-                          href={''}
-                          className={styles['hobbiescategory']}
-                          onClick={async (e) => {
-                            e.preventDefault()
-                            dispatch(setCategory(''))
-                            dispatch(setPageType('Place'))
-                            dispatch(setSearching(true))
-                            dispatch(setKeyword(''))
-                            dispatch(setHobby(''))
-                            dispatch(setLocation(''))
-                            const query = { ['page-type']: 'Place' }
-                            router.push({
-                              pathname: '/explore/places',
-                              query: query,
-                            })
-                          }}
-                        >
-                          Places - Venues
-                        </Link>
-                      </h4>
-                    </section>
-                    <section className={styles['list']}>
-                      <h4>
-                        <Link
-                          href={''}
-                          className={styles['hobbiescategory']}
-                          onClick={async (e) => {
-                            e.preventDefault()
-                            dispatch(setCategory(''))
-                            dispatch(setPageType('Product'))
-                            dispatch(setSearching(true))
-                            dispatch(setKeyword(''))
-                            dispatch(setHobby(''))
-                            dispatch(setLocation(''))
-                            const query = { ['page-type']: 'Product' }
-                            router.push({
-                              pathname: '/explore/products',
-                              query: query,
-                            })
-                          }}
-                        >
-                          Products - Store
-                        </Link>
-                      </h4>
-                    </section>
-                    <section className={styles['list']}>
-                      <h4>
-                        <Link
-                          href={''}
-                          className={styles['hobbiescategory']}
-                          onClick={async (e) => {
-                            e.preventDefault()
-                            dispatch(setCategory(''))
-                            dispatch(setPageType('Program'))
-                            dispatch(setSearching(true))
-                            dispatch(setKeyword(''))
-                            dispatch(setHobby(''))
-                            dispatch(setLocation(''))
-                            const query = { ['page-type']: 'Program' }
-                            router.push({
-                              pathname: '/explore/programs',
-                              query: query,
-                            })
-                          }}
-                        >
-                          Programs - Events
-                        </Link>
-                      </h4>
-                    </section>
-
-                    <section className={styles['list']}>
-                      <h4>
-                        <Link
-                          href=""
-                          className={styles['hobbiescategory']}
-                          onClick={async (e) => {
-                            e.preventDefault()
-                            router.push({
-                              pathname: '/blog',
-                            })
-                          }}
-                        >
-                          Perspectives - Blogs
-                        </Link>
-                      </h4>
-                    </section>
-                    <section className={styles['list']}>
-                      <h4>
-                        <Link
-                          href=""
-                          className={styles['hobbiescategory']}
-                          onClick={async (e) => {
-                            if (!isLoggedIn) {
-                              dispatch(
-                                openModal({ type: 'auth', closable: true }),
-                              )
-                              return
-                            }
-                            e.preventDefault()
-                            router.push({
-                              pathname: '/community',
-                            })
-                          }}
-                        >
-                          Posts - Community
-                        </Link>
-                      </h4>
-                    </section>
-                  </div>
-                )}
-              </li>
-
-              {/* Hobbies */}
-              <li
-                className={styles['hobby-icon']}
-                onMouseOver={() => setShowDropdown('hobby-list')}
-                onMouseLeave={() => setShowDropdown(null)}
-              >
-                <Link href={'/hobby'}>
-                  <Image src={HobbyIcon} alt="hobby" />
-                  <span>Hobbies</span>
-                  <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
-                </Link>
-                {showDropdown === 'hobby-list' && (
-                  <div className={styles['hobby-list-dropdown']}>
-                    <section className={styles['list']}>
-                      <h4>
-                        <Link
-                          href={'/hobby/arts'}
-                          className={styles['hobbiescategory']}
-                        >
-                          Art
-                        </Link>
-                      </h4>
-                      <ul>
-                        <Link href={'/hobby/music'}>
-                          <li>Music</li>
-                        </Link>
-
-                        <Link href={'/hobby/dance'}>
-                          <li>Dance</li>
-                        </Link>
-
-                        <Link href={'/hobby/literary'}>
-                          <li>Literary</li>
-                        </Link>
-
-                        <Link href={'/hobby/theatre'}>
-                          <li>Theatre</li>
-                        </Link>
-
-                        <Link href={'/hobby/visual'}>
-                          <li>Visual</li>
-                        </Link>
-                      </ul>
-                    </section>
-                    <section className={styles['list']}>
-                      <h4>
-                        <Link
-                          href={'/hobby/play'}
-                          className={styles['hobbiescategory']}
-                        >
-                          Play
-                        </Link>
-                      </h4>
-
-                      <ul>
-                        <Link href={'/hobby/games'}>
-                          <li>Games</li>
-                        </Link>
-
-                        <Link href={'/hobby/sports'}>
-                          <li>Sports</li>
-                        </Link>
-                      </ul>
-                    </section>
-                    <section className={styles['list']}>
-                      <h4>
-                        <Link
-                          href={'/hobby/making'}
-                          className={styles['hobbiescategory']}
-                        >
-                          Making Things
-                        </Link>
-                      </h4>
-
-                      <ul>
-                        <Link href={'/hobby/clothing'}>
-                          <li>Clothing</li>
-                        </Link>
-
-                        <Link href={'/hobby/cooking'}>
-                          <li>Cooking</li>
-                        </Link>
-
-                        <Link href={'/hobby/garden'}>
-                          <li>Garden</li>
-                        </Link>
-
-                        <Link href={'/hobby/model'}>
-                          <li>Model</li>
-                        </Link>
-
-                        <Link href={'/hobby/utility'}>
-                          <li>Utility</li>
-                        </Link>
-                      </ul>
-                    </section>
-                    <section className={styles['list']}>
-                      <h4>
-                        <Link
-                          href={'/hobby/activity'}
-                          className={styles['hobbiescategory']}
-                        >
-                          Activity
-                        </Link>
-                      </h4>
-
-                      <ul>
-                        <Link href={'/hobby/animal-fancy'}>
-                          <li>Animal-Fancy</li>
-                        </Link>
-
-                        <Link href={'/hobby/observe'}>
-                          <li>Observe</li>
-                        </Link>
-
-                        <Link href={'/hobby/outdoors'}>
-                          <li>Outdoors</li>
-                        </Link>
-
-                        <Link href={'/hobby/travel'}>
-                          <li>Travel</li>
-                        </Link>
-                        <Link href={'/hobby/wellness'}>
-                          <li>Wellness</li>
-                        </Link>
-                      </ul>
-                    </section>
-                    <section className={styles['list']}>
-                      <h4>
-                        <Link
-                          href={'/hobby/collecting'}
-                          className={styles['hobbiescategory']}
-                        >
-                          {' '}
-                          Collecting{' '}
-                        </Link>
-                      </h4>
-
-                      <ul>
-                        <Link href={'/hobby/items'}>
-                          <li>Items</li>
-                        </Link>
-
-                        <Link href={'/hobby/records'}>
-                          <li>Records</li>
-                        </Link>
-                      </ul>
-                    </section>
-                    <section className={styles['list']}>
-                      <h4>
-                        <Link
-                          href={'/hobby'}
-                          className={styles['hobbiescategory']}
-                        >
-                          All Hobbies
-                        </Link>
-                      </h4>
-
-                      <ul>
-                        <li>Hobbies Challenges</li>
-                      </ul>
-                    </section>
-                  </div>
-                )}
-              </li>
-
-              {/* Bookmark */}
-              <li>
-                <Link href={'/bookmarks'}>
-                  <CustomizedTooltips title="Bookmark">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g clipPath="url(#clip0_10705_1996)">
-                        <path
-                          d="M17 3H7C5.9 3 5 3.9 5 5V21L12 18L19 21V5C19 3.9 18.1 3 17 3Z"
-                          fill="#8064A2"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_10705_1996">
-                          <rect width="24" height="24" fill="white" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </CustomizedTooltips>
-                </Link>{' '}
-              </li>
-
-              {/* Notification */}
-              <li>
-                <Link href={'/notifications'}>
-                  <CustomizedTooltips title="Notification">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g clipPath="url(#clip0_10705_1999)">
-                        <path
-                          d="M12.0001 22C13.1001 22 14.0001 21.1 14.0001 20H10.0001C10.0001 21.1 10.8901 22 12.0001 22ZM18.0001 16V11C18.0001 7.93 16.3601 5.36 13.5001 4.68V4C13.5001 3.17 12.8301 2.5 12.0001 2.5C11.1701 2.5 10.5001 3.17 10.5001 4V4.68C7.63005 5.36 6.00005 7.92 6.00005 11V16L4.71005 17.29C4.08005 17.92 4.52005 19 5.41005 19H18.5801C19.4701 19 19.9201 17.92 19.2901 17.29L18.0001 16Z"
-                          fill="#8064A2"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_10705_1999">
-                          <rect width="24" height="24" fill="white" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </CustomizedTooltips>
-                </Link>{' '}
-              </li>
-
-              {/* Cart */}
-              <li>
-                <Link href={'/cart'}>
-                  <CustomizedTooltips title="Cart">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M21.9201 7.25002V7.38002L20.4601 12.78C20.2875 13.421 19.9073 13.9866 19.3789 14.3883C18.8505 14.79 18.2038 15.0051 17.5401 15H9.89007C9.13906 15.0031 8.41423 14.7243 7.85877 14.2189C7.30332 13.7134 6.95765 13.018 6.89007 12.27L6.24007 4.91002C6.21754 4.6607 6.10232 4.4289 5.91717 4.26041C5.73202 4.09192 5.4904 3.99901 5.24007 4.00002H3.07007C2.80485 4.00002 2.5505 3.89467 2.36296 3.70713C2.17543 3.51959 2.07007 3.26524 2.07007 3.00002C2.07007 2.73481 2.17543 2.48045 2.36296 2.29292C2.5505 2.10538 2.80485 2.00002 3.07007 2.00002H5.24007C5.99107 1.99698 6.71591 2.27572 7.27136 2.78118C7.82682 3.28665 8.17248 3.98206 8.24007 4.73002V5.00002H19.9301C20.2151 4.99779 20.4974 5.05652 20.7579 5.17228C21.0184 5.28805 21.2512 5.45816 21.4406 5.67124C21.63 5.88431 21.7716 6.1354 21.8561 6.4077C21.9405 6.67999 21.9657 6.96718 21.9301 7.25002H21.9201Z"
-                        fill="#8064A2"
-                      />
-                      <path
-                        d="M9.07007 22C10.4508 22 11.5701 20.8807 11.5701 19.5C11.5701 18.1193 10.4508 17 9.07007 17C7.68936 17 6.57007 18.1193 6.57007 19.5C6.57007 20.8807 7.68936 22 9.07007 22Z"
-                        fill="#8064A2"
-                      />
-                      <path
-                        d="M17.0701 22C18.4508 22 19.5701 20.8807 19.5701 19.5C19.5701 18.1193 18.4508 17 17.0701 17C15.6894 17 14.5701 18.1193 14.5701 19.5C14.5701 20.8807 15.6894 22 17.0701 22Z"
-                        fill="#8064A2"
-                      />
-                    </svg>
-                  </CustomizedTooltips>
-                </Link>{' '}
-              </li>
-
-              {isLoggedIn ? (
-                <li
-                  className={styles['user-menu']}
-                  onMouseOver={() => setShowDropdown('user-menu')}
-                  onMouseLeave={() => setShowDropdown(null)}
-                >
-                  <Link
-                    href={'#'}
-                    onFocus={() => setShowDropdown('user-menu')}
-                    onBlur={() => setShowDropdown(null)}
-                  >
-                    {user?.profile_image ? (
-                      <img
-                        className={styles['img']}
-                        src={user.profile_image}
-                        alt=""
-                        width={48}
-                        height={48}
-                      />
-                    ) : (
-                      <div
-                        className={`${styles['img']} default-user-icon`}
-                      ></div>
-                    )}
-                    <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
-                  </Link>
-
-                  {showDropdown === 'user-menu' && (
-                    <div className={styles['user-menu-dropdown']}>
-                      <section className={styles['general-info']}>
-                      <Link
-                          style={{display: 'flex', flexDirection: 'column', alignItems:"start"}}
-                          prefetch={true}
-                          href={`/profile/${user.profile_url}`}
-                        >
-                        <div className={styles['profile-name']}>
-                          {user?.profile_image ? (
-                            <img
-                              className={styles['img']}
-                              src={user.profile_image}
-                              alt=""
-                              width={48}
-                              height={48}
-                            />
-                          ) : (
-                            <div
-                              className={`${styles['img']} default-user-icon`}
-                            ></div>
-                          )}
-                          <h4>{user.full_name}</h4>
-                        </div>
-                          <button className={styles['view-profile-btn']}>
-                            View Profile
-                          </button>
-                        </Link>
-                      </section>
-
-                      <span className={styles['divider']}></span>
-
-                      <section className={styles['manage']}>
-                        <h5>Manage</h5>
-                        <Link href={`/activity`}>
-                          <p>My Activity</p>
-                        </Link>
-                        <Link href={`/orders`}>
-                          <p>My Orders</p>
-                        </Link>
-                        <Link href={`/profile/${user.profile_url}/pages`}>
-                          <p>My Pages</p>
-                        </Link>
-                      </section>
-
-                      <span className={styles['divider']}></span>
-
-                      <Link href={'/add-listing'}>
-                        <h5 className={styles['add-listing']}>
-                          Add Listing Page
-                        </h5>
-                      </Link>
-
-                      <span className={styles['divider']}></span>
-
-                      <section className={styles['account']}>
-                        <h5>Account</h5>
-                        <Link href={`/settings/login-security`}>
-                          <p>Settings</p>
-                        </Link>
-                        <p onClick={handleLogout}>Sign Out</p>
-                      </section>
-                    </div>
-                  )}
-                </li>
-              ) : (
-                <li>
-                  <OutlinedButton
-                    onClick={() =>
-                      dispatch(openModal({ type: 'auth', closable: true }))
-                    }
-                    className={styles.textSmall}
-                  >
-                    Sign In
-                  </OutlinedButton>{' '}
-                </li>
-              )}
-            </ul>
-            <ul className={styles['right-listing-small']}>
-              <div
-                className={`${styles['mobile-search-input']} ${
-                  isSearchInputVisible
-                    ? styles['mobile-search-input-visible']
-                    : styles['left-0']
-                }`}
-              >
-                {isSearchInputVisible ? (
-                  <form
-                    ref={mobileSearchRef}
-                    onSubmit={handleSearchSubmit}
-                    className={
-                      styles['mobile-search-input'] +
-                      ` ${
-                        isSearchInputVisible === true &&
-                        'mobile-search-input-visible'
-                      }`
-                    }
-                  >
-                    <header className={styles['header']}>
-                      <Image
-                        className={styles['responsive-logo']}
-                        src={LogoSmall}
-                        alt="hobbycue"
-                      />
-                      <h2 className={styles['modal-heading']}></h2>
-                      {searchCloseIcon}
-                    </header>
-                    <div className={styles['mobile-search-container']}>
-                      <TextField
-                        autoComplete="off"
-                        ref={mobileSearchInputRef}
-                        type="search"
-                        variant="outlined"
-                        placeholder="Search for anything on your hobbies..."
-                        size="small"
-                        autoFocus
-                        onFocus={() => {
-                          setIsWriting(true)
-                        }}
-                        className={styles.inputField}
-                        onChange={handleInputChange}
-                        value={data.search.value}
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: '8px',
-                            padding: 0,
-                            overflow: 'hidden',
-                            borderColor: 'red',
-                            background: '#f8f9fa',
-                            '& fieldset': {
-                              borderColor: '#EBEDF0',
-                              borderRight: 0,
-                            },
-                          },
-                          '& .MuiInputBase-input': {
-                            fontSize: '15px',
-                          },
-                          '& .MuiInputBase-input::placeholder': {
-                            fontSize: '12px',
-                            color: 'black',
-                          },
-                        }}
-                        InputLabelProps={{ shrink: false }}
-                      />
-
-                      <button
-                        type="submit"
-                        className={styles['search-icon-container']}
-                      >
-                        {/* Search Icon */}
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="17"
-                          viewBox="0 0 16 17"
-                          fill="none"
-                        >
-                          <path
-                            d="M6.83333 2.19531C4.17185 2.19531 2 4.36717 2 7.02865C2 9.69013 4.17185 11.862 6.83333 11.862C7.92439 11.862 8.92964 11.493 9.74023 10.8789L12.862 14C12.9234 14.064 12.997 14.1151 13.0784 14.1503C13.1598 14.1854 13.2474 14.204 13.3361 14.2049C13.4248 14.2058 13.5128 14.189 13.5949 14.1555C13.6771 14.122 13.7517 14.0724 13.8144 14.0097C13.8771 13.947 13.9267 13.8724 13.9602 13.7903C13.9937 13.7081 14.0105 13.6202 14.0096 13.5315C14.0087 13.4428 13.9901 13.3551 13.9549 13.2737C13.9198 13.1923 13.8687 13.1187 13.8047 13.0573L10.6836 9.93555C11.2977 9.12495 11.6667 8.1197 11.6667 7.02865C11.6667 4.36717 9.49481 2.19531 6.83333 2.19531ZM6.83333 3.52865C8.77423 3.52865 10.3333 5.08775 10.3333 7.02865C10.3333 7.96055 9.97135 8.80218 9.38281 9.42773C9.32552 9.46921 9.2752 9.51953 9.23372 9.57682C8.60803 10.1661 7.7659 10.5286 6.83333 10.5286C4.89244 10.5286 3.33333 8.96954 3.33333 7.02865C3.33333 5.08775 4.89244 3.52865 6.83333 3.52865Z"
-                            fill="white"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </form>
-                ) : data.search.value.length > 0 ? (
-                  <li
-                    onClick={toggleSearchInput}
-                    className={
-                      data.search.value.length > 0
-                        ? styles['topbar-search-box']
-                        : ''
-                    }
-                  >
-                    {data.search.value.length > 0 && (
-                      <input
-                        type="text"
-                        autoComplete="new"
-                        value={data.search.value}
-                      />
-                    )}
-                    <div
-                      onClick={() => {
-                        setData((prev) => ({
-                          ...prev,
-                          search: { ...prev.search, value: '' },
-                        }))
-                        searchInputRef?.current?.focus()
-                      }}
-                      className={styles['search-cross-icon-inside']}
-                    >
-                      {searchCrossIcon}
-                    </div>
+                      <Image src={Search} alt="search" />
+                    </li>
+                  ) : null}
+                </div>
+                {data.search.value.length === 0 && (
+                  <li onClick={toggleSearchInput} className={''}>
                     <Image src={Search} alt="search" />
                   </li>
-                ) : null}
-              </div>
-              {data.search.value.length === 0 && (
-                <li onClick={toggleSearchInput} className={''}>
-                  <Image src={Search} alt="search" />
+                )}
+                <li>
+                  <Link href={'/notifications'}>
+                    <Image src={BellIcon} alt="Bell" />
+                  </Link>
                 </li>
-              )}
-              <li>
-                <Link href={'/notifications'}>
-                  <Image src={BellIcon} alt="Bell" />
-                </Link>
-              </li>
-              <li>
-                <Image src={BarsIcon} alt="Bars" onClick={toggleMenu} />
-              </li>
-            </ul>
-          </section>
-        </nav>
+                <li>
+                  <Image src={BarsIcon} alt="Bars" onClick={toggleMenu} />
+                </li>
+              </ul>
+            </section>
+          </nav>
+        )}
       </header>
 
       {menuActive && <SideMenu handleClose={toggleMenu} />}

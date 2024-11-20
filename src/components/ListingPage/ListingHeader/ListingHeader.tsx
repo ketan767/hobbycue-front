@@ -78,9 +78,10 @@ const ListingHeader: React.FC<Props> = ({
   setpageTypeErr,
   setTitleError,
 }) => {
-  const [viewAs, setViewAs] = useState<
-    '' | 'signed-in' | 'not-signed-in' | 'print'
-  >('')
+  // const [viewAs, setViewAs] = useState<
+  //   '' | 'signed-in' | 'not-signed-in' | 'print'
+  // >('')
+  const { viewAs } = useSelector((state: RootState) => state.site) // as viewAs is cross-component, no point making redundant states
   const dispatch = useDispatch()
   const router = useRouter()
   const [snackbar, setSnackbar] = useState({
@@ -730,7 +731,6 @@ const ListingHeader: React.FC<Props> = ({
       />
     </svg>
   )
-  console.log('asifs viewAs', viewAs)
   return (
     <>
       <header
@@ -1285,54 +1285,57 @@ const ListingHeader: React.FC<Props> = ({
             </div>
           </section>
         ) : (
-          <section className={styles['product-header-content']}>
-            {isMobile ? (
-              <VerticalSlider data={data} />
-            ) : active_img_product?.type === 'image' && data?.profile_image ? (
-              <img
-                className={styles['active-image']}
-                src={
-                  active_img_product?.idx === 0
-                    ? data?.profile_image
-                    : data.images[active_img_product?.idx - 1]
-                }
-              />
-            ) : active_img_product?.type === 'video' ? (
-              <div className={styles['active-image']}>
-                {data?.video_url && (
-                  <div className={styles['videos']}>
-                    <ReactPlayer
-                      width="100%"
-                      height="100%"
-                      url={data?.video_url}
-                      controls={true}
-                    />
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div
-                className={`${styles.item} ${
-                  !isEditMode ? styles['item-view'] : ''
-                }`}
-              >
-                {listingLayoutMode === 'edit' ? (
-                  <>
-                    <input
-                      type="file"
-                      accept="image/png, image/gif, image/jpeg"
-                      className={styles.hidden}
-                      onChange={(e: any) => onInputChange(e, 'profile')}
-                      ref={inputRef}
-                    />
-                    {uploadIcon}
-                    <p>Add Image</p>
-                  </>
-                ) : (
-                  ''
-                )}
-              </div>
-            )}
+          <>
+            <section className={styles['product-header-content']}>
+              {isMobile ? (
+                <VerticalSlider data={data} />
+              ) : active_img_product?.type === 'image' &&
+                data?.profile_image ? (
+                <img
+                  className={styles['active-image']}
+                  src={
+                    active_img_product?.idx === 0
+                      ? data?.profile_image
+                      : data.images[active_img_product?.idx - 1]
+                  }
+                />
+              ) : active_img_product?.type === 'video' ? (
+                <div className={styles['active-image']}>
+                  {data?.video_url && (
+                    <div className={styles['videos']}>
+                      <ReactPlayer
+                        width="100%"
+                        height="100%"
+                        url={data?.video_url}
+                        controls={true}
+                      />
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div
+                  className={`${styles.item} ${
+                    !isEditMode ? styles['item-view'] : ''
+                  }`}
+                >
+                  {listingLayoutMode === 'edit' ? (
+                    <>
+                      <input
+                        type="file"
+                        accept="image/png, image/gif, image/jpeg"
+                        className={styles.hidden}
+                        onChange={(e: any) => onInputChange(e, 'profile')}
+                        ref={inputRef}
+                      />
+                      {uploadIcon}
+                      <p>Add Image</p>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              )}
+            </section>
 
             <div className={styles['product-name-container']}>
               <div>
@@ -1370,40 +1373,10 @@ const ListingHeader: React.FC<Props> = ({
                   // )
                 }
                 <div className={styles['edit-field-wrapper']}>
-                  <style>
-                    {`
-                        .ql-editor.ql-indent-1{
-                          padding-left:4px;
-                        }
-                        .ql-editor ul, 
-                        .ql-editor ol {
-                          font-family:'Poppins';
-                          padding-left: 4px; 
-                          font-size:14px;
-                          text-align:justify; 
-                        }
-
-                        .ql-editor a {
-                          font-family:'Poppins';
-                          color: rgb(128, 100, 162);  
-                          text-decoration: none !important;
-                          font-size:14px;
-                          text-align:justify;
-                        }
-                        .ql-editor p {
-                        font-family:'Poppins';
-                          font-size:14px;
-                          text-align:justify;
-                        }
-                        .ql-editor{
-                          padding-inline:4px;
-                        }
-                      `}
-                  </style>
                   {data?.description ? (
                     <div className={'ql-snow'}>
                       <div
-                        className={`ql-editor`}
+                        className={styles[`ql-editor`]}
                         dangerouslySetInnerHTML={{ __html: data?.description }}
                       />
                     </div>
@@ -1522,6 +1495,38 @@ const ListingHeader: React.FC<Props> = ({
                 </div>
 
                 <div className={styles['actions-container-desktop']}>
+                  {listingLayoutMode !== 'edit' && viewAs && (
+                    <>
+                      {viewAs === 'print' ? (
+                        // <button className={styles.viewButton}></button>
+                        <FilledButton
+                          className={styles.viewButtonPrint}
+                          onClick={() => window.print()}
+                        >
+                          <PrintIcon /> Print
+                        </FilledButton>
+                      ) : (
+                        <button className={styles.viewButton}>
+                          You are viewing this page as a <br />
+                          <span>
+                            {viewAs === 'signed-in'
+                              ? 'User Signed In'
+                              : 'User Not Signed In'}
+                          </span>
+                        </button>
+                      )}
+                      <button
+                        onClick={() => {
+                          dispatch(updateListingLayoutMode('edit'))
+                          dispatch(updateViewAs(''))
+                        }}
+                        className={styles.viewButton}
+                        style={{ textAlign: 'center', fontWeight: 600 }}
+                      >
+                        View as Admin
+                      </button>
+                    </>
+                  )}
                   {listingLayoutMode === 'edit' && (
                     <FilledButton
                       className={
@@ -1535,77 +1540,85 @@ const ListingHeader: React.FC<Props> = ({
                     </FilledButton>
                   )}
                   {/* Action Buttons */}
-                  <div className={styles['action-btn-wrapper']}>
-                    {/* Send Email Button  */}
-                    <div onClick={handleRepost}>
-                      <CustomTooltip title="Repost">
+                  {viewAs === 'print' ? (
+                    <img
+                      src={printViewLogo.src}
+                      alt="Print Logo"
+                      className={styles.printViewLogo}
+                    />
+                  ) : (
+                    <div className={styles['action-btn-wrapper']}>
+                      {/* Send Email Button  */}
+                      <div onClick={handleRepost}>
+                        <CustomTooltip title="Repost">
+                          <div
+                            onClick={(e) => console.log(e)}
+                            className={styles['action-btn']}
+                          >
+                            <RepostIcon />
+                          </div>
+                        </CustomTooltip>
+                      </div>
+
+                      {/* Bookmark Button */}
+                      <CustomTooltip title="Bookmark">
                         <div
-                          onClick={(e) => console.log(e)}
+                          onClick={showFeatureUnderDevelopment}
                           className={styles['action-btn']}
                         >
-                          <RepostIcon />
+                          <BookmarkBorderRoundedIcon color="primary" />
                         </div>
                       </CustomTooltip>
-                    </div>
 
-                    {/* Bookmark Button */}
-                    <CustomTooltip title="Bookmark">
-                      <div
-                        onClick={showFeatureUnderDevelopment}
-                        className={styles['action-btn']}
-                      >
-                        <BookmarkBorderRoundedIcon color="primary" />
-                      </div>
-                    </CustomTooltip>
-
-                    {/* Share Button */}
-                    <CustomTooltip title="Share">
-                      <div
-                        onClick={(e) => handleShare()}
-                        className={styles['action-btn']}
-                      >
-                        <ShareIcon />
-                      </div>
-                    </CustomTooltip>
-
-                    {/* More Options Button */}
-                    <div
-                      className={styles['action-btn-dropdown-wrapper']}
-                      ref={Dropdownref}
-                    >
-                      <CustomTooltip title="Click to view options">
+                      {/* Share Button */}
+                      <CustomTooltip title="Share">
                         <div
-                          onClick={(e) => handleDropdown()}
+                          onClick={(e) => handleShare()}
                           className={styles['action-btn']}
                         >
-                          <MoreHorizRoundedIcon color="primary" />
+                          <ShareIcon />
                         </div>
                       </CustomTooltip>
-                      {listingLayoutMode === 'edit'
-                        ? open && (
-                            <Dropdown
-                              userType={'edit'}
-                              handleClose={handleDropdown}
-                              showFeatureUnderDevelopment={
-                                showFeatureUnderDevelopment
-                              }
-                            />
-                          )
-                        : open && (
-                            <Dropdown
-                              userType={'anonymous'}
-                              handleClose={handleDropdown}
-                              showFeatureUnderDevelopment={
-                                showFeatureUnderDevelopment
-                              }
-                            />
-                          )}
+
+                      {/* More Options Button */}
+                      <div
+                        className={styles['action-btn-dropdown-wrapper']}
+                        ref={Dropdownref}
+                      >
+                        <CustomTooltip title="Click to view options">
+                          <div
+                            onClick={(e) => handleDropdown()}
+                            className={styles['action-btn']}
+                          >
+                            <MoreHorizRoundedIcon color="primary" />
+                          </div>
+                        </CustomTooltip>
+                        {listingLayoutMode === 'edit'
+                          ? open && (
+                              <Dropdown
+                                userType={'edit'}
+                                handleClose={handleDropdown}
+                                showFeatureUnderDevelopment={
+                                  showFeatureUnderDevelopment
+                                }
+                              />
+                            )
+                          : open && (
+                              <Dropdown
+                                userType={'anonymous'}
+                                handleClose={handleDropdown}
+                                showFeatureUnderDevelopment={
+                                  showFeatureUnderDevelopment
+                                }
+                              />
+                            )}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
-          </section>
+          </>
         )}
         {data.type !== 4 ? (
           <div className={styles['actions-container-desktop']}>
@@ -1613,7 +1626,10 @@ const ListingHeader: React.FC<Props> = ({
               <>
                 {viewAs === 'print' ? (
                   // <button className={styles.viewButton}></button>
-                  <FilledButton className={styles.viewButtonPrint} onClick={()=> window.print()}>
+                  <FilledButton
+                    className={styles.viewButtonPrint}
+                    onClick={() => window.print()}
+                  >
                     <PrintIcon /> Print
                   </FilledButton>
                 ) : (
@@ -1629,8 +1645,7 @@ const ListingHeader: React.FC<Props> = ({
                 <button
                   onClick={() => {
                     dispatch(updateListingLayoutMode('edit'))
-                    dispatch(updateViewAs('')) // for the contact details
-                    setViewAs('')
+                    dispatch(updateViewAs(''))
                   }}
                   className={styles.viewButton}
                   style={{ textAlign: 'center', fontWeight: 600 }}
@@ -1707,7 +1722,6 @@ const ListingHeader: React.FC<Props> = ({
                     ? open && (
                         <Dropdown
                           userType={'edit'}
-                          setViewAs={setViewAs}
                           handleClose={handleDropdown}
                           showFeatureUnderDevelopment={
                             showFeatureUnderDevelopment
