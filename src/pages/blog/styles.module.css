@@ -121,6 +121,10 @@
   color: #8064a2;
 }
 
+.desktopActions {
+  margin: auto 0 0 auto;
+}
+
 .actions {
   display: flex;
   gap: 12px;

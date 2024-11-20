@@ -171,7 +171,13 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
               ) : (
                 posts.length === 0 &&
                 isLoggedIn && (
-                  <div className={styles['no-posts-container']}>
+                  <div
+                  style={
+                    isMobile
+                      ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
+                      : undefined
+                  }
+                   className={styles['no-posts-container']}>
                     <p>No posts available</p>
                   </div>
                 )
@@ -210,7 +216,13 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
                 </>
               ) : (
                 posts.length === 0 && (
-                  <div className={styles['no-posts-container']}>
+                  <div
+                  style={
+                    isMobile
+                      ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
+                      : undefined
+                  } 
+                  className={styles['no-posts-container']}>
                     <p>No posts available</p>
                   </div>
                 )

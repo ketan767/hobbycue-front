@@ -232,7 +232,8 @@ export const isVideoLink = (url: string) => {
     /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/).+/,
     /^(https?:\/\/)?(www\.)?youtube\.com\/shorts\/.+/,
     /^(https?:\/\/)?(www\.)?fb\.watch\/.+$/,
- 
+    /https:\/\/www\.facebook\.com\/watch\/\?v=\d+/,
+
     /^(https?:\/\/)?(www\.)?(instagram\.com|instagr\.am)\/p\/.+$/, // Only match Instagram post URLs
     /^(https?:\/\/)?(www\.)?vimeo\.com\/.+$/,
     /^(https?:\/\/)?(www\.)?dailymotion\.com\/video\/.+/,

@@ -154,7 +154,7 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
                 <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 2 }}>
                   <Masonry
                     gutter={isMobile ? `8px` : `12px`}
-                    style={{ columnGap: '24px', rowGap: '12px' }}
+                    style={isMobile ? {columnGap: '24px', rowGap: '12px', marginTop:"8px"}: {columnGap: '24px', rowGap: '12px'}}
                   >
                     {itsMe && (
                       <div

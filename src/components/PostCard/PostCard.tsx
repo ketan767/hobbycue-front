@@ -258,7 +258,7 @@ const PostCard: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div className={styles['post-card-wrapper']} onClick={handleCardClick}>
+      <div style={{height:"auto"}} className={styles['post-card-wrapper']} onClick={handleCardClick}>
         {/* Card Header */}
         {(!has_link ||
           props.currentSection === 'posts' ||
@@ -499,7 +499,7 @@ const PostCard: React.FC<Props> = (props) => {
             font-family:'Poppins';
             padding-left: 4px; 
             font-size:14px;
-            text-align:justify; 
+            text-align:left; 
           }
 
           .ql-editor a {
@@ -507,12 +507,12 @@ const PostCard: React.FC<Props> = (props) => {
             color: rgb(128, 100, 162);  
             text-decoration: none !important;
             font-size:14px;
-            text-align:justify;
+            text-align:left;
           }
           .ql-editor p {
             font-family:'Poppins';
             font-size:14px;
-            text-align:justify;
+            text-align:left;
           }
       `}</style>
           {(!has_link ||
@@ -580,7 +580,8 @@ const PostCard: React.FC<Props> = (props) => {
                           <ReactPlayer
                             className={styles.reactplayer}
                             width="100%"
-                            height="410px"
+                            // height="410px"
+                            height="100%"
                             url={url}
                             controls={true}
                           />
@@ -588,23 +589,21 @@ const PostCard: React.FC<Props> = (props) => {
                       ) : (
                         <>
                           <div className={styles['posts-meta-data-container']}>
-                            <a
-                              href={url}
-                              target="_blank"
-                              className={styles['posts-meta-img']}
-                            >
-                              <img
-                                src={
-                                  (typeof metaData?.image === 'string' &&
-                                    metaData.image) ||
-                                  (typeof metaData?.icon === 'string' &&
-                                    metaData.icon) ||
-                                  defaultImg
-                                }
-                                alt="link-image"
-                                width={80}
-                                height={80}
-                              />
+                            <a href={url} target="_blank">
+                              <div className={styles['posts-meta-img']}>
+                                <img
+                                  src={
+                                    (typeof metaData?.image === 'string' &&
+                                      metaData.image) ||
+                                    (typeof metaData?.icon === 'string' &&
+                                      metaData.icon) ||
+                                    defaultImg
+                                  }
+                                  alt="link-image"
+                                  width={80}
+                                  height={80}
+                                />
+                              </div>
                             </a>
                             <div className={styles['posts-meta-content']}>
                               <a
@@ -647,7 +646,7 @@ const PostCard: React.FC<Props> = (props) => {
                   height={130}
                 />
               </a>
-              <div className={styles.metaContent}>
+              <div style={isMobile ? {height:"109px"}: {}} className={styles.metaContent}>
                 <a href={url} target="_blank" className={styles.contentHead}>
                   {' '}
                   {metaData?.title}{' '}

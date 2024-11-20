@@ -6,16 +6,21 @@
 
 .allLabels {
     display: flex;
-    width: 940px;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.label {
+    align-items: center; 
+    gap: 48px; 
+  }
+  
+  .label {
     display: flex;
-    align-items: flex-start;
-    gap: 6px;
-}
+    align-items: center;
+    gap: 6px; 
+  }
+  
+  
+  .separator {
+    width: 120px; 
+  }
+  
 
 .label p {
     color: var(--Grey-Darker, #6D747A);
@@ -29,7 +34,7 @@
 }
 
 .label span {
-    color: var(--Grey-Darkest, #08090A);
+    color: var(--Blue1, #0096C8);
     font-feature-settings: 'clig' off, 'liga' off;
     font-family: 'Poppins';
     font-size: 16px;

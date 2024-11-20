@@ -4,7 +4,8 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f7f5f9;;
+  background-color: #f7f5f9;
+  ;
 }
 
 .input-box label {
@@ -20,14 +21,14 @@
 }
 
 .input-box input {
-  
+
   width: 100%;
   /* all: unset; */
   background: #f8f9fa;
-  
+
   /* Grey/Lighter */
 
-  
+
   border-radius: 8px;
   padding: calc(var(--spacing-8) + var(--spacing-4));
 
@@ -40,20 +41,20 @@
   min-width: 6.25rem;
 }
 
-.input-box div div{
+.input-box div div {
   border-radius: 8px;
 }
 
-.input-box-error>div>div>fieldset{
+.input-box-error>div>div>fieldset {
   border-color: transparent !important;
 }
 
-.input-box{
+.input-box {
   background: #f8f9fa;
-  
+
 }
 
-.input ::placeholder{
+.input ::placeholder {
   color: #939CA3;
 }
 
@@ -69,7 +70,7 @@
 
 .input-box input:focus-within {
   outline: none;
-  
+
 }
 
 /* Container styles */
@@ -118,6 +119,24 @@
   width: 100%;
 }
 
+.notesInput {
+  padding: 10px;
+  height: 40px;
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 16px;
+  /* 133.333% */
+  border-radius: 8px;
+  border: 1px solid var(--Grey-Lighter, #EBEDF0);
+  background: var(--Grey-Hover, #F8F9FA);
+  /* border-right: none; */
+  outline: none;
+  width: 70%;
+
+}
+
 .searchInput::placeholder {
   color: var(--Grey-Dark, #939CA3);
   font-family: Poppins;
@@ -131,6 +150,11 @@
 .searchInput:focus {
   border: 1px solid #0096C8;
   border-right: none;
+}
+
+.notesInput:focus {
+  border: 1px solid #0096C8;
+  /* border-right: none; */
 }
 
 .filterBtn {
@@ -162,7 +186,7 @@
 
 /* Results table styles */
 
-.resultsContainer{
+.resultsContainer {
   max-height: calc(100vh - 140px);
   overflow-y: auto;
 }
@@ -173,7 +197,7 @@
   border-radius: 8px;
 }
 
-.resultsTable thead{
+.resultsTable thead {
   position: sticky;
   top: 0;
 }
@@ -183,8 +207,8 @@
   text-align: left;
 }
 
-.resultsTable tbody{
-  
+.resultsTable tbody {
+
   border: 1px solid var(--Grey-Lighter, #EBEDF0);
 }
 
@@ -303,7 +327,37 @@
   /* Fixed width for the Last LoggedIn by column */
 }
 
-.pagesLength{
+.pagination {
+  display: flex;
+  position: absolute;
+  right: 64px;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.PaginationButton {
+  width: 80px;
+  height: 36px;
+  color: #fff;
+  font-family: 'poppins-regular';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  background: var(--Blue1, #0096C8);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: all 0.3s;
+
+}
+
+.PaginationButton:hover {
+  background-color: #0056b3;
+  transition: all 0.3s;
+}
+
+.pagesLength {
   text-align: center !important;
   padding-right: 16px !important;
 }
@@ -318,7 +372,7 @@
   gap: 16px;
 }
 
-.actions svg{
+.actions svg {
   cursor: pointer;
 }
 

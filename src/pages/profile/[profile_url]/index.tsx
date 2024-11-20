@@ -47,7 +47,6 @@ interface Props {
 
 const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
   console.warn({ data })
-  console.log('asifs page', data)
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 

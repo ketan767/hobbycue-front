@@ -21,6 +21,7 @@ import PostCard from '@/components/PostCard/PostCard'
 import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
 import { useRouter } from 'next/router'
 import { showProfileError } from '@/redux/slices/user'
+import { isMobile } from '@/utils'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -36,6 +37,7 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
+  const isMobileBool = isMobile()
 
   const fetchPages = () => {
     const id = data?._id
@@ -135,7 +137,12 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
           pinnedPosts.length === 0 &&
           unpinnnedPosts.length === 0 && (
             <div
-              className={`${styles['no-posts-container']} ${styles['responsive-margin']}`}
+              className={`${styles['no-posts-container']} ${styles['responsive-margin']} `}
+              style={
+                isMobileBool
+                  ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
+                  : undefined
+              }
             >
               <p>No posts available</p>
             </div>
