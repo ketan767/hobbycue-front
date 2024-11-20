@@ -26,6 +26,8 @@ import {
   setTypeResultThree,
   setTypeResultFour,
   setBlogsSearchResult,
+  setUserName,
+  setPostsSearchResult,
 } from '@/redux/slices/search'
 import { RootState } from '@/redux/store'
 import { MenuItem, Select, useMediaQuery } from '@mui/material'
@@ -76,6 +78,7 @@ import Place from '../../assets/svg/Search/Place.svg'
 import Program from '../../assets/svg/Search/Program.svg'
 import Product from '../../assets/svg/Search/Product.svg'
 import Blogs from '../../assets/svg/Search/blogs.svg'
+import { searchPosts } from '@/services/post.service'
 
 type Props = {
   data?: any
@@ -317,7 +320,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const [HidePeople, setHidePeople] = useState(false)
   const [HidePlace, setHidePlace] = useState(false)
   const [HideEvent, setHideEvent] = useState(false)
+  const [HideClasses, setHideClasses] = useState(false)
   const [HideProduct, setHideProduct] = useState(false)
+  const [HideRentals, setHideRentals] = useState(false)
   const [HidePosts, setHidePosts] = useState(false)
   const [HideBlogs, setHideBlogs] = useState(false)
   const [HideHobbies, setHideHobbies] = useState(false)
@@ -326,7 +331,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
   const router = useRouter()
 
-  const { q, filter } = router.query
+  const { q, filter, name, hobby, location, postedBy } = router.query
 
   const queryString = q?.toString() || ''
 
@@ -339,6 +344,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const showAllPosts = filter === 'posts'
   const showAllBlogs = filter === 'blogs'
   const showAllhobbies = filter === 'hobby'
+  const showAllClasses = filter === 'classes'
+  const showAllRentals = filter === 'rentals'
 
   const observer = useRef<IntersectionObserver | null>(null)
 
@@ -417,6 +424,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHideProduct(false)
       setHideBlogs(false)
       setHidePosts(false)
+      setHideClasses(true)
+      setHideRentals(true)
     } else if (showAllUsers === true) {
       setHideHobbies(true)
       setHidePeople(true)
@@ -426,6 +435,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHideBlogs(true)
       setHidePosts(true)
       setHideUser(false)
+      setHideClasses(true)
+      setHideRentals(true)
     } else if (showAllhobbies === true) {
       setHideUser(true)
       setHidePeople(true)
@@ -435,6 +446,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHideBlogs(true)
       setHidePosts(true)
       setHideHobbies(false)
+      setHideClasses(true)
+      setHideRentals(true)
     } else if (showAllPeople === true) {
       setHideUser(true)
       setHideHobbies(true)
@@ -444,6 +457,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHideBlogs(true)
       setHidePosts(true)
       setHidePeople(false)
+      setHideClasses(true)
+      setHideRentals(true)
     } else if (showAllPlace === true) {
       setHideUser(true)
       setHideHobbies(true)
@@ -453,6 +468,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHideBlogs(true)
       setHidePosts(true)
       setHidePlace(false)
+      setHideClasses(true)
+      setHideRentals(true)
     } else if (showAllEvent === true) {
       setHideUser(true)
       setHidePeople(true)
@@ -462,6 +479,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHideBlogs(true)
       setHidePosts(true)
       setHideEvent(false)
+      setHideClasses(true)
+      setHideRentals(true)
     } else if (showAllProducts === true) {
       setHideUser(true)
       setHideHobbies(true)
@@ -471,6 +490,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHideBlogs(true)
       setHidePosts(true)
       setHideProduct(false)
+      setHideClasses(true)
+      setHideRentals(true)
     } else if (showAllBlogs === true) {
       setHideUser(true)
       setHideHobbies(true)
@@ -481,6 +502,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHidePosts(true)
       setHideProduct(true)
       setHideBlogs(false)
+      setHideClasses(true)
+      setHideRentals(true)
     } else if (showAllPosts === true) {
       setHideUser(true)
       setHideHobbies(true)
@@ -490,6 +513,30 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHideBlogs(true)
       setHideProduct(true)
       setHidePosts(false)
+      setHideClasses(true)
+      setHideRentals(true)
+    } else if (showAllClasses === true) {
+      setHideUser(true)
+      setHideHobbies(true)
+      setHidePeople(true)
+      setHidePlace(true)
+      setHideEvent(true)
+      setHideBlogs(true)
+      setHideProduct(true)
+      setHidePosts(true)
+      setHideClasses(false)
+      setHideRentals(true)
+    } else if (showAllRentals === true) {
+      setHideUser(true)
+      setHideHobbies(true)
+      setHidePeople(true)
+      setHidePlace(true)
+      setHideEvent(true)
+      setHideBlogs(true)
+      setHideProduct(true)
+      setHidePosts(true)
+      setHideClasses(true)
+      setHideRentals(false)
     }
   }, [
     showAll,
@@ -502,6 +549,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
     showAllProducts,
     showAllBlogs,
     showAllPosts,
+    showAllClasses,
+    showAllRentals,
   ])
 
   useEffect(() => {
@@ -521,7 +570,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
         !taglineValue &&
         !cityValue &&
         !hobbyValue &&
-        !filter
+        !filter &&
+        !name &&
+        !hobby &&
+        !location &&
+        !postedBy
       ) {
         console.log('Search fields are empty.')
         return
@@ -537,9 +590,20 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
       try {
         dispatch(setSearchLoading(true))
-        const { res: userRes, err: userErr } = await searchUsers({
-          searchValue: searchValue,
-        })
+        let data = {}
+        if (searchValue) {
+          data = { ...data, searchValue: searchValue }
+        }
+        if (name) {
+          data = { ...data, name: name }
+        }
+        if (hobby) {
+          data = { ...data, hobby: hobby }
+        }
+        if (location) {
+          data = { ...data, location: location }
+        }
+        const { res: userRes, err: userErr } = await searchUsers(data)
         if (userErr) {
         } else {
           console.log('User result----------------->', userRes)
@@ -699,40 +763,51 @@ const MainContent: React.FC<SearchResultsProps> = ({
             }),
           )
         }
-        // if (isLoggedIn) {
-        //   const { res: PostRes, err: PostErr } = await searchPosts({
-        //     content: searchValue,
-        //   })
-        //   if (PostErr) {
-        //     console.error('An error occurred during the page search:', PostErr)
-        //   } else {
-        //     const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
-        //       const indexA = a?.content
-        //         .toLowerCase()
-        //         .indexOf(searchValue.toLowerCase())
-        //       const indexB = b?.content
-        //         .toLowerCase()
-        //         .indexOf(searchValue.toLowerCase())
+        if (isLoggedIn) {
+          let data = {}
+          if (searchValue) {
+            data = { ...data, searchValue: searchValue }
+          }
+          if (postedBy) {
+            data = { ...data, postedBy: postedBy }
+          }
+          if (hobby) {
+            data = { ...data, hobby: hobby }
+          }
+          if (location) {
+            data = { ...data, location: location }
+          }
+          const { res: PostRes, err: PostErr } = await searchPosts(data)
+          if (PostErr) {
+            console.error('An error occurred during the page search:', PostErr)
+          } else {
+            const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
+              const indexA = a?.content
+                .toLowerCase()
+                .indexOf(searchValue.toLowerCase())
+              const indexB = b?.content
+                .toLowerCase()
+                .indexOf(searchValue.toLowerCase())
 
-        //       if (indexA === 0 && indexB !== 0) {
-        //         return -1
-        //       } else if (indexB === 0 && indexA !== 0) {
-        //         return 1
-        //       }
-        //       return a?.content
-        //         ?.toLowerCase()
-        //         ?.localeCompare(b?.content?.toLowerCase())
-        //     })
-        //     console.warn('posts search results:', PostRes?.data)
-        //     dispatch(
-        //       setPostsSearchResult({
-        //         data: sortedposts,
-        //         message: 'Search completed successfully.',
-        //         success: true,
-        //       }),
-        //     )
-        //   }
-        // }
+              if (indexA === 0 && indexB !== 0) {
+                return -1
+              } else if (indexB === 0 && indexA !== 0) {
+                return 1
+              }
+              return a?.content
+                ?.toLowerCase()
+                ?.localeCompare(b?.content?.toLowerCase())
+            })
+            console.warn('posts search results:', PostRes?.data)
+            dispatch(
+              setPostsSearchResult({
+                data: sortedposts,
+                message: 'Search completed successfully.',
+                success: true,
+              }),
+            )
+          }
+        }
 
         dispatch(setSearchLoading(false))
         dispatch(setShowPageLoader(false))
@@ -744,7 +819,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
       }
     }
     searchResult()
-  }, [queryString, filter])
+  }, [queryString, filter, name, hobby, location])
 
   const toggleShowAllusers = () => {
     dispatch(toggleShowAllUsers())
