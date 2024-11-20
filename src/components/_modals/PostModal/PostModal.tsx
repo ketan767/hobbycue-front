@@ -50,6 +50,7 @@ import ReactPlayer from 'react-player'
 import ShareIcon from '@/assets/icons/ShareIcon'
 import { useRouter } from 'next/router'
 import CustomizedTooltips from '@/components/Tooltip/ToolTip'
+import { link } from 'fs'
 
 type Props = {
   confirmationModal?: boolean
@@ -369,6 +370,7 @@ export const PostModal: React.FC<Props> = ({
             )}
             {activePost?.has_link && activePost?.media.length == 0 && (
               <div
+                style={linkLoading ? { margin:"none"} : { }}
                 className={
                   isVideoLink(url)
                     ? styles['post-video-link']
@@ -376,7 +378,9 @@ export const PostModal: React.FC<Props> = ({
                 }
               >
                 {linkLoading ? (
+                  <div style={{ width:"100%"}}>
                   <LinkPreviewLoader />
+                  </div>
                 ) : (
                   <>
                     {isVideoLink(url) ? (
