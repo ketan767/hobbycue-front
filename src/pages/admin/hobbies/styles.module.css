@@ -130,12 +130,24 @@
   /* 133.333% */
   border-radius: 8px;
   border: 1px solid var(--Grey-Lighter, #EBEDF0);
-  background: var(--Grey-Hover, #F8F9FA);
+  /* background: var(--Grey-Hover, #F8F9FA); */
   /* border-right: none; */
   outline: none;
   width: 70%;
-
 }
+
+
+.resultsTable tbody tr:nth-child(odd) .notesInput {
+  background-color: #F8F9FA; /* Matches even row background */
+}
+
+
+.resultsTable tbody tr:nth-child(even) .notesInput {
+  background-color: #FFF; /* Matches odd row background */
+}
+
+
+
 
 .searchInput::placeholder {
   color: var(--Grey-Dark, #939CA3);
@@ -202,7 +214,7 @@
   top: 0;
 }
 
-.resultsTable td,
+.resultsTable td
 .resultsTable th {
   text-align: left;
 }
@@ -243,6 +255,15 @@
   line-height: 18px;
 }
 
+.resultsTable tbody tr {
+  height: 48px;
+  line-height: 48px;
+}
+
+.resultsTable tbody td {
+  vertical-align: middle;
+}
+
 .resultsTable th:first-of-type {
   border-top-left-radius: 8px;
 }
@@ -254,6 +275,7 @@
 .resultsTable tbody tr {
   border-bottom: 1px solid var(--Grey-Lighter, #EBEDF0);
   background: var(--background-white, #FFF);
+  
 }
 
 .resultsTable tbody tr:nth-child(even) {
@@ -362,13 +384,14 @@
   padding-right: 16px !important;
 }
 
+
 /* Responsive styles (optional) */
 
 .actions {
   display: flex;
-  padding: 24px 20px;
+ padding: 14px 10px;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   gap: 16px;
 }
 

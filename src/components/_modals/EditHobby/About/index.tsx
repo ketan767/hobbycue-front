@@ -61,7 +61,7 @@ const HobbyAboutEditModal: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
-  const {} = useSelector((state: RootState) => state.site)
+  const { } = useSelector((state: RootState) => state.site)
   const [data, setData] = useState<HobbyAboutData>({
     description: '',
   })
@@ -352,9 +352,8 @@ const HobbyAboutEditModal: React.FC<Props> = ({
   return (
     <>
       <div
-        className={`${styles['modal-wrapper']} ${
-          confirmationModal ? styles['ins-active'] : ''
-        }  `}
+        className={`${styles['modal-wrapper']} ${confirmationModal ? styles['ins-active'] : ''
+          }  `}
       >
         <CloseIcon
           className={styles['modal-close-icon']}
@@ -380,6 +379,15 @@ const HobbyAboutEditModal: React.FC<Props> = ({
             {inputErrs.description && (
               <p className={styles['error-msg']}>{inputErrs.description}</p>
             )}
+            
+          <h3 className={styles['heading']} style={{
+            marginTop:10,
+            marginBottom:4
+          }}>{'Keywords'}</h3>
+          {!user.is_onboarded && showSkip ? skipSvg : null}
+        
+        
+            <input type='text'/>
           </div>
         </section>
 

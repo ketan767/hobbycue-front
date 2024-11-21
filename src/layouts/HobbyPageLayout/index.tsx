@@ -34,7 +34,9 @@ type Props = {
   data: any
   children: React.ReactNode
   setExpandAll: (value: boolean) => void
-  expandAll?: boolean
+  expandAll?: boolean;
+  onclickEdit?: () => void;
+  onclickmemberEdit?: () => void;
 }
 
 const HobbyPageLayout: React.FC<Props> = ({
@@ -43,6 +45,8 @@ const HobbyPageLayout: React.FC<Props> = ({
   data,
   expandAll,
   setExpandAll,
+  onclickEdit,
+  onclickmemberEdit
 }) => {
   console.warn({ tags: data.tags })
   const dispatch = useDispatch()
@@ -161,9 +165,9 @@ const HobbyPageLayout: React.FC<Props> = ({
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
-      <HobbyPageHeader data={data} activeTab={activeTab} />
+      <HobbyPageHeader data={data} activeTab={activeTab} onclickEdit={onclickEdit}/>
       {showSmallHeader && (
-        <HobbyPageHeaderSmall data={data} activeTab={activeTab} />
+        <HobbyPageHeaderSmall data={data} activeTab={activeTab}/>
       )}
 
       <div className={`${styles['display-mobile']}`}>
@@ -214,9 +218,7 @@ const HobbyPageLayout: React.FC<Props> = ({
                         className={styles['pencil-edit']}
                         src={EditIcon}
                         alt="edit"
-                        onClick={() =>
-                          router.push(`/admin/hobby/edit/${data?.slug}`)
-                        }
+                        onClick={onclickEdit}
                       />
                     )}
                   </h4>
@@ -248,9 +250,7 @@ const HobbyPageLayout: React.FC<Props> = ({
                         className={styles['pencil-edit']}
                         src={EditIcon}
                         alt="edit"
-                        onClick={() =>
-                          router.push(`/admin/hobby/edit/${data?.slug}`)
-                        }
+                        onClick={onclickEdit}
                       />
                     )}
                   </h4>
@@ -307,8 +307,13 @@ const HobbyPageLayout: React.FC<Props> = ({
                       className={styles['pencil-edit']}
                       src={EditIcon}
                       alt="edit"
-                      onClick={() =>
-                        router.push(`/admin/hobby/edit/${data?.slug}`)
+                      onClick={() =>{
+                        if(onclickEdit){
+                          onclickEdit()
+                        }else{
+                          router.push(`/admin/hobby/edit/${data?.slug}`)
+                        }
+                      }
                       }
                     />
                   )}
@@ -340,7 +345,25 @@ const HobbyPageLayout: React.FC<Props> = ({
               <aside>
                 <div className={styles['members']}>
                   <div className={styles['heading']}>
-                    <h4>Members</h4>
+                  <div style={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                  }}>
+                    <h4 style={{
+                      fontWeight: '600',
+                    }}>
+                      Members
+                    </h4>
+                    {user?.is_admin && (
+                      <Image
+                        className={styles['pencil-edit']}
+                        src={EditIcon}
+                        alt="edit"
+                        onClick={onclickmemberEdit}
+                      />
+                    )}
+                  </div>
                     <Image
                       src={ChevronDown}
                       alt=""
@@ -415,6 +438,7 @@ const HobbyPageLayout: React.FC<Props> = ({
                         </p>
                       </>
                     )}
+                    
                   </div>
                 </div>
               </aside>

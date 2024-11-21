@@ -201,6 +201,7 @@ export const searchUsers = async (searchCriteria:any) => {
         queryParams.append(key, searchCriteria[key]);
       }
     }
+    console.log(`/user/user-search?${queryParams.toString()}`);
     
     const response = await axiosInstance.get(`/user/user-search?${queryParams.toString()}`);
     return { res: response.data, err: null };
