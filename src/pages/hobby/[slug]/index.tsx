@@ -205,12 +205,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
             <div className={styles['modal-wrapper']}>
               <main className={styles['pos-relative']}>
                 <HobbyRelatedEditModal
-
                   title={modalTitle}
-
-                  data={''}
-                  setData={''}
-                  handleSubmit={''}
                   handleClose={() => {
                     setShowRelatedHobbies(false)
                   }}
