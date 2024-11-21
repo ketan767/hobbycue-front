@@ -360,6 +360,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const [pageNum, setPageNum] = useState<number>(1)
   const [userPages, setUserPages] = useState<User[]>([])
   const [isSearchingMore, setIsSearchingMore] = useState<boolean>(false)
+  const [hasNoMoreData, setHasNoMoreData] = useState<boolean>(false)
 
   // const callForData = async (page: number) => {
   //   if (page === 1) return
@@ -625,6 +626,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
           console.log('User result----------------->', userRes)
           dispatch(setUserSearchResults(userRes))
           setUserPages(userRes.data)
+          if (userRes.data.length < 20) {
+            setHasNoMoreData(true)
+          }
         }
         // Search by title
         dispatch(setShowPageLoader(true))
@@ -770,7 +774,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
         // const { res: hobbyRes, err: hobbyErr } = await getAllHobbiesWithoutPagi(
         //   query,
         // )
-        const query2 = `show=true&keyword=${searchValue}`
+        const query2 = `show=true&searchValue=${searchValue}`
         const { res: hobbyRes, err: hobbyErr } = await searchAllHobbies(query2)
         console.log('response----------->', hobbyRes)
         console.log('response----------->', hobbyRes.status)
@@ -1027,6 +1031,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setIsSearchingMore(false)
     } else {
       console.log('User result----------------->', userRes)
+      if (userRes.data.length === 0) {
+        setHasNoMoreData(true)
+      }
       const newSearchResult: SearchResults<User> = {
         data: [...searchResults, ...userRes.data],
         message: '',
@@ -1238,7 +1245,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   ))}
                 {showAllUsers && (
                   <div className={styles.loaders}>
-                    <SearchLoader />
+                    {!hasNoMoreData ? <SearchLoader /> : ''}
                   </div>
                 )}
                 <div className={styles['view-more-btn-container']}>
