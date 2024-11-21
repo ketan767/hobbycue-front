@@ -411,33 +411,31 @@ const HobbiesRequest: React.FC = () => {
                   <th style={{ width: '12.163%' }}>On  ▼</th>
                   <th
                     style={{
-                      width: '12.54%',
+                      width: '20%',
                       paddingRight: '16px',
-                      textAlign: 'center',
+                      
                     }}
                   >
                     Matching or Similar
                   </th>
-                  <th style={{ width: '12.54%', paddingRight: '16px' }}>
-                    Hobby Status
-                  </th>
-                  <th style={{ width: '30.672%', paddingRight: '16px' }}>
+                  
+                  <th style={{ width: '30.672%', paddingRight: '160px'}}>
                     Admin Notes
                   </th>
-                  <th style={{ width: '9.252%', paddingRight: '16px' }}>
+                  <th style={{ width: '9.252%', paddingRight: '32px'}}>
                     Status
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {searchResults?.map((hobbyreq, index) => (
-                  <tr key={index}>
+                  <tr key={index} >
                     <td>
                       <div className={styles.resultItem}>
                         <div className={styles.detailsContainer}>
-                          <div className={styles.userName}>
+                          <Link className={styles.userName} href={`/hobby/${hobbyreq?.hobby}`}>
                             {hobbyreq?.hobby}
-                          </div>
+                          </Link>
                         </div>
                       </div>
                     </td>
@@ -463,7 +461,7 @@ const HobbiesRequest: React.FC = () => {
                       <div>{formatDate(hobbyreq?.createdAt)}</div>
                     </td>
                     <td className={styles.lastLoggedIn}>{hobbyreq?.similar}</td>
-                    <td className={styles.pagesLength}>{hobbyreq?.status}</td>
+                    
                     <td className={styles.pagesLength}>
                       <input
                         className={styles.notesInput}

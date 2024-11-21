@@ -3,6 +3,9 @@ import styles from './styles.module.css'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import { admindashboard } from '@/services/admin.service'
 import Link from 'next/link'
+import Image from 'next/image'
+import logo from '@/assets/image/Switch-Role-to-User.png';
+
 
 export default function Index() {
   interface IconProps {
@@ -119,27 +122,34 @@ export default function Index() {
                 Updated : <span>18 Jun 2024</span>
               </p>
             </div>
-            <div style={{marginLeft:'48px'}}>
-              <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}`}>
-                <UserIcon/>
-              </Link>
+            <div style={{ marginLeft: '48px' }}>
+            <Link href={`/community`}>
+      
+        <Image
+          src={logo}
+          alt="Logo"
+          width={50} 
+          height={50}
+        />
+      
+    </Link>
             </div>
             <div className={styles.separator}></div>
             <div className={styles.label}>
-              <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/admin/users`}>
+              <Link href={`/admin/users`}>
                 Users : <span>{data.userCount}</span>
               </Link>
             </div>
-            <div style={{width:'20px'}}/>
+            <div style={{ width: '20px' }} />
             <div className={styles.label}>
-              <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/admin/pages`}>
+              <Link href={`/admin/pages`}>
                 Pages : <span>{data.listingCount}</span>
               </Link>
             </div>
-            <div style={{width:'20px'}}/>
+            <div style={{ width: '20px' }} />
             <div className={styles.label}>
-              <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/admin/posts`}>
-                Posts : <span>{data.postCount}</span>
+              <Link href={`/admin/posts`}>
+                Posts : <span>{data?.postCount||462}</span>
               </Link>
             </div>
           </div>

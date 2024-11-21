@@ -51,8 +51,8 @@ const StatusDropdown: React.FC<{
           <Image
             src={selectedStatus.icon}
             alt={selectedStatus.label}
-            width={24}
-            height={24}
+            // width={24}
+            // height={24}
           />
         </span>
         <svg
