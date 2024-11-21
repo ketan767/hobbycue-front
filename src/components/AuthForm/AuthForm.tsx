@@ -78,7 +78,7 @@ const AuthForm: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
   const emailRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
-
+  
   const { authFormData } = useSelector((state: RootState) => state.modal)
   const { user, linkviaAuth } = useSelector((state: RootState) => state.user)
   const [selectedTab, setSelectedTab] = useState<tabs>('sign-in')
@@ -94,6 +94,7 @@ const AuthForm: React.FC<Props> = (props) => {
   const [inputValidation, setInputValidation] = useState(
     validatePasswordConditions(authFormData.password),
   )
+  const [genRedirectURI, setGenRedirectURI] = useState(redirectURI)
   const [strength, setStrength] = useState(0)
   const getStrengthNum = (object: any) => {
     let num = 0
@@ -136,6 +137,18 @@ const AuthForm: React.FC<Props> = (props) => {
   useEffect(() => {
     emailRef.current?.focus()
   }, [])
+
+  useEffect(() => {
+    if (router.asPath.includes('me=true')) {
+      setGenRedirectURI(`${redirectURI}/me`)
+    } else if (router.asPath.includes('showGeneral=true')) {
+      setGenRedirectURI(`${redirectURI}/me/general`)
+    } else if (router.asPath.includes('showHobby=true')) {
+      setGenRedirectURI(`${redirectURI}/me/hobby`)
+    } else if (router.asPath.includes('showLocation=true')) {
+      setGenRedirectURI(`${redirectURI}/me/location`)
+    }
+  }, [router])
 
   useEffect(() => {
     const strengthNum = getStrengthNum(inputValidation)
@@ -560,7 +573,7 @@ const AuthForm: React.FC<Props> = (props) => {
             // App Secret: a4839f4438a6b3527ca60636cc5d76a6
             appId="1614660215286765"
             callback={handleFacebookAuth}
-            redirectUri={redirectURI}
+            redirectUri={genRedirectURI}
             fields="name,email,picture"
             onFailure={(err) => console.log('Error in facebook login', err)}
             render={(renderProps: any) => (
