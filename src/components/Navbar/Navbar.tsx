@@ -100,6 +100,7 @@ type SearchInput = {
 export const Navbar: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const router = useRouter()
+  const { q, filter } = router.query
   const [menuActive, setMenuActive] = useState(false)
   const [isWriting, setIsWriting] = useState(false)
   const [hasShadow, setHasShadow] = useState(true)
@@ -127,12 +128,19 @@ export const Navbar: React.FC<Props> = ({}) => {
         search: { value: '', error: null },
       }))
     } else {
-      setData((prev) => ({
-        ...prev,
-        search: { value: data.search.value, error: null },
-      }))
+      if (q) {
+        setData((prev) => ({
+          ...prev,
+          search: { value: q.toString(), error: null },
+        }))
+      } else {
+        setData((prev) => ({
+          ...prev,
+          search: { value: data.search.value, error: null },
+        }))
+      }
     }
-  }, [router.pathname])
+  }, [q,router.pathname])
 
   // useEffect(() => {
   //   if (!(router.asPath === '/explore')) {
@@ -195,7 +203,49 @@ export const Navbar: React.FC<Props> = ({}) => {
   const searchResult = () => {
     const val = data.search.value.trim()
     if (val) {
-      router.push({ pathname: '/search', query: { q: val } })
+      if (filter === 'users') {
+        router.push({ pathname: '/search', query: { q: val, filter: 'users' } })
+      } else if (filter === 'people') {
+        router.push({
+          pathname: '/search',
+          query: { q: val, filter: 'people' },
+        })
+      } else if (filter === 'places') {
+        router.push({
+          pathname: '/search',
+          query: { q: val, filter: 'places' },
+        })
+      } else if (filter === 'programs') {
+        router.push({
+          pathname: '/search',
+          query: { q: val, filter: 'programs' },
+        })
+      } else if (filter === 'products') {
+        router.push({
+          pathname: '/search',
+          query: { q: val, filter: 'products' },
+        })
+      } else if (filter === 'posts') {
+        router.push({ pathname: '/search', query: { q: val, filter: 'posts' } })
+      } else if (filter === 'blogs') {
+        router.push({ pathname: '/search', query: { q: val, filter: 'blogs' } })
+      } else if (filter === 'hobby') {
+        router.push({ pathname: '/search', query: { q: val, filter: 'hobby' } })
+      } else if (filter === 'classes') {
+        router.push({
+          pathname: '/search',
+          query: { q: val, filter: 'classes' },
+        })
+      } else if (filter === 'rentals') {
+        router.push({
+          pathname: '/search',
+          query: { q: val, filter: 'rentals' },
+        })
+      } else {
+        router.push({ pathname: '/search', query: { q: val } })
+      }
+    } else {
+      router.push('/search')
     }
   }
 

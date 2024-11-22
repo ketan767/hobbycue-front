@@ -30,6 +30,8 @@ import AcceptedIcon from '@/assets/svg/checked_icon.svg'
 import RejectedIcon from '@/assets/svg/cancel_icon.svg'
 import AdminActionModal from '@/components/_modals/AdminModals/ActionModal'
 import { Fade, Modal } from '@mui/material'
+import { log } from 'console'
+import { formatDate } from '@/utils/Date'
 
 type SearchInput = {
   search: InputData<string>
@@ -41,6 +43,7 @@ const HobbiesRequest: React.FC = () => {
     search: { value: '', error: null },
   })
   const [email, setEmail] = useState('')
+  const [notes, setNotes] = useState<{ [key: string]: string }>({});
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const [showAdminActionModal, setShowAdminActionModal] = useState(false)
@@ -217,6 +220,16 @@ const HobbiesRequest: React.FC = () => {
     }
   }, [data.search.value, page])
 
+  useEffect(() => {
+    const initialNotes: { [key: string]: string } = {};
+    searchResults.forEach((hobbyreq) => {
+      if (hobbyreq?._id) {
+        initialNotes[hobbyreq._id] = hobbyreq.admin_notes || "";
+      }
+    });
+    setNotes(initialNotes);
+  }, [searchResults,page]);
+
   const getUserName = async (_id: any) => {
     const { res, err } = await getAllUserDetail(`_id=${_id}`)
     return res?.data.data.users[0].full_name
@@ -262,6 +275,37 @@ const HobbiesRequest: React.FC = () => {
     }
   }
 
+
+
+  // Function to handle note updates
+  const handleNoteChange = (Id: string, value: string) => {
+    setNotes((prevNotes) => ({
+      ...prevNotes,
+      [Id]: value, 
+    }));
+  };
+
+  // Function to handle submit logic
+  const handleNoteSubmit = async (hobbyreq: any, note: string) => {
+    try {
+      const { err, res } = await UpdateHobbyreq({
+        user_id: hobbyreq?.user_id?._id,
+        listing_id: hobbyreq?.listing_id?._id,
+        hobby: hobbyreq?.hobby,
+        description: note,
+        status: hobbyreq?.status,
+      });
+
+      if (err) throw new Error("Update failed");
+      window.location.reload();
+      console.log("Update successful", res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+
   const handleSubmit = async () => {
     let jsondata = {
       user_id: hobbyData?.user_id,
@@ -270,7 +314,7 @@ const HobbiesRequest: React.FC = () => {
       status: hobbyData?.status,
       description: hobbyData?.description,
     }
-
+    console.log(jsondata)
     const { err, res } = await UpdateHobbyreq(jsondata)
     if (err) {
       throw new Error()
@@ -278,6 +322,19 @@ const HobbiesRequest: React.FC = () => {
       window.location.reload()
     }
   }
+
+  const handleStatusChange = async (hobbyreq: any, newStatus: any) => {
+    setHobbydata({
+      user_id: hobbyreq?.user_id?._id,
+      listing_id: hobbyreq?.listing_id?._id,
+      hobby: hobbyreq?.hobby,
+      description: hobbyreq?.description,
+      status: newStatus?.status,
+    })
+    console.log('status changed')
+    await handleSubmit();
+  }
+
   const handleAction = async (hobbyreq: any) => {
     setHobbydata({
       user_id: hobbyreq?.user_id?._id,
@@ -286,7 +343,11 @@ const HobbiesRequest: React.FC = () => {
       description: hobbyreq?.description,
       status: hobbyreq?.status,
     })
-    setShowAdminActionModal(true)
+    console.log('Hobby data received');
+
+    console.log(hobbyData, 10000);
+
+    //setShowAdminActionModal(true)
   }
 
   const CustomBackdrop: React.FC = () => {
@@ -347,35 +408,34 @@ const HobbiesRequest: React.FC = () => {
                   <th style={{ width: '8%' }}>Level</th>
 
                   <th style={{ width: '12.163%' }}>Requested By</th>
+                  <th style={{ width: '12.163%' }}>On  ▼</th>
                   <th
                     style={{
-                      width: '12.54%',
+                      width: '20%',
                       paddingRight: '16px',
-                      textAlign: 'center',
+                      
                     }}
                   >
                     Matching or Similar
                   </th>
-                  <th style={{ width: '10.939%', paddingRight: '16px' }}>
-                    Hobby Status
-                  </th>
-                  <th style={{ width: '30.672%', paddingRight: '16px' }}>
+                  
+                  <th style={{ width: '30.672%', paddingRight: '160px'}}>
                     Admin Notes
                   </th>
-                  <th style={{ width: '9.252%', paddingRight: '16px' }}>
+                  <th style={{ width: '9.252%', paddingRight: '32px'}}>
                     Status
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {searchResults?.map((hobbyreq, index) => (
-                  <tr key={index}>
+                  <tr key={index} >
                     <td>
                       <div className={styles.resultItem}>
                         <div className={styles.detailsContainer}>
-                          <div className={styles.userName}>
+                          <Link className={styles.userName} href={`/hobby/${hobbyreq?.hobby}`}>
                             {hobbyreq?.hobby}
-                          </div>
+                          </Link>
                         </div>
                       </div>
                     </td>
@@ -388,9 +448,8 @@ const HobbiesRequest: React.FC = () => {
                         href={
                           hobbyreq.user_type == 'user'
                             ? `/profile/${hobbyreq.user_id?.profile_url}`
-                            : `/${pageType(hobbyreq?.listing_id?.type)}/${
-                                hobbyreq.listing_id?.page_url
-                              }`
+                            : `/${pageType(hobbyreq?.listing_id?.type)}/${hobbyreq.listing_id?.page_url
+                            }`
                         }
                       >
                         {hobbyreq.user_type == 'user'
@@ -398,31 +457,48 @@ const HobbiesRequest: React.FC = () => {
                           : hobbyreq.listing_id?.title}
                       </Link>
                     </td>
+                    <td className={styles.userName}>
+                      <div>{formatDate(hobbyreq?.createdAt)}</div>
+                    </td>
                     <td className={styles.lastLoggedIn}>{hobbyreq?.similar}</td>
-                    <td className={styles.pagesLength}>{hobbyreq?.status}</td>
+                    
                     <td className={styles.pagesLength}>
-                      {hobbyreq?.admin_notes}
+                      <input
+                        className={styles.notesInput}
+                        type="text"
+                        value={notes[hobbyreq?._id || ""] || ""}
+                        onChange={(e) =>
+                          handleNoteChange(hobbyreq?._id || "", e.target.value)
+                        }
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleNoteSubmit(hobbyreq, notes[hobbyreq?._id || ""] || "");
+                          }
+                        }}
+                      />
                     </td>
                     <td>
                       <div
-                        onClick={() => handleAction(hobbyreq)}
+                        
                         className={styles.actions}
                       >
-                        {pencilSvg}
-
-                        <div>
-                          {hobbyreq?.status == 'accepted' ? (
-                            <Image src={AcceptedIcon} alt="" />
-                          ) : hobbyreq?.status == 'rejected' ? (
-                            <Image src={RejectedIcon} alt="" />
-                          ) : hobbyreq?.status == 'in_progress' ? (
-                            <Image src={InProgressIcon} alt="" />
-                          ) : hobbyreq?.status == 'New' ? (
-                            <Image src={selectIcon} alt="" />
-                          ) : (
-                            ''
-                          )}
-                        </div>
+                          <StatusDropdown
+                            status={hobbyreq?.status}
+                            onStatusChange={async (newStatus) => {
+                              console.log(newStatus, hobbyreq, 100);
+                              const { err, res } = await UpdateHobbyreq({
+                                user_id: hobbyreq?.user_id?._id,
+                                listing_id: hobbyreq?.listing_id?._id,
+                                hobby: hobbyreq?.hobby,
+                                description: hobbyreq?.description,
+                                status: newStatus?.status,
+                              })
+                              if (err) {
+                                throw new Error()
+                              }
+                            }}
+                          />
+                        
                       </div>
                     </td>
                   </tr>
@@ -433,12 +509,12 @@ const HobbiesRequest: React.FC = () => {
           <div className={styles.pagination}>
             {/* Previous Page Button */}
             {page > 1 ? (
-              <button onClick={goToPreviousPage}>Previous</button>
+              <button className={styles.PaginationButton} onClick={goToPreviousPage}>Previous</button>
             ) : (
               ''
             )}
             {searchResults.length === pagelimit ? (
-              <button onClick={goToNextPage}>Next</button>
+              <button className={styles.PaginationButton} onClick={goToNextPage}>Next</button>
             ) : (
               ''
             )}

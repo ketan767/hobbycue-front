@@ -16,9 +16,13 @@ import { RootState } from '@/redux/store'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 import { getAllUserDetail } from '@/services/user.service'
 import EditIcon from '@/assets/svg/edit-colored.svg'
-import { useMediaQuery } from '@mui/material'
+import { Fade, Modal, useMediaQuery } from '@mui/material'
 import { openModal } from '@/redux/slices/modal'
 import { htmlToPlainTextAdv } from '@/utils'
+import EditHobbyModal from '@/components/_modals/AdminModals/EditHobbyModal'
+import HobbyRelatedEditModal from '@/components/_modals/AdminModals/RelatedHobbyModal'
+import { title } from 'process'
+import { log } from 'console'
 
 type Props = { data: { hobbyData: any }; unformattedAbout?: string }
 
@@ -28,11 +32,13 @@ const HobbyDetail: React.FC<Props> = (props) => {
   const [showKeywords, setShowKeywords] = useState(false)
   const [showNextLevels, setShowNextLevels] = useState(false)
   const [showRelatedHobbies, setShowRelatedHobbies] = useState(false)
+  const [modalTitle, setModalTitle] = useState('Related')
   const { hobby } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(hobby)
   const dispatch = useDispatch()
   const [showHobby, setShowHobby] = useState(false)
   const [showRelated, setShowRelated] = useState(true)
+  const [showAdminActionModal, setShowAdminActionModal] = useState(false)
   const { user, isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
@@ -118,6 +124,10 @@ const HobbyDetail: React.FC<Props> = (props) => {
     dispatch(updateHobbyMenuExpandAll(value))
   }
 
+  const CustomBackdrop: React.FC = () => {
+    return <div className={styles['custom-backdrop']}></div>
+  }
+
   useEffect(() => {
     // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
@@ -154,6 +164,57 @@ const HobbyDetail: React.FC<Props> = (props) => {
   console.log('hobbydata', data)
   return (
     <>
+      {showAdminActionModal && (
+        <Modal
+          open
+          onClose={() => {
+            setShowAdminActionModal(false)
+          }}
+          slots={{ backdrop: CustomBackdrop }}
+          disableEscapeKeyDown
+          closeAfterTransition
+        >
+          <Fade>
+            <div className={styles['modal-wrapper']}>
+              <main className={styles['pos-relative']}>
+                <EditHobbyModal
+                  data={''}
+                  setData={''}
+                  handleSubmit={''}
+                  handleClose={() => {
+                    setShowAdminActionModal(false)
+                  }}
+                />
+              </main>
+            </div>
+          </Fade>
+        </Modal>
+      )}
+
+      {showRelatedHobbies && (
+        <Modal
+          open
+          onClose={() => {
+            setShowRelatedHobbies(false)
+          }}
+          slots={{ backdrop: CustomBackdrop }}
+          disableEscapeKeyDown
+          closeAfterTransition
+        >
+          <Fade>
+            <div className={styles['modal-wrapper']}>
+              <main className={styles['pos-relative']}>
+                <HobbyRelatedEditModal
+                  title={modalTitle}
+                  handleClose={() => {
+                    setShowRelatedHobbies(false)
+                  }}
+                />
+              </main>
+            </div>
+          </Fade>
+        </Modal>
+      )}
       <Head>
         {data?.profile_image ? (
           <>
@@ -182,6 +243,15 @@ const HobbyDetail: React.FC<Props> = (props) => {
         data={data}
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
+        onclickEdit={() => {
+          setShowAdminActionModal(true)
+        }}
+
+        onclickmemberEdit={() => {
+          setModalTitle('Admin')
+          console.log(modalTitle)
+          setShowRelatedHobbies(true)
+        }}
       >
         <main>
           {/* About Section */}
@@ -217,15 +287,33 @@ const HobbyDetail: React.FC<Props> = (props) => {
             // showEditButton={false}
             // setDisplayData={setShowKeywords}
             >
-              <div className={styles['keyword-container']}>
-                <h4 className={styles['keyword-text']}>Keywords :</h4>
-                <ul className={`${styles['keyword-list']}`}>
-                  {data?.keywords?.map((item: any, idx: number) => (
-                    <li key={idx}>
-                      {item} {idx + 1 === data?.keywords.length ? '' : ','}{' '}
-                    </li>
-                  ))}
-                </ul>
+              <div className={styles['keyword-container']} style={{
+                justifyContent:'space-between'
+              }}>
+                <div>
+                  <h4 className={styles['keyword-text']}>Keywords :</h4>
+                  <ul className={`${styles['keyword-list']}`}>
+                    {data?.keywords?.map((item: any, idx: number) => (
+                      <li key={idx}>
+                        {item} {idx + 1 === data?.keywords.length ? '' : ','}{' '}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  {user?.is_admin && (
+                    <Image
+                      className={styles['pencil-edit']}
+                      src={EditIcon}
+                      alt="edit"
+                      onClick={() =>
+                        dispatch(
+                          openModal({ type: 'Hobby-about-edit', closable: true }),
+                        )
+                      }
+                    />
+                  )}
+                </div>
               </div>
             </PageContentBox>
           )}
@@ -239,19 +327,38 @@ const HobbyDetail: React.FC<Props> = (props) => {
                 // showEditButton={false}
                 // setDisplayData={setShowNextLevels}
                 >
-                  <h4>
-                    {data?.level === 0
-                      ? 'Sub-Categories and Tags'
-                      : data?.level === 1
-                      ? 'Tags and Hobbies'
-                      : data?.level === 2
-                      ? 'Hobbies'
-                      : data?.level === 3
-                      ? 'Genre/Styles'
-                      : data?.level === 5
-                      ? 'Next Level'
-                      : 'Next Level'}
-                  </h4>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: 10
+                  }}>
+                    <h4 style={{
+                      fontWeight: '600',
+                    }}>
+                      {data?.level === 0
+                        ? 'Sub-Categories and Tags'
+                        : data?.level === 1
+                          ? 'Tags and Hobbies'
+                          : data?.level === 2
+                            ? 'Hobbies'
+                            : data?.level === 3
+                              ? 'Genre/Styles'
+                              : data?.level === 5
+                                ? 'Next Level'
+                                : 'Next Level'}
+                    </h4>
+                    {user?.is_admin && (
+                      <Image
+                        className={styles['pencil-edit']}
+                        src={EditIcon}
+                        alt="edit"
+                        onClick={() =>
+                          setShowAdminActionModal(true)
+                        }
+                      />
+                    )}
+                  </div>
+
                   <div
                   // className={`${styles['display-desktop']}${
                   //   showNextLevels ? ' ' + styles['display-mobile'] : ''
@@ -280,7 +387,27 @@ const HobbyDetail: React.FC<Props> = (props) => {
                 // showEditButton={false}
                 // setDisplayData={setShowRelatedHobbies}
                 >
-                  <h4>Related</h4>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: 10
+                  }}>
+                    <h4 style={{
+                      fontWeight: '600',
+                    }}>
+                      Related
+                    </h4>
+                    {user?.is_admin && (
+                      <Image
+                        className={styles['pencil-edit']}
+                        src={EditIcon}
+                        alt="edit"
+                        onClick={() =>
+                          setShowRelatedHobbies(true)
+                        }
+                      />
+                    )}
+                  </div>
                   <div
                   // className={`${styles['display-desktop']}${
                   //   showRelatedHobbies ? ' ' + styles['display-mobile'] : ''
@@ -328,15 +455,14 @@ const HobbyDetail: React.FC<Props> = (props) => {
                         src={EditIcon}
                         alt="edit"
                         onClick={() =>
-                          router.push(`/admin/hobby/edit/${data?.slug}`)
+                          setShowAdminActionModal(true)
                         }
                       />
                     )}
                   </h4>
                   <div
-                    className={`${styles['display-desktop']}${
-                      showHobby ? ' ' + styles['display-mobile'] : ''
-                    }`}
+                    className={`${styles['display-desktop']}${showHobby ? ' ' + styles['display-mobile'] : ''
+                      }`}
                   >
                     <ul className={styles['classification-items']}>
                       {data.level !== 5 && nextLevels?.length > 0 ? (
@@ -363,6 +489,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
           </section>
         </main>
       </HobbyPageLayout>
+
     </>
   )
 }

@@ -1,6 +1,7 @@
 .modal-wrapper {
   background-color: white;
-  width: 46.45rem;
+  width: 671px;
+  /* width: 46.45rem; */
   /* width: 100%; */
   mix-blend-mode: normal;
   border-radius: var(--spacing-8);
@@ -8,6 +9,9 @@
 .body-wrapper{
   height: calc(100vh - 6rem);
   overflow-y: auto;
+}
+.body-wrapper::-webkit-scrollbar{
+  width: 0;
 }
 
 .postUrl {
@@ -77,9 +81,9 @@
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
-  letter-spacing: 0.02em;
+  /* letter-spacing: 0.02em; */
   text-align: left;
-  word-break: break-all;
+  width: 652.4px;
 }
 .post-content ol, .post-content ul {
   padding-left: 2rem;
@@ -417,7 +421,7 @@
     gap: 8px;
     flex-direction: column;
   
-    padding: 8px 12px;
+    /* padding: 8px 12px; */
   }
   
   .posts-meta-data-container {

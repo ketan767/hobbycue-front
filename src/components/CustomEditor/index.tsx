@@ -180,7 +180,7 @@ const CustomEditor: React.FC<Props> = ({
             font-family:'Poppins';
             padding-left: 4px; 
             font-size:14px;
-            text-align:justify; 
+            text-align:left; 
           }
 
           .ql-editor a {
@@ -188,12 +188,12 @@ const CustomEditor: React.FC<Props> = ({
             color: rgb(128, 100, 162);  
             text-decoration: none !important;
             font-size:14px;
-            text-align:justify;
+            text-align:left;
           }
           .ql-editor p {
             font-family:'Poppins';
             font-size:14px;
-            text-align:justify;
+            text-align:left;
           }
           
       `}</style>

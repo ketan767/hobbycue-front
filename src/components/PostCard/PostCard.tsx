@@ -258,7 +258,7 @@ const PostCard: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div className={styles['post-card-wrapper']} onClick={handleCardClick}>
+      <div style={{height:"auto"}} className={styles['post-card-wrapper']} onClick={handleCardClick}>
         {/* Card Header */}
         {(!has_link ||
           props.currentSection === 'posts' ||
@@ -499,7 +499,7 @@ const PostCard: React.FC<Props> = (props) => {
             font-family:'Poppins';
             padding-left: 4px; 
             font-size:14px;
-            text-align:justify; 
+            text-align:left; 
           }
 
           .ql-editor a {
@@ -507,12 +507,12 @@ const PostCard: React.FC<Props> = (props) => {
             color: rgb(128, 100, 162);  
             text-decoration: none !important;
             font-size:14px;
-            text-align:justify;
+            text-align:left;
           }
           .ql-editor p {
             font-family:'Poppins';
             font-size:14px;
-            text-align:justify;
+            text-align:left;
           }
       `}</style>
           {(!has_link ||

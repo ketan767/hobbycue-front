@@ -28,6 +28,11 @@ import {
   setBlogsSearchResult,
   setUserName,
   setPostsSearchResult,
+  setClassesResult,
+  toggleShowAllClasses,
+  toggleShowAllRentals,
+  setRentalResult,
+  SearchResults,
 } from '@/redux/slices/search'
 import { RootState } from '@/redux/store'
 import { MenuItem, Select, useMediaQuery } from '@mui/material'
@@ -163,6 +168,8 @@ type SearchResultsProps = {
   EventResults: EventData[]
   hobbyResults: hobby[]
   ProductResults: ProductData[]
+  ClassesResults: EventData[]
+  RentalResults: ProductData[]
   BlogsResults: BlogData[]
   PostsResults: PostData[]
 }
@@ -275,6 +282,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
   EventResults,
   hobbyResults,
   ProductResults,
+  ClassesResults,
+  RentalResults,
   PostsResults,
   BlogsResults,
 }) => {
@@ -348,6 +357,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const showAllRentals = filter === 'rentals'
 
   const observer = useRef<IntersectionObserver | null>(null)
+  const [pageNum, setPageNum] = useState<number>(1)
+  const [userPages, setUserPages] = useState<User[]>([])
+  const [isSearchingMore, setIsSearchingMore] = useState<boolean>(false)
+  const [hasNoMoreData, setHasNoMoreData] = useState<boolean>(false)
 
   // const callForData = async (page: number) => {
   //   if (page === 1) return
@@ -554,6 +567,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   ])
 
   useEffect(() => {
+    if (!q && !name && !postedBy && !hobby && !location) return
     const searchResult = async (page = 1) => {
       dispatch(resetSearch())
       dispatch(setExplore(false))
@@ -591,23 +605,30 @@ const MainContent: React.FC<SearchResultsProps> = ({
       try {
         dispatch(setSearchLoading(true))
         let data = {}
-        if (searchValue) {
+        if (name || hobby || location) {
+          if (name) {
+            data = { ...data, name: name }
+          }
+          if (hobby) {
+            data = { ...data, hobby: hobby }
+          }
+          if (location) {
+            data = { ...data, location: location }
+          }
+        } else if (searchValue) {
           data = { ...data, searchValue: searchValue }
         }
-        if (name) {
-          data = { ...data, name: name }
-        }
-        if (hobby) {
-          data = { ...data, hobby: hobby }
-        }
-        if (location) {
-          data = { ...data, location: location }
-        }
+        data = { ...data, page: 1, limit: 20 }
+        setPageNum(1)
         const { res: userRes, err: userErr } = await searchUsers(data)
         if (userErr) {
         } else {
           console.log('User result----------------->', userRes)
           dispatch(setUserSearchResults(userRes))
+          setUserPages(userRes.data)
+          if (userRes.data.length < 20) {
+            setHasNoMoreData(true)
+          }
         }
         // Search by title
         dispatch(setShowPageLoader(true))
@@ -617,6 +638,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
         const { res: titleRes, err: titleErr } = await searchPages({
           sort: '-createdAt',
           populate: '_hobbies,_address,product_variant,seller',
+          searchValue: searchValue,
           title: searchValue,
           hobby: searchValue,
           location: searchValue,
@@ -674,10 +696,31 @@ const MainContent: React.FC<SearchResultsProps> = ({
         const typeResultThree = uniquePages.filter(
           (page) => page.type === 3 && page.is_published,
         )
+        // console.log('Type 3------------------------------->', typeResultThree)
 
         const typeResultFour = uniquePages.filter(
           (page) => page.type === 4 && page.is_published,
         )
+        const filteredClasses = uniquePages.filter(
+          (page) =>
+            page.is_published &&
+            (page.page_type.includes('Classes') ||
+              page.page_type.includes('Live Classes') ||
+              (page.type === 3 &&
+                page.event_date_time.from_date === null &&
+                page.event_date_time.to_date === null)),
+        )
+        const filteredRentals = uniquePages.filter(
+          (page) =>
+            // page.is_published &&
+            page.page_type.includes('Item Rental') ||
+            page.page_type.includes('Space Rental'),
+        )
+        // console.log(
+        //   'Type filteredClasses------------------------------->',
+        //   filteredClasses,
+        // )
+        // console.log('Type 4------------------------------->', typeResultFour)
 
         // Dispatch the unique results to the appropriate actions
         dispatch(
@@ -709,6 +752,20 @@ const MainContent: React.FC<SearchResultsProps> = ({
             success: true,
           }),
         )
+        dispatch(
+          setClassesResult({
+            data: filteredClasses,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
+        dispatch(
+          setRentalResult({
+            data: filteredRentals,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
 
         dispatch(setShowPageLoader(false))
 
@@ -717,7 +774,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
         // const { res: hobbyRes, err: hobbyErr } = await getAllHobbiesWithoutPagi(
         //   query,
         // )
-        const query2 = `show=true&keyword=${searchValue}`
+        const query2 = `show=true&searchValue=${searchValue}`
         const { res: hobbyRes, err: hobbyErr } = await searchAllHobbies(query2)
         console.log('response----------->', hobbyRes)
         console.log('response----------->', hobbyRes.status)
@@ -763,50 +820,48 @@ const MainContent: React.FC<SearchResultsProps> = ({
             }),
           )
         }
-        if (isLoggedIn) {
-          let data = {}
-          if (searchValue) {
-            data = { ...data, searchValue: searchValue }
-          }
-          if (postedBy) {
-            data = { ...data, postedBy: postedBy }
-          }
-          if (hobby) {
-            data = { ...data, hobby: hobby }
-          }
-          if (location) {
-            data = { ...data, location: location }
-          }
-          const { res: PostRes, err: PostErr } = await searchPosts(data)
-          if (PostErr) {
-            console.error('An error occurred during the page search:', PostErr)
-          } else {
-            const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
-              const indexA = a?.content
-                .toLowerCase()
-                .indexOf(searchValue.toLowerCase())
-              const indexB = b?.content
-                .toLowerCase()
-                .indexOf(searchValue.toLowerCase())
+        let searchData = {}
+        if (searchValue) {
+          searchData = { ...searchData, searchValue: searchValue }
+        }
+        if (postedBy) {
+          searchData = { ...searchData, postedBy: postedBy }
+        }
+        if (hobby) {
+          searchData = { ...searchData, hobby: hobby }
+        }
+        if (location) {
+          searchData = { ...searchData, location: location }
+        }
+        const { res: PostRes, err: PostErr } = await searchPosts(searchData)
+        if (PostErr) {
+          console.error('An error occurred during the page search:', PostErr)
+        } else {
+          const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
+            const indexA = a?.content
+              .toLowerCase()
+              .indexOf(searchValue.toLowerCase())
+            const indexB = b?.content
+              .toLowerCase()
+              .indexOf(searchValue.toLowerCase())
 
-              if (indexA === 0 && indexB !== 0) {
-                return -1
-              } else if (indexB === 0 && indexA !== 0) {
-                return 1
-              }
-              return a?.content
-                ?.toLowerCase()
-                ?.localeCompare(b?.content?.toLowerCase())
-            })
-            console.warn('posts search results:', PostRes?.data)
-            dispatch(
-              setPostsSearchResult({
-                data: sortedposts,
-                message: 'Search completed successfully.',
-                success: true,
-              }),
-            )
-          }
+            if (indexA === 0 && indexB !== 0) {
+              return -1
+            } else if (indexB === 0 && indexA !== 0) {
+              return 1
+            }
+            return a?.content
+              ?.toLowerCase()
+              ?.localeCompare(b?.content?.toLowerCase())
+          })
+          console.warn('posts search results:', PostRes?.data)
+          dispatch(
+            setPostsSearchResult({
+              data: sortedposts,
+              message: 'Search completed successfully.',
+              success: true,
+            }),
+          )
         }
 
         dispatch(setSearchLoading(false))
@@ -819,7 +874,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       }
     }
     searchResult()
-  }, [queryString, filter, name, hobby, location])
+  }, [queryString, name, postedBy, hobby, location])
+  // }, [queryString, filter, name, postedBy, hobby, location])
 
   const toggleShowAllusers = () => {
     dispatch(toggleShowAllUsers())
@@ -858,6 +914,20 @@ const MainContent: React.FC<SearchResultsProps> = ({
     router.push({
       pathname: '/search',
       query: { ...router.query, filter: 'events' },
+    })
+  }
+  const toggleShowAllclasses = () => {
+    dispatch(toggleShowAllClasses())
+    router.push({
+      pathname: '/search',
+      query: { ...router.query, filter: 'classes' },
+    })
+  }
+  const toggleShowAllrentals = () => {
+    dispatch(toggleShowAllRentals())
+    router.push({
+      pathname: '/search',
+      query: { ...router.query, filter: 'rentals' },
     })
   }
 
@@ -935,6 +1005,76 @@ const MainContent: React.FC<SearchResultsProps> = ({
     (BlogsResults.length === 0 && showAllBlogs && searchLoading === false)
 
   const isMobile = useMediaQuery('(max-width:1100px)')
+
+  const fetchMoreUsers = async () => {
+    if (isSearchingMore) return
+    setIsSearchingMore(true)
+    let data = {}
+    if (name || hobby || location) {
+      if (name) {
+        data = { ...data, name: name }
+      }
+      if (hobby) {
+        data = { ...data, hobby: hobby }
+      }
+      if (location) {
+        data = { ...data, location: location }
+      }
+    } else if (queryString) {
+      data = { ...data, searchValue: queryString }
+    }
+
+    data = { ...data, page: pageNum + 1, limit: 20 }
+
+    const { res: userRes, err: userErr } = await searchUsers(data)
+    if (userErr) {
+      setIsSearchingMore(false)
+    } else {
+      console.log('User result----------------->', userRes)
+      if (userRes.data.length === 0) {
+        setHasNoMoreData(true)
+      }
+      const newSearchResult: SearchResults<User> = {
+        data: [...searchResults, ...userRes.data],
+        message: '',
+        success: false,
+      }
+      setUserPages((prevPages) => [...prevPages, ...userRes.data])
+      dispatch(setUserSearchResults(newSearchResult))
+      setIsSearchingMore(false)
+      setPageNum(pageNum + 1)
+    }
+  }
+
+  useEffect(() => {
+    let lastCall = 0
+    const handleScroll = () => {
+      if (isSearchingMore) return
+      const now = Date.now()
+
+      if (now - lastCall >= 500) {
+        // console.log('lastCall---------------->', lastCall)
+        // console.log('now------------------------>', now)
+        lastCall = now
+        if (
+          window.innerHeight + document.documentElement.scrollTop >=
+          document.documentElement.offsetHeight - 500
+        ) {
+          // if (!hasNoDataPerma) {
+          // setHasMore(true)
+          // }
+          // alert('hiii...')
+          setIsSearchingMore(true)
+          if (filter === 'users') {
+            fetchMoreUsers()
+          }
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [fetchMoreUsers])
 
   return (
     <main className={styles.searchResults}>
@@ -1065,11 +1205,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
             )}
 
           {/* User  */}
-          {!HideUser && searchResults.length > 0 && searchLoading === false && (
+          {!HideUser && userPages.length > 0 && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>User Profiles</div>
-                {searchResults
+                {userPages
                   .slice(0, showAllUsers ? undefined : 3)
                   .map((user, index) => (
                     <div
@@ -1103,10 +1243,15 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     </div>
                   ))}
+                {showAllUsers && (
+                  <div className={styles.loaders}>
+                    {!hasNoMoreData ? <SearchLoader /> : ''}
+                  </div>
+                )}
                 <div className={styles['view-more-btn-container']}>
                   {showAllUsers
                     ? undefined
-                    : (searchResults.length > 3 ? (
+                    : (userPages.length > 3 ? (
                         <button
                           onClick={toggleShowAllusers}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
@@ -1388,6 +1533,158 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       : (ProductResults.length > 3 ? (
                           <button
                             onClick={toggleShowAllproducts}
+                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          >
+                            View More
+                          </button>
+                        ) : (
+                          ''
+                        )) || ''}
+                  </div>
+                </div>
+              </section>
+            )}
+          {/* Classes  */}
+          {!HideClasses &&
+            ClassesResults.length > 0 &&
+            searchLoading === false && (
+              <section className={styles.userSection}>
+                <div className={styles.peopleItemsContainer}>
+                  {!isExplore && (
+                    <div className={styles.resultHeading}>Classes</div>
+                  )}
+                  {ClassesResults.slice(0, showAllClasses ? undefined : 3).map(
+                    (page, index) => (
+                      <div
+                        className={styles.peopleItem}
+                        key={index}
+                        onClick={() => navigateToProgramPage(page.page_url)}
+                      >
+                        <div className={styles.peopleAvatar}>
+                          {page.profile_image ? (
+                            <img
+                              src={page.profile_image}
+                              alt={`${page.title}'s `}
+                              width={64}
+                              height={64}
+                              className={styles.peopleavatarImage}
+                            />
+                          ) : (
+                            <div
+                              className={`${styles['people-img']} default-program-listing-icon`}
+                            ></div>
+                          )}
+                        </div>
+                        <div className={styles.userDetails}>
+                          <div className={styles.userName}>{page?.title}</div>
+                          <div className={styles.userTagline}>
+                            {page?.tagline || '\u00a0'}
+                          </div>
+                          <div className={styles.userLocation}>
+                            {page.page_type +
+                              (page._address?.city
+                                ? ` | ${page._address?.city}`
+                                : '') || '\u00a0'}
+                            {page?.event_date_time &&
+                              page?.event_date_time.length !== 0 && (
+                                <>
+                                  {' | '}
+                                  {formatDateRange(page?.event_date_time[0])}
+                                  {!isMobile && (
+                                    <>
+                                      {', '}
+                                      {page?.event_date_time[0]?.from_time +
+                                        ' - '}
+                                      {page?.event_weekdays?.length > 0 ? (
+                                        <>
+                                          ...
+                                          <span
+                                            className={styles['purpleText']}
+                                          >
+                                            more
+                                          </span>
+                                        </>
+                                      ) : (
+                                        page?.event_date_time[0]?.to_time
+                                      )}
+                                    </>
+                                  )}
+                                </>
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                    ),
+                  )}
+                  <div className={styles['view-more-btn-container']}>
+                    {showAllClasses
+                      ? undefined
+                      : (ClassesResults.length > 3 ? (
+                          <button
+                            onClick={toggleShowAllclasses}
+                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          >
+                            View More
+                          </button>
+                        ) : (
+                          ''
+                        )) || ''}
+                  </div>
+                </div>
+              </section>
+            )}
+          {/* Rentals  */}
+          {!HideRentals &&
+            RentalResults.length > 0 &&
+            searchLoading === false && (
+              <section className={styles.userSection}>
+                <div className={styles.peopleItemsContainer}>
+                  {!isExplore && (
+                    <div className={styles.resultHeading}>Rentals</div>
+                  )}
+                  {RentalResults.slice(0, showAllRentals ? undefined : 3).map(
+                    (page, index) => (
+                      <div
+                        className={styles.peopleItem}
+                        key={index}
+                        onClick={() => navigateToProductPage(page.page_url)}
+                      >
+                        <div className={styles.peopleAvatar}>
+                          {page.profile_image ? (
+                            <img
+                              src={page.profile_image}
+                              alt={`${page.title}'s `}
+                              width={64}
+                              height={64}
+                              className={styles.peopleavatarImage}
+                            />
+                          ) : (
+                            <div
+                              className={`${styles['people-img']} default-product-listing-icon`}
+                            ></div>
+                          )}
+                        </div>
+                        <div className={styles.userDetails}>
+                          <div className={styles.userName}>{page?.title}</div>
+                          <div className={styles.userTagline}>
+                            {page?.tagline || '\u00a0'}
+                          </div>
+                          <div className={styles.userLocation}>
+                            {page.page_type +
+                              (page._address?.city
+                                ? ` | ${page._address?.city}`
+                                : '') || '\u00a0'}
+                          </div>
+                        </div>
+                      </div>
+                    ),
+                  )}
+                  <div className={styles['view-more-btn-container']}>
+                    {showAllRentals
+                      ? undefined
+                      : (RentalResults.length > 3 ? (
+                          <button
+                            onClick={toggleShowAllrentals}
                             className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                           >
                             View More
@@ -1822,6 +2119,12 @@ const Search: React.FC<Props> = ({ data, children }) => {
   const ProductSearch = useSelector(
     (state: RootState) => state.search.typeResultFour.data,
   )
+  const ClassesSearch = useSelector(
+    (state: RootState) => state.search.classesResult.data,
+  )
+  const RentalSearch = useSelector(
+    (state: RootState) => state.search.rentalResult.data,
+  )
   const PostsSearch = useSelector(
     (state: RootState) => state.search.postsSearchResults.data,
   )
@@ -1922,6 +2225,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
             EventResults={EventSearch || []}
             hobbyResults={hobbySearchResults || []}
             ProductResults={ProductSearch || []}
+            ClassesResults={ClassesSearch || []}
+            RentalResults={RentalSearch || []}
             PostsResults={PostsSearch || []}
             BlogsResults={BlogsSearch || []}
           />

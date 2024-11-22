@@ -32,10 +32,11 @@ import CustomizedTooltips from '@/components/Tooltip/ToolTip'
 
 type Props = {
   activeTab: HobbyPageTabs
-  data: any
+  data: any;
+  onclickEdit?: () => void;
 }
 
-const HobbyPageHeader = ({ activeTab, data }: Props) => {
+const HobbyPageHeader = ({ activeTab, data,onclickEdit }: Props) => {
   // console.log('🚀 ~ file: HobbyHeader.tsx:22 ~ HobbyPageHeader ~ data:', data)
   const dispatch = useDispatch()
   const router = useRouter()
@@ -350,9 +351,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
                   <Image
                     src={EditIcon}
                     alt="edit"
-                    onClick={() =>
-                      router.push(`/admin/hobby/edit/${data?.slug}`)
-                    }
+                    onClick={onclickEdit}
                   />
                 )}
               </h1>{' '}

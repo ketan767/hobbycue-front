@@ -760,7 +760,7 @@ const NoResult = () => {
                     }
                     if (e.key === 'Enter') {
                       let query = {}
-                      query = { ...query, filter: 'users' }
+                      query = { ...query, filter: 'posts' }
                       if (currPostedBy) {
                         query = { ...query, postedBy: currPostedBy }
                       }
