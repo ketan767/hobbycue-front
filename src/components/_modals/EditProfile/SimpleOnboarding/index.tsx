@@ -557,6 +557,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     setSubmitBtnLoading(false)
     if (error || !response?.data?.success) return
 
+
     console.warn('userId', response?.data?.data?.user?._id)
     console.warn('newurl', profileUrl)
     const urldata = {
@@ -566,10 +567,9 @@ const SimpleOnboarding: React.FC<Props> = ({
       await updateMyProfileUrl(response?.data?.data?.user?._id, urldata)
 
     dispatch(updateUser(updateUrlResponse?.data?.data?.user))
-    // window.location.href = '/community'
+     window.location.href = '/community'
+
     dispatch(closeModal())
-    // router.push(`/profile/${response?.data?.data?.user.profile_url}`)
-    router.push('/community')
   }
 
   useEffect(() => {
