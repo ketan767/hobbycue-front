@@ -42,6 +42,21 @@ export const updateMyProfileDetail = async (data: UpdateProfilePayload) => {
   }
 }
 
+
+/** Update LoggedIn User Detail `PATCH /api/user/me/` */
+export const updateMyProfileUrl = async (id:any, data:any) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/user/update-profile-url/${id}`, data, { headers })
+    return { res: res, err: null }
+  } catch (error: any) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 // Update User Hobby
 export const addUserHobby = async (
   data: {
