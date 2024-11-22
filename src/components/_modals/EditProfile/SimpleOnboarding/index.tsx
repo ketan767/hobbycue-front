@@ -563,10 +563,8 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (error || !response?.data?.success) return
 
     dispatch(updateUser(response?.data?.data?.user))
-    // window.location.href = '/community'
+    window.location.href = '/community'
     dispatch(closeModal())
-    // router.push(`/profile/${response?.data?.data?.user.profile_url}`)
-    router.push('/community')
   }
 
   useEffect(() => {
