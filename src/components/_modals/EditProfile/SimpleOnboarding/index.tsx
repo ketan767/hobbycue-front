@@ -8,6 +8,7 @@ import {
   addUserHobby,
   getMyProfileDetail,
   updateMyProfileDetail,
+  updateMyProfileUrl,
   updateUserAddress,
 } from '@/services/user.service'
 import {
@@ -382,13 +383,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   const handleSubmit = async (checkErrors = true) => {
     let inputhobby = null
     let hasErrors = false
-    const isProfileUrlValid = await checkProfileUrl()
 
-    if (!isProfileUrlValid) {
-      console.log('Profile URL is invalid')
-    }
-
-    console.log('Profile URL is valid, proceeding')
     if (checkErrors) {
       if (
         hobbyInputValue?.includes(',') ||
@@ -562,7 +557,15 @@ const SimpleOnboarding: React.FC<Props> = ({
     setSubmitBtnLoading(false)
     if (error || !response?.data?.success) return
 
-    dispatch(updateUser(response?.data?.data?.user))
+    console.warn('userId', response?.data?.data?.user?._id)
+    console.warn('newurl', profileUrl)
+    const urldata = {
+      new_url: profileUrl,
+    }
+    const { err: updateUrlError, res: updateUrlResponse } =
+      await updateMyProfileUrl(response?.data?.data?.user?._id, urldata)
+
+    dispatch(updateUser(updateUrlResponse?.data?.data?.user))
     // window.location.href = '/community'
     dispatch(closeModal())
     // router.push(`/profile/${response?.data?.data?.user.profile_url}`)
