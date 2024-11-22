@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllUserDetail, searchUsers } from '../../../services/user.service'
@@ -27,7 +27,18 @@ import FacebookIcon from '@/assets/svg/admin_facebook.svg'
 import ToggleButton from '@/components/_buttons/ToggleButton'
 
 import Modal from '@/components/Modal'
+interface ModalProps {
+  isModalOpen: boolean
+  setIsModalOpen: (value: boolean) => void
+}
 
+interface ModalState {
+  onboarded: string
+  joined: { start: string; end: string }
+  loginModes: string[]
+  pageCount: { min: string; max: string }
+  status: string
+}
 type SearchInput = {
   search: InputData<string>
 }
@@ -100,6 +111,16 @@ const deleteSvg = (
     />
   </svg>
 )
+const formatDate = (date: string): string => {
+  if (!date) return ''
+  const options: Intl.DateTimeFormatOptions = {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }
+  const dateObj = new Date(date)
+  return new Intl.DateTimeFormat('en-GB', options).format(dateObj) // 'en-GB' for DD MMM YYYY format
+}
 const AdminDashboard: React.FC = () => {
   const router = useRouter()
   const [data, setData] = useState<SearchInput>({
@@ -127,7 +148,15 @@ const AdminDashboard: React.FC = () => {
     display: false,
     message: '',
   })
-
+  const [modalState, setModalState] = useState<ModalState>({
+    onboarded: 'both',
+    joined: { start: '', end: '' },
+    loginModes: [],
+    pageCount: { min: '', max: '' },
+    status: '',
+  })
+  const startDateRef = useRef<HTMLInputElement | null>(null)
+  const endDateRef = useRef<HTMLInputElement | null>(null)
   const fullNumber = (user: any) => {
     if (user?.phone?.prefix && user?.phone?.number) {
       return user?.phone?.prefix + user?.phone?.number
@@ -238,6 +267,47 @@ const AdminDashboard: React.FC = () => {
     }
   }
   console.log({ searchResults })
+
+  const handleOnboardedChange = (value: string) => {
+    setModalState((prev) => ({ ...prev, onboarded: value }))
+  }
+  const handleDateChange = (field: 'start' | 'end') => {
+    const ref = field === 'start' ? startDateRef.current : endDateRef.current
+    if (ref) {
+      setModalState((prev) => ({
+        ...prev,
+        joined: { ...prev.joined, [field]: ref.value },
+      }))
+    }
+  }
+  console.log(modalState)
+  console.log(formatDate(modalState.joined.end))
+  const handleLoginModeChange = (mode: string) => {
+    setModalState((prev) => {
+      const exists = prev.loginModes.includes(mode)
+      const updatedModes = exists
+        ? prev.loginModes.filter((m) => m !== mode)
+        : [...prev.loginModes, mode]
+      return { ...prev, loginModes: updatedModes }
+    })
+  }
+
+  const handlePageCountChange = (field: 'min' | 'max', value: string) => {
+    setModalState((prev) => ({
+      ...prev,
+      pageCount: { ...prev.pageCount, [field]: value },
+    }))
+  }
+
+  const handleStatusChange = (value: string) => {
+    setModalState((prev) => ({ ...prev, status: value }))
+  }
+
+  const handleApply = () => {
+    console.log('Modal state:', modalState)
+    setIsModalOpen(false)
+  }
+
   return (
     <>
       <AdminLayout>
@@ -538,9 +608,178 @@ const AdminDashboard: React.FC = () => {
 
         <div>
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-            <h2>Modal with Translate Animation</h2>
-            <p>This modal slides in and out smoothly using translate!</p>
-            <button onClick={() => setIsModalOpen(false)}>Close Modal</button>
+            <main className={styles.modal}>
+              <div className={styles.modalHeader}>
+                <h2 className={styles.modalTitle}>Filter</h2>
+                <button className={styles.applyButton} onClick={handleApply}>
+                  Apply
+                </button>
+              </div>
+              <div className={styles.modalBody}>
+                {/* 1. Onboarded */}
+                <div className={styles.filterGroup}>
+                  <label className={styles.filterLabel}>Onboarded</label>
+                  <fieldset className={styles.fieldset}>
+                    {['Yes', 'No', 'Both'].map((option, index) => (
+                      <p key={index} className={styles.radioGroup}>
+                        <input
+                          type="radio"
+                          name="onboarded"
+                          id={`onboarded-${option}`}
+                          value={option.toLowerCase()}
+                          checked={
+                            modalState.onboarded === option.toLowerCase()
+                          }
+                          onChange={(e) =>
+                            handleOnboardedChange(e.target.value)
+                          }
+                          className={styles.radioInput}
+                        />
+                        <label
+                          htmlFor={`onboarded-${option}`}
+                          className={styles.radioLabel}
+                        >
+                          {option}
+                        </label>
+                      </p>
+                    ))}
+                  </fieldset>
+                </div>
+
+                {/* 2. Joined */}
+                <div className={styles.filterGroup}>
+                  <label className={styles.filterLabel}>Joined</label>
+                  <p className={styles.dateRange}>
+                    <button
+                      className={styles.dateButton}
+                      onClick={() => startDateRef.current?.showPicker()}
+                    >
+                      {modalState.joined.start
+                        ? formatDate(modalState.joined.start)
+                        : 'start date'}
+                    </button>
+                    <input
+                      type="date"
+                      ref={startDateRef}
+                      className={styles.hiddenDateInput}
+                      onChange={() => handleDateChange('start')}
+                    />
+
+                    <span>-</span>
+
+                    {/* End Date */}
+                    <button
+                      className={styles.dateButton}
+                      onClick={() => endDateRef.current?.showPicker()}
+                    >
+                      {modalState.joined.end
+                        ? formatDate(modalState.joined.end)
+                        : ' End Date'}
+                    </button>
+                    <input
+                      type="date"
+                      ref={endDateRef}
+                      className={styles.hiddenDateInput}
+                      onChange={() => handleDateChange('end')}
+                    />
+                  </p>
+                </div>
+
+                {/* 3. Login Mode */}
+                <div className={styles.filterGroup}>
+                  <label className={styles.filterLabel}>Login Mode</label>
+                  <fieldset className={styles.LoginMode}>
+                    {[
+                      { name: 'Google', icon: GoogleIcon },
+                      { name: 'Facebook', icon: MailIcon },
+                      { name: 'Email', icon: FacebookIcon },
+                    ].map((mode, index) => (
+                      <p key={index} className={styles.checkboxGroup}>
+                        <input
+                          type="checkbox"
+                          id={`login-${mode}`}
+                          value={mode.name.toLowerCase()}
+                          checked={modalState.loginModes.includes(
+                            mode.name.toLowerCase(),
+                          )}
+                          onChange={() =>
+                            handleLoginModeChange(mode.name.toLowerCase())
+                          }
+                          className={styles.checkboxInput}
+                        />
+                        <label
+                          htmlFor={`login-${mode}`}
+                          className={styles.checkboxLabel}
+                        >
+                          <Image
+                            width={20}
+                            height={20}
+                            src={mode.icon}
+                            alt="iconsss"
+                          />
+                        </label>
+                      </p>
+                    ))}
+                  </fieldset>
+                </div>
+
+                {/* 4. Page Count */}
+                <div className={styles.filterGroup}>
+                  <label className={styles.filterLabel}>Page Count</label>
+                  <p className={styles.textRange}>
+                    <input
+                      type="text"
+                      placeholder="Min"
+                      className={styles.textInput}
+                      value={modalState.pageCount.min}
+                      onChange={(e) =>
+                        handlePageCountChange('min', e.target.value)
+                      }
+                    />
+                    <span className={styles.rangeSeparator}>-</span>
+                    <input
+                      type="text"
+                      placeholder="Max"
+                      className={styles.textInput}
+                      value={modalState.pageCount.max}
+                      onChange={(e) =>
+                        handlePageCountChange('max', e.target.value)
+                      }
+                    />
+                  </p>
+                </div>
+
+                {/* 5. Status */}
+                <div className={styles.filterGroup}>
+                  <label className={styles.filterLabel}>Status</label>
+                  <ToggleButton
+                    isOn={modalState.status === 'both'}
+                    handleToggle={() =>
+                      handleStatusChange(
+                        modalState.status === 'both' ? 'none' : 'both',
+                      )
+                    }
+                  />
+                  <p className={styles.radioGroup}>
+                    <input
+                      type="radio"
+                      name="status"
+                      id="status-both"
+                      checked={modalState.status === 'active'}
+                      onChange={() =>
+                        handleStatusChange(
+                          modalState.status === 'active' ? '' : 'active',
+                        )
+                      }
+                      className={styles.radioInput}
+                    />
+                    <label htmlFor="status-both" className={styles.radioLabel}>
+                      Both
+                    </label>
+                  </p>
+                </div>
+              </div>
+            </main>
           </Modal>
         </div>
       </AdminLayout>
