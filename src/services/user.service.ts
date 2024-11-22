@@ -285,3 +285,21 @@ export const TrendingHobbiesByUser = async (): Promise<ApiReturnObject> => {
     return { err: error, res: null }
   }
 }
+
+interface NotifyMaintenanceArgsType {
+  username?: string
+  email: string
+}
+
+export const notifyMaintenance = async ({
+  username = '',
+  email,
+}: NotifyMaintenanceArgsType) => {
+  try {
+    const body = { username, email }
+    const res = await axiosInstance.post(`/under-maintenance`, body)
+    return { res, err: null }
+  } catch (err) {
+    return { res: null, err }
+  }
+}
