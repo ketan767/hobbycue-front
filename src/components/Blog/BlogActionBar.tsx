@@ -20,10 +20,10 @@ import RepostIconBlog from '@/assets/icons/RepostIconBlog'
 
 type Props = {
   data: any
+  disabled: boolean
 }
 
-const BlogActionBar: React.FC<Props> = ({ data }) => {
-  console.log('asifs data', data)
+const BlogActionBar: React.FC<Props> = ({ data, disabled }) => {
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -194,25 +194,25 @@ const BlogActionBar: React.FC<Props> = ({ data }) => {
     <div className={styles.actions} onClick={(e) => e.stopPropagation()}>
       <CustomizedTooltips title="UpVote">
         <button
-          disabled={btnLoading}
+          disabled={btnLoading || disabled}
           onClick={() => handleActionsWithAuth('upvote')}
         >
           <UpvoteIcon fill={vote.up} />
         </button>
       </CustomizedTooltips>
       <CustomizedTooltips title="Bookmark">
-        <button onClick={() => handleActionsWithAuth('bookmark')}>
+        <button onClick={() => handleActionsWithAuth('bookmark')} disabled={disabled}>
           <BookmarkIcon />
         </button>
       </CustomizedTooltips>
       <CustomizedTooltips title="Share">
-        <button onClick={() => handleActionsWithoutAuth('share')}>
+        <button onClick={() => handleActionsWithoutAuth('share')} disabled={disabled}>
           <ShareIcon />
         </button>
       </CustomizedTooltips>
       <div style={{ position: 'relative' }}>
         <CustomizedTooltips title="Click to view options">
-          <button onClick={() => setShowMenu(!showMenu)} className={styles.btn}>
+          <button onClick={() => setShowMenu(!showMenu)} className={styles.btn} disabled={disabled}>
             <MenuIcon />
           </button>
         </CustomizedTooltips>

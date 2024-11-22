@@ -2,6 +2,7 @@ import { getMyProfileDetail } from '@/services/user.service'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export interface AuthState {
+  isUserDataLoaded: boolean
   isLoggedIn: Boolean
   isAuthenticated: Boolean
   profileData: any
@@ -18,6 +19,7 @@ export interface AuthState {
 }
 
 const initialState: AuthState = {
+  isUserDataLoaded: false,
   isLoggedIn: false,
   isAuthenticated: false,
   user: {},
@@ -37,6 +39,9 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    updateIsUserDataLoaded: (state, action) => {
+      state.isUserDataLoaded = action.payload
+    },
     updateIsAuthenticated: (state, { payload }) => {
       state.isAuthenticated = payload
     },
@@ -80,6 +85,7 @@ const authSlice = createSlice({
 })
 
 export const {
+  updateIsUserDataLoaded,
   updateIsAuthenticated,
   updateIsLoggedIn,
   updateUser,
