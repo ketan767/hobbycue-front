@@ -685,7 +685,7 @@ const Contact: React.FC<Props> = ({}) => {
                   }`}
                 >
                   <label>You are</label>
-                  <div className={styles['input-box']}>
+                  <div style={{marginBottom:"0"}} className={styles['input-box']}>
                     <input hidden required />
                     <div className={styles['select-container']}>
                       <div
@@ -795,7 +795,7 @@ const Contact: React.FC<Props> = ({}) => {
                   }`}
                 >
                   <label>Regarding</label>
-                  <div className={styles['input-box']}>
+                  <div style={{marginBottom:"0"}} className={styles['input-box']}>
                     <input hidden required />
                     <div className={styles['select-container']}>
                       <div
