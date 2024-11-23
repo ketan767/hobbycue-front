@@ -8,6 +8,8 @@
   width: 100%;
   border: none;
   outline: none;
+  display: block;
+  resize: none;
 }
 
 .container {

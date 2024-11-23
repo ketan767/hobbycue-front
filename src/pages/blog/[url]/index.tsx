@@ -42,8 +42,8 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   const [title, setTitle] = useState(data?.blog_url?.title || '')
   const [tagline, setTagline] = useState(data?.blog_url?.tagline || '')
   const [content, setContent] = useState(data?.blog_url?.content || '')
-  const titleRef = useRef<HTMLInputElement | null>(null)
-  const taglineRef = useRef<HTMLInputElement | null>(null)
+  const titleRef = useRef<HTMLTextAreaElement | null>(null)
+  const taglineRef = useRef<HTMLTextAreaElement | null>(null)
   const cameraInputRef = useRef<HTMLInputElement | null>(null)
   const [showStickyHeader, setShowStickyHeader] = useState(false)
   const blogUrl = data?.blog_url?.url || ''
@@ -59,12 +59,32 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   )
   let isAuthor = false
 
+  const handleChange = (e: any, type: string) => {
+    const { value } = e.target
+    switch (type) {
+      case 'title':
+        if (value?.length > 100) return
+        setTitle(value)
+        break
+      case 'tagline':
+        if (value?.length > 100) return
+        setTagline(value)
+        break
+      default:
+        break
+    }
+  }
+
   const handleEditBlog = async (type: string) => {
     if (!canEdit) return
     let response: any = {}
     switch (type) {
       case 'title':
         response = await updateBlog({ blogId: data?.blog_url?._id, title })
+        if (response?.res?.data?.success) {
+          const newUrl = response?.res?.data?.data?.url
+          router.replace(`/blog/${newUrl}`)
+        }
         break
       case 'tagline':
         response = await updateBlog({ blogId: data?.blog_url?._id, tagline })
@@ -76,7 +96,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         console.log('Wrong type passed in handleEditBlog()!')
         break
     }
-    if (response.err || !response.res.data.success) {
+    if (response?.err || !response?.res?.data?.success) {
       console.log('Error in handleEditBlog()!', response.err)
     }
   }
@@ -198,24 +218,25 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         <div className={styles.all}>
           <div className={styles['blog-header']}>
             {canEdit ? (
-              <input
+              <textarea
                 className={styles['blog-title'] + ' ' + styles.editInput}
                 placeholder="Title"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => handleChange(e, 'title')}
                 onBlur={() => handleEditBlog('title')}
                 ref={titleRef}
                 onKeyDown={(e) => e.key === 'Enter' && titleRef.current?.blur()}
+                rows={3}
               />
             ) : (
               <h1 className={styles['blog-title']}>{data?.blog_url?.title}</h1>
             )}
             {canEdit ? (
-              <input
+              <textarea
                 className={styles['blog-desc'] + ' ' + styles.editInput}
                 placeholder="Tagline"
                 value={tagline}
-                onChange={(e) => setTagline(e.target.value)}
+                onChange={(e) => handleChange(e, 'tagline')}
                 onBlur={() => handleEditBlog('tagline')}
                 ref={taglineRef}
                 onKeyDown={(e) =>
