@@ -7,18 +7,23 @@ import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
 import { toggleAdminNav } from '@/redux/slices/site'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { AuthState } from '@/redux/slices/user'
+import { log } from 'console'
 
-interface AdminNavbarProps {}
+interface AdminNavbarProps { }
 
 interface IconProps {
   active?: boolean
 }
 
-const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
+const AdminNavbar: FC<AdminNavbarProps> = ({ }) => {
   const { admin_nav } = useSelector((state: RootState) => state.site)
   const dispatch = useDispatch()
   const router = useRouter()
   const pathname = router.pathname
+  const user = useSelector((state : AuthState)=>state.user)
+  
+  
 
   const ArrowRight = () => (
     <svg
@@ -208,6 +213,21 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
     </svg>
   )
 
+  const Communities = ({active} : IconProps) =>(
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
+      fill="none"
+    >
+      <path
+        d="M8.97463 14.8235L8.97325 14.8193C8.88564 14.7926 8.79854 14.7641 8.712 14.7341C7.46989 14.2942 6.37998 13.5073 5.5715 12.4667C4.91822 11.6255 4.46933 10.6439 4.26026 9.59952C4.05118 8.55512 4.08763 7.47643 4.36673 6.44852C4.64582 5.42061 5.15994 4.47161 5.86852 3.67637C6.57709 2.88114 7.46076 2.26141 8.4498 1.86608C9.43884 1.47075 10.5062 1.31064 11.5677 1.39836C12.6292 1.48608 13.6558 1.81924 14.5666 2.37156C15.4773 2.92388 16.2472 3.68026 16.8156 4.58103C17.3841 5.48179 17.7354 6.50232 17.842 7.56209C17.8791 7.94022 17.567 8.24822 17.1875 8.24822C16.808 8.24822 16.5041 7.93884 16.4588 7.56209C16.336 6.58974 15.9557 5.66783 15.3572 4.89177C14.7586 4.11571 13.9636 3.51368 13.0543 3.14798C12.145 2.78229 11.1545 2.6662 10.1853 2.81174C9.2161 2.95728 8.30339 3.35915 7.54161 3.97578C6.77983 4.59241 6.19666 5.40139 5.85243 6.31902C5.50821 7.23665 5.41544 8.2296 5.58372 9.19511C5.752 10.1606 6.17521 11.0636 6.80958 11.8107C7.44394 12.5578 8.26641 13.1218 9.19188 13.4443C9.42532 13.0186 9.8015 12.6888 10.2542 12.5131C10.7069 12.3374 11.207 12.3271 11.6665 12.4839C12.1261 12.6408 12.5156 12.9547 12.7664 13.3705C13.0172 13.7863 13.1133 14.2772 13.0378 14.7568C12.9622 15.2365 12.7198 15.6741 12.3533 15.9926C11.9868 16.3112 11.5197 16.4902 11.0342 16.4981C10.5487 16.5061 10.0759 16.3425 9.6992 16.0362C9.32245 15.7298 9.06587 15.3004 8.97463 14.8235ZM7.88425 15.8891C6.53824 15.3382 5.36114 14.4423 4.4715 13.2917C4.24508 13.6302 4.12447 14.0285 4.125 14.4357V15.1232C4.125 17.8333 6.6825 20.6232 11 20.6232C15.3175 20.6232 17.875 17.8333 17.875 15.1232V14.4357C17.875 13.8887 17.6577 13.3641 17.2709 12.9773C16.8841 12.5905 16.3595 12.3732 15.8125 12.3732H13.75C14.0384 12.7584 14.2427 13.1998 14.3498 13.6689C14.4568 14.138 14.4642 14.6243 14.3714 15.0964C14.2786 15.5686 14.0877 16.016 13.8111 16.4097C13.5345 16.8034 13.1783 17.1346 12.7656 17.382C12.3529 17.6294 11.8929 17.7873 11.4153 17.8457C10.9377 17.904 10.4532 17.8615 9.99305 17.7208C9.53293 17.58 9.10748 17.3443 8.74422 17.0288C8.38096 16.7133 8.08799 16.325 7.88425 15.8891ZM15.125 8.24822C15.125 6.99147 14.5626 5.86534 13.6758 5.10909C13.2427 4.74231 12.7387 4.46882 12.1951 4.30572C11.6516 4.14263 11.0803 4.09344 10.5168 4.16123C9.95342 4.22903 9.41004 4.41235 8.9207 4.69972C8.43137 4.9871 8.00659 5.37235 7.67293 5.83139C7.33928 6.29042 7.10393 6.81336 6.9816 7.36751C6.85927 7.92165 6.8526 8.49507 6.962 9.05191C7.0714 9.60875 7.29452 10.137 7.6174 10.6037C7.94028 11.0704 8.35598 11.4654 8.8385 11.7641C9.44936 11.2674 10.2127 10.9965 11 10.9968C11.787 10.9957 12.5503 11.2657 13.1615 11.7613C13.7617 11.3924 14.2574 10.8757 14.6011 10.2607C14.9449 9.64566 15.1252 8.95279 15.125 8.24822Z"
+        fill={active ? '#0096C8' : '#6D747A'}
+      />
+    </svg>
+  )
+
   const Reports = ({ active }: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -279,6 +299,8 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
       />
     </svg>
   )
+
+
 
   const SellerKYC = ({ active }: IconProps) => (
     <svg
@@ -356,39 +378,35 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
                 href={'/admin/dashboard'}
                 className={styles['profile-and-title']}
               >
-                <img src={defaultUserImage?.src} alt="" />
+                <img src={user?.activeProfile?.data?.profile_image||defaultUserImage} alt="" />
               </Link>
             </span>
 
-            {admin_nav && <p>Hobbycue Admin</p>}
+            {admin_nav && <p>{user?.activeProfile?.data?.full_name||'Hobbycue Admin'}</p>}
             {admin_nav && <ArrowDown />}
           </div>
         </div>
 
         <NavItem url="/admin/users" name="Users" Icon={UserIcon} />
         <NavItem url="/admin/posts" name="Posts" Icon={PostIcon} />
+        <NavItem url="/admin/communities" name="Communities" Icon={Communities} />
+        <NavItem url="/admin/locations" name="Locations" Icon={Supports} />
         <NavItem url="/admin/hobbies" name="Hobbies" Icon={UserHobbies} />
-        <NavItem url="/admin/hobby" name="Edit Hobbies" Icon={UserHobbies} />
         <NavItem url="/admin/pages" name="Pages" Icon={PageIcon} />
+        <NavItem url="/admin/activity" name="Activity" Icon={Supports} />
+        <NavItem url="/admin/searchHistory" name="Searches" Icon={Supports} />
         <NavItem url="/admin/claims" name="Claims" Icon={Claims} />
         <NavItem url="/admin/reports" name="Reports" Icon={Reports} />
         <NavItem url="/admin/supports" name="Support" Icon={Supports} />
-        {/* here please change the Supports icon with contact us icon */}
         <NavItem url="/admin/contactUs" name="Contact Us" Icon={Supports} />
-        <NavItem
-          url="/admin/searchHistory"
-          name="Search History"
-          Icon={Supports}
-        />
-        <NavItem url="/admin/communities" name="Communities" Icon={Supports} />
+        <NavItem url="/admin/tickets" name="Tickets" Icon={Supports} />
         <NavItem url="/admin/relations" name="Relation" Icon={Relations} />
         <NavItem url="/admin/blogs" name="Blogs" Icon={Blogs} />
         <NavItem url="/admin/sellers-kyc" name="Seller KYC" Icon={SellerKYC} />
-        <NavItem
-          url="/admin/list-of-values"
-          name="List Values"
-          Icon={ListValues}
-        />
+        <NavItem url="/admin/list-of-values" name="List Values" Icon={ListValues} />
+        <NavItem url="/admin/static-pages" name="Static Pages" Icon={Supports} />
+        <NavItem url="/admin/releases" name="Releases" Icon={Supports} />
+
       </div>
     </nav>
   )

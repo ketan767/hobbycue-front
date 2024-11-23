@@ -95,6 +95,7 @@ const AuthForm: React.FC<Props> = (props) => {
     validatePasswordConditions(authFormData.password),
   )
   const [strength, setStrength] = useState(0)
+  const [genRedirectURI, setGenRedirectURI] = useState(redirectURI)
   const getStrengthNum = (object: any) => {
     let num = 0
     Object.keys(object).map((key: any) => {
@@ -130,6 +131,18 @@ const AuthForm: React.FC<Props> = (props) => {
     }
     getBrowserData()
   }, [user])
+
+  useEffect(() => {
+    if (router.asPath.includes('me=true')) {
+      setGenRedirectURI(`${redirectURI}/me/login`)
+    } else if (router.asPath.includes('showGeneral=true')) {
+      setGenRedirectURI(`${redirectURI}/me/login/general`)
+    } else if (router.asPath.includes('showHobby=true')) {
+      setGenRedirectURI(`${redirectURI}/me/login/hobby`)
+    } else if (router.asPath.includes('showLocation=true')) {
+      setGenRedirectURI(`${redirectURI}/me/login/location`)
+    }
+  }, [router])
 
   console.warn('devicee', deviceInfo)
 
@@ -422,20 +435,20 @@ const AuthForm: React.FC<Props> = (props) => {
         dispatch(updateIsLoggedIn(true))
         dispatch(closeModal())
 
-        if (e.picture.data.url) {
-          const googleImageUrl = e.picture.data.url
-          try {
-            const imageBlob = await fetch(googleImageUrl).then((res) =>
-              res.blob(),
-            )
-            const formData = new FormData()
-            formData.append('user-profile', imageBlob)
-            const updateResponse = await updateUserProfile(formData)
-            console.log('Update Profile Image Response:', updateResponse)
-          } catch (uploadError) {
-            console.error('Error uploading profile image:', uploadError)
-          }
-        }
+        // if (e.picture.data.url) {
+        //   const googleImageUrl = e.picture.data.url
+        //   try {
+        //     const imageBlob = await fetch(googleImageUrl).then((res) =>
+        //       res.blob(),
+        //     )
+        //     const formData = new FormData()
+        //     formData.append('user-profile', imageBlob)
+        //     const updateResponse = await updateUserProfile(formData)
+        //     console.log('Update Profile Image Response:', updateResponse)
+        //   } catch (uploadError) {
+        //     console.error('Error uploading profile image:', uploadError)
+        //   }
+        // }
         if (res?.data?.message === 'User registered successfully') {
           dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
         }
@@ -560,7 +573,7 @@ const AuthForm: React.FC<Props> = (props) => {
             // App Secret: a4839f4438a6b3527ca60636cc5d76a6
             appId="1614660215286765"
             callback={handleFacebookAuth}
-            redirectUri={redirectURI}
+            redirectUri={genRedirectURI}
             fields="name,email,picture"
             onFailure={(err) => console.log('Error in facebook login', err)}
             render={(renderProps: any) => (

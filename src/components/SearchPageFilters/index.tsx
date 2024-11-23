@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  setUserName,
   showAllTrue,
   toggleShowAllBlogs,
   // toggleShowAll,
@@ -138,12 +139,13 @@ const SearchPageFilter = () => {
   const handleFilterClick = (filterType: any) => {
     if (isExplore) return
     if (activeFilter === filterType) {
-      setActiveFilter('all')
-      router.push({
-        pathname: '/search',
-        query: { ...router.query, filter: '' },
-      })
-      dispatch(showAllTrue())
+      return
+      // setActiveFilter('all')
+      // router.push({
+      //   pathname: '/search',
+      //   query: { ...router.query, filter: '' },
+      // })
+      // dispatch(showAllTrue())
     } else {
       setActiveFilter(filterType)
       switch (filterType) {
@@ -183,8 +185,8 @@ const SearchPageFilter = () => {
         default:
           break
       }
+      const { filter, name, hobby, location, postedBy, ...rest } = router.query
       if (filterType === 'all') {
-        const { filter, ...rest } = router.query
         router.push({
           pathname: '/search',
           query: {
@@ -195,7 +197,7 @@ const SearchPageFilter = () => {
         router.push({
           pathname: '/search',
           query: {
-            ...router.query,
+            ...rest,
             filter: filterType,
           },
         })
@@ -223,7 +225,9 @@ const SearchPageFilter = () => {
         <div className={styles['filters-container']}>
           <div
             className={getFilterItemClass('all')}
-            onClick={() => handleFilterClick('all')}
+            onClick={() => {
+              handleFilterClick('all')
+            }}
           >
             <Image src={hobbycue} alt="hobbycue" />
             All of HobbyCue

@@ -541,7 +541,23 @@ const NoResult = () => {
       }
       link += `page-type=${page_type}`
     } else if (category) {
-      link += `?category=${category}`
+      if (category === 'People' || category === 'people') {
+        link += `?page-type=People`
+        dispatch(setCategory(''))
+        dispatch(setPageType('People'))
+      } else if (category === 'Place' || category === 'place') {
+        link += `?page-type=Place`
+        dispatch(setCategory(''))
+        dispatch(setPageType('Place'))
+      } else if (category === 'Product' || category === 'product') {
+        link += `?page-type=Product`
+        dispatch(setCategory(''))
+        dispatch(setPageType('Product'))
+      } else if (category === 'Program' || category === 'program') {
+        link += `?page-type=Program`
+        dispatch(setCategory(''))
+        dispatch(setPageType('Program'))
+      }
     }
     if (hobby) {
       if (category || page_type) {
@@ -760,7 +776,7 @@ const NoResult = () => {
                     }
                     if (e.key === 'Enter') {
                       let query = {}
-                      query = { ...query, filter: 'users' }
+                      query = { ...query, filter: 'posts' }
                       if (currPostedBy) {
                         query = { ...query, postedBy: currPostedBy }
                       }

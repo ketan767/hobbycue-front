@@ -28,6 +28,12 @@ import {
   setBlogsSearchResult,
   setUserName,
   setPostsSearchResult,
+  setClassesResult,
+  toggleShowAllClasses,
+  toggleShowAllRentals,
+  setRentalResult,
+  SearchResults,
+  hobbies,
 } from '@/redux/slices/search'
 import { RootState } from '@/redux/store'
 import { MenuItem, Select, useMediaQuery } from '@mui/material'
@@ -163,6 +169,8 @@ type SearchResultsProps = {
   EventResults: EventData[]
   hobbyResults: hobby[]
   ProductResults: ProductData[]
+  ClassesResults: EventData[]
+  RentalResults: ProductData[]
   BlogsResults: BlogData[]
   PostsResults: PostData[]
 }
@@ -275,6 +283,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
   EventResults,
   hobbyResults,
   ProductResults,
+  ClassesResults,
+  RentalResults,
   PostsResults,
   BlogsResults,
 }) => {
@@ -348,6 +358,13 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const showAllRentals = filter === 'rentals'
 
   const observer = useRef<IntersectionObserver | null>(null)
+  const [pageNum, setPageNum] = useState<number>(1)
+  const [hobbyPageNum, setHobbyPageNum] = useState<number>(1)
+  const [userPages, setUserPages] = useState<User[]>([])
+  const [hobbyPages, setHobbyPages] = useState<hobby[]>([])
+  const [isSearchingMore, setIsSearchingMore] = useState<boolean>(false)
+  const [hasNoMoreData, setHasNoMoreData] = useState<boolean>(false)
+  const [hasNoMoreHobbies, setHasNoMoreHobbies] = useState<boolean>(false)
 
   // const callForData = async (page: number) => {
   //   if (page === 1) return
@@ -554,6 +571,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   ])
 
   useEffect(() => {
+    if (!q && !name && !postedBy && !hobby && !location) return
     const searchResult = async (page = 1) => {
       dispatch(resetSearch())
       dispatch(setExplore(false))
@@ -591,23 +609,30 @@ const MainContent: React.FC<SearchResultsProps> = ({
       try {
         dispatch(setSearchLoading(true))
         let data = {}
-        if (searchValue) {
+        if (name || hobby || location) {
+          if (name) {
+            data = { ...data, name: name }
+          }
+          if (hobby) {
+            data = { ...data, hobby: hobby }
+          }
+          if (location) {
+            data = { ...data, location: location }
+          }
+        } else if (searchValue) {
           data = { ...data, searchValue: searchValue }
         }
-        if (name) {
-          data = { ...data, name: name }
-        }
-        if (hobby) {
-          data = { ...data, hobby: hobby }
-        }
-        if (location) {
-          data = { ...data, location: location }
-        }
+        data = { ...data, page: 1, limit: 20 }
+        setPageNum(1)
         const { res: userRes, err: userErr } = await searchUsers(data)
         if (userErr) {
         } else {
           console.log('User result----------------->', userRes)
           dispatch(setUserSearchResults(userRes))
+          setUserPages(userRes.data)
+          if (userRes.data.length < 20) {
+            setHasNoMoreData(true)
+          }
         }
         // Search by title
         dispatch(setShowPageLoader(true))
@@ -617,6 +642,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
         const { res: titleRes, err: titleErr } = await searchPages({
           sort: '-createdAt',
           populate: '_hobbies,_address,product_variant,seller',
+          searchValue: searchValue,
           title: searchValue,
           hobby: searchValue,
           location: searchValue,
@@ -674,10 +700,31 @@ const MainContent: React.FC<SearchResultsProps> = ({
         const typeResultThree = uniquePages.filter(
           (page) => page.type === 3 && page.is_published,
         )
+        // console.log('Type 3------------------------------->', typeResultThree)
 
         const typeResultFour = uniquePages.filter(
           (page) => page.type === 4 && page.is_published,
         )
+        const filteredClasses = uniquePages.filter(
+          (page) =>
+            page.is_published &&
+            (page.page_type.includes('Classes') ||
+              page.page_type.includes('Live Classes') ||
+              (page.type === 3 &&
+                page.event_date_time.from_date === null &&
+                page.event_date_time.to_date === null)),
+        )
+        const filteredRentals = uniquePages.filter(
+          (page) =>
+            // page.is_published &&
+            page.page_type.includes('Item Rental') ||
+            page.page_type.includes('Space Rental'),
+        )
+        // console.log(
+        //   'Type filteredClasses------------------------------->',
+        //   filteredClasses,
+        // )
+        // console.log('Type 4------------------------------->', typeResultFour)
 
         // Dispatch the unique results to the appropriate actions
         dispatch(
@@ -709,6 +756,20 @@ const MainContent: React.FC<SearchResultsProps> = ({
             success: true,
           }),
         )
+        dispatch(
+          setClassesResult({
+            data: filteredClasses,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
+        dispatch(
+          setRentalResult({
+            data: filteredRentals,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
 
         dispatch(setShowPageLoader(false))
 
@@ -717,7 +778,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
         // const { res: hobbyRes, err: hobbyErr } = await getAllHobbiesWithoutPagi(
         //   query,
         // )
-        const query2 = `show=true&keyword=${searchValue}`
+        const query2 = `show=true&searchValue=${searchValue}&page=1&limit=20`
+        setHobbyPageNum(1)
         const { res: hobbyRes, err: hobbyErr } = await searchAllHobbies(query2)
         console.log('response----------->', hobbyRes)
         console.log('response----------->', hobbyRes.status)
@@ -730,6 +792,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
               success: true,
             }),
           )
+          setHobbyPages(hobbyRes.data)
+          if (hobbyRes.data.length < 20) {
+            setHasNoMoreHobbies(true)
+          } else {
+            setHasNoMoreHobbies(false)
+          }
         }
 
         dispatch(setShowPageLoader(true))
@@ -763,50 +831,48 @@ const MainContent: React.FC<SearchResultsProps> = ({
             }),
           )
         }
-        if (isLoggedIn) {
-          let data = {}
-          if (searchValue) {
-            data = { ...data, searchValue: searchValue }
-          }
-          if (postedBy) {
-            data = { ...data, postedBy: postedBy }
-          }
-          if (hobby) {
-            data = { ...data, hobby: hobby }
-          }
-          if (location) {
-            data = { ...data, location: location }
-          }
-          const { res: PostRes, err: PostErr } = await searchPosts(data)
-          if (PostErr) {
-            console.error('An error occurred during the page search:', PostErr)
-          } else {
-            const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
-              const indexA = a?.content
-                .toLowerCase()
-                .indexOf(searchValue.toLowerCase())
-              const indexB = b?.content
-                .toLowerCase()
-                .indexOf(searchValue.toLowerCase())
+        let searchData = {}
+        if (searchValue) {
+          searchData = { ...searchData, searchValue: searchValue }
+        }
+        if (postedBy) {
+          searchData = { ...searchData, postedBy: postedBy }
+        }
+        if (hobby) {
+          searchData = { ...searchData, hobby: hobby }
+        }
+        if (location) {
+          searchData = { ...searchData, location: location }
+        }
+        const { res: PostRes, err: PostErr } = await searchPosts(searchData)
+        if (PostErr) {
+          console.error('An error occurred during the page search:', PostErr)
+        } else {
+          const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
+            const indexA = a?.content
+              .toLowerCase()
+              .indexOf(searchValue.toLowerCase())
+            const indexB = b?.content
+              .toLowerCase()
+              .indexOf(searchValue.toLowerCase())
 
-              if (indexA === 0 && indexB !== 0) {
-                return -1
-              } else if (indexB === 0 && indexA !== 0) {
-                return 1
-              }
-              return a?.content
-                ?.toLowerCase()
-                ?.localeCompare(b?.content?.toLowerCase())
-            })
-            console.warn('posts search results:', PostRes?.data)
-            dispatch(
-              setPostsSearchResult({
-                data: sortedposts,
-                message: 'Search completed successfully.',
-                success: true,
-              }),
-            )
-          }
+            if (indexA === 0 && indexB !== 0) {
+              return -1
+            } else if (indexB === 0 && indexA !== 0) {
+              return 1
+            }
+            return a?.content
+              ?.toLowerCase()
+              ?.localeCompare(b?.content?.toLowerCase())
+          })
+          console.warn('posts search results:', PostRes?.data)
+          dispatch(
+            setPostsSearchResult({
+              data: sortedposts,
+              message: 'Search completed successfully.',
+              success: true,
+            }),
+          )
         }
 
         dispatch(setSearchLoading(false))
@@ -819,7 +885,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       }
     }
     searchResult()
-  }, [queryString, filter, name, hobby, location])
+  }, [queryString, name, postedBy, hobby, location])
+  // }, [queryString, filter, name, postedBy, hobby, location])
 
   const toggleShowAllusers = () => {
     dispatch(toggleShowAllUsers())
@@ -858,6 +925,20 @@ const MainContent: React.FC<SearchResultsProps> = ({
     router.push({
       pathname: '/search',
       query: { ...router.query, filter: 'events' },
+    })
+  }
+  const toggleShowAllclasses = () => {
+    dispatch(toggleShowAllClasses())
+    router.push({
+      pathname: '/search',
+      query: { ...router.query, filter: 'classes' },
+    })
+  }
+  const toggleShowAllrentals = () => {
+    dispatch(toggleShowAllRentals())
+    router.push({
+      pathname: '/search',
+      query: { ...router.query, filter: 'rentals' },
     })
   }
 
@@ -936,6 +1017,109 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
   const isMobile = useMediaQuery('(max-width:1100px)')
 
+  const fetchMoreUsers = async () => {
+    if (isSearchingMore) return
+    setIsSearchingMore(true)
+    let data = {}
+    if (name || hobby || location) {
+      if (name) {
+        data = { ...data, name: name }
+      }
+      if (hobby) {
+        data = { ...data, hobby: hobby }
+      }
+      if (location) {
+        data = { ...data, location: location }
+      }
+    } else if (queryString) {
+      data = { ...data, searchValue: queryString }
+    }
+
+    data = { ...data, page: pageNum + 1, limit: 20 }
+
+    const { res: userRes, err: userErr } = await searchUsers(data)
+    if (userErr) {
+      setIsSearchingMore(false)
+    } else {
+      console.log('User result----------------->', userRes)
+      if (userRes.data.length === 0) {
+        setHasNoMoreData(true)
+      }
+      const newSearchResult: SearchResults<User> = {
+        data: [...searchResults, ...userRes.data],
+        message: '',
+        success: false,
+      }
+      setUserPages((prevPages) => [...prevPages, ...userRes.data])
+      dispatch(setUserSearchResults(newSearchResult))
+      setIsSearchingMore(false)
+      setPageNum(pageNum + 1)
+    }
+  }
+  const fetchMoreHobbies = async () => {
+    if (isSearchingMore) return
+    setIsSearchingMore(true)
+    const newHobbyPageNum = hobbyPageNum + 1
+    console.log(newHobbyPageNum)
+    const query = `show=true&searchValue=${queryString}&page=${newHobbyPageNum}&limit=20`
+
+    const { res: hobbyRes, err: hobbyErr } = await searchAllHobbies(query)
+    if (hobbyErr) {
+      setIsSearchingMore(false)
+    } else {
+      if (hobbyRes.data.length === 0) {
+        setHasNoMoreHobbies(true)
+        setIsSearchingMore(false)
+        return
+      }
+      const newSearchResult: SearchResults<hobbies> = {
+        data: [...searchResults, ...hobbyRes.data],
+        message: 'Search completed successfully.',
+        success: true,
+      }
+      dispatch(setHobbiesSearchResult(newSearchResult))
+      setHobbyPages((prevPages) => [...prevPages, ...hobbyRes.data])
+      setIsSearchingMore(false)
+      setHobbyPageNum(hobbyPageNum + 1)
+      console.log('hobbyPageNum', hobbyPageNum + 1)
+    }
+  }
+
+  useEffect(() => {
+    let lastCall = 0
+    const handleScroll = () => {
+      console.log('Searching more...', isSearchingMore)
+      if (isSearchingMore) return
+      console.log('Searching more...', isSearchingMore)
+
+      const now = Date.now()
+
+      if (now - lastCall >= 500) {
+        // console.log('lastCall---------------->', lastCall)
+        // console.log('now------------------------>', now)
+        lastCall = now
+        if (
+          window.innerHeight + document.documentElement.scrollTop >=
+          document.documentElement.offsetHeight - 500
+        ) {
+          // if (!hasNoDataPerma) {
+          // setHasMore(true)
+          // }
+          // alert('hiii...')
+          setIsSearchingMore(true)
+          if (filter === 'users') {
+            fetchMoreUsers()
+          } else if (filter === 'hobby') {
+            fetchMoreHobbies()
+          }
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [fetchMoreUsers, fetchMoreHobbies])
+
   return (
     <main className={styles.searchResults}>
       {noResultsFound && searchLoading === false ? (
@@ -971,105 +1155,105 @@ const MainContent: React.FC<SearchResultsProps> = ({
           )}
 
           {/* Hobbies */}
-          {!HideHobbies &&
-            hobbyResults.length > 0 &&
-            searchLoading === false && (
-              <section className={styles.userSection}>
-                <div className={styles.peopleItemsContainer}>
-                  <div className={styles.resultHeading}>Hobbies</div>
-                  {hobbyResults
-                    .slice(0, showAllhobbies ? undefined : 3)
-                    .map((hobby, index) => (
-                      <div
-                        className={styles.peopleItem}
-                        key={index}
-                        onClick={() => navigateToHobby(hobby.slug)}
-                        // ref={
-                        //   index === hobbyResults.length - 1
-                        //     ? lastPostElementRef
-                        //     : null
+          {!HideHobbies && hobbyPages.length > 0 && searchLoading === false && (
+            <section className={styles.userSection}>
+              <div className={styles.peopleItemsContainer}>
+                <div className={styles.resultHeading}>Hobbies</div>
+                {hobbyPages
+                  .slice(0, showAllhobbies ? undefined : 3)
+                  .map((hobby, index) => (
+                    <div
+                      className={styles.peopleItem}
+                      key={index}
+                      onClick={() => navigateToHobby(hobby.slug)}
+                      // ref={
+                      //   index === hobbyResults.length - 1
+                      //     ? lastPostElementRef
+                      //     : null
 
-                        // }
-                      >
-                        <div className={styles.hobbyAvtar}>
-                          {/* Render the image */}
-                          {hobby.profile_image ? (
-                            <div className={styles['border-div']}>
-                              <img
-                                src={hobby.profile_image}
-                                alt={`${hobby.display}'s `}
+                      // }
+                    >
+                      <div className={styles.hobbyAvtar}>
+                        {/* Render the image */}
+                        {hobby.profile_image ? (
+                          <div className={styles['border-div']}>
+                            <img
+                              src={hobby.profile_image}
+                              alt={`${hobby.display}'s `}
+                            />
+                          </div>
+                        ) : (
+                          <>
+                            <div className={`${styles['img-polygon']} `}></div>
+                            <svg
+                              className={styles.polygonOverlay}
+                              viewBox="0 0 160 160"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M80 0L149.282 40V120L80 160L10.718 120V40L80 0Z"
+                                fill="#969696"
+                                fillOpacity="0.5"
                               />
-                            </div>
-                          ) : (
-                            <>
-                              <div
-                                className={`${styles['img-polygon']} `}
-                              ></div>
-                              <svg
-                                className={styles.polygonOverlay}
-                                viewBox="0 0 160 160"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M80 0L149.282 40V120L80 160L10.718 120V40L80 0Z"
-                                  fill="#969696"
-                                  fillOpacity="0.5"
-                                />
-                                <path
-                                  d="M79.6206 46.1372C79.7422 45.7727 80.2578 45.7727 80.3794 46.1372L87.9122 68.7141C87.9663 68.8763 88.1176 68.9861 88.2885 68.9875L112.088 69.175C112.472 69.178 112.632 69.6684 112.323 69.8967L93.1785 84.0374C93.041 84.139 92.9833 84.3168 93.0348 84.4798L100.211 107.173C100.327 107.539 99.9097 107.842 99.5971 107.619L80.2326 93.7812C80.0935 93.6818 79.9065 93.6818 79.7674 93.7812L60.4029 107.619C60.0903 107.842 59.6731 107.539 59.789 107.173L66.9652 84.4798C67.0167 84.3168 66.959 84.139 66.8215 84.0374L47.6773 69.8967C47.3682 69.6684 47.5276 69.178 47.9118 69.175L71.7115 68.9875C71.8824 68.9861 72.0337 68.8763 72.0878 68.7141L79.6206 46.1372Z"
-                                  fill="white"
-                                />
-                              </svg>
-                            </>
-                          )}
-                        </div>
+                              <path
+                                d="M79.6206 46.1372C79.7422 45.7727 80.2578 45.7727 80.3794 46.1372L87.9122 68.7141C87.9663 68.8763 88.1176 68.9861 88.2885 68.9875L112.088 69.175C112.472 69.178 112.632 69.6684 112.323 69.8967L93.1785 84.0374C93.041 84.139 92.9833 84.3168 93.0348 84.4798L100.211 107.173C100.327 107.539 99.9097 107.842 99.5971 107.619L80.2326 93.7812C80.0935 93.6818 79.9065 93.6818 79.7674 93.7812L60.4029 107.619C60.0903 107.842 59.6731 107.539 59.789 107.173L66.9652 84.4798C67.0167 84.3168 66.959 84.139 66.8215 84.0374L47.6773 69.8967C47.3682 69.6684 47.5276 69.178 47.9118 69.175L71.7115 68.9875C71.8824 68.9861 72.0337 68.8763 72.0878 68.7141L79.6206 46.1372Z"
+                                fill="white"
+                              />
+                            </svg>
+                          </>
+                        )}
+                      </div>
 
-                        <div className={styles.userDetails}>
-                          <div className={styles.userName}>{hobby.display}</div>
-                          <div className={styles.userTagline}>
-                            {`${
-                              hobby?.category?.display
-                                ? hobby.category.display
-                                : ''
-                            }${
-                              hobby?.sub_category?.display
-                                ? ' | ' + hobby.sub_category.display
-                                : ''
-                            }`}
-                            &nbsp;
-                          </div>
-                          <div className={styles.hobbydescription}>
-                            {hobby?.description}
-                          </div>
+                      <div className={styles.userDetails}>
+                        <div className={styles.userName}>{hobby.display}</div>
+                        <div className={styles.userTagline}>
+                          {`${
+                            hobby?.category?.display
+                              ? hobby.category.display
+                              : ''
+                          }${
+                            hobby?.sub_category?.display
+                              ? ' | ' + hobby.sub_category.display
+                              : ''
+                          }`}
+                          &nbsp;
+                        </div>
+                        <div className={styles.hobbydescription}>
+                          {hobby?.description}
                         </div>
                       </div>
-                    ))}
-
-                  <div className={styles['view-more-btn-container']}>
-                    {showAllhobbies
-                      ? undefined
-                      : (hobbyResults.length > 3 ? (
-                          <button
-                            onClick={toggleShowAllhobbies}
-                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
-                          >
-                            View More
-                          </button>
-                        ) : (
-                          ''
-                        )) || ''}
+                    </div>
+                  ))}
+                {showAllhobbies && (
+                  <div className={styles.loaders}>
+                    {!hasNoMoreHobbies ? <SearchLoader /> : ''}
                   </div>
+                )}
+                <div className={styles['view-more-btn-container']}>
+                  {showAllhobbies
+                    ? undefined
+                    : (hobbyResults.length > 3 ? (
+                        <button
+                          onClick={toggleShowAllhobbies}
+                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                        >
+                          View More
+                        </button>
+                      ) : (
+                        ''
+                      )) || ''}
                 </div>
-              </section>
-            )}
+              </div>
+            </section>
+          )}
 
           {/* User  */}
-          {!HideUser && searchResults.length > 0 && searchLoading === false && (
+          {!HideUser && userPages.length > 0 && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>User Profiles</div>
-                {searchResults
+                {userPages
                   .slice(0, showAllUsers ? undefined : 3)
                   .map((user, index) => (
                     <div
@@ -1103,10 +1287,15 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     </div>
                   ))}
+                {showAllUsers && (
+                  <div className={styles.loaders}>
+                    {!hasNoMoreData ? <SearchLoader /> : ''}
+                  </div>
+                )}
                 <div className={styles['view-more-btn-container']}>
                   {showAllUsers
                     ? undefined
-                    : (searchResults.length > 3 ? (
+                    : (userPages.length > 3 ? (
                         <button
                           onClick={toggleShowAllusers}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
@@ -1388,6 +1577,158 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       : (ProductResults.length > 3 ? (
                           <button
                             onClick={toggleShowAllproducts}
+                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          >
+                            View More
+                          </button>
+                        ) : (
+                          ''
+                        )) || ''}
+                  </div>
+                </div>
+              </section>
+            )}
+          {/* Classes  */}
+          {!HideClasses &&
+            ClassesResults.length > 0 &&
+            searchLoading === false && (
+              <section className={styles.userSection}>
+                <div className={styles.peopleItemsContainer}>
+                  {!isExplore && (
+                    <div className={styles.resultHeading}>Classes</div>
+                  )}
+                  {ClassesResults.slice(0, showAllClasses ? undefined : 3).map(
+                    (page, index) => (
+                      <div
+                        className={styles.peopleItem}
+                        key={index}
+                        onClick={() => navigateToProgramPage(page.page_url)}
+                      >
+                        <div className={styles.peopleAvatar}>
+                          {page.profile_image ? (
+                            <img
+                              src={page.profile_image}
+                              alt={`${page.title}'s `}
+                              width={64}
+                              height={64}
+                              className={styles.peopleavatarImage}
+                            />
+                          ) : (
+                            <div
+                              className={`${styles['people-img']} default-program-listing-icon`}
+                            ></div>
+                          )}
+                        </div>
+                        <div className={styles.userDetails}>
+                          <div className={styles.userName}>{page?.title}</div>
+                          <div className={styles.userTagline}>
+                            {page?.tagline || '\u00a0'}
+                          </div>
+                          <div className={styles.userLocation}>
+                            {page.page_type +
+                              (page._address?.city
+                                ? ` | ${page._address?.city}`
+                                : '') || '\u00a0'}
+                            {page?.event_date_time &&
+                              page?.event_date_time.length !== 0 && (
+                                <>
+                                  {' | '}
+                                  {formatDateRange(page?.event_date_time[0])}
+                                  {!isMobile && (
+                                    <>
+                                      {', '}
+                                      {page?.event_date_time[0]?.from_time +
+                                        ' - '}
+                                      {page?.event_weekdays?.length > 0 ? (
+                                        <>
+                                          ...
+                                          <span
+                                            className={styles['purpleText']}
+                                          >
+                                            more
+                                          </span>
+                                        </>
+                                      ) : (
+                                        page?.event_date_time[0]?.to_time
+                                      )}
+                                    </>
+                                  )}
+                                </>
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                    ),
+                  )}
+                  <div className={styles['view-more-btn-container']}>
+                    {showAllClasses
+                      ? undefined
+                      : (ClassesResults.length > 3 ? (
+                          <button
+                            onClick={toggleShowAllclasses}
+                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          >
+                            View More
+                          </button>
+                        ) : (
+                          ''
+                        )) || ''}
+                  </div>
+                </div>
+              </section>
+            )}
+          {/* Rentals  */}
+          {!HideRentals &&
+            RentalResults.length > 0 &&
+            searchLoading === false && (
+              <section className={styles.userSection}>
+                <div className={styles.peopleItemsContainer}>
+                  {!isExplore && (
+                    <div className={styles.resultHeading}>Rentals</div>
+                  )}
+                  {RentalResults.slice(0, showAllRentals ? undefined : 3).map(
+                    (page, index) => (
+                      <div
+                        className={styles.peopleItem}
+                        key={index}
+                        onClick={() => navigateToProductPage(page.page_url)}
+                      >
+                        <div className={styles.peopleAvatar}>
+                          {page.profile_image ? (
+                            <img
+                              src={page.profile_image}
+                              alt={`${page.title}'s `}
+                              width={64}
+                              height={64}
+                              className={styles.peopleavatarImage}
+                            />
+                          ) : (
+                            <div
+                              className={`${styles['people-img']} default-product-listing-icon`}
+                            ></div>
+                          )}
+                        </div>
+                        <div className={styles.userDetails}>
+                          <div className={styles.userName}>{page?.title}</div>
+                          <div className={styles.userTagline}>
+                            {page?.tagline || '\u00a0'}
+                          </div>
+                          <div className={styles.userLocation}>
+                            {page.page_type +
+                              (page._address?.city
+                                ? ` | ${page._address?.city}`
+                                : '') || '\u00a0'}
+                          </div>
+                        </div>
+                      </div>
+                    ),
+                  )}
+                  <div className={styles['view-more-btn-container']}>
+                    {showAllRentals
+                      ? undefined
+                      : (RentalResults.length > 3 ? (
+                          <button
+                            onClick={toggleShowAllrentals}
                             className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                           >
                             View More
@@ -1822,6 +2163,12 @@ const Search: React.FC<Props> = ({ data, children }) => {
   const ProductSearch = useSelector(
     (state: RootState) => state.search.typeResultFour.data,
   )
+  const ClassesSearch = useSelector(
+    (state: RootState) => state.search.classesResult.data,
+  )
+  const RentalSearch = useSelector(
+    (state: RootState) => state.search.rentalResult.data,
+  )
   const PostsSearch = useSelector(
     (state: RootState) => state.search.postsSearchResults.data,
   )
@@ -1922,6 +2269,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
             EventResults={EventSearch || []}
             hobbyResults={hobbySearchResults || []}
             ProductResults={ProductSearch || []}
+            ClassesResults={ClassesSearch || []}
+            RentalResults={RentalSearch || []}
             PostsResults={PostsSearch || []}
             BlogsResults={BlogsSearch || []}
           />
