@@ -6,7 +6,7 @@
   overflow: visible;
   border: 1px solid #ebedf0;
   height: fit-content;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .post-card-wrapper > header {
@@ -217,7 +217,7 @@
   padding: 10px var(--spacing-8);
   height: var(--spacing-40);
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 16px;
   color: #000000;
   width: 100%;
@@ -226,7 +226,7 @@
 
 .input::placeholder {
   color: #939ca3;
-  font-size: 12px;
+  font-size: 14px;
 }
 .all-comment-container {
   padding: 0px 12px 12px 12px;
