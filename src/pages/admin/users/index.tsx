@@ -129,7 +129,7 @@ const AdminDashboard: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [email, setEmail] = useState('')
   const [searchResults, setSearchResults] = useState<any[]>([])
-  const [pageNumber, setPageNumber] = useState<number[]>([])
+  const [pageNumber, setPageNumber] = useState<number>(0)
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
@@ -198,6 +198,7 @@ const AdminDashboard: React.FC = () => {
     const { res, err } = await searchUsers(searchCriteria)
     if (err) {
       console.log('An error', err)
+      setPageNumber(0)
     } else {
       setSearchResults(res.data)
 
@@ -207,10 +208,11 @@ const AdminDashboard: React.FC = () => {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i)
       }
-      setPageNumber(pages)
+      setPageNumber(res?.data?.length > 0 ? res?.data?.length : 0)
     }
   }
   const fetchUsers = async () => {
+    setPageNumber(0)
     const { res, err } = await getAllUserDetail(
       `limit=${pagelimit}&sort=-last_login&page=${page}&populate=sessions`,
     )
@@ -222,7 +224,7 @@ const AdminDashboard: React.FC = () => {
     }
   }
   useEffect(() => {
-    if (data.search.value) {
+    if (data.search.value.length > 0) {
       fetchSearchResults()
     } else if (page) {
       fetchUsers()
@@ -283,7 +285,7 @@ const AdminDashboard: React.FC = () => {
 
   const filteredUsers = filterUsers(searchResults, modalState) || []
 
-  console.log(searchResults)
+  console.log(pageNumber)
 
   const goToPreviousPage = () => {
     setPage(page - 1)
@@ -645,25 +647,27 @@ const AdminDashboard: React.FC = () => {
               </tbody>
             </table>
           </div>
-          <div className={styles.pagination}>
-            {/* Previous Page Button */}
+          {pageNumber === 0 && (
+            <div className={styles.pagination}>
+              {/* Previous Page Button */}
 
-            <button
-              disabled={page <= 1}
-              className="admin-next-btn"
-              onClick={goToPreviousPage}
-            >
-              Previous
-            </button>
+              <button
+                disabled={page <= 1}
+                className="admin-next-btn"
+                onClick={goToPreviousPage}
+              >
+                Previous
+              </button>
 
-            <button
-              disabled={searchResults.length !== pagelimit}
-              className="admin-next-btn"
-              onClick={goToNextPage}
-            >
-              Next
-            </button>
-          </div>
+              <button
+                disabled={searchResults.length !== pagelimit}
+                className="admin-next-btn"
+                onClick={goToNextPage}
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
 
         <div>
