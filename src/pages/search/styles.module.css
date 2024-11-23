@@ -230,7 +230,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  max-width: 590px;
+  max-width: 550px;
 }
 
 .view-more-btn {
