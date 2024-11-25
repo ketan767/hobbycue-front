@@ -426,10 +426,13 @@ const AuthForm: React.FC<Props> = (props) => {
         browser: deviceInfo?.browser,
         device: deviceInfo.device,
       })
+      console.log('Handling fb login.....')
       dispatch(setShowPageLoader(false))
       if (err) {
         throw new Error(err)
       }
+      console.log('Fb login res.status.....', res.status)
+
       if (res.status === 200 && res.data.success) {
         localStorage.setItem('token', res.data.data.token)
         dispatch(updateIsLoggedIn(true))
