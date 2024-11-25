@@ -37,6 +37,7 @@ import {
 import { setShowPageLoader } from '@/redux/slices/site'
 import {
   SetLinkviaAuth,
+  setRedirectPath,
   showProfileError,
   updateIsLoggedIn,
 } from '@/redux/slices/user'
@@ -134,13 +135,13 @@ const AuthForm: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (router.asPath.includes('me=true')) {
-      setGenRedirectURI(`/me/login`)
+      setGenRedirectURI(`/me`)
     } else if (router.asPath.includes('showGeneral=true')) {
-      setGenRedirectURI(`/me/login/general`)
+      setGenRedirectURI(`/me/general`)
     } else if (router.asPath.includes('showHobby=true')) {
-      setGenRedirectURI(`/me/login/hobby`)
+      setGenRedirectURI(`/me/hobby`)
     } else if (router.asPath.includes('showLocation=true')) {
-      setGenRedirectURI(`/me/login/location`)
+      setGenRedirectURI(`/me/location`)
     }
   }, [router])
   // useEffect(() => {
@@ -482,11 +483,12 @@ const AuthForm: React.FC<Props> = (props) => {
           // } else {
           //   window.location.reload()
           // }
-          if (genRedirectURI) {
-            router.push(genRedirectURI)
-          } else {
-            window.location.reload()
-          }
+          // if (genRedirectURI) {
+          //   router.push(genRedirectURI)
+          // } else {
+          window.location.reload()
+          // }
+          dispatch(setRedirectPath(genRedirectURI))
         } else {
           dispatch(
             openModal({

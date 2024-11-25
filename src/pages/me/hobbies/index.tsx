@@ -1,16 +1,20 @@
+import { setRedirectPath } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 const index = () => {
   const router = useRouter()
   const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
   const [isInitialized, setIsInitialized] = useState(false)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (!isInitialized) {
       setIsInitialized(true)
+      dispatch(setRedirectPath('/me/hobby'))
+
       return
     }
     const handleRedirect = () => {
