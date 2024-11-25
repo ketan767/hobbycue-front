@@ -20,6 +20,7 @@ const index = () => {
       if (isLoggedIn && user?.profile_url) {
         router.push(`/profile/${user.profile_url}`)
       } else if (!isLoggedIn) {
+        localStorage.setItem('meUrl', '/me')
         router.push('/?me=true')
       }
     }

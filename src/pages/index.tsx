@@ -88,7 +88,18 @@ const Home: React.FC<PropTypes> = function () {
       } else if (redirectPath === '/me/location') {
         router.push(`/me/location`)
       } else {
-        router.push(`/community`)
+        const path = localStorage.getItem('meUrl')
+        if (path === '/me') {
+          router.push(`/me`)
+        } else if (path === '/me/general') {
+          router.push(`/me/general`)
+        } else if (path === '/me/hobby') {
+          router.push(`/me/hobby`)
+        } else if (path === '/me/location') {
+          router.push(`/me/location`)
+        } else {
+          router.push(`/community`)
+        }
       }
     }
   }
