@@ -569,13 +569,12 @@ const AuthForm: React.FC<Props> = (props) => {
             onFailure={googleAuthFailure}
           />
           <FacebookLogin
-            // App ID: 1614660215286765
-            // App Secret: a4839f4438a6b3527ca60636cc5d76a6
             appId="1614660215286765"
             callback={handleFacebookAuth}
             redirectUri={genRedirectURI}
             fields="name,email,picture"
-            onFailure={(err) => console.log('Error in facebook login', err)}
+            disableMobileRedirect={false}
+            onFailure={(err) => console.log('Error in Facebook login', err)}
             render={(renderProps: any) => (
               <Button
                 className={`${styles['social-login-btn']} ${styles['facebook']}`}
