@@ -10,6 +10,7 @@
   outline: none;
   display: block;
   resize: none;
+  overflow: hidden;
 }
 
 .container {
@@ -47,6 +48,28 @@
   margin-bottom: 24px;
 }
 
+.blogContainer {
+  background-color: #f8f9fa;
+  padding-block: 12px;
+}
+
+.blogContent {
+  border-radius: 8px 8px 0px 0px;
+  border: 1px solid var(--Grey-Lighter, #ebedf0);
+  background: var(--Base-White, #fff);
+  padding: 18px 24px;
+}
+
+.blogEditor {
+  display: flex;
+  flex-direction: column;
+}
+
+.blogSaveButton {
+  margin-top: 12px;
+  margin-left: auto;
+}
+
 .cover-image {
   border-radius: 10px;
   overflow: hidden;
@@ -62,6 +85,7 @@
   position: absolute;
   bottom: 0;
   right: 8px;
+  z-index: 2;
 }
 
 .coverPic {
@@ -211,11 +235,6 @@
 
 .menu button:hover {
   background: rgba(128, 100, 162, 0.25);
-}
-
-.blogContainer {
-  background-color: #f8f9fa;
-  padding-block: 12px;
 }
 
 .quill > * {

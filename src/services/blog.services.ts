@@ -134,3 +134,21 @@ export const updateBlog = async ({
     return { res: null, err }
   }
 }
+
+export const uploadBlogImage = async (formData: FormData, blogId: string) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.patch(
+      `/blogs/upload-blog-image/${blogId}`,
+      formData,
+      {
+        headers,
+      },
+    )
+    return { res, err: null }
+  } catch (err) {
+    return { err: err, res: null }
+  }
+}

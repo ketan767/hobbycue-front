@@ -1,5 +1,9 @@
 import { GetServerSideProps } from 'next'
-import { getAllBlogs, updateBlog } from '@/services/blog.services'
+import {
+  getAllBlogs,
+  updateBlog,
+  uploadBlogImage,
+} from '@/services/blog.services'
 import styles from './../styles.module.css'
 import BlogComments from './Comments'
 import { dateFormat, dateFormatwithYear, isMobile } from '@/utils'
@@ -7,16 +11,12 @@ import Image from 'next/image'
 import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
 import Link from 'next/link'
 import Head from 'next/head'
-import UpvoteIcon from '@/assets/icons/UpvoteIcon'
-import BookmarkIcon from '@/assets/icons/BookmarkIcon'
-import ShareIcon from '@/assets/icons/ShareIcon'
-import MenuIcon from '@/assets/icons/MenuIcon'
 import { useEffect, useRef, useState } from 'react'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { useRouteError } from 'react-router-dom'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-import { openModal, updateShareUrl } from '@/redux/slices/modal'
+import { closeModal, openModal, updateShareUrl } from '@/redux/slices/modal'
 import HobbyIconHexagon from '@/assets/icons/HobbyIconHexagon'
 import CustomizedTooltips from '@/components/Tooltip/ToolTip'
 import BlogActionBar from '@/components/Blog/BlogActionBar'
@@ -28,6 +28,7 @@ import CameraIcon from '@/assets/icons/CameraIcon'
 import BlogContainer from '@/components/Blog/BlogContainer'
 import QuillEditor from '@/pages/brand/QuillEditor'
 import dynamic from 'next/dynamic'
+import FilledButton from '@/components/_buttons/FilledButton'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 type Props = {
@@ -37,38 +38,41 @@ type Props = {
 }
 
 const BlogPage: React.FC<Props> = ({ data }) => {
+  const [isAuthor, setIsAuthor] = useState(false)
   const [isAuthorizedToView, setIsAuthorizedToView] = useState(false)
-  const [canEdit, setCanEdit] = useState(false)
-  const [title, setTitle] = useState(data?.blog_url?.title || '')
-  const [tagline, setTagline] = useState(data?.blog_url?.tagline || '')
-  const [content, setContent] = useState(data?.blog_url?.content || '')
+  const [isEditing, setIsEditing] = useState(false) // to check if the author is shown the editable interface
+  // const [hasChanged, setHasChanged] = useState(false)
+  const [blog, setBlog] = useState(data?.blog_url || {})
   const titleRef = useRef<HTMLTextAreaElement | null>(null)
   const taglineRef = useRef<HTMLTextAreaElement | null>(null)
   const cameraInputRef = useRef<HTMLInputElement | null>(null)
   const [showStickyHeader, setShowStickyHeader] = useState(false)
-  const blogUrl = data?.blog_url?.url || ''
+  const [btnLoading, setBtnLoading] = useState(false)
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
     message: '',
+  })
+  const [vote, setVote] = useState<{ up: boolean; down: boolean }>({
+    up: false,
+    down: false,
   })
   const router = useRouter()
   const dispatch = useDispatch()
   const { user, isLoggedIn, isUserDataLoaded } = useSelector(
     (state: RootState) => state.user,
   )
-  let isAuthor = false
 
   const handleChange = (e: any, type: string) => {
     const { value } = e.target
     switch (type) {
       case 'title':
         if (value?.length > 100) return
-        setTitle(value)
+        setBlog((prev: any) => ({ ...prev, title: value }))
         break
       case 'tagline':
         if (value?.length > 100) return
-        setTagline(value)
+        setBlog((prev: any) => ({ ...prev, tagline: value }))
         break
       default:
         break
@@ -76,21 +80,32 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   }
 
   const handleEditBlog = async (type: string) => {
-    if (!canEdit) return
+    if (!isEditing) return
     let response: any = {}
     switch (type) {
       case 'title':
-        response = await updateBlog({ blogId: data?.blog_url?._id, title })
+        if (!blog.title) return
+        response = await updateBlog({
+          blogId: blog._id,
+          title: blog.title,
+        })
         if (response?.res?.data?.success) {
           const newUrl = response?.res?.data?.data?.url
           router.replace(`/blog/${newUrl}`)
         }
         break
       case 'tagline':
-        response = await updateBlog({ blogId: data?.blog_url?._id, tagline })
+        response = await updateBlog({
+          blogId: blog._id,
+          tagline: blog.tagline,
+        })
         break
       case 'content':
-        response = await updateBlog({ blogId: data?.blog_url?._id, content })
+        setBtnLoading(true)
+        response = await updateBlog({
+          blogId: blog._id,
+          content: blog.content,
+        })
         break
       default:
         console.log('Wrong type passed in handleEditBlog()!')
@@ -99,6 +114,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     if (response?.err || !response?.res?.data?.success) {
       console.log('Error in handleEditBlog()!', response.err)
     }
+    setBtnLoading(false)
   }
 
   const handleUploadCoverImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,44 +135,29 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         closable: true,
       }),
     )
-
-    // const reader = new FileReader()
-    // reader.onload = () => {
-    //   dispatch(
-    //     updatePhotoEditModalData({
-    //       type: 'cover',
-    //       image: reader.result,
-    //       onComplete: handleUserCoverUpload,
-    //     }),
-    //   )
-    //   dispatch(
-    //     openModal({
-    //       type: 'upload-image',
-    //       closable: true,
-    //     }),
-    //   )
-    // }
-    // reader.readAsDataURL(files[0])
   }
 
   const uploadImageToServer = async (image: any) => {
     const response = await fetch(image)
     const blob = await response.blob()
-    console.log('asifs blob', blob)
 
     const formData = new FormData()
-    formData.append('user-cover', blob)
-    // const { err, res } = await updateUserCover(formData)
-    // if (err) return console.log(err)
-    // if (res?.data.success) {
-    //   window.location.reload()
-    //   // dispatch(closeModal())
-    // }
+    formData.append('blog-image', blob)
+    const { err, res } = await uploadBlogImage(formData, data.blog_url._id)
+    if (err) return console.log('Error in uploadImageToServer(): ', err)
+    if (res?.data.success) {
+      setBlog({ ...blog, cover_pic: res?.data?.data.cover_pic })
+      dispatch(closeModal())
+    }
   }
 
   useEffect(() => {
+    setBlog(data.blog_url)
+  }, [data])
+
+  useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY >= 620) {
+      if (window.scrollY >= 730) {
         setShowStickyHeader(true)
       } else {
         setShowStickyHeader(false)
@@ -169,34 +170,56 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   }, [])
 
   useEffect(() => {
-    if (data.blog_url.status === 'Published') {
+    const isPublished = data.blog_url?.status === 'Published'
+    const isDraft = data.blog_url?.status === 'Draft'
+    if (isPublished) {
       setIsAuthorizedToView(true)
-      setCanEdit(false)
-      return
     }
     // redirect if it is not published and user is not author
-    if (data.blog_url.status !== 'Published' && isUserDataLoaded) {
+    if (isUserDataLoaded) {
       if (!isLoggedIn) {
-        router.push('/404')
+        if (!isPublished) router.push('/404')
         return
       }
-      if (isLoggedIn) {
-        if (user?._id) {
-          isAuthor = user._id === data.blog_url.author._id
-          if (isAuthor) setCanEdit(true)
-          if (!isAuthor) {
+
+      if (isLoggedIn && user?._id) {
+        const authorCheck =
+          user._id === data.blog_url.author._id || user?.is_admin
+        setIsAuthor(authorCheck)
+
+        if (!isPublished) {
+          if (authorCheck) {
+            setIsAuthorizedToView(true)
+          } else {
             router.push('/404')
             return
           }
         }
+        if (isDraft && authorCheck) {
+          setIsEditing(true)
+        }
       }
-      setIsAuthorizedToView(true)
     }
   }, [user, isLoggedIn, isUserDataLoaded])
+
+  /** Set upvote, downvote state initially from the DB */
+  useEffect(() => {
+    const initialUpvote = data?.blog_url?.up_votes?._users?.some(
+      (id: any) => id === user._id,
+    )
+    if (initialUpvote) setVote({ up: true, down: false })
+
+    const initialDownvote = data?.blog_url?.down_votes?._users?.some(
+      (id: any) => id === user._id,
+    )
+    if (initialDownvote) setVote({ up: false, down: true })
+  }, [user, data])
 
   const isMobileScreen = isMobile()
 
   console.warn('Blog Data', data)
+
+  console.log('asifs blog', blog)
 
   return (
     <>
@@ -217,25 +240,32 @@ const BlogPage: React.FC<Props> = ({ data }) => {
       {isAuthorizedToView && (
         <div className={styles.all}>
           <div className={styles['blog-header']}>
-            {canEdit ? (
+            {isEditing ? (
               <textarea
                 className={styles['blog-title'] + ' ' + styles.editInput}
                 placeholder="Title"
-                value={title}
+                value={blog.title}
+                name="title"
                 onChange={(e) => handleChange(e, 'title')}
                 onBlur={() => handleEditBlog('title')}
                 ref={titleRef}
                 onKeyDown={(e) => e.key === 'Enter' && titleRef.current?.blur()}
                 rows={3}
+                // onInput={function (e) {
+                //   const target = e.target as HTMLTextAreaElement
+                //   target.style.height = 'auto'
+                //   target.style.height = target.scrollHeight + 'px'
+                // }}
               />
             ) : (
               <h1 className={styles['blog-title']}>{data?.blog_url?.title}</h1>
             )}
-            {canEdit ? (
+            {isEditing ? (
               <textarea
                 className={styles['blog-desc'] + ' ' + styles.editInput}
                 placeholder="Tagline"
-                value={tagline}
+                value={blog.tagline}
+                name="tagline"
                 onChange={(e) => handleChange(e, 'tagline')}
                 onBlur={() => handleEditBlog('tagline')}
                 ref={taglineRef}
@@ -244,14 +274,14 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                 }
               />
             ) : (
-              data?.blog_url?.description && (
+              data?.blog_url?.tagline && (
                 <h1 className={styles['blog-desc']}>
-                  {data?.blog_url?.description}
+                  {data?.blog_url?.tagline}
                 </h1>
               )
             )}
-            {/* Cover Image */}
 
+            {/* Cover Image */}
             {data?.blog_url?.cover_pic ? (
               <div
                 onClick={() => {
@@ -259,23 +289,26 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                     openModal({
                       type: 'View-Image-Modal',
                       closable: false,
-                      imageurl: data?.blog_url?.cover_pic,
+                      // imageurl: data?.blog_url?.cover_pic,
+                      imageurl: blog.cover_pic,
                     }),
                   )
                 }}
                 className={styles['cover-image']}
               >
                 <img
-                  src={data?.blog_url?.cover_pic}
+                  // src={data?.blog_url?.cover_pic}
+                  src={blog.cover_pic}
                   className={styles.coverBlur}
                   alt="cover image"
                 />
                 <img
-                  src={data?.blog_url?.cover_pic}
+                  // src={data?.blog_url?.cover_pic}
+                  src={blog.cover_pic}
                   className={styles.coverPic}
                   alt="cover image"
                 />
-                {canEdit && (
+                {isEditing && (
                   <span
                     onClick={(e) => {
                       e.stopPropagation()
@@ -293,7 +326,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   </span>
                 )}
               </div>
-            ) : canEdit ? (
+            ) : isEditing ? (
               <div className={styles['cover-image']}>
                 <CoverPhotoLayout
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -380,31 +413,57 @@ const BlogPage: React.FC<Props> = ({ data }) => {
               {/* actions for desktop */}
               {!isMobileScreen && (
                 <div className={styles.desktopActions}>
-                  <BlogActionBar data={data} disabled={canEdit} />
+                  <BlogActionBar
+                    data={data}
+                    vote={vote}
+                    setVote={setVote}
+                    isEditing={isEditing}
+                    setIsEditing={setIsEditing}
+                    isAuthor={isAuthor}
+                  />
                 </div>
               )}
             </div>
           </div>
 
           {/** Actions for Mobile */}
-          {isMobileScreen && <BlogActionBar data={data} disabled={canEdit} />}
+          {isMobileScreen && (
+            <BlogActionBar
+              data={data}
+              vote={vote}
+              setVote={setVote}
+              isEditing={isEditing}
+              setIsEditing={setIsEditing}
+              isAuthor={isAuthor}
+            />
+          )}
 
           {/** Sticky header */}
           {!isMobileScreen && showStickyHeader && (
-            <BlogStickyHeader data={data} />
+            <BlogStickyHeader
+              data={data}
+              vote={vote}
+              setVote={setVote}
+              isEditing={isEditing}
+              setIsEditing={setIsEditing}
+              isAuthor={isAuthor}
+            />
           )}
 
           {/* Content */}
           <div className={styles.blogContainer}>
             <BlogContainer>
-              {canEdit ? (
-                <>
+              {isEditing ? (
+                <div className={styles.blogEditor}>
                   <ReactQuill
                     // ref={inputRef}
                     theme="snow"
-                    value={content}
+                    value={blog.content}
                     onChange={(updatedValue) => {
-                      setContent(updatedValue)
+                      setBlog((prev: any) => ({
+                        ...prev,
+                        content: updatedValue,
+                      }))
                     }}
                     onBlur={() => handleEditBlog('content')}
                     className={`${styles.quill} ${styles['ql-editor']} blog-quill`}
@@ -421,22 +480,39 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                             { header: '1' },
                             { header: '2' },
                           ],
-                          ['link'],
+                          ['link', 'image'],
                         ],
                       },
                     }}
                   />
-                </>
-              ) : null}
+                  <FilledButton
+                    className={styles.blogSaveButton}
+                    onClick={() => handleEditBlog('content')}
+                    disabled={btnLoading}
+                  >
+                    Save
+                  </FilledButton>
+                </div>
+              ) : (
+                <div
+                  className={styles.blogContent}
+                  dangerouslySetInnerHTML={{
+                    __html: data?.blog_url?.content,
+                  }}
+                ></div>
+              )}
             </BlogContainer>
           </div>
 
-          {/* <div className={styles['iframe-container']}>
-            <iframe
-              className={styles['iframe']}
-              src={`https://blog.hobbycue.com/blog/${blogUrl}`}
-            ></iframe>
-          </div> */}
+          {/* {!data.blog_url.content && (
+            <div className={styles['iframe-container']}>
+              <iframe
+                className={styles['iframe']}
+                src={`https://blog.hobbycue.com/blog/${blogUrl}`}
+              ></iframe>
+            </div>
+          )} */}
+
           {/* <div className={styles['iframe-container']}>
             <div
               className={styles['iframe']}
