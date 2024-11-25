@@ -360,11 +360,26 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const observer = useRef<IntersectionObserver | null>(null)
   const [pageNum, setPageNum] = useState<number>(1)
   const [hobbyPageNum, setHobbyPageNum] = useState<number>(1)
+  const [peoplePageNum, setPeoplePageNum] = useState<number>(1)
+  const [placePageNum, setPlacePageNum] = useState<number>(1)
+  const [programPageNum, setProgramPageNum] = useState<number>(1)
+  const [productPageNum, setProductPageNum] = useState<number>(1)
   const [userPages, setUserPages] = useState<User[]>([])
   const [hobbyPages, setHobbyPages] = useState<hobby[]>([])
+  const [peoplePages, setPeoplePages] = useState<PeopleData[]>([])
+  const [placePages, setPlacePages] = useState<PlaceData[]>([])
+  const [eventPages, setEventPages] = useState<EventData[]>([])
+  const [productPages, setProductPages] = useState<ProductData[]>([])
   const [isSearchingMore, setIsSearchingMore] = useState<boolean>(false)
-  const [hasNoMoreData, setHasNoMoreData] = useState<boolean>(false)
+  const [hasNoMoreUsers, setHasNoMoreUsers] = useState<boolean>(false)
   const [hasNoMoreHobbies, setHasNoMoreHobbies] = useState<boolean>(false)
+  const [hasNoMorePersonPages, setHasNoMorePersonPages] =
+    useState<boolean>(false)
+  const [hasNoMorePlacePages, setHasNoMorePlacePages] = useState<boolean>(false)
+  const [hasNoMoreProgramPages, setHasNoMoreProgramPages] =
+    useState<boolean>(false)
+  const [hasNoMoreProductPages, setHasNoMoreProductPages] =
+    useState<boolean>(false)
 
   // const callForData = async (page: number) => {
   //   if (page === 1) return
@@ -624,43 +639,190 @@ const MainContent: React.FC<SearchResultsProps> = ({
         }
         data = { ...data, page: 1, limit: 20 }
         setPageNum(1)
-        const { res: userRes, err: userErr } = await searchUsers(data)
-        if (userErr) {
+
+        let searchData = {}
+        if (searchValue) {
+          searchData = { ...searchData, searchValue: searchValue }
+        }
+        if (postedBy) {
+          searchData = { ...searchData, postedBy: postedBy }
+        }
+        if (hobby) {
+          searchData = { ...searchData, hobby: hobby }
+        }
+        if (location) {
+          searchData = { ...searchData, location: location }
+        }
+
+        const query2 = `show=true&searchValue=${searchValue}&page=1&limit=20`
+        // dispatch(setShowPageLoader(true))
+
+        const [
+          titleRes,
+          titleRes2,
+          titleRes3,
+          titleRes4,
+          userRes,
+          blogRes,
+          PostRes,
+          hobbyRes,
+        ] = await Promise.all([
+          searchPages({
+            sort: '-createdAt',
+            populate: '_hobbies,_address,product_variant,seller',
+            searchValue: searchValue,
+            title: searchValue,
+            hobby: searchValue,
+            location: searchValue,
+            page: '1',
+            limit: '20',
+            type: '1',
+          }),
+          searchPages({
+            sort: '-createdAt',
+            populate: '_hobbies,_address,product_variant,seller',
+            searchValue: searchValue,
+            title: searchValue,
+            hobby: searchValue,
+            location: searchValue,
+            page: '1',
+            limit: '20',
+            type: '2',
+          }),
+          searchPages({
+            sort: '-createdAt',
+            populate: '_hobbies,_address,product_variant,seller',
+            searchValue: searchValue,
+            title: searchValue,
+            hobby: searchValue,
+            location: searchValue,
+            page: '1',
+            limit: '20',
+            type: '3',
+          }),
+          searchPages({
+            sort: '-createdAt',
+            populate: '_hobbies,_address,product_variant,seller',
+            searchValue: searchValue,
+            title: searchValue,
+            hobby: searchValue,
+            location: searchValue,
+            page: '1',
+            limit: '20',
+            type: '4',
+          }),
+          searchUsers(data),
+          searchBlogs({
+            search: searchValue,
+          }),
+          searchPosts(searchData),
+          searchAllHobbies(query2),
+        ])
+        // const { res: userRes, err: userErr } = await searchUsers(data)
+
+        if (userRes.err) {
         } else {
-          console.log('User result----------------->', userRes)
-          dispatch(setUserSearchResults(userRes))
-          setUserPages(userRes.data)
-          if (userRes.data.length < 20) {
-            setHasNoMoreData(true)
+          console.log('User result----------------->', userRes.res)
+          dispatch(setUserSearchResults(userRes.res))
+          setUserPages(userRes.res.data)
+          if (userRes.res.data.length < 20) {
+            setHasNoMoreUsers(true)
+          } else {
+            setHasNoMoreUsers(false)
           }
         }
         // Search by title
-        dispatch(setShowPageLoader(true))
         // const { res: titleRes, err: titleErr } = await searchPages({
         //   title: searchValue,
         // })
-        const { res: titleRes, err: titleErr } = await searchPages({
-          sort: '-createdAt',
-          populate: '_hobbies,_address,product_variant,seller',
-          searchValue: searchValue,
-          title: searchValue,
-          hobby: searchValue,
-          location: searchValue,
-          page: '1',
-          limit: '10000',
-        })
-        if (titleErr) {
-          console.error('An error occurred during the title search:', titleErr)
+
+        // const { res: titleRes, err: titleErr } = await searchPages({
+        //   sort: '-createdAt',
+        //   populate: '_hobbies,_address,product_variant,seller',
+        //   searchValue: searchValue,
+        //   title: searchValue,
+        //   hobby: searchValue,
+        //   location: searchValue,
+        //   page: '1',
+        //   limit: '20',
+        //   type: '1',
+        // })
+        // const { res: titleRes2, err: titleErr2 } = await searchPages({
+        //   sort: '-createdAt',
+        //   populate: '_hobbies,_address,product_variant,seller',
+        //   searchValue: searchValue,
+        //   title: searchValue,
+        //   hobby: searchValue,
+        //   location: searchValue,
+        //   page: '1',
+        //   limit: '20',
+        //   type: '2',
+        // })
+        // const { res: titleRes3, err: titleErr3 } = await searchPages({
+        //   sort: '-createdAt',
+        //   populate: '_hobbies,_address,product_variant,seller',
+        //   searchValue: searchValue,
+        //   title: searchValue,
+        //   hobby: searchValue,
+        //   location: searchValue,
+        //   page: '1',
+        //   limit: '20',
+        //   type: '3',
+        // })
+        // const { res: titleRes4, err: titleErr4 } = await searchPages({
+        //   sort: '-createdAt',
+        //   populate: '_hobbies,_address,product_variant,seller',
+        //   searchValue: searchValue,
+        //   title: searchValue,
+        //   hobby: searchValue,
+        //   location: searchValue,
+        //   page: '1',
+        //   limit: '20',
+        //   type: '4',
+        // })
+        setPeoplePageNum(1)
+        if (titleRes.err) {
+          console.error(
+            'An error occurred during the title search:',
+            titleRes.err,
+          )
+          dispatch(setSearchLoading(false))
+          return
+        }
+        if (titleRes2.err) {
+          console.error(
+            'An error occurred during the title search:',
+            titleRes2.err,
+          )
+          dispatch(setSearchLoading(false))
+          return
+        }
+        if (titleRes3.err) {
+          console.error(
+            'An error occurred during the title search:',
+            titleRes3.err,
+          )
+          dispatch(setSearchLoading(false))
+          return
+        }
+        if (titleRes4.err) {
+          console.error(
+            'An error occurred during the title search:',
+            titleRes4.err,
+          )
           dispatch(setSearchLoading(false))
           return
         }
 
         // const titlePages = titleRes.data.slice(0, 100) // Get title search results
-        const titlePages = titleRes.data // Get title search results
+        const titlePages = titleRes.res.data // Get title search results
+        const titlePages2 = titleRes2.res.data // Get title search results
+        const titlePages3 = titleRes3.res.data // Get title search results
+        const titlePages4 = titleRes4.res.data // Get title search results
 
         // Function to fetch tagline search results and process unique pages
 
-        dispatch(setShowPageLoader(true))
+        // dispatch(setShowPageLoader(true))
         // const { res: taglineRes, err: taglineErr } = await searchPages({
         //   tagline: searchValue,
         // })
@@ -669,8 +831,14 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
         // Combine titlePages and taglinePages and filter out duplicate URLs
         const uniqueUrls = new Set<string>()
-        const uniquePages: any[] = [] // Use 'any[]' if you prefer not to define a specific type
-
+        const uniqueUrls2 = new Set<string>()
+        const uniqueUrls3 = new Set<string>()
+        const uniqueUrls4 = new Set<string>()
+        // Use 'any[]' if you prefer not to define a specific type
+        const uniquePages: any[] = []
+        const uniquePages2: any[] = []
+        const uniquePages3: any[] = []
+        const uniquePages4: any[] = []
         ;[...titlePages].forEach((page) => {
           if (
             page &&
@@ -682,6 +850,40 @@ const MainContent: React.FC<SearchResultsProps> = ({
             uniquePages.push(page)
           }
         })
+        ;[...titlePages2].forEach((page) => {
+          if (
+            page &&
+            page.page_url &&
+            typeof page.page_url === 'string' &&
+            !uniqueUrls2.has(page.page_url)
+          ) {
+            uniqueUrls2.add(page.page_url)
+            uniquePages2.push(page)
+          }
+        })
+        ;[...titlePages3].forEach((page) => {
+          if (
+            page &&
+            page.page_url &&
+            typeof page.page_url === 'string' &&
+            !uniqueUrls3.has(page.page_url)
+          ) {
+            uniqueUrls3.add(page.page_url)
+            uniquePages3.push(page)
+          }
+        })
+        ;[...titlePages4].forEach((page) => {
+          if (
+            page &&
+            page.page_url &&
+            typeof page.page_url === 'string' &&
+            !uniqueUrls4.has(page.page_url)
+          ) {
+            uniqueUrls4.add(page.page_url)
+            uniquePages4.push(page)
+          }
+        })
+
         const user_id = isLoggedIn ? user?._id : null
         console.log('sto')
         const { res, err } = await addSearchHistory({
@@ -694,18 +896,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
         const typeResultOne = uniquePages.filter(
           (page) => page.type === 1 && page.is_published,
         )
-        const typeResultTwo = uniquePages.filter(
+        const typeResultTwo = uniquePages2.filter(
           (page) => page.type === 2 && page.is_published,
         )
-        const typeResultThree = uniquePages.filter(
+        const typeResultThree = uniquePages3.filter(
           (page) => page.type === 3 && page.is_published,
         )
         // console.log('Type 3------------------------------->', typeResultThree)
 
-        const typeResultFour = uniquePages.filter(
+        const typeResultFour = uniquePages4.filter(
           (page) => page.type === 4 && page.is_published,
         )
-        const filteredClasses = uniquePages.filter(
+        const filteredClasses1 = uniquePages3.filter(
           (page) =>
             page.is_published &&
             (page.page_type.includes('Classes') ||
@@ -714,12 +916,46 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 page.event_date_time.from_date === null &&
                 page.event_date_time.to_date === null)),
         )
-        const filteredRentals = uniquePages.filter(
+        const filteredClasses2 = uniquePages4.filter(
+          (page) =>
+            page.is_published &&
+            (page.page_type.includes('Classes') ||
+              page.page_type.includes('Live Classes') ||
+              (page.type === 3 &&
+                page.event_date_time.from_date === null &&
+                page.event_date_time.to_date === null)),
+        )
+        const filteredClasses = [...filteredClasses1, ...filteredClasses2]
+        const filteredRentals1 = uniquePages.filter(
           (page) =>
             // page.is_published &&
             page.page_type.includes('Item Rental') ||
             page.page_type.includes('Space Rental'),
         )
+        const filteredRentals2 = uniquePages2.filter(
+          (page) =>
+            // page.is_published &&
+            page.page_type.includes('Item Rental') ||
+            page.page_type.includes('Space Rental'),
+        )
+        const filteredRentals3 = uniquePages3.filter(
+          (page) =>
+            // page.is_published &&
+            page.page_type.includes('Item Rental') ||
+            page.page_type.includes('Space Rental'),
+        )
+        const filteredRentals4 = uniquePages4.filter(
+          (page) =>
+            // page.is_published &&
+            page.page_type.includes('Item Rental') ||
+            page.page_type.includes('Space Rental'),
+        )
+        const filteredRentals = [
+          ...filteredRentals1,
+          ...filteredRentals2,
+          ...filteredRentals3,
+          ...filteredRentals4,
+        ]
         // console.log(
         //   'Type filteredClasses------------------------------->',
         //   filteredClasses,
@@ -734,6 +970,27 @@ const MainContent: React.FC<SearchResultsProps> = ({
             success: true,
           }),
         )
+        setPeoplePages(typeResultOne)
+        if (typeResultOne.length < 20) {
+          setHasNoMorePersonPages(true)
+        } else {
+          setHasNoMorePersonPages(false)
+        }
+        if (typeResultTwo.length < 20) {
+          setHasNoMorePlacePages(true)
+        } else {
+          setHasNoMorePlacePages(false)
+        }
+        if (typeResultThree.length < 20) {
+          setHasNoMoreProgramPages(true)
+        } else {
+          setHasNoMoreProgramPages(false)
+        }
+        if (typeResultFour.length < 20) {
+          setHasNoMoreProductPages(true)
+        } else {
+          setHasNoMoreProductPages(false)
+        }
         dispatch(
           setTypeResultTwo({
             data: typeResultTwo,
@@ -771,44 +1028,47 @@ const MainContent: React.FC<SearchResultsProps> = ({
           }),
         )
 
-        dispatch(setShowPageLoader(false))
+        // dispatch(setShowPageLoader(false))
 
         const query = `fields=display,genre&level=1&level=2&level=3&level=4&level=5&search=${searchValue}`
-        dispatch(setShowPageLoader(true))
+        // dispatch(setShowPageLoader(true))
         // const { res: hobbyRes, err: hobbyErr } = await getAllHobbiesWithoutPagi(
         //   query,
         // )
-        const query2 = `show=true&searchValue=${searchValue}&page=1&limit=20`
+        // const query2 = `show=true&searchValue=${searchValue}&page=1&limit=20`
         setHobbyPageNum(1)
-        const { res: hobbyRes, err: hobbyErr } = await searchAllHobbies(query2)
-        console.log('response----------->', hobbyRes)
-        console.log('response----------->', hobbyRes.status)
-        if (hobbyRes.status === 200) {
-          console.log('SortedHobbies:--------------> ' + hobbyRes.data[0])
+        // const { res: hobbyRes, err: hobbyErr } = await searchAllHobbies(query2)
+        console.log('response----------->', hobbyRes.res)
+        console.log('response----------->', hobbyRes.res.status)
+        if (hobbyRes.res.status === 200) {
+          console.log('SortedHobbies:--------------> ' + hobbyRes.res.data[0])
           dispatch(
             setHobbiesSearchResult({
-              data: hobbyRes.data,
+              data: hobbyRes.res.data,
               message: 'Search completed successfully.',
               success: true,
             }),
           )
-          setHobbyPages(hobbyRes.data)
-          if (hobbyRes.data.length < 20) {
+          setHobbyPages(hobbyRes.res.data)
+          if (hobbyRes.res.data.length < 20) {
             setHasNoMoreHobbies(true)
           } else {
             setHasNoMoreHobbies(false)
           }
         }
 
-        dispatch(setShowPageLoader(true))
-        const { res: blogRes, err: BlogErr } = await searchBlogs({
-          search: searchValue,
-        })
+        // dispatch(setShowPageLoader(true))
+        // const { res: blogRes, err: BlogErr } = await searchBlogs({
+        //   search: searchValue,
+        // })
 
-        if (BlogErr) {
-          console.error('An error occurred during the page search:', BlogErr)
+        if (blogRes.err) {
+          console.error(
+            'An error occurred during the page search:',
+            blogRes.err,
+          )
         } else {
-          const sortedBlog = blogRes?.data?.sort((a: any, b: any) => {
+          const sortedBlog = blogRes.res.data?.sort((a: any, b: any) => {
             const titleA = a.title?.toLowerCase()
             const titleB = b.title?.toLowerCase()
             const indexA = titleA.indexOf(searchValue?.toLowerCase())
@@ -831,24 +1091,15 @@ const MainContent: React.FC<SearchResultsProps> = ({
             }),
           )
         }
-        let searchData = {}
-        if (searchValue) {
-          searchData = { ...searchData, searchValue: searchValue }
-        }
-        if (postedBy) {
-          searchData = { ...searchData, postedBy: postedBy }
-        }
-        if (hobby) {
-          searchData = { ...searchData, hobby: hobby }
-        }
-        if (location) {
-          searchData = { ...searchData, location: location }
-        }
-        const { res: PostRes, err: PostErr } = await searchPosts(searchData)
-        if (PostErr) {
-          console.error('An error occurred during the page search:', PostErr)
+
+        // const { res: PostRes, err: PostErr } = await searchPosts(searchData)
+        if (PostRes.err) {
+          console.error(
+            'An error occurred during the page search:',
+            PostRes.err,
+          )
         } else {
-          const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
+          const sortedposts = PostRes.res?.data?.sort((a: any, b: any) => {
             const indexA = a?.content
               .toLowerCase()
               .indexOf(searchValue.toLowerCase())
@@ -865,7 +1116,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
               ?.toLowerCase()
               ?.localeCompare(b?.content?.toLowerCase())
           })
-          console.warn('posts search results:', PostRes?.data)
+          console.log('posts search results:', PostRes?.res.data)
           dispatch(
             setPostsSearchResult({
               data: sortedposts,
@@ -876,16 +1127,17 @@ const MainContent: React.FC<SearchResultsProps> = ({
         }
 
         dispatch(setSearchLoading(false))
-        dispatch(setShowPageLoader(false))
+        // dispatch(setShowPageLoader(false))
         dispatch(showAllTrue())
       } catch (error) {
         dispatch(setSearchLoading(false))
-        dispatch(setShowPageLoader(false))
+        // dispatch(setShowPageLoader(false))
         console.error('An error occurred during the combined search:', error)
       }
     }
     searchResult()
-  }, [queryString, name, postedBy, hobby, location])
+  }, [queryString])
+  // }, [queryString, name, postedBy, hobby, location])
   // }, [queryString, filter, name, postedBy, hobby, location])
 
   const toggleShowAllusers = () => {
@@ -1043,7 +1295,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
     } else {
       console.log('User result----------------->', userRes)
       if (userRes.data.length === 0) {
-        setHasNoMoreData(true)
+        setHasNoMoreUsers(true)
       }
       const newSearchResult: SearchResults<User> = {
         data: [...searchResults, ...userRes.data],
@@ -1057,10 +1309,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
     }
   }
   const fetchMoreHobbies = async () => {
-    if (isSearchingMore) return
-    setIsSearchingMore(true)
     const newHobbyPageNum = hobbyPageNum + 1
     console.log(newHobbyPageNum)
+    if (isSearchingMore) return
+    setIsSearchingMore(true)
+    // const newHobbyPageNum = hobbyPageNum + 1
+    // console.log(newHobbyPageNum)
     const query = `show=true&searchValue=${queryString}&page=${newHobbyPageNum}&limit=20`
 
     const { res: hobbyRes, err: hobbyErr } = await searchAllHobbies(query)
@@ -1084,11 +1338,225 @@ const MainContent: React.FC<SearchResultsProps> = ({
       console.log('hobbyPageNum', hobbyPageNum + 1)
     }
   }
+  const fetchMorePeoplePages = async () => {
+    if (isSearchingMore) return
+    setIsSearchingMore(true)
+
+    const { res: titleRes, err: titleErr } = await searchPages({
+      sort: '-createdAt',
+      populate: '_hobbies,_address,product_variant,seller',
+      searchValue: queryString,
+      title: queryString,
+      hobby: queryString,
+      location: queryString,
+      page: peoplePageNum + 1,
+      limit: '20',
+      type: '1',
+    })
+    if (titleErr) {
+      console.error('An error occurred during the title search:', titleErr)
+      dispatch(setSearchLoading(false))
+      return
+    }
+    const titlePages = titleRes.data // Get title search results
+    const uniqueUrls = new Set<string>()
+    const uniquePages: any[] = []
+
+    ;[...titlePages].forEach((page) => {
+      if (
+        page &&
+        page.page_url &&
+        typeof page.page_url === 'string' &&
+        !uniqueUrls.has(page.page_url)
+      ) {
+        uniqueUrls.add(page.page_url)
+        uniquePages.push(page)
+      }
+    })
+
+    if (titleRes.data.length === 0) {
+      setHasNoMorePersonPages(true)
+      setIsSearchingMore(false)
+      return
+    }
+    dispatch(
+      setTypeResultOne({
+        data: [...peopleResults, ...uniquePages],
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+    setPeoplePages([...peopleResults, ...uniquePages])
+
+    setIsSearchingMore(false)
+    setPeoplePageNum(peoplePageNum + 1)
+  }
+  const fetchMorePlacePages = async () => {
+    if (isSearchingMore) return
+    setIsSearchingMore(true)
+
+    const { res: titleRes, err: titleErr } = await searchPages({
+      sort: '-createdAt',
+      populate: '_hobbies,_address,product_variant,seller',
+      searchValue: queryString,
+      title: queryString,
+      hobby: queryString,
+      location: queryString,
+      page: placePageNum + 1,
+      limit: '20',
+      type: '2',
+    })
+    if (titleErr) {
+      console.error('An error occurred during the title search:', titleErr)
+      dispatch(setSearchLoading(false))
+      return
+    }
+    const titlePages = titleRes.data // Get title search results
+    const uniqueUrls = new Set<string>()
+    const uniquePages: any[] = []
+
+    ;[...titlePages].forEach((page) => {
+      if (
+        page &&
+        page.page_url &&
+        typeof page.page_url === 'string' &&
+        !uniqueUrls.has(page.page_url)
+      ) {
+        uniqueUrls.add(page.page_url)
+        uniquePages.push(page)
+      }
+    })
+
+    if (titleRes.data.length === 0) {
+      setHasNoMorePlacePages(true)
+      setIsSearchingMore(false)
+      return
+    }
+    dispatch(
+      setTypeResultTwo({
+        data: [...placeResults, ...uniquePages],
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+    setPlacePages([...placeResults, ...uniquePages])
+
+    setIsSearchingMore(false)
+    setPlacePageNum(placePageNum + 1)
+  }
+  const fetchMoreProgramPages = async () => {
+    if (isSearchingMore) return
+    setIsSearchingMore(true)
+
+    const { res: titleRes, err: titleErr } = await searchPages({
+      sort: '-createdAt',
+      populate: '_hobbies,_address,product_variant,seller',
+      searchValue: queryString,
+      title: queryString,
+      hobby: queryString,
+      location: queryString,
+      page: programPageNum + 1,
+      limit: '20',
+      type: '3',
+    })
+    if (titleErr) {
+      console.error('An error occurred during the title search:', titleErr)
+      dispatch(setSearchLoading(false))
+      return
+    }
+    const titlePages = titleRes.data // Get title search results
+    const uniqueUrls = new Set<string>()
+    const uniquePages: any[] = []
+
+    ;[...titlePages].forEach((page) => {
+      if (
+        page &&
+        page.page_url &&
+        typeof page.page_url === 'string' &&
+        !uniqueUrls.has(page.page_url)
+      ) {
+        uniqueUrls.add(page.page_url)
+        uniquePages.push(page)
+      }
+    })
+
+    if (titleRes.data.length === 0) {
+      setHasNoMoreProgramPages(true)
+      setIsSearchingMore(false)
+      return
+    }
+    dispatch(
+      setTypeResultThree({
+        data: [...eventPages, ...uniquePages],
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+    setEventPages([...eventPages, ...uniquePages])
+
+    setIsSearchingMore(false)
+    setProgramPageNum(programPageNum + 1)
+  }
+  const fetchMoreProductPages = async () => {
+    if (isSearchingMore) return
+    setIsSearchingMore(true)
+
+    const { res: titleRes, err: titleErr } = await searchPages({
+      sort: '-createdAt',
+      populate: '_hobbies,_address,product_variant,seller',
+      searchValue: queryString,
+      title: queryString,
+      hobby: queryString,
+      location: queryString,
+      page: productPageNum + 1,
+      limit: '20',
+      type: '4',
+    })
+    if (titleErr) {
+      console.error('An error occurred during the title search:', titleErr)
+      dispatch(setSearchLoading(false))
+      return
+    }
+    const titlePages = titleRes.data // Get title search results
+    const uniqueUrls = new Set<string>()
+    const uniquePages: any[] = []
+
+    ;[...titlePages].forEach((page) => {
+      if (
+        page &&
+        page.page_url &&
+        typeof page.page_url === 'string' &&
+        !uniqueUrls.has(page.page_url)
+      ) {
+        uniqueUrls.add(page.page_url)
+        uniquePages.push(page)
+      }
+    })
+
+    if (titleRes.data.length === 0) {
+      setHasNoMoreProductPages(true)
+      setIsSearchingMore(false)
+      return
+    }
+    dispatch(
+      setTypeResultFour({
+        data: [...productPages, ...uniquePages],
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+    setProductPages([...productPages, ...uniquePages])
+
+    setIsSearchingMore(false)
+    setProductPageNum(productPageNum + 1)
+  }
 
   useEffect(() => {
     let lastCall = 0
     const handleScroll = () => {
       console.log('Searching more...', isSearchingMore)
+      console.log('hobbyPageNum', hobbyPageNum)
+
       if (isSearchingMore) return
       console.log('Searching more...', isSearchingMore)
 
@@ -1100,17 +1568,26 @@ const MainContent: React.FC<SearchResultsProps> = ({
         lastCall = now
         if (
           window.innerHeight + document.documentElement.scrollTop >=
-          document.documentElement.offsetHeight - 500
+          document.documentElement.offsetHeight - 1000
         ) {
           // if (!hasNoDataPerma) {
           // setHasMore(true)
           // }
           // alert('hiii...')
-          setIsSearchingMore(true)
+          console.log('hobbyPageNum', hobbyPageNum)
+          // setIsSearchingMore(true)
           if (filter === 'users') {
             fetchMoreUsers()
           } else if (filter === 'hobby') {
             fetchMoreHobbies()
+          } else if (filter === 'people') {
+            fetchMorePeoplePages()
+          } else if (filter === 'places') {
+            fetchMorePlacePages()
+          } else if (filter === 'programs') {
+            fetchMoreProgramPages()
+          } else if (filter === 'products') {
+            fetchMoreProductPages()
           }
         }
       }
@@ -1118,7 +1595,14 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [fetchMoreUsers, fetchMoreHobbies])
+  }, [
+    fetchMoreUsers,
+    fetchMoreHobbies,
+    fetchMorePeoplePages,
+    fetchMorePlacePages,
+    fetchMoreProgramPages,
+    fetchMoreProductPages,
+  ])
 
   return (
     <main className={styles.searchResults}>
@@ -1289,7 +1773,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   ))}
                 {showAllUsers && (
                   <div className={styles.loaders}>
-                    {!hasNoMoreData ? <SearchLoader /> : ''}
+                    {!hasNoMoreUsers ? <SearchLoader /> : ''}
                   </div>
                 )}
                 <div className={styles['view-more-btn-container']}>
@@ -1310,74 +1794,77 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </section>
           )}
           {/* People */}
-          {!HidePeople &&
-            peopleResults.length > 0 &&
-            searchLoading === false && (
-              <section className={styles.userSection}>
-                <div className={styles.peopleItemsContainer}>
-                  {!isExplore && (
-                    <div className={styles.resultHeading}>People</div>
-                  )}
-                  {peopleResults
-                    .slice(0, showAllPeople ? undefined : 3)
-                    .map((page, index) => (
-                      <div
-                        className={styles.peopleItem}
-                        key={index}
-                        onClick={() => navigateToPeoplePage(page.page_url)}
-                      >
-                        <div className={styles.peopleAvatar}>
-                          {page.profile_image ? (
-                            <img
-                              src={page.profile_image}
-                              alt={`${page.title}'s `}
-                              width={64}
-                              height={64}
-                              className={styles.peopleavatarImage}
-                            />
-                          ) : (
-                            <div
-                              className={`${styles['people-img']} default-people-listing-icon`}
-                            ></div>
-                          )}
+          {!HidePeople && peoplePages.length > 0 && searchLoading === false && (
+            <section className={styles.userSection}>
+              <div className={styles.peopleItemsContainer}>
+                {!isExplore && (
+                  <div className={styles.resultHeading}>People</div>
+                )}
+                {peoplePages
+                  .slice(0, showAllPeople ? undefined : 3)
+                  .map((page, index) => (
+                    <div
+                      className={styles.peopleItem}
+                      key={index}
+                      onClick={() => navigateToPeoplePage(page.page_url)}
+                    >
+                      <div className={styles.peopleAvatar}>
+                        {page.profile_image ? (
+                          <img
+                            src={page.profile_image}
+                            alt={`${page.title}'s `}
+                            width={64}
+                            height={64}
+                            className={styles.peopleavatarImage}
+                          />
+                        ) : (
+                          <div
+                            className={`${styles['people-img']} default-people-listing-icon`}
+                          ></div>
+                        )}
+                      </div>
+                      <div className={styles.userDetails}>
+                        <div className={styles.userName}>{page?.title}</div>
+                        <div className={styles.userTagline}>
+                          {page?.tagline || '\u00a0'}
                         </div>
-                        <div className={styles.userDetails}>
-                          <div className={styles.userName}>{page?.title}</div>
-                          <div className={styles.userTagline}>
-                            {page?.tagline || '\u00a0'}
-                          </div>
-                          <div className={styles.userLocation}>
-                            {page.page_type.map((item, idx) => {
-                              if (idx === 0) {
-                                return item
-                              } else {
-                                return ' ' + item
-                              }
-                            }) +
-                              (page._address?.city
-                                ? ` | ${page._address?.city}`
-                                : '') || '\u00a0'}
-                          </div>
+                        <div className={styles.userLocation}>
+                          {page.page_type.map((item, idx) => {
+                            if (idx === 0) {
+                              return item
+                            } else {
+                              return ' ' + item
+                            }
+                          }) +
+                            (page._address?.city
+                              ? ` | ${page._address?.city}`
+                              : '') || '\u00a0'}
                         </div>
                       </div>
-                    ))}
-                  <div className={styles['view-more-btn-container']}>
-                    {showAllPeople
-                      ? undefined
-                      : (peopleResults.length > 3 ? (
-                          <button
-                            onClick={toggleShowAllpeople}
-                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
-                          >
-                            View More
-                          </button>
-                        ) : (
-                          ''
-                        )) || ''}
+                    </div>
+                  ))}
+                {showAllPeople && (
+                  <div className={styles.loaders}>
+                    {!hasNoMorePersonPages ? <SearchLoader /> : ''}
                   </div>
+                )}
+                <div className={styles['view-more-btn-container']}>
+                  {showAllPeople
+                    ? undefined
+                    : (peopleResults.length > 3 ? (
+                        <button
+                          onClick={toggleShowAllpeople}
+                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                        >
+                          View More
+                        </button>
+                      ) : (
+                        ''
+                      )) || ''}
                 </div>
-              </section>
-            )}
+              </div>
+            </section>
+          )}
           {/* Place  */}
           {!HidePlace && placeResults.length > 0 && searchLoading === false && (
             <section className={styles.userSection}>
@@ -1422,6 +1909,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     </div>
                   ))}
+                {showAllPlace && (
+                  <div className={styles.loaders}>
+                    {!hasNoMorePlacePages ? <SearchLoader /> : ''}
+                  </div>
+                )}
                 <div className={styles['view-more-btn-container']}>
                   {showAllPlace
                     ? undefined
@@ -1508,6 +2000,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     </div>
                   ),
                 )}
+                {showAllEvent && (
+                  <div className={styles.loaders}>
+                    {!hasNoMoreProgramPages ? <SearchLoader /> : ''}
+                  </div>
+                )}
                 <div className={styles['view-more-btn-container']}>
                   {showAllEvent
                     ? undefined
@@ -1534,6 +2031,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   {!isExplore && (
                     <div className={styles.resultHeading}>Products</div>
                   )}
+
                   {ProductResults.slice(0, showAllProducts ? undefined : 3).map(
                     (page, index) => (
                       <div
@@ -1570,6 +2068,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         </div>
                       </div>
                     ),
+                  )}
+                  {showAllProducts && (
+                    <div className={styles.loaders}>
+                      {!hasNoMoreProductPages ? <SearchLoader /> : ''}
+                    </div>
                   )}
                   <div className={styles['view-more-btn-container']}>
                     {showAllProducts
