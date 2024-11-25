@@ -486,7 +486,7 @@ const AuthForm: React.FC<Props> = (props) => {
           // if (genRedirectURI) {
           //   router.push(genRedirectURI)
           // } else {
-          window.location.reload()
+          // window.location.reload()
           // }
           dispatch(setRedirectPath(genRedirectURI))
         } else {
