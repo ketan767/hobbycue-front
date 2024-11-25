@@ -1136,8 +1136,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       }
     }
     searchResult()
-  }, [queryString])
-  // }, [queryString, name, postedBy, hobby, location])
+  // }, [queryString])
+  }, [queryString, name, postedBy, hobby, location])
   // }, [queryString, filter, name, postedBy, hobby, location])
 
   const toggleShowAllusers = () => {
