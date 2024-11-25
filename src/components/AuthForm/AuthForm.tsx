@@ -95,7 +95,7 @@ const AuthForm: React.FC<Props> = (props) => {
     validatePasswordConditions(authFormData.password),
   )
   const [strength, setStrength] = useState(0)
-  const [genRedirectURI, setGenRedirectURI] = useState(redirectURI)
+  const [genRedirectURI, setGenRedirectURI] = useState('/')
   const getStrengthNum = (object: any) => {
     let num = 0
     Object.keys(object).map((key: any) => {
@@ -134,15 +134,26 @@ const AuthForm: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (router.asPath.includes('me=true')) {
-      setGenRedirectURI(`${redirectURI}/me/login`)
+      setGenRedirectURI(`/me/login`)
     } else if (router.asPath.includes('showGeneral=true')) {
-      setGenRedirectURI(`${redirectURI}/me/login/general`)
+      setGenRedirectURI(`/me/login/general`)
     } else if (router.asPath.includes('showHobby=true')) {
-      setGenRedirectURI(`${redirectURI}/me/login/hobby`)
+      setGenRedirectURI(`/me/login/hobby`)
     } else if (router.asPath.includes('showLocation=true')) {
-      setGenRedirectURI(`${redirectURI}/me/login/location`)
+      setGenRedirectURI(`/me/login/location`)
     }
   }, [router])
+  // useEffect(() => {
+  //   if (router.asPath.includes('me=true')) {
+  //     setGenRedirectURI(`${redirectURI}/me/login`)
+  //   } else if (router.asPath.includes('showGeneral=true')) {
+  //     setGenRedirectURI(`${redirectURI}/me/login/general`)
+  //   } else if (router.asPath.includes('showHobby=true')) {
+  //     setGenRedirectURI(`${redirectURI}/me/login/hobby`)
+  //   } else if (router.asPath.includes('showLocation=true')) {
+  //     setGenRedirectURI(`${redirectURI}/me/login/location`)
+  //   }
+  // }, [router])
 
   console.warn('devicee', deviceInfo)
 
@@ -458,16 +469,21 @@ const AuthForm: React.FC<Props> = (props) => {
 
         const { err: error, res: response } = await getMyProfileDetail()
         if (response?.data?.data?.user?.is_onboarded) {
-          if (router.asPath.includes('me=true')) {
-            router.push(`/me`)
-          } else if (router.asPath.includes('showGeneral=true')) {
-            router.push(`/me/general`)
-          } else if (router.asPath.includes('showHobby=true')) {
-            router.push(`/me/hobby`)
-          } else if (router.asPath.includes('showLocation=true')) {
-            router.push(`/me/location`)
-          } else if (router.pathname === '/') {
-            router.push('/community', undefined, { shallow: false })
+          // if (router.asPath.includes('me=true')) {
+          //   router.push(`/me`)
+          // } else if (router.asPath.includes('showGeneral=true')) {
+          //   router.push(`/me/general`)
+          // } else if (router.asPath.includes('showHobby=true')) {
+          //   router.push(`/me/hobby`)
+          // } else if (router.asPath.includes('showLocation=true')) {
+          //   router.push(`/me/location`)
+          // } else if (router.pathname === '/') {
+          //   router.push('/community', undefined, { shallow: false })
+          // } else {
+          //   window.location.reload()
+          // }
+          if (genRedirectURI) {
+            router.push(genRedirectURI)
           } else {
             window.location.reload()
           }
@@ -574,7 +590,7 @@ const AuthForm: React.FC<Props> = (props) => {
           <FacebookLogin
             appId="1614660215286765"
             callback={handleFacebookAuth}
-            redirectUri={genRedirectURI}
+            redirectUri={redirectURI}
             fields="name,email,picture"
             disableMobileRedirect={false}
             onFailure={(err) => console.log('Error in Facebook login', err)}
