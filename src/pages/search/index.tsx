@@ -364,6 +364,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const [placePageNum, setPlacePageNum] = useState<number>(1)
   const [programPageNum, setProgramPageNum] = useState<number>(1)
   const [productPageNum, setProductPageNum] = useState<number>(1)
+  const [postsPageNum, setPostsPageNum] = useState<number>(1)
+  const [blogsPageNum, setBlogsPageNum] = useState<number>(1)
   const [userPages, setUserPages] = useState<User[]>([])
   const [hobbyPages, setHobbyPages] = useState<hobby[]>([])
   const [peoplePages, setPeoplePages] = useState<PeopleData[]>([])
@@ -380,6 +382,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
     useState<boolean>(false)
   const [hasNoMoreProductPages, setHasNoMoreProductPages] =
     useState<boolean>(false)
+  const [hasNoMoreBlogsPages, setHasNoMoreBlogsPages] = useState<boolean>(false)
+  const [hasNoMorePostsPages, setHasNoMorePostsPages] = useState<boolean>(false)
 
   // const callForData = async (page: number) => {
   //   if (page === 1) return
@@ -652,6 +656,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
         }
         if (location) {
           searchData = { ...searchData, location: location }
+        }
+        searchData = {
+          ...searchData,
+          page: 1,
+          limit: 20,
         }
 
         const query2 = `show=true&searchValue=${searchValue}&page=1&limit=20`
@@ -1099,31 +1108,20 @@ const MainContent: React.FC<SearchResultsProps> = ({
             PostRes.err,
           )
         } else {
-          const sortedposts = PostRes.res?.data?.sort((a: any, b: any) => {
-            const indexA = a?.content
-              .toLowerCase()
-              .indexOf(searchValue.toLowerCase())
-            const indexB = b?.content
-              .toLowerCase()
-              .indexOf(searchValue.toLowerCase())
-
-            if (indexA === 0 && indexB !== 0) {
-              return -1
-            } else if (indexB === 0 && indexA !== 0) {
-              return 1
-            }
-            return a?.content
-              ?.toLowerCase()
-              ?.localeCompare(b?.content?.toLowerCase())
-          })
+          const posts = PostRes.res?.data
           console.log('posts search results:', PostRes?.res.data)
           dispatch(
             setPostsSearchResult({
-              data: sortedposts,
+              data: posts,
               message: 'Search completed successfully.',
               success: true,
             }),
           )
+          if (posts.length < 20) {
+            setHasNoMorePostsPages(true)
+          } else {
+            setHasNoMorePostsPages(false)
+          }
         }
 
         dispatch(setSearchLoading(false))
@@ -1136,7 +1134,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
       }
     }
     searchResult()
-  // }, [queryString])
+    // }, [queryString])
   }, [queryString, name, postedBy, hobby, location])
   // }, [queryString, filter, name, postedBy, hobby, location])
 
@@ -1551,6 +1549,55 @@ const MainContent: React.FC<SearchResultsProps> = ({
     setProductPageNum(productPageNum + 1)
   }
 
+  const fetchMorePostsPages = async () => {
+    if (isSearchingMore || hasNoMorePostsPages) return
+    setIsSearchingMore(true)
+
+    let searchData = {}
+    if (queryString) {
+      searchData = { ...searchData, searchValue: queryString }
+    }
+    if (postedBy) {
+      searchData = { ...searchData, postedBy: postedBy }
+    }
+    if (hobby) {
+      searchData = { ...searchData, hobby: hobby }
+    }
+    if (location) {
+      searchData = { ...searchData, location: location }
+    }
+    searchData = {
+      ...searchData,
+      page: postsPageNum + 1,
+      limit: 20,
+    }
+    const { res: PostRes, err: PostErr } = await searchPosts(searchData)
+    if (PostErr) {
+      console.error('An error occurred during the post search:', PostErr)
+      dispatch(setSearchLoading(false))
+      return
+    }
+
+    const posts = PostRes.data
+    console.log('Posts,..............', posts)
+
+    if (posts.length === 0) {
+      alert('empty')
+      setHasNoMorePostsPages(true)
+      setIsSearchingMore(false)
+      return
+    }
+    dispatch(
+      setPostsSearchResult({
+        data: [...PostsResults, ...posts],
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+    setIsSearchingMore(false)
+    setPostsPageNum(postsPageNum + 1)
+  }
+
   useEffect(() => {
     let lastCall = 0
     const handleScroll = () => {
@@ -1588,6 +1635,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
             fetchMoreProgramPages()
           } else if (filter === 'products') {
             fetchMoreProductPages()
+          } else if (filter === 'posts') {
+            fetchMorePostsPages()
           }
         }
       }
@@ -2312,6 +2361,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     </div>
                   ),
+                )}
+                {showAllPosts && (
+                  <div className={styles.loaders}>
+                    {!hasNoMorePostsPages ? <SearchLoader /> : ''}
+                  </div>
                 )}
                 <div className={styles['view-more-btn-container']}>
                   {showAllPosts
