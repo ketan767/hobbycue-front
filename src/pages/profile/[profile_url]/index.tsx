@@ -318,6 +318,7 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
       router.replace(`/profile/${user.profile_url}`)
       dispatch(openModal({ type: 'profile-address-edit', closable: true }))
     }
+    localStorage.setItem('meUrl', '')
   }, [router.asPath])
 
   return (
@@ -444,7 +445,7 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
                   }
                   setDisplayData={setDisplayAbout}
                 >
-                  <h4 className={styles['no-margin']}>About</h4> 
+                  <h4 className={styles['no-margin']}>About</h4>
                   {/* About of profile page */}
                   <div className={`ql-snow`}>
                     <div
