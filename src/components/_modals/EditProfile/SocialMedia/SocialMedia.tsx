@@ -17,6 +17,7 @@ import { RootState } from '@/redux/store'
 import SaveModal from '../../SaveModal/saveModal'
 import { getSocialNetworks } from '@/services/socialnetworks.service'
 import DropdownComponent from './Dropdown'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   data?: ProfilePageData['pageData']
@@ -212,108 +213,126 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
         switch (true) {
           case key.startsWith('facebook'):
             arr.push({
+              error : false,
               socialMedia: 'Facebook',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('instagram'):
             arr.push({
+              error : false,
               socialMedia: 'Instagram',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('twitter'):
             arr.push({
+              error : false,
               socialMedia: 'Twitter',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('youtube'):
             arr.push({
+              error : false,
               socialMedia: 'Youtube',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('soundcloud'):
             arr.push({
+              error : false,
               socialMedia: 'SoundCloud',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('pinterest'):
             arr.push({
+              error : false,
               socialMedia: 'Pinterest',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('medium'):
             arr.push({
+              error : false,
               socialMedia: 'Medium',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('telegram'):
             arr.push({
+              error : false,
               socialMedia: 'Telegram',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('tripadvisor'):
             arr.push({
+              error : false,
               socialMedia: 'TripAdvisor',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('ultimate_guitar'):
             arr.push({
+              error : false,
               socialMedia: 'Ultimate Guitar',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('strava'):
             arr.push({
+              error : false,
               socialMedia: 'Strava',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('deviantarts'):
             arr.push({
+              error : false,
               socialMedia: 'DeviantArts',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('behance'):
             arr.push({
+              error : false,
               socialMedia: 'Behance',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('goodreads'):
             arr.push({
+              error : false,
               socialMedia: 'GoodReads',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('smule'):
             arr.push({
+              error : false,
               socialMedia: 'Smule',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('chess'):
             arr.push({
+              error : false,
               socialMedia: 'Chess.com',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('bgg'):
             arr.push({
+              error : false,
               socialMedia: 'BGG',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('others'):
             arr.push({
+              error : false,
               socialMedia: 'Others',
               url: userSocialMediaUrls[key],
             })
@@ -334,6 +353,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
     {
       socialMedia: '',
       url: '',
+      error: false,
     },
   ])
 
@@ -362,7 +382,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
   }
 
   const addSocialMedia = () => {
-    const newSocialMedia = { socialMedia: '', url: '' }
+    const newSocialMedia = { socialMedia: '', url: '', error: false }
     setMediaData((prevMediaData) => [...prevMediaData.slice(), newSocialMedia])
   }
 
@@ -384,7 +404,14 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
     }
   }
 
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+
   const handleSubmit = async () => {
+    let errorSaving = false
     setSubmitBtnLoading(true)
     let reqBody: any = {}
     let socialMediaCounts: { [key: string]: number } = {}
@@ -396,6 +423,17 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
       // Increment the count for the current social media
       socialMediaCounts[socialMedia] = (socialMediaCounts[socialMedia] || 0) + 1
 
+      const defaultURL = defaultSocialMediaURLs[socialMedia as SocialMediaOption]
+      const isValidUrl =
+        url !== defaultURL && url.startsWith(defaultURL) && url.length > defaultURL.length
+
+      if (!isValidUrl) {
+        setMediaData((prev: any) => {
+          prev[i].error = true
+          return prev
+        })
+        errorSaving = true
+      }
       let key
       switch (socialMedia) {
         case 'Facebook':
@@ -514,21 +552,32 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
         reqBody[key] = url
       }
     }
-    const { err, res } = await updateMyProfileDetail({
-      social_media_urls: reqBody,
-    })
-
-    if (err) {
+    if(errorSaving === true){
       setSubmitBtnLoading(false)
-      return console.log(err)
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Please enter a valid URL',
+      })
+      return console.log('Invalid URL')
+    } else {
+      const { err, res } = await updateMyProfileDetail({
+        social_media_urls: reqBody,
+      })
+  
+      if (err) {
+        setSubmitBtnLoading(false)
+        return console.log(err)
+      }
+  
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        console.log('res', res)
+        window.location.reload()
+        dispatch(closeModal())
+      }
     }
 
-    if (err) return console.log(err)
-    if (res?.data.success) {
-      console.log('res', res)
-      window.location.reload()
-      dispatch(closeModal())
-    }
   }
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
@@ -721,8 +770,8 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                     ...item,
                     socialMedia: selectedSocialMedia,
                     url: defaultUrl,
+                    error: true
                   };
-              
                   setMediaData(updatedMediaData);
                 }}
               />
@@ -738,7 +787,12 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                   onChange={(e) => {
                     let val = e.target.value
                     onChange(idx, 'url', val)
+                    setMediaData((prev: any) =>{
+                      prev[idx].error = false
+                      return prev
+                    })
                   }}
+                  style={item?.error === true ?{ borderColor: "red"} :{}}
                 />
               </div>
               <Image
@@ -777,6 +831,16 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
           )}
         </button>
       </footer>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </div>
   )
 }

@@ -16,6 +16,7 @@ import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import { showProfileError } from '@/redux/slices/user'
 import styles from './PostCard.module.css'
 import Comment from './Comment'
+import CustomTooltip from '@/components/Tooltip/ToolTip'
 
 type Props = {
   // styles: any
@@ -66,6 +67,7 @@ const PostComments = ({
     open: false,
     _id: undefined,
   })
+  const [inputFocus, setInputFocus] = useState(false)
   const { activeModal, closable } = useSelector(
     (state: RootState) => state.modal,
   )
@@ -196,9 +198,13 @@ const PostComments = ({
                     JSON.stringify({ id: data?._id, content: e.target.value }),
                   )
                 }}
+                onFocus={() => setInputFocus(true)}
+                onBlur={() => setInputFocus(false)}
                 ref={inputRef}
                 maxRows={5}
+                style={{borderColor: inputFocus ? '#8064A2' : '#E0E0E0'}}
               />
+              <CustomTooltip title="Send">
               <button
                 type="submit"
                 className={styles['submit-btn']}
@@ -219,6 +225,7 @@ const PostComments = ({
                   />
                 </svg>
               </button>
+              </CustomTooltip>
             </form>
           </div>
         </section>
