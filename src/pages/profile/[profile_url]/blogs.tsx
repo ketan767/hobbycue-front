@@ -87,7 +87,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
       console.log('Error while creating blog at handleAddBlog()!', err)
     }
   }
-
+  console.log(data)
   return (
     <>
       <Head>
@@ -188,9 +188,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     return { notFound: true }
 
   const { err: error, res: response } = await getAllBlogs(
-    `populate=_hobbies,author&author=${user?._id}&status=Published`,
+    `populate=_hobbies,author&author=${user?._id}`,
   )
-  console.warn('blogdataaaaaa', response)
 
   const data = {
     pageData: res.data.data.users[0],
@@ -198,6 +197,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     mediaData: null,
     listingsData: null,
     blogsData: response?.data?.data?.blog,
+    response: response?.data,
   }
   return {
     props: {

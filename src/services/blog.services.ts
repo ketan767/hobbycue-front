@@ -3,7 +3,9 @@ import axiosInstance, { operation } from './_axios'
 /** Get User Details `GET /api/user/?{query}`  */
 export const getAllBlogs = async (query: string): Promise<ApiReturnObject> => {
   try {
-    const res = await axiosInstance.get(`/blogs/?${query}`)
+    let url = `/blogs/?${query}`
+    console.log(url)
+    const res = await axiosInstance.get(url)
     return { res: res, err: null }
   } catch (error) {
     console.error(error)

@@ -29,6 +29,8 @@ import BlogContainer from '@/components/Blog/BlogContainer'
 import QuillEditor from '@/pages/brand/QuillEditor'
 import dynamic from 'next/dynamic'
 import FilledButton from '@/components/_buttons/FilledButton'
+import ModalWrapper from '@/components/Modal'
+import EditBlog from '@/components/_modals/EditBlog/EditBlog'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 type Props = {
@@ -36,7 +38,23 @@ type Props = {
     blog_url?: any
   }
 }
-
+export const downarrow = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="25"
+    height="25"
+    viewBox="0 0 25 25"
+    fill="none"
+  >
+    <path
+      d="M6.85547 9.50195L12.8555 15.502L18.8555 9.50195"
+      stroke="#8064A2"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+)
 const BlogPage: React.FC<Props> = ({ data }) => {
   const [isAuthor, setIsAuthor] = useState(false)
   const [isAuthorizedToView, setIsAuthorizedToView] = useState(false)
@@ -48,6 +66,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   const cameraInputRef = useRef<HTMLInputElement | null>(null)
   const [showStickyHeader, setShowStickyHeader] = useState(false)
   const [btnLoading, setBtnLoading] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -217,9 +236,9 @@ const BlogPage: React.FC<Props> = ({ data }) => {
 
   const isMobileScreen = isMobile()
 
-  console.warn('Blog Data', data)
+  // console.warn('Blog Data', data)
 
-  console.log('asifs blog', blog)
+  // console.log('asifs blog', blog)
 
   return (
     <>
@@ -240,26 +259,37 @@ const BlogPage: React.FC<Props> = ({ data }) => {
       {isAuthorizedToView && (
         <div className={styles.all}>
           <div className={styles['blog-header']}>
-            {isEditing ? (
-              <textarea
-                className={styles['blog-title'] + ' ' + styles.editInput}
-                placeholder="Title"
-                value={blog.title}
-                name="title"
-                onChange={(e) => handleChange(e, 'title')}
-                onBlur={() => handleEditBlog('title')}
-                ref={titleRef}
-                onKeyDown={(e) => e.key === 'Enter' && titleRef.current?.blur()}
-                rows={3}
-                // onInput={function (e) {
-                //   const target = e.target as HTMLTextAreaElement
-                //   target.style.height = 'auto'
-                //   target.style.height = target.scrollHeight + 'px'
-                // }}
-              />
-            ) : (
-              <h1 className={styles['blog-title']}>{data?.blog_url?.title}</h1>
-            )}
+            <div className={styles.wrapper}>
+              <div className={styles.buttonWrapper}>
+                <button onClick={() => setIsModalOpen(true)}>
+                  {downarrow}
+                </button>
+              </div>
+              {isEditing ? (
+                <textarea
+                  className={styles['blog-title'] + ' ' + styles.editInput}
+                  placeholder="Title"
+                  value={blog.title}
+                  name="title"
+                  onChange={(e) => handleChange(e, 'title')}
+                  onBlur={() => handleEditBlog('title')}
+                  ref={titleRef}
+                  onKeyDown={(e) =>
+                    e.key === 'Enter' && titleRef.current?.blur()
+                  }
+                  rows={3}
+                  // onInput={function (e) {
+                  //   const target = e.target as HTMLTextAreaElement
+                  //   target.style.height = 'auto'
+                  //   target.style.height = target.scrollHeight + 'px'
+                  // }}
+                />
+              ) : (
+                <h1 className={styles['blog-title']}>
+                  {data?.blog_url?.title}
+                </h1>
+              )}
+            </div>
             {isEditing ? (
               <textarea
                 className={styles['blog-desc'] + ' ' + styles.editInput}
@@ -400,7 +430,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                     className={`${styles['date-and-hobbies']} ${styles.res}`}
                   >
                     {data?.blog_url?._hobbies?.map((hobby: any, idx: any) => (
-                      <span>
+                      <span key={idx}>
                         {hobby?.hobby?.display}
                         {idx !== data?.blog_url?._hobbies?.length - 1
                           ? ', '
@@ -620,6 +650,10 @@ const BlogPage: React.FC<Props> = ({ data }) => {
           />
         </div>
       )}
+
+      <ModalWrapper isOpen={isModalOpen} onClose={setIsModalOpen}>
+        <EditBlog setIsModalOpen={setIsModalOpen} />
+      </ModalWrapper>
     </>
   )
 }
