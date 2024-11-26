@@ -265,6 +265,7 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
   }, [selectQuery, options]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    setHighlightIndex(0);
     if (!showOptions || filteredOptions.length === 0) return;
 
     if (e.key === "ArrowDown") {
