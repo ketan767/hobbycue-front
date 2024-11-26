@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  setUserName,
   showAllTrue,
   toggleShowAllBlogs,
   // toggleShowAll,
@@ -22,6 +23,8 @@ import Program from '../../assets/svg/Search/Program.svg'
 import Product from '../../assets/svg/Search/Product.svg'
 import Blogs from '../../assets/svg/Search/blogs.svg'
 import Posts from '../../assets/svg/Search/Posts.svg'
+import Classes from '../../assets/svg/Search/classes.svg'
+import Rentals from '../../assets/svg/Search/rentals.svg'
 import styles from './styles.module.css'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
@@ -56,6 +59,8 @@ const SearchPageFilter = () => {
   const showAllPosts = filter === 'posts'
   const showAllBlogs = filter === 'blogs'
   const showAllHobbies = filter === 'hobby'
+  const showAllClasses = filter === 'classes'
+  const showAllRentals = filter === 'rentals'
 
   const userSearchResults = useSelector(
     (state: RootState) => state.search.userSearchResults.data,
@@ -112,6 +117,10 @@ const SearchPageFilter = () => {
       setActiveFilter('blogs')
     } else if (showAllPosts === true) {
       setActiveFilter('posts')
+    } else if (showAllClasses === true) {
+      setActiveFilter('classes')
+    } else if (showAllRentals === true) {
+      setActiveFilter('rentals')
     }
   }, [
     showAll,
@@ -123,17 +132,20 @@ const SearchPageFilter = () => {
     showAllHobbies,
     showAllBlogs,
     showAllPosts,
+    showAllClasses,
+    showAllRentals,
   ])
 
   const handleFilterClick = (filterType: any) => {
     if (isExplore) return
     if (activeFilter === filterType) {
-      setActiveFilter('all')
-      router.push({
-        pathname: '/search',
-        query: { ...router.query, filter: '' },
-      })
-      dispatch(showAllTrue())
+      return
+      // setActiveFilter('all')
+      // router.push({
+      //   pathname: '/search',
+      //   query: { ...router.query, filter: '' },
+      // })
+      // dispatch(showAllTrue())
     } else {
       setActiveFilter(filterType)
       switch (filterType) {
@@ -164,11 +176,17 @@ const SearchPageFilter = () => {
         case 'posts':
           dispatch(toggleShowAllPosts())
           break
+        case 'classes':
+          dispatch(toggleShowAllEvent())
+          break
+        case 'rentals':
+          dispatch(toggleShowAllProducts())
+          break
         default:
           break
       }
+      const { filter, name, hobby, location, postedBy, ...rest } = router.query
       if (filterType === 'all') {
-        const { filter, ...rest } = router.query
         router.push({
           pathname: '/search',
           query: {
@@ -179,7 +197,7 @@ const SearchPageFilter = () => {
         router.push({
           pathname: '/search',
           query: {
-            ...router.query,
+            ...rest,
             filter: filterType,
           },
         })
@@ -207,7 +225,9 @@ const SearchPageFilter = () => {
         <div className={styles['filters-container']}>
           <div
             className={getFilterItemClass('all')}
-            onClick={() => handleFilterClick('all')}
+            onClick={() => {
+              handleFilterClick('all')
+            }}
           >
             <Image src={hobbycue} alt="hobbycue" />
             All of HobbyCue
@@ -278,6 +298,24 @@ const SearchPageFilter = () => {
           >
             <Image src={Product} alt="Product" />
             Products
+          </div>
+          <div
+            className={getFilterItemClass('classes')}
+            onClick={() => {
+              handleFilterClick('classes')
+            }}
+          >
+            <Image src={Classes} alt="Product" />
+            Classes
+          </div>
+          <div
+            className={getFilterItemClass('rentals')}
+            onClick={() => {
+              handleFilterClick('rentals')
+            }}
+          >
+            <Image src={Rentals} alt="Rentals" />
+            Rentals
           </div>
           <div
             className={getFilterItemClass('posts')}

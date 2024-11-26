@@ -59,7 +59,7 @@ const AboutEditor: React.FC<Props> = ({
   }, [])
 
   return (
-    <div className={`about-quill-container  ${error ? 'quill-error' : ''}  `}>
+    <div className={`about-quill-container =  ${error ? 'quill-error' : ''}  `}>
       <ReactQuill
         ref={inputRef}
         theme="snow"
@@ -67,7 +67,7 @@ const AboutEditor: React.FC<Props> = ({
         onChange={(updatedValue) => {
           onChange(updatedValue)
         }}
-        className={`${styles.quill}`}
+        className={`${styles.quill} ${styles['ql-editor']}`}
         placeholder={placeholder}
         modules={{
           toolbar: {
@@ -79,42 +79,11 @@ const AboutEditor: React.FC<Props> = ({
                 { list: 'ordered' },
                 { list: 'bullet' },
               ],
-              //   [{ list: 'ordered' }, { list: 'bullet' }],
               ['link'],
             ],
           },
         }}
       />
-      <style>
-        {`
-         .ql-editor.ql-indent-1{
-                          padding-left:4px;
-                        }
-                        .ql-editor ul, 
-                        .ql-editor ol {
-                        font-family:'Poppins';
-
-                          padding-left: 4px; 
-                          font-size:14px;
-                          text-align:justify; 
-                        }
-
-                        .ql-editor a {
-                        font-family:'Poppins';
-
-                          color: rgb(128, 100, 162);  
-                          text-decoration: none !important;
-                          font-size:14px;
-                          text-align:justify;
-                        }
-                        .ql-editor p {
-                        font-family:'Poppins';
-                          font-size:14px;
-                          text-align:justify;
-                        }
-                        
-        `}
-      </style>
     </div>
   )
 }

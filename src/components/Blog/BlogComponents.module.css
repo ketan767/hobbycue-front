@@ -1,0 +1,134 @@
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+.actions > button,
+.btn {
+  width: 48px;
+  height: 40px;
+  border-radius: 10px;
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+}
+
+@keyframes fadeDownWithScale {
+  from {
+    opacity: 0;
+    transform: translate3d(10px, -20px, 0);
+    scale: 0.8;
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    scale: 1;
+  }
+}
+
+.menu {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  right: 0;
+  top: 50px;
+  min-width: 100px;
+  background: white;
+  padding: 4px;
+  border-radius: 4px;
+  box-shadow: 0px 8px 12px 0px rgba(147, 156, 163, 0.12),
+    0px 0px 2px 0px rgba(147, 156, 163, 0.36);
+  animation: fadeDownWithScale 0.3s ease forwards;
+}
+
+.menu button {
+  width: 100%;
+  padding: 11px 12px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background: transparent;
+  text-align: left;
+  color: var(--Grey-Darker, #6d747a);
+  border-radius: 4px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+
+  /* Text sm/Regular */
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px; /* 128.571% */
+  letter-spacing: 0.07px;
+}
+
+.menu button:hover {
+  background: rgba(128, 100, 162, 0.25);
+}
+
+.sticky {
+  height: 110px;
+  background-color: white;
+  position: sticky;
+  top: 78px;
+  left: 0;
+  z-index: 10;
+}
+
+.flexDiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+
+.flexDiv h1 {
+  width: 569px;
+  /* Typography */
+  color: var(--Grey-Darkest, #08090a);
+  font-family: Poppins;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 32px;
+}
+
+.blogContainer {
+  width: 872px;
+  height: 100%;
+  margin: 0 auto;
+}
+
+@media (max-width: 1100px) {
+  .actions {
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.12);
+    padding: 6px;
+    margin-bottom: 12px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .commentButton {
+    font-family: Poppins;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    text-align: left;
+    color: #8064a2;
+    background-color: transparent;
+    width: 99px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #8064a2;
+    border-radius: 8px;
+    margin: 0;
+  }
+}

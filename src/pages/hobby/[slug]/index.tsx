@@ -377,7 +377,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
                         </ul>
                       </>
                     ) : (
-                      <span>No further sub-classification.</span>
+                      <span style={isMobile ? {marginTop:"16px"} : {}} >No further sub-classification.</span>
                     )}
                   </div>
                 </PageContentBox>
@@ -478,7 +478,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
                           </ul>
                         </>
                       ) : (
-                        <span>No further sub-classification.</span>
+                        <span style={isMobile ? {marginTop:"16px"} : {}}>No further sub-classification.</span>
                       )}
                       <li className={styles['active']}></li>
                     </ul>

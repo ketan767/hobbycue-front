@@ -81,7 +81,7 @@
   display: none;
 }
 @media screen and (max-width: 1100px) {
-  /* 💥 asifs can cause problem  */
+  /** 💥 asifs can cause problem  */
   /* .custom-backdrop{
     top: 48px;
   } */

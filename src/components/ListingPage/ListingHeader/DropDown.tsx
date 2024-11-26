@@ -6,21 +6,18 @@ import { RootState } from '@/redux/store'
 import { showProfileError } from '@/redux/slices/user'
 import { useRouter } from 'next/router'
 import { updateListingLayoutMode, updateViewAs } from '@/redux/slices/site'
+import { isMobile } from '@/utils'
 
 type Props = {
   handleClose?: any
   userType: 'edit' | 'anonymous' | 'page'
   showFeatureUnderDevelopment?: () => void
-  setViewAs?: React.Dispatch<
-    React.SetStateAction<'' | 'signed-in' | 'not-signed-in' | 'print'>
-  >
 }
 
 const Dropdown: React.FC<Props> = ({
   handleClose,
   userType,
   showFeatureUnderDevelopment,
-  setViewAs,
 }) => {
   const [showViewAsOptions, setShowViewAsOptions] = useState(false)
   const dispatch = useDispatch()
@@ -136,22 +133,11 @@ const Dropdown: React.FC<Props> = ({
 
   const handleClickViewAs = (option: string) => {
     dispatch(updateListingLayoutMode('view'))
-    switch (option) {
-      case 'signed-in':
-        setViewAs?.('signed-in')
-        break
-      case 'not-signed-in':
-        setViewAs?.('not-signed-in')
-        dispatch(updateViewAs('not-signed-in')) // for hiding the contact details in page
-        break
-      case 'print':
-        setViewAs?.('print')
-        break
-      default:
-        console.log('Wrong view as option in handleClickViewAs()')
-    }
+    dispatch(updateViewAs(option))
     handleClose()
   }
+
+  const isMob = isMobile()
 
   return (
     <>
@@ -161,12 +147,22 @@ const Dropdown: React.FC<Props> = ({
             <>
               <li ref={supportRef}>Support</li>
               <li ref={transferRef}>Transfer</li>
-              <li ref={viewAsRef} className={styles.viewAsLi}>
+              <li
+                ref={viewAsRef}
+                className={styles.viewAsLi}
+                onMouseEnter={() =>
+                  isMob ? null : setShowViewAsOptions((prev) => !prev)
+                }
+                // onMouseLeave={() => setShowViewAsOptions(false)}
+              >
                 <div onClick={() => setShowViewAsOptions((prev) => !prev)}>
                   View As
                 </div>
                 {showViewAsOptions ? (
-                  <ul className={styles.viewAsOptions}>
+                  <ul
+                    className={styles.viewAsOptions}
+                    onMouseEnter={() => setShowViewAsOptions(true)}
+                  >
                     <li onClick={() => handleClickViewAs('signed-in')}>
                       User Signed In
                     </li>
