@@ -385,7 +385,7 @@ const PostCard: React.FC<Props> = (props) => {
             </div>
             <div ref={editReportDeleteRef} className={styles.actionIcon}>
               {openAction === true && (
-                <div className={styles.editReportDelete}>
+                <div style={{ marginTop:"12px" }} className={styles.editReportDelete}>
                   {postedByMe && (
                     <>
                       <button
@@ -457,7 +457,7 @@ const PostCard: React.FC<Props> = (props) => {
                 </defs>
               </svg>
               {optionsActive && fromProfile && (
-                <ul className={styles.optionsContainer}>
+                <ul style={{ marginTop:"12px" }} className={styles.optionsContainer}>
                   <li
                     onClick={
                       onPinPost !== undefined
