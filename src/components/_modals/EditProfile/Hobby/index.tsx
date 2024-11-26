@@ -1030,7 +1030,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             if (res?.data.success) {
               setShowAddGenreModal(false)
               setErrorOrmsg(
-                `<strong>${hobbyInputValue}-${genreInputValue}</strong> has been requested. You can add it later if approved.`,
+                `<strong>${hobbyInputValue} - ${genreInputValue}</strong> has been requested. You can add it later if approved.`,
               )
               setHobbyInputValue('')
               setGenreInputValue('')
