@@ -8,7 +8,7 @@ interface ModalProps {
   children: React.ReactNode
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+const ModalWrapper: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   const [isAnimating, setIsAnimating] = useState(false)
 
   useEffect(() => {
@@ -39,4 +39,4 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   )
 }
 
-export default Modal
+export default ModalWrapper
