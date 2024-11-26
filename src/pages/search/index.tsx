@@ -1582,7 +1582,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
     console.log('Posts,..............', posts)
 
     if (posts.length === 0) {
-      alert('empty')
+      // alert('empty')
       setHasNoMorePostsPages(true)
       setIsSearchingMore(false)
       return
