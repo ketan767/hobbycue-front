@@ -495,9 +495,13 @@ flex: 1 0 0;
     /* overflow: hidden; */
   }
 
+  .editor-container {
+    width: 100% !important;
+  }
+
   .modal-wrapper {
     /* max-width: 350px; */
-    width: 100%;
+    width: 100vw !important;
     border-radius: 0;
     height: 100%;
   }
