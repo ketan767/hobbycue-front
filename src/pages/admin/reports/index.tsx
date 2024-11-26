@@ -163,9 +163,17 @@ const AdminReport: React.FC = () => {
     }
   }
   function extractPath(url: any) {
-    const urlObject = new URL(url)
-    return urlObject.pathname.slice(1)
+    console.log(url);
+    
+    try {
+      const urlObject = new URL(url);
+      return urlObject.pathname.slice(1);
+    } catch (error) {
+      console.error("Invalid URL:", url);
+      return url; // or handle it in a way that suits your use case
+    }
   }
+  
 
   const pagesLength = (user: any) => {
     return user?._listings?.length || 0

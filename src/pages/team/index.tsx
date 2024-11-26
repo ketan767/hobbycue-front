@@ -2,6 +2,9 @@ import Link from 'next/link'
 import styles from './styles.module.css'
 import Footer from '@/components/Footer/Footer'
 import Head from 'next/head'
+import bhaskar_img from '@/assets/image/Bhaskar-Pic.png'
+import Purnima_img from '@/assets/image/Purnima-Pic.png'
+import Team_img from '@/assets/image/Team-hobbycue-600x400.jpg'
 
 export default function index() {
   return (
@@ -32,7 +35,7 @@ export default function index() {
             </p>
             <div className={styles.imgContent}>
               <img
-                src="http://blog.hobbycue.com/wp-content/uploads/2018/06/Purnima-Pic.png"
+                src={Purnima_img.src}
                 alt="Purnima Sambasivan, Co-Founder"
               />
               <div>
@@ -63,7 +66,7 @@ export default function index() {
             </p>
             <div className={styles.imgContent}>
               <img
-                src="http://blog.hobbycue.com/wp-content/uploads/2018/06/Bhaskar-Pic.png"
+                src={bhaskar_img.src}
                 alt="Bhaskar Subramanian, Co-Founder"
               />
               <div>
@@ -98,7 +101,7 @@ export default function index() {
               through his blog on hobbycue.com.
             </p>
             <img
-              src="https://blog.hobbycue.com/wp-content/uploads/2019/07/Team-hobbycue-600x400.jpg"
+              src={Team_img.src}
               alt="Purnima and Bhaskar"
             />
           </div>

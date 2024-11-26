@@ -1133,3 +1133,57 @@
   border-radius: 8px;
   border: 1px solid rgb(var(--primary-50-rgb));
 }
+
+.modal-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.modal-item:hover {
+  background-color: #f0f0f0;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-name {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Parent container relative positioning */
+.invite-wrapper {
+  position: relative;
+}
+
+/* Modal styling */
+.modal-container {
+  
+  position: absolute;
+  top: 94%; /* Position below the input */
+  left: 0;
+  width: 100%; /* Match input width */
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 10; /* Ensure it appears above other content */
+  border-radius: 4px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+/* Modal list items */
+.modal-list li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.modal-list li:hover {
+  background-color: #f0f0f0;
+}
