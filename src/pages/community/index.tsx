@@ -26,6 +26,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
+  // First time user onboarding modal 07B002-39
   const ShowWelcomeModal = async () => {
     const { err: error, res: response } = await getMyProfileDetail()
     if (

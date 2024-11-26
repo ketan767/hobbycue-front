@@ -6,13 +6,13 @@ import { useSelector } from 'react-redux'
 const index = () => {
   const router = useRouter()
   const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
-  const [isInitialized, setIsInitialized] = useState(false)
+  // const [isInitialized, setIsInitialized] = useState(false)
 
   useEffect(() => {
-    if (!isInitialized) {
-      setIsInitialized(true)
-      return
-    }
+    // if (!isInitialized) {
+    //   setIsInitialized(true)
+    //   return
+    // }
     const handleRedirect = () => {
       if (isLoggedIn && user?.profile_url) {
         router.push(`/profile/${user.profile_url}?showGeneral=true`)
@@ -20,11 +20,11 @@ const index = () => {
     }
 
     handleRedirect()
-  }, [isLoggedIn, user?.profile_url, router, isInitialized])
+  }, [isLoggedIn, user?.profile_url, router])
 
-  if (!isInitialized) {
-    return null
-  }
+  // if (!isInitialized) {
+  //   return null
+  // }
 
   return null
 }

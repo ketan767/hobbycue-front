@@ -133,9 +133,10 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
     }
   }
   const updatevideoThumbnail = async () => {
-    getMetadata(data.video_url).then((res: any) => {
-      setMetaDataImg(res?.res?.data.data.data?.image ?? '')
-    })
+    if (data.video_url)
+      getMetadata(data.video_url).then((res: any) => {
+        setMetaDataImg(res?.res?.data.data.data?.image ?? '')
+      })
   }
 
   useEffect(() => {
