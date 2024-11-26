@@ -963,6 +963,57 @@ font-family:'Poppins';
   .product-name-container .name {
     padding-top: 12px;
   }
+  .mobileViewAs {
+    padding: 12px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+
+    border-top: 1px solid var(--Blue1, #0096C8);
+    border-bottom: 1px solid var(--Blue1, #0096C8);
+    background: var(--Base-White, #FFF);
+    box-shadow: 0px 0px 2px 0px rgba(147, 156, 163, 0.36), 0px 8px 12px 0px rgba(147, 156, 163, 0.12);
+  }
+  .mobileViewAs > * {
+    width: 100%;
+  }
+  .viewButtonPrint {
+    margin: auto;
+  }
+  .viewButton {
+    margin-block: auto;
+    padding-block: 8px;
+    display: flex;
+    width: 136px;
+    box-shadow: none;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+
+    color: var(--Blue1, #0096C8);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 16px; /* 114.286% */
+  }
+  .viewingAs {
+    color: var(--Blue1, #0096C8);
+    font-family: Poppins;
+    font-size: 13px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 20px; /* 153.846% */
+  }
+  .viewingAs span {
+    color: var(--Blue1, #0096C8);
+    font-family: Poppins;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+  }
 }
 
 /* Desktop only */

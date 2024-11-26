@@ -235,7 +235,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 12px 40px;
+  padding: 12px 0px;
   gap: 24px;
 }
 .title {
@@ -267,7 +267,7 @@
 }
 
 .hobby-list {
-  padding: 16px 40px 40px 40px;
+  padding: 16px 0px 40px 0px;
   list-style: none;
   display: flex;
   flex-wrap: wrap;

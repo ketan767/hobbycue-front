@@ -61,14 +61,17 @@ const Home: React.FC<PropTypes> = function () {
   const openLogin = () => {
     dispatch(openModal({ type: 'auth', closable: true }))
   }
-  const user = useSelector((state: RootState) => state.user)
+  // const user = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, redirectPath } = useSelector(
+    (state: RootState) => state.user,
+  )
   const router = useRouter()
 
   useEffect(() => {
-    if (user.isLoggedIn) {
+    if (isLoggedIn) {
       checkIfLoggin()
     }
-  }, [user.isLoggedIn])
+  }, [isLoggedIn])
 
   const checkIfLoggin = async () => {
     const { err, res } = await getMyProfileDetail()
@@ -76,16 +79,27 @@ const Home: React.FC<PropTypes> = function () {
       console.warn('profileurl', res?.data?.data?.user)
       router.push(`/profile/${res?.data?.data?.user?.profile_url}`)
     } else {
-      if (router.asPath.includes('me=true')) {
+      if (redirectPath === '/me') {
         router.push(`/me`)
-      } else if (router.asPath.includes('showGeneral=true')) {
+      } else if (redirectPath === '/me/general') {
         router.push(`/me/general`)
-      } else if (router.asPath.includes('showHobby=true')) {
+      } else if (redirectPath === '/me/hobby') {
         router.push(`/me/hobby`)
-      } else if (router.asPath.includes('showLocation=true')) {
+      } else if (redirectPath === '/me/location') {
         router.push(`/me/location`)
       } else {
-        router.push(`/community`)
+        const path = localStorage.getItem('meUrl')
+        if (path === '/me') {
+          router.push(`/me`)
+        } else if (path === '/me/general') {
+          router.push(`/me/general`)
+        } else if (path === '/me/hobby') {
+          router.push(`/me/hobby`)
+        } else if (path === '/me/location') {
+          router.push(`/me/location`)
+        } else {
+          router.push(`/community`)
+        }
       }
     }
   }

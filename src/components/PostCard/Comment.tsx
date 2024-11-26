@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './PostCard.module.css'
 import { format, render, cancel, register } from 'timeago.js'
 import CommentCheckWithUrl from './CommentCheckWithUrl'
@@ -20,6 +20,8 @@ interface Props {
 const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
   const [openAction, setOpenAction] = useState(false)
   const [showDelModal, setShowDelModal] = useState(false)
+  const [editComment, setEditComment] = useState(false)
+  const [editCommentContent, setEditCommentContent] = useState(comment.content)
   const dispatch = useDispatch()
   const { activeProfile, user, isLoggedIn } = useSelector(
     (state: RootState) => state.user,
@@ -72,6 +74,19 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
     setShowDelModal(false)
   }
 
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const handleInputChange = (e: any) => {
+    setEditCommentContent(e.target.value);
+
+    // Adjust textarea height to fit content
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto'; // Reset height to calculate the new height
+      textarea.style.height = `${textarea.scrollHeight}px`; // Set to scrollHeight
+    }
+  };
+
   return (
     <div key={comment._id} className={styles['comment']}>
       {/* Profile Image */}
@@ -117,11 +132,32 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
         </header>
 
         {/* Content */}
-        <CommentCheckWithUrl>
-          {comment.content.split('\n').map((line: any, index: number) => (
-            <div key={index}>{line}</div>
-          ))}
-        </CommentCheckWithUrl>
+        {
+          editComment ? (
+            <textarea
+              ref={textareaRef}
+              onChange={handleInputChange}
+              value={editCommentContent}
+              style={{
+                width: '100%',
+                marginTop: '12px',
+                border: 'none',
+                outline: 'none',
+                backgroundColor: 'transparent',
+                fontSize: '14px',
+                lineHeight: '20px',
+                overflow: 'hidden',
+                maxHeight: '200px', 
+              }}
+            />
+          ) : (
+            <CommentCheckWithUrl>
+              {comment.content.split('\n').map((line: any, index: number) => (
+                <div key={index}>{line}</div>
+              ))}
+            </CommentCheckWithUrl>
+          )
+        }
 
         {/* Footer */}
         <footer>
@@ -198,23 +234,17 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
             </CustomizedTooltips>
 
             {openAction === true && (
-              <div className={styles.editReportDelete}>
+              <div style={{ marginTop:"12px" }} className={styles.editReportDelete}>
                 {postedByMe && (
                   <>
-                    {/* <button
+                    <button
                       onClick={() => {
-                        dispatch(
-                          openModal({
-                            type: 'update-post',
-                            closable: true,
-                            propData: data,
-                          }),
-                        )
+                        setEditComment(true)
                         setOpenAction(false)
                       }}
                     >
                       Edit
-                    </button> */}
+                    </button>
                     <button
                       onClick={() => {
                         setShowDelModal(true)
