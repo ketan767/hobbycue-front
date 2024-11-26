@@ -26,7 +26,7 @@ export interface Page {
   event_weekdays: any
 }
 
-interface hobbies {
+export interface hobbies {
   _id: string
   add_count: number
   cover_image: string | null
@@ -45,7 +45,7 @@ interface hobbies {
   tags: string[]
 }
 
-interface blogs {
+export interface blogs {
   _id: string
   url: string
   title: string
@@ -55,7 +55,7 @@ interface blogs {
   createdAt: string
 }
 
-interface posts {
+export interface posts {
   _id: string
   _author: any
   author_type: string
