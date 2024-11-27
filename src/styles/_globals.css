@@ -1,3 +1,9 @@
+.truncateOneLine {
+  white-space: nowrap; /* Prevents text from wrapping to the next line */
+  overflow: hidden;    /* Ensures content beyond the element's width is hidden */
+  text-overflow: ellipsis; /* Displays ellipsis (...) for overflowing text */
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -87,7 +93,8 @@ button:disabled {
 } */
 
 .site-container {
-  max-width: var(--max-width);
+  /* max-width: var(--max-width); */
+  max-width: 1240px;
   margin: auto;
 }
 
@@ -295,7 +302,7 @@ select:-webkit-autofill {
 }
 .ql-container {
   font-size: 14px !important;
-  max-width: 800px;
+  /* max-width: 800px; */
   width: 100%;
   font-family: 'Poppins';
 }

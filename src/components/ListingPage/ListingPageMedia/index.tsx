@@ -246,7 +246,13 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
           (!listingModalData?.images ||
             listingModalData?.images?.length < 1) && (
             <section className={`${styles['dual-section-wrapper']}`}>
-              <div className={styles['no-posts-div']}>
+              <div 
+              style={
+                isMobile
+                  ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
+                  : undefined
+              }
+              className={styles['no-posts-div']}>
                 <p className={styles['no-posts-text']}>No media available</p>
               </div>
               {!isMobile && <div className={styles['no-posts-div']}></div>}

@@ -27,6 +27,12 @@ import {
   setPageType,
 } from '@/redux/slices/explore'
 import AccordionMenu2 from '../explore/nestedDropdown/AccordionMenu2'
+import {
+  setPostedBy,
+  setUserHobby,
+  setUserLocation,
+  setUserName,
+} from '@/redux/slices/search'
 type DropdownListItem = {
   _id: string
   display: string
@@ -47,6 +53,7 @@ const NoResult = () => {
     programs: 'Programs',
     products: 'Products',
     blogs: 'Blogs',
+    posts: 'Posts',
   }
   const isMob = isMobile()
   const { query } = router
@@ -58,6 +65,9 @@ const NoResult = () => {
     page_type,
     location: currLocation,
   } = useSelector((state: RootState) => state.explore)
+  const { userName, userHobby, userLocation } = useSelector(
+    (state: RootState) => state.search,
+  )
   const dispatch = useDispatch()
   // const [hobby, setHobby] = useState('')
   // const [category, setCategory] = useState('')
@@ -65,6 +75,8 @@ const NoResult = () => {
   // const [location, setLocation] = useState('')
   const searchHobbyRef = useRef<HTMLInputElement>(null)
   const locationDropdownRef = useRef<HTMLInputElement>(null)
+  const nameInputRef = useRef<HTMLInputElement>(null)
+  const postedByRef = useRef<HTMLInputElement>(null)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState(false)
   const [showAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   // const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
@@ -72,6 +84,9 @@ const NoResult = () => {
   const [focusedHobbyIndex, setFocusedHobbyIndex] = useState<number>(-1)
   const [focusedLocationIdx, setFocusedLocationIdx] = useState<number>(-1)
   const [isHobbySelected, setIsHobbySelected] = useState<boolean>(false)
+  const [isLocationSelected, setIsLocationSelected] = useState<boolean>(false)
+  const [currUserName, setCurrUserName] = useState<string>('')
+  const [currPostedBy, setCurrPostedBy] = useState<string>('')
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     ExtendedDropdownListItem[]
@@ -101,6 +116,7 @@ const NoResult = () => {
   const handleHobbyInputChange = async (e: any) => {
     // setHobby(e.target.value)
     dispatch(setHobby(e.target.value))
+
     setFocusedHobbyIndex(-1)
 
     if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
@@ -146,16 +162,68 @@ const NoResult = () => {
         e.stopPropagation()
         if (hobby.length !== 0 && focusedHobbyIndex === -1) {
           //AddButtonRef.current?.click()
-          handleSubmit()
+          if (filter === 'users' || filter === 'posts') {
+          } else {
+            handleSubmit()
+          }
         } else if (focusedHobbyIndex !== -1) {
           setShowHobbyDropdown(false)
           if (showHobbyDropdown) {
             const val = hobbyDropdownList[focusedHobbyIndex]?.display || hobby
+            // if (filter === 'users') {
+            //   dispatch(
+            //     setUserHobby(
+            //       hobbyDropdownList[focusedHobbyIndex]?.display || hobby,
+            //     ),
+            //   )
+            // }
             dispatch(setHobby(val))
           }
 
           if (isHobbySelected) {
-            handleSubmit()
+            if (filter === 'users') {
+              handleUserProfileSearch()
+              // dispatch(setUserHobby(hobby))
+              // dispatch(setUserLocation(currLocation))
+              // let query = {}
+              // query = { ...query, filter: 'users' }
+              // if (currUserName) {
+              //   query = { ...query, name: currUserName }
+              // }
+              // if (hobby) {
+              //   query = { ...query, hobby: hobby }
+              // }
+              // if (currLocation) {
+              //   query = { ...query, location: currLocation }
+              // }
+              // router.push({
+              //   pathname: `/search`,
+              //   query: query,
+              // })
+            } else if (filter === 'posts') {
+              handlePostsSearch()
+
+              // dispatch(setUserHobby(hobby))
+              // dispatch(setUserLocation(currLocation))
+              // // dispatch(Ser)
+              // let query = {}
+              // query = { ...query, filter: 'posts' }
+              // if (currPostedBy) {
+              //   query = { ...query, postedBy: currPostedBy }
+              // }
+              // if (hobby) {
+              //   query = { ...query, hobby: hobby }
+              // }
+              // if (userLocation) {
+              //   query = { ...query, location: userLocation }
+              // }
+              // router.push({
+              //   pathname: `/search`,
+              //   query: query,
+              // })
+            } else {
+              handleSubmit()
+            }
           }
           setIsHobbySelected(true)
           // searchResult(undefined, val, undefined)
@@ -196,6 +264,7 @@ const NoResult = () => {
     setAddressData((prev) => ({ ...prev, [name]: value }))
     // alert(value)
     dispatch(setLocation(value))
+
     if (Addressdata.street?.length > 1) {
       setShowAutoAddress(true)
       try {
@@ -288,24 +357,131 @@ const NoResult = () => {
         dispatch(setLocation(suggestions[upIndex]?.description[0]))
         break
       case 'Enter':
-        if (Addressdata.street.trim().length !== 0 && !showAutoAddress) {
-        } else if (focusedLocationIdx !== -1 && showAutoAddress) {
-          handleSelectAddressTwo(
-            suggestions[focusedLocationIdx]?.description?.join(', '),
-            suggestions[focusedLocationIdx]?.place_id,
-          )
-          console.log(
-            'Changed location',
-            suggestions[focusedLocationIdx]?.description[0],
-          )
-          dispatch(setLocation(suggestions[focusedLocationIdx]?.description[0]))
+        if (
+          Addressdata.street.trim().length !== 0 &&
+          focusedLocationIdx === -1
+        ) {
+          if (filter === 'users') {
+            handleUserProfileSearch()
+            // alert('Hiii')
+            // dispatch(setUserHobby(hobby))
+            // dispatch(setUserLocation(currLocation))
+            // let query = {}
+            // query = { ...query, filter: 'users' }
+            // if (currUserName) {
+            //   query = { ...query, name: currUserName }
+            // }
+            // if (hobby) {
+            //   query = { ...query, hobby: hobby }
+            // }
+            // if (currLocation) {
+            //   query = { ...query, location: currLocation }
+            // }
+            // router.push({
+            //   pathname: `/search`,
+            //   query: query,
+            // })
+          } else if (filter === 'posts') {
+            handlePostsSearch()
+
+            // dispatch
+            // dispatch(setUserHobby(hobby))
+            // dispatch(setUserLocation(currLocation))
+            // let query = {}
+            // query = { ...query, filter: 'posts' }
+            // if (currPostedBy) {
+            //   query = { ...query, postedBy: currPostedBy }
+            // }
+            // if (hobby) {
+            //   query = { ...query, hobby: hobby }
+            // }
+            // if (currLocation) {
+            //   query = { ...query, location: currLocation }
+            // }
+            // router.push({
+            //   pathname: `/search`,
+            //   query: query,
+            // })
+          } else {
+            handleSubmit()
+          }
+        } else if (focusedLocationIdx !== -1) {
+          setShowAutoAddress(false)
+          if (showAutoAddress) {
+            handleSelectAddressTwo(
+              suggestions[focusedLocationIdx]?.description?.join(', '),
+              suggestions[focusedLocationIdx]?.place_id,
+            )
+            console.log(
+              'Changed location',
+              suggestions[focusedLocationIdx]?.description[0],
+            )
+
+            // if (filter === 'users') {
+            //   dispatch(
+            //     setUserLocation(
+            //       suggestions[focusedLocationIdx]?.description[0],
+            //     ),
+            //   )
+            // }
+            dispatch(
+              setLocation(suggestions[focusedLocationIdx]?.description[0]),
+            )
+          }
+
+          if (isLocationSelected) {
+            if (filter === 'users') {
+              handleUserProfileSearch()
+              // let query = {}
+              // dispatch(setUserLocation(currLocation))
+              // query = { ...query, filter: 'users' }
+              // if (currUserName) {
+              //   query = { ...query, name: currUserName }
+              // }
+              // if (userHobby) {
+              //   query = { ...query, hobby: userHobby }
+              // }
+              // if (currLocation) {
+              //   query = { ...query, location: currLocation }
+              // }
+              // router.push({
+              //   pathname: `/search`,
+              //   query: query,
+              // })
+            } else if (filter === 'posts') {
+              handlePostsSearch()
+              // let query = {}
+              // dispatch(setUserLocation(currLocation))
+              // query = { ...query, filter: 'posts' }
+              // if (currPostedBy) {
+              //   query = { ...query, postedBy: currPostedBy }
+              // }
+              // if (userHobby) {
+              //   query = { ...query, hobby: userHobby }
+              // }
+              // if (userLocation) {
+              //   query = { ...query, location: userLocation }
+              // }
+              // router.push({
+              //   pathname: `/search`,
+              //   query: query,
+              // })
+            } else {
+              handleSubmit()
+            }
+          }
+          setIsLocationSelected(true)
         } else if (
           focusedLocationIdx === -1 &&
           Addressdata.street.trim().length !== 0
         ) {
           setShowAutoAddress(false)
         }
-        handleSubmit()
+        // if (filter === 'users') {
+        //   alert('hiiii')
+        // } else {
+        //   handleSubmit()
+        // }
         break
       default:
         break
@@ -365,7 +541,23 @@ const NoResult = () => {
       }
       link += `page-type=${page_type}`
     } else if (category) {
-      link += `?category=${category}`
+      if (category === 'People' || category === 'people') {
+        link += `?page-type=People`
+        dispatch(setCategory(''))
+        dispatch(setPageType('People'))
+      } else if (category === 'Place' || category === 'place') {
+        link += `?page-type=Place`
+        dispatch(setCategory(''))
+        dispatch(setPageType('Place'))
+      } else if (category === 'Product' || category === 'product') {
+        link += `?page-type=Product`
+        dispatch(setCategory(''))
+        dispatch(setPageType('Product'))
+      } else if (category === 'Program' || category === 'program') {
+        link += `?page-type=Program`
+        dispatch(setCategory(''))
+        dispatch(setPageType('Program'))
+      }
     }
     if (hobby) {
       if (category || page_type) {
@@ -402,6 +594,46 @@ const NoResult = () => {
     //   return
     // }
     router.push(`${getLink()}`)
+  }
+  const handleUserProfileSearch = () => {
+    dispatch(setUserName(currUserName))
+    dispatch(setUserHobby(hobby))
+    dispatch(setUserLocation(currLocation))
+    let query = {}
+    query = { ...query, filter: 'users' }
+    if (currUserName) {
+      query = { ...query, name: currUserName }
+    }
+    if (hobby) {
+      query = { ...query, hobby: hobby }
+    }
+    if (currLocation) {
+      query = { ...query, location: currLocation }
+    }
+    router.push({
+      pathname: `/search`,
+      query: query,
+    })
+  }
+  const handlePostsSearch = () => {
+    dispatch(setPostedBy(currPostedBy))
+    dispatch(setUserHobby(hobby))
+    dispatch(setUserLocation(currLocation))
+    let query = {}
+    query = { ...query, filter: 'posts' }
+    if (currPostedBy) {
+      query = { ...query, postedBy: currPostedBy }
+    }
+    if (hobby) {
+      query = { ...query, hobby: hobby }
+    }
+    if (currLocation) {
+      query = { ...query, location: currLocation }
+    }
+    router.push({
+      pathname: `/search`,
+      query: query,
+    })
   }
 
   useEffect(() => {
@@ -446,6 +678,156 @@ const NoResult = () => {
         <div className={styles.filterParent}>
           {/* <div className={styles.filter}> */}
           <div className={styles.inputsContainer}>
+            {filter === 'users' && (
+              <div className={styles.hobbySuggestion}>
+                <Image
+                  src={SearchIcon}
+                  width={16}
+                  height={16}
+                  alt="SearchIcon"
+                  className={styles.searchIcon}
+                />
+                <TextField
+                  autoComplete="off"
+                  inputRef={nameInputRef}
+                  variant="standard"
+                  label="Name"
+                  size="small"
+                  name="name"
+                  className={styles.hobbySearch}
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                    if (e.key === 'Enter') {
+                      dispatch(setUserName(currUserName))
+                    }
+                    if (e.key === 'Enter') {
+                      let query = {}
+                      query = { ...query, filter: 'users' }
+                      if (currUserName) {
+                        query = { ...query, name: currUserName }
+                      }
+                      if (userHobby) {
+                        query = { ...query, hobby: userHobby }
+                      }
+                      if (userLocation) {
+                        query = { ...query, location: userLocation }
+                      }
+                      router.push({
+                        pathname: `/search`,
+                        query: query,
+                      })
+                    }
+                  }}
+                  value={currUserName}
+                  onBlur={() =>
+                    setTimeout(() => {
+                      setShowHobbyDropdown(false)
+                    }, 300)
+                  }
+                  onChange={(e) => {
+                    setCurrUserName(e.target.value)
+                  }}
+                  sx={{
+                    '& label': {
+                      fontSize: '16px',
+                      paddingLeft: '24px',
+                    },
+                    '& label.Mui-focused': {
+                      fontSize: '14px',
+                      marginLeft: '-16px',
+                    },
+                    '& .MuiInputLabel-shrink': {
+                      marginTop: '3px',
+                      fontSize: '14px',
+                      marginLeft: '-16px',
+                    },
+                    '& .MuiInput-underline:hover:before': {
+                      borderBottomColor: '#7F63A1 !important',
+                    },
+                  }}
+                  InputProps={{
+                    sx: {
+                      paddingLeft: '24px',
+                    },
+                  }}
+                />
+              </div>
+            )}
+
+            {filter === 'posts' && (
+              <div className={styles.hobbySuggestion}>
+                <Image
+                  src={SearchIcon}
+                  width={16}
+                  height={16}
+                  alt="SearchIcon"
+                  className={styles.searchIcon}
+                />
+                <TextField
+                  autoComplete="off"
+                  inputRef={postedByRef}
+                  variant="standard"
+                  label="Posted by"
+                  size="small"
+                  name="postedBy"
+                  className={styles.hobbySearch}
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                    if (e.key === 'Enter') {
+                      dispatch(setPostedBy(currPostedBy))
+                    }
+                    if (e.key === 'Enter') {
+                      let query = {}
+                      query = { ...query, filter: 'posts' }
+                      if (currPostedBy) {
+                        query = { ...query, postedBy: currPostedBy }
+                      }
+                      if (userHobby) {
+                        query = { ...query, hobby: userHobby }
+                      }
+                      if (userLocation) {
+                        query = { ...query, location: userLocation }
+                      }
+                      router.push({
+                        pathname: `/search`,
+                        query: query,
+                      })
+                    }
+                  }}
+                  value={currPostedBy}
+                  onBlur={() =>
+                    setTimeout(() => {
+                      setShowHobbyDropdown(false)
+                    }, 300)
+                  }
+                  onChange={(e) => {
+                    setCurrPostedBy(e.target.value)
+                  }}
+                  sx={{
+                    '& label': {
+                      fontSize: '16px',
+                      paddingLeft: '24px',
+                    },
+                    '& label.Mui-focused': {
+                      fontSize: '14px',
+                      marginLeft: '-16px',
+                    },
+                    '& .MuiInputLabel-shrink': {
+                      marginTop: '3px',
+                      fontSize: '14px',
+                      marginLeft: '-16px',
+                    },
+                    '& .MuiInput-underline:hover:before': {
+                      borderBottomColor: '#7F63A1 !important',
+                    },
+                  }}
+                  InputProps={{
+                    sx: {
+                      paddingLeft: '24px',
+                    },
+                  }}
+                />
+              </div>
+            )}
+
             <div className={styles.hobbySuggestion}>
               <Image
                 src={SearchIcon}
@@ -528,21 +910,14 @@ const NoResult = () => {
                 </div>
               )}
             </div>
-            <div className={styles.locationHiddenMobile}>
-              {/* <AccordianMenuNoResult
-                value={category}
-                setValue={setCategory}
-                subCategory={subCategory}
-                setSubCategory={setSubCategory}
-                handleSubmit={handleSubmit}
-                setShowCategoryDropdown={setShowCategoryDropdown}
-                showCategoryDropdown={showCategoryDropdown}
-              /> */}
-              <AccordionMenu2
-                categoryValue={categoryValue}
-                handleSubmit={handleSubmit}
-              />
-            </div>
+            {filter !== 'users' && filter !== 'posts' && (
+              <div className={styles.locationHiddenMobile}>
+                <AccordionMenu2
+                  categoryValue={categoryValue}
+                  handleSubmit={handleSubmit}
+                />
+              </div>
+            )}
             <div className={styles.categorySuggestion}>
               <Image
                 src={SearchIcon}
@@ -562,10 +937,15 @@ const NoResult = () => {
                 onChange={handleInputChangeAddress}
                 value={currLocation}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  handleLocationKeyDown(e)
-                  if (e.key === 'Enter') {
-                    setShowAutoAddress(false)
+                  // handleLocationKeyDown(e)
+                  // if (e.key === 'Enter') {
+                  //   setShowAutoAddress(false)
+                  // }
+                  if (e.key !== 'Enter') {
+                    setShowAutoAddress(true)
+                    setIsLocationSelected(false)
                   }
+                  handleLocationKeyDown(e)
                 }}
                 sx={{
                   '& .MuiInput-underline:hover:before': {
@@ -616,17 +996,37 @@ const NoResult = () => {
                 </div>
               )}
             </div>
-            <button
-              className="modal-footer-btn"
-              style={{
-                width: isMob ? '100%' : 71,
-                height: 32,
-                marginLeft: 'auto',
-              }}
-              onClick={() => handleSubmit()}
-            >
-              Explore
-            </button>
+            {filter !== 'users' && filter !== 'posts' ? (
+              <button
+                className="modal-footer-btn"
+                style={{
+                  width: isMob ? '100%' : 71,
+                  height: 32,
+                  marginLeft: 'auto',
+                }}
+                onClick={() => handleSubmit()}
+              >
+                Explore
+              </button>
+            ) : (
+              <button
+                className="modal-footer-btn"
+                style={{
+                  width: isMob ? '100%' : 71,
+                  height: 32,
+                  marginLeft: 'auto',
+                }}
+                onClick={() => {
+                  if (filter === 'users') {
+                    handleUserProfileSearch()
+                  } else if (filter === 'posts') {
+                    handlePostsSearch()
+                  }
+                }}
+              >
+                Search
+              </button>
+            )}
             {/* </div> */}
           </div>
         </div>

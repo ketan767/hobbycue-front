@@ -1,3 +1,85 @@
+.ql-editor.ql-indent-1{
+  padding-left:4px;
+}
+.ql-editor ul, 
+.ql-editor ol {
+  font-family:'Poppins';
+  padding-left: 25px; 
+  font-size:14px;
+  text-align:justify; 
+}
+
+.ql-editor a {
+  font-family:'Poppins';
+  color: rgb(128, 100, 162);  
+  text-decoration: none !important;
+  font-size:14px;
+  text-align:justify;
+}
+.ql-editor p {
+font-family:'Poppins';
+  font-size:14px;
+  text-align:justify;
+}
+/* .ql-editor{
+  padding-inline:4px;
+} */
+
+@media print {
+  @page {
+      /* size: A3; */
+  }
+  .viewButtonPrint {
+    display: none !important;
+  }
+  .viewButton {
+    display: none !important;
+  }
+}
+
+.viewButton {
+  cursor: pointer;
+  width: 100%;
+  background-color: transparent;
+  padding: 10px 9px;
+  text-align: left;
+  border-radius: 8px;
+  border: 1px solid var(--Blue1, #0096C8);
+  background: var(--background-white, #FFF);
+  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.12);
+  margin-bottom: 10px;
+
+  /* Typography */
+  color: var(--Blue1, #0096C8);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.56px;
+}
+
+.viewButton span {
+  font-weight: 600;
+}
+
+.viewButtonPrint {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.printViewLogo {
+  width: 160px;
+  height: 160px;
+  scale: 1.2;
+  margin-top: 5px;
+}
+
 /* Header */
 .header {
   margin: auto;
@@ -197,8 +279,10 @@
 }
 .content-container {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   margin-top: 9px;
+  gap: 9px;
   align-items: flex-end;
 }
 
@@ -254,7 +338,7 @@
   margin-right: 14px;
 }
 .edit-field-wrapper {
-  padding-top: 12px;
+  padding-top: 16px;
   display: flex;
   gap: 12px;
   position: relative;
@@ -364,12 +448,19 @@
 
   box-shadow: none;
 }
+.nav {
+  padding: 0 24px;
+}
+.navContainer {
+  margin: auto;
+  width: 1240px;
+}
 .container:has(.header).small .navigation-tabs {
   display: flex;
 
   gap: 20px;
   justify-content: flex-start;
-  margin: 4px 0 0 23.96%;
+  margin: 4px 0 0 calc(229px + 24px);
   position: sticky;
   min-height: 40px;
 }
@@ -419,11 +510,15 @@
 
 .product-header {
   align-items: flex-start;
-  grid-template-columns: 88px auto 160px;
+  grid-template-columns: 88px 472px auto;
 }
 
-.product-header > :nth-child(4) {
+/* .product-header > :nth-child(4) {
   margin-top: auto;
+} */
+
+.actions-container-desktop {
+  width: 160px;
 }
 
 .item-view {
@@ -472,9 +567,10 @@
 .product-name-container {
   display: flex;
   flex-direction: column;
-  padding-left: 24px;
+  height: 100%;
+  /* padding-left: 24px; */
   /* width: 500px; */
-  width: 712px;
+  /* width: 712px; */
   justify-content: space-between;
 }
 .publish-laptop {
@@ -637,6 +733,10 @@
     display: flex;
 
     padding: 0 14px;
+  }
+  .navContainer {
+    margin: 0;
+    width: auto;
   }
   .navigation-tabs {
     gap: 8px;
@@ -864,6 +964,57 @@
   }
   .product-name-container .name {
     padding-top: 12px;
+  }
+  .mobileViewAs {
+    padding: 12px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+
+    border-top: 1px solid var(--Blue1, #0096C8);
+    border-bottom: 1px solid var(--Blue1, #0096C8);
+    background: var(--Base-White, #FFF);
+    box-shadow: 0px 0px 2px 0px rgba(147, 156, 163, 0.36), 0px 8px 12px 0px rgba(147, 156, 163, 0.12);
+  }
+  .mobileViewAs > * {
+    width: 100%;
+  }
+  .viewButtonPrint {
+    margin: auto;
+  }
+  .viewButton {
+    margin-block: auto;
+    padding-block: 8px;
+    display: flex;
+    width: 136px;
+    box-shadow: none;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+
+    color: var(--Blue1, #0096C8);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 16px; /* 114.286% */
+  }
+  .viewingAs {
+    color: var(--Blue1, #0096C8);
+    font-family: Poppins;
+    font-size: 13px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 20px; /* 153.846% */
+  }
+  .viewingAs span {
+    color: var(--Blue1, #0096C8);
+    font-family: Poppins;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
   }
 }
 

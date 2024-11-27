@@ -1251,6 +1251,7 @@ const CommunityLayout: React.FC<Props> = ({
             } `}
           >
             {/* {children} */}
+            {/* It might have key issue here */}
             {React.Children.map(children, (child) =>
               React.cloneElement(child as React.ReactElement<singlePostProps>, {
                 hobbyMembers: childData?.hobbyMembers,

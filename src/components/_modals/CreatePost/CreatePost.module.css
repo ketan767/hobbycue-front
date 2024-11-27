@@ -1,6 +1,6 @@
 .modal-wrapper {
   background-color: white;
-  width: 790px;
+  width: 720.4px !important;
   /* width: 100%; */
   mix-blend-mode: normal;
   border-radius: var(--spacing-8);
@@ -262,8 +262,14 @@ line-height: 16px; /* 114.286% */
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  max-width: calc(100vw - 2rem);
+  /* max-width: calc(100% + 17px) ; */
+  /* width: 703.4px !important; */
+  width: 671px !important;
   overflow: auto;
+}
+
+.editor-container::-webkit-scrollbar {
+  width: 0px;
 }
 
 .editor-container::-webkit-scrollbar-track {
@@ -489,9 +495,13 @@ flex: 1 0 0;
     /* overflow: hidden; */
   }
 
+  .editor-container {
+    width: 100% !important;
+  }
+
   .modal-wrapper {
     /* max-width: 350px; */
-    width: 100%;
+    width: 100vw !important;
     border-radius: 0;
     height: 100%;
   }

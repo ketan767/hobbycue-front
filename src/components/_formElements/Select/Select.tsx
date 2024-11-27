@@ -100,7 +100,8 @@ const InputSelect: React.FC<Props> = ({
           active ? styles['active'] : ''
         }
         ${optionsContainerUnactiveClass ?? ''}
-        ${active ? optionsContainerClass ?? '' : ''}
+        ${active ? optionsContainerClass ?? '' : ''} 
+        ${className ? className : ''} 
         `}
       >
         {React.Children.map(children, (child) =>

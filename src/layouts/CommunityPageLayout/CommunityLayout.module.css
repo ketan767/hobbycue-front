@@ -152,7 +152,7 @@
   column-gap: 24px;
 }
 .community-header-small > .community-header-left {
-  max-width: 726.42px;
+  max-width: 671px;
   flex: 4;
 }
 .community-header-small .invite-container-main {
@@ -403,6 +403,7 @@
   align-items: center;
   flex: 1;
   gap: var(--spacing-8);
+  padding-left: 0.25px;
 }
 .trending-hobbies-side-wrapper section ul li .default-img {
   width: var(--spacing-32);
@@ -660,7 +661,9 @@
 
 .location-dropdown {
   border: none !important;
-  border-radius: 0;
+  border-radius: 8px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 .location-side-wrapper {
   border-bottom-left-radius: 0;
@@ -673,14 +676,16 @@
   max-height: 1000px;
   top: 0;
   box-shadow: none;
-  border: 1px solid #ebedf0;
+  /* border: 1px solid #ebedf0; */
   border-top: none;
   padding-bottom: 12px;
 }
 .location-dropdown > div > div {
   border-bottom: 0;
 }
-
+.location-dropdown-container {
+  padding-bottom: 0 !important;
+}
 .location-dropdown-container p {
   line-height: 18px;
 }
@@ -778,6 +783,11 @@
   .filter-section {
     display: flex;
     gap: 12px;
+    padding: 8px 16px;
+    margin-block: 0;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.08);
   }
 
   .error-invite {
@@ -1019,7 +1029,7 @@
     transform: translateY(calc(0 * var(--navbar-height-desktop)));
     z-index: 2;
     background-color: white;
-    padding: 8px 16px;
+    padding: 8px 0;
     /* position: relative; */
   }
   .community-header .top-margin-card {
@@ -1030,11 +1040,12 @@
   }
 
   .start-post-btn-container {
-    padding: 6px 0px;
+    padding: 6px 16px;
     border-radius: 0;
   }
   .navigation-links {
-    right: 8px;
+    /* right: 8px; */
+    padding-inline: 16px;
   }
 
   .navigation-links ul li {

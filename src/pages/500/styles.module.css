@@ -119,6 +119,15 @@
   cursor: pointer;
 }
 
+.btnSecondary:focus-visible {
+  outline-offset: 1px;
+  outline: 1px solid rgb(var(--primary-100-rgb));
+}
+.btnPrimary:focus-visible {
+  outline-offset: 1px;
+  outline: 1px solid rgb(var(--primary-100-rgb));
+}
+
 /* .btnPrimary:hover {
   background-color: white;
   color: #8064a2;

@@ -4,6 +4,7 @@ import { Button, CircularProgress } from '@mui/material'
 
 import {
   getMyProfileDetail,
+  notifyMaintenance,
   updateMyProfileDetail,
 } from '@/services/user.service'
 
@@ -49,7 +50,7 @@ const ConfirmEmail: React.FC<Props> = ({}) => {
   })
   const router = useRouter()
 
-  const is5XXPage = /^\/5\d{2}$/.test(router.asPath);
+  const is5XXPage = /^\/5\d{2}$/.test(router.asPath)
 
   const [errors, setErrors] = useState({
     email: '',
@@ -69,16 +70,33 @@ const ConfirmEmail: React.FC<Props> = ({}) => {
       return
     }
     if (is5XXPage) {
-      setSubmitBtnLoading(false)
-      setShowSnackbar({
-        message: "You will receive an e-mail as soon as we're back",
-        triggerOpen: true,
-        type: 'success',
-      })
-      setTimeout(() => {
-        dispatch(closeModal())
-      }, 3 * 1000)
-      return
+      try {
+        const { res, err } = await notifyMaintenance({ email })
+        if (err || !res?.data?.success) {
+          throw err || new Error('Error in 500 page')
+        }
+        setShowSnackbar({
+          message: "You will receive an e-mail as soon as we're back",
+          triggerOpen: true,
+          type: 'success',
+        })
+      } catch (err: any) {
+        console.log('Error in 500 page', err)
+        if (err.response?.status === 400) {
+          setShowSnackbar({
+            message: 'You are already on our waiting list!',
+            triggerOpen: true,
+            type: 'success',
+          })
+        }
+        // if (err.message === '')
+      } finally {
+        setSubmitBtnLoading(false)
+        setTimeout(() => {
+          dispatch(closeModal())
+        }, 3 * 1000)
+        return
+      }
     }
     const { err, res } = await forgotPassword({
       email,

@@ -203,7 +203,7 @@
   gap: 20px;
   justify-content: start;
 
-  margin: 14px 0 0 24.05%;
+  margin: 14px 0 0 calc(229px + 24px);
   position: -webkit-sticky;
   position: sticky;
   min-height: 40px;
@@ -291,6 +291,13 @@
   background-color: transparent;
 
   box-shadow: none;
+}
+.display-desktop {
+  padding: 0 24px;
+}
+.navContainer {
+  margin: auto;
+  width: 1240px;
 }
 .container:has(.header).small .navigation-tabs {
   padding-top: 4px;

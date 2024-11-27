@@ -66,10 +66,14 @@
   line-height: 20px;
   text-align: center;
   color: #8064a2;
+  outline: none;
 }
 .searchButton:hover {
   background-color: #f2f0f5;
   cursor: pointer;
+}
+.searchButton:focus {
+  outline: 2px solid #7f63a1;
 }
 .mapText {
   font-family: 'Poppins';

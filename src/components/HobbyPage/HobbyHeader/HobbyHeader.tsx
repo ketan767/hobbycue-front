@@ -32,10 +32,11 @@ import CustomizedTooltips from '@/components/Tooltip/ToolTip'
 
 type Props = {
   activeTab: HobbyPageTabs
-  data: any
+  data: any;
+  onclickEdit?: () => void;
 }
 
-const HobbyPageHeader = ({ activeTab, data }: Props) => {
+const HobbyPageHeader = ({ activeTab, data,onclickEdit }: Props) => {
   // console.log('🚀 ~ file: HobbyHeader.tsx:22 ~ HobbyPageHeader ~ data:', data)
   const dispatch = useDispatch()
   const router = useRouter()
@@ -327,9 +328,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
                 width={1000}
               />
             ) : (
-              <div
-                className={`${styles['img']} default-user-cover`}
-              ></div>
+              <div className={`${styles['img']} default-user-cover`}></div>
             )}
             {user?.is_admin && (
               <label className={styles['edit-btn']}>
@@ -352,9 +351,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
                   <Image
                     src={EditIcon}
                     alt="edit"
-                    onClick={() =>
-                      router.push(`/admin/hobby/edit/${data?.slug}`)
-                    }
+                    onClick={onclickEdit}
                   />
                 )}
               </h1>{' '}
@@ -495,7 +492,9 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
 
       {/* Tabs */}
       <div className={styles['display-desktop']}>
-        <HobbyNavigationLinks activeTab={activeTab} />
+        <div className={styles.navContainer}>
+          <HobbyNavigationLinks activeTab={activeTab} />
+        </div>
       </div>
       {
         <CustomSnackbar

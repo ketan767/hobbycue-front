@@ -5,6 +5,8 @@ import { openModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
 import { showProfileError } from '@/redux/slices/user'
 import { useRouter } from 'next/router'
+import { updateListingLayoutMode, updateViewAs } from '@/redux/slices/site'
+import { isMobile } from '@/utils'
 
 type Props = {
   handleClose?: any
@@ -17,6 +19,7 @@ const Dropdown: React.FC<Props> = ({
   userType,
   showFeatureUnderDevelopment,
 }) => {
+  const [showViewAsOptions, setShowViewAsOptions] = useState(false)
   const dispatch = useDispatch()
   const ref = useRef<HTMLDivElement>(null)
   const Claimref = useRef<HTMLLIElement>(null)
@@ -24,6 +27,7 @@ const Dropdown: React.FC<Props> = ({
   const supportRef = useRef<HTMLLIElement>(null)
   const reportRef = useRef<HTMLLIElement>(null)
   const transferRef = useRef<HTMLLIElement>(null)
+  const viewAsRef = useRef<HTMLLIElement>(null)
   const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
   const router = useRouter()
 
@@ -110,6 +114,10 @@ const Dropdown: React.FC<Props> = ({
             dispatch(showProfileError(true))
           }
         } else dispatch(openModal({ type: 'auth', closable: true }))
+      } else if (
+        event.target.nodeName === viewAsRef.current?.nodeName ||
+        event.target.textContent === viewAsRef.current?.textContent
+      ) {
       } else if (ref.current && !ref.current.contains(event.target)) {
         handleClose()
         return
@@ -123,6 +131,14 @@ const Dropdown: React.FC<Props> = ({
     }
   }, [ref])
 
+  const handleClickViewAs = (option: string) => {
+    dispatch(updateListingLayoutMode('view'))
+    dispatch(updateViewAs(option))
+    handleClose()
+  }
+
+  const isMob = isMobile()
+
   return (
     <>
       <div className={styles['dropdown']} ref={ref}>
@@ -131,6 +147,36 @@ const Dropdown: React.FC<Props> = ({
             <>
               <li ref={supportRef}>Support</li>
               <li ref={transferRef}>Transfer</li>
+              <li
+                ref={viewAsRef}
+                className={styles.viewAsLi}
+                onMouseEnter={() =>
+                  isMob ? null : setShowViewAsOptions((prev) => !prev)
+                }
+                // onMouseLeave={() => setShowViewAsOptions(false)}
+              >
+                <div onClick={() => setShowViewAsOptions((prev) => !prev)}>
+                  View As
+                </div>
+                {showViewAsOptions ? (
+                  <ul
+                    className={styles.viewAsOptions}
+                    onMouseEnter={() => setShowViewAsOptions(true)}
+                  >
+                    <li onClick={() => handleClickViewAs('signed-in')}>
+                      User Signed In
+                    </li>
+                    <li onClick={() => handleClickViewAs('not-signed-in')}>
+                      User Not Signed In
+                    </li>
+                    <li onClick={() => handleClickViewAs('print')}>
+                      Print Ready
+                    </li>
+                  </ul>
+                ) : (
+                  <></>
+                )}
+              </li>
             </>
           )}
           {userType === 'anonymous' && (

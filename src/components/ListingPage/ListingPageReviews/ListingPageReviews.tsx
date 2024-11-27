@@ -271,8 +271,14 @@ const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
                   </div>
                 ))
               ) : (
-                <div className={styles['no-data-div']}>
-                  <p className={styles['no-data-text']}>No reviews</p>
+                <div
+                style={
+                  isMobile
+                    ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
+                    : undefined
+                } 
+                className={styles['no-data-div']}>
+                  <p className={styles['no-data-text']}>No reviews available</p>
                 </div>
               )}
             </Masonry>

@@ -5,7 +5,7 @@ interface Address {
   city: string
 }
 
-interface User {
+export interface User {
   profile_image: string
   full_name: string
   tagline: string
@@ -26,8 +26,10 @@ export interface Page {
   event_weekdays: any
 }
 
-interface hobbies {
+export interface hobbies {
   _id: string
+  add_count: number
+  cover_image: string | null
   profile_image: string | null
   genre: string[]
   slug: string
@@ -35,9 +37,15 @@ interface hobbies {
   category: { display: string }
   sub_category: { display: string }
   description: string
+  keywords: string[]
+  level: number
+  related_hobbies: string[]
+  search_key: string[]
+  show: boolean
+  tags: string[]
 }
 
-interface blogs {
+export interface blogs {
   _id: string
   url: string
   title: string
@@ -47,7 +55,7 @@ interface blogs {
   createdAt: string
 }
 
-interface posts {
+export interface posts {
   _id: string
   _author: any
   author_type: string
@@ -64,11 +72,17 @@ export interface SearchResults<T> {
 }
 
 interface SearchState {
+  userName: string
+  userHobby: string
+  userLocation: string
+  postedBy: string
   userSearchResults: SearchResults<User>
   typeResultOne: SearchResults<Page>
   typeResultTwo: SearchResults<Page>
   typeResultThree: SearchResults<Page>
   typeResultFour: SearchResults<Page>
+  classesResult: SearchResults<Page>
+  rentalResult: SearchResults<Page>
   searchString: string
   currentPage: number
   result_pagination: number
@@ -82,6 +96,8 @@ interface SearchState {
   showAllPlace: boolean
   showAllEvent: boolean
   showAllProducts: boolean
+  showAllClasses: boolean
+  showAllRentals: boolean
   showAllBlogs: boolean
   showAllPosts: boolean
   showAllHobbies: boolean
@@ -115,6 +131,16 @@ const initialState: SearchState = {
     message: '',
     success: false,
   },
+  classesResult: {
+    data: [],
+    message: '',
+    success: false,
+  },
+  rentalResult: {
+    data: [],
+    message: '',
+    success: false,
+  },
   currentPage: 1,
   result_pagination: 1,
   hobbiesSearchResults: {
@@ -132,6 +158,10 @@ const initialState: SearchState = {
     message: '',
     success: false,
   },
+  userName: '',
+  postedBy: '',
+  userHobby: '',
+  userLocation: '',
   searchString: '',
   hasMore: true,
   showAll: true,
@@ -140,6 +170,8 @@ const initialState: SearchState = {
   showAllPlace: false,
   showAllEvent: false,
   showAllProducts: false,
+  showAllClasses: false,
+  showAllRentals: false,
   showAllPosts: false,
   showAllBlogs: false,
   showAllHobbies: false,
@@ -151,6 +183,18 @@ export const searchSlice = createSlice({
   name: 'search',
   initialState,
   reducers: {
+    setUserName: (state, action: PayloadAction<string>) => {
+      state.userName = action.payload
+    },
+    setUserHobby: (state, action: PayloadAction<string>) => {
+      state.userHobby = action.payload
+    },
+    setUserLocation: (state, action: PayloadAction<string>) => {
+      state.userLocation = action.payload
+    },
+    setPostedBy: (state, action: PayloadAction<string>) => {
+      state.postedBy = action.payload
+    },
     setUserSearchResults: (
       state,
       action: PayloadAction<SearchResults<User>>,
@@ -168,6 +212,12 @@ export const searchSlice = createSlice({
     },
     setTypeResultFour: (state, action: PayloadAction<SearchResults<Page>>) => {
       state.typeResultFour = action.payload
+    },
+    setClassesResult: (state, action: PayloadAction<SearchResults<Page>>) => {
+      state.classesResult = action.payload
+    },
+    setRentalResult: (state, action: PayloadAction<SearchResults<Page>>) => {
+      state.rentalResult = action.payload
     },
     setSearchString: (state, action: PayloadAction<string>) => {
       state.searchString = action.payload
@@ -215,6 +265,8 @@ export const searchSlice = createSlice({
       state.showAllEvent = false
       state.showAllProducts = false
       state.showAllHobbies = false
+      state.showAllClasses = false
+      state.showAllRentals = false
     },
 
     toggleShowAllUsers: (state) => {
@@ -225,6 +277,8 @@ export const searchSlice = createSlice({
         state.showAllProducts = false
         state.showAll = false
         state.showAllUsers = true
+        state.showAllClasses = false
+        state.showAllRentals = false
         state.showAllHobbies = false
       } else {
         state.showAll = true
@@ -239,6 +293,8 @@ export const searchSlice = createSlice({
         state.showAllProducts = false
         state.showAll = false
         state.showAllUsers = false
+        state.showAllClasses = false
+        state.showAllRentals = false
         state.showAllHobbies = true
       } else {
         state.showAll = true
@@ -253,6 +309,8 @@ export const searchSlice = createSlice({
         state.showAllProducts = false
         state.showAll = false
         state.showAllHobbies = false
+        state.showAllClasses = false
+        state.showAllRentals = false
         state.showAllPeople = true
       } else {
         state.showAll = true
@@ -267,6 +325,8 @@ export const searchSlice = createSlice({
         state.showAllEvent = false
         state.showAllProducts = false
         state.showAll = false
+        state.showAllClasses = false
+        state.showAllRentals = false
         state.showAllPlace = true
       } else {
         state.showAll = true
@@ -281,6 +341,8 @@ export const searchSlice = createSlice({
         state.showAllPlace = false
         state.showAllProducts = false
         state.showAll = false
+        state.showAllClasses = false
+        state.showAllRentals = false
         state.showAllEvent = true
       } else {
         state.showAll = true
@@ -295,10 +357,44 @@ export const searchSlice = createSlice({
         state.showAllPlace = false
         state.showAllEvent = false
         state.showAll = false
+        state.showAllClasses = false
+        state.showAllRentals = false
         state.showAllProducts = true
       } else {
         state.showAll = true
         state.showAllProducts = false
+      }
+    },
+    toggleShowAllClasses: (state) => {
+      if (!state.showAllClasses) {
+        state.showAllUsers = false
+        state.showAllHobbies = false
+        state.showAllPeople = false
+        state.showAllPlace = false
+        state.showAllProducts = false
+        state.showAll = false
+        state.showAllEvent = false
+        state.showAllRentals = false
+        state.showAllClasses = true
+      } else {
+        state.showAll = true
+        state.showAllClasses = false
+      }
+    },
+    toggleShowAllRentals: (state) => {
+      if (!state.showAllRentals) {
+        state.showAllUsers = false
+        state.showAllHobbies = false
+        state.showAllPeople = false
+        state.showAllPlace = false
+        state.showAllProducts = false
+        state.showAll = false
+        state.showAllEvent = true
+        state.showAllClasses = false
+        state.showAllRentals = true
+      } else {
+        state.showAll = true
+        state.showAllRentals = false
       }
     },
 
@@ -312,6 +408,8 @@ export const searchSlice = createSlice({
         state.showAll = false
         state.showAllProducts = false
         state.showAllPosts = false
+        state.showAllClasses = false
+        state.showAllRentals = false
         state.showAllBlogs = true
       } else {
         state.showAll = true
@@ -328,6 +426,8 @@ export const searchSlice = createSlice({
         state.showAll = false
         state.showAllProducts = false
         state.showAllBlogs = false
+        state.showAllClasses = false
+        state.showAllRentals = false
         state.showAllPosts = true
       } else {
         state.showAll = true
@@ -342,6 +442,8 @@ export const searchSlice = createSlice({
         state.showAllPlace = false
         state.showAllEvent = false
         state.showAllProducts = false
+        state.showAllClasses = false
+        state.showAllRentals = false
       }
     },
     showAllPeopleTrue: (state) => {
@@ -352,6 +454,8 @@ export const searchSlice = createSlice({
         state.showAllPlace = false
         state.showAllEvent = false
         state.showAllProducts = false
+        state.showAllClasses = false
+        state.showAllRentals = false
       }
     },
     showAllPlaceTrue: (state) => {
@@ -362,6 +466,8 @@ export const searchSlice = createSlice({
         state.showAllPeople = false
         state.showAllEvent = false
         state.showAllProducts = false
+        state.showAllClasses = false
+        state.showAllRentals = false
       }
     },
     showAllEventTrue: (state) => {
@@ -372,6 +478,8 @@ export const searchSlice = createSlice({
         state.showAllPeople = false
         state.showAllPlace = false
         state.showAllProducts = false
+        state.showAllClasses = false
+        state.showAllRentals = false
       }
     },
     showAllProductsTrue: (state) => {
@@ -382,6 +490,30 @@ export const searchSlice = createSlice({
         state.showAllPeople = false
         state.showAllPlace = false
         state.showAllEvent = false
+        state.showAllClasses = false
+        state.showAllRentals = false
+      }
+    },
+    showAllClassesTrue: (state) => {
+      state.showAllClasses = true
+      if (state.showAllEvent) {
+        state.showAllUsers = false
+        state.showAllHobbies = false
+        state.showAllPeople = false
+        state.showAllPlace = false
+        state.showAllEvent = false
+        state.showAllRentals = false
+      }
+    },
+    showAllRentalsTrue: (state) => {
+      state.showAllRentals = true
+      if (state.showAllEvent) {
+        state.showAllUsers = false
+        state.showAllHobbies = false
+        state.showAllPeople = false
+        state.showAllPlace = false
+        state.showAllEvent = false
+        state.showAllClasses = false
       }
     },
     showAllPostsTrue: (state) => {
@@ -394,6 +526,8 @@ export const searchSlice = createSlice({
         state.showAllEvent = false
         state.showAllProducts = false
         state.showAllBlogs = false
+        state.showAllClasses = false
+        state.showAllRentals = false
       }
     },
     showAllBlogsTrue: (state) => {
@@ -406,6 +540,8 @@ export const searchSlice = createSlice({
         state.showAllEvent = false
         state.showAllProducts = false
         state.showAllPosts = false
+        state.showAllClasses = false
+        state.showAllRentals = false
       }
     },
     showAllTrue: (state) => {
@@ -418,6 +554,8 @@ export const searchSlice = createSlice({
       state.showAllPlace = false
       state.showAllPosts = false
       state.showAllBlogs = false
+      state.showAllClasses = false
+      state.showAllRentals = false
     },
     setExplore: (state, { payload }: { payload: boolean }) => {
       state.explore = payload
@@ -432,11 +570,17 @@ export const searchSlice = createSlice({
 })
 
 export const {
+  setUserName,
+  setUserHobby,
+  setUserLocation,
+  setPostedBy,
   setUserSearchResults,
   setTypeResultOne,
   setTypeResultTwo,
   setTypeResultThree,
   setTypeResultFour,
+  setClassesResult,
+  setRentalResult,
   setSearchString,
   setBlogsSearchResult,
   setPostsSearchResult,
@@ -447,11 +591,15 @@ export const {
   toggleShowAllPlace,
   toggleShowAllEvent,
   toggleShowAllProducts,
+  toggleShowAllClasses,
+  toggleShowAllRentals,
   showAllEventTrue,
   showAllPeopleTrue,
   showAllPlaceTrue,
   showAllUsersTrue,
   showAllProductsTrue,
+  showAllClassesTrue,
+  showAllRentalsTrue,
   showAllTrue,
   toggleShowAllHobbies,
   resetSearch,

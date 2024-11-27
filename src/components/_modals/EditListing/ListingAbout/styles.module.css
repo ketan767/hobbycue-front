@@ -10,7 +10,7 @@
 }
 
 .product-model-wrapper {
-  width: 44.93rem !important;
+  width: 44.93rem ;
 }
 
 .modal-close-icon {
@@ -27,6 +27,7 @@
 }
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
+    width: 100vw !important;
     max-height: 50rem;
     height: calc(100vh - 6rem);
   }

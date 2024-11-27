@@ -81,6 +81,7 @@ type ListingModalData = {
 }
 
 interface AuthState {
+  viewAs?: '' | 'signed-in' | 'not-signed-in' | 'print'
   listingLayoutMode: ListingLayoutMode
   profileLayoutMode: ProfileLayoutMode
   listingPageData: any
@@ -149,6 +150,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
+  viewAs: '',
   listingLayoutMode: 'view',
   profileLayoutMode: 'view',
   listingPageData: {},
@@ -237,6 +239,9 @@ const siteSlice = createSlice({
   name: 'site',
   initialState,
   reducers: {
+    updateViewAs: (state, action) => {
+      state.viewAs = action.payload
+    },
     updateListingLayoutMode: (
       state,
       { payload }: PayloadAction<ListingLayoutMode>,
@@ -420,6 +425,7 @@ const siteSlice = createSlice({
 })
 
 export const {
+  updateViewAs,
   updateActiveProductImg,
   updateSaleOpenStates,
   updateListingLayoutMode,

@@ -119,6 +119,27 @@
   cursor: pointer;
 }
 
+.focusable {
+  border: 1px solid transparent;
+  padding: 1px 3px;
+  border-radius: 4px;
+  outline: none; 
+}
+
+.focusable:focus {
+  border-color: var(--Primary-Full); 
+}
+
+.btnSecondary:focus-visible {
+  outline-offset: 1px;
+  outline: 1px solid rgb(var(--primary-100-rgb));
+}
+.btnPrimary:focus-visible {
+  outline-offset: 1px;
+  outline: 1px solid rgb(var(--primary-100-rgb));
+}
+
+
 /* .btnPrimary:hover {
     background-color: white;
     color: #8064a2;

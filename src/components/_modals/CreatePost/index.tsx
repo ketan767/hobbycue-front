@@ -662,12 +662,12 @@ export const CreatePost: React.FC<Props> = ({
       <div
         className={`${styles['modal-wrapper']} ${
           confirmationModal ? styles['ins-active'] : ''
-        } ${data.media.length && !isMobile ? styles['changedWidth'] : ''}`}
+        } ${data?.media?.length && !isMobile ? styles['changedWidth'] : ''}`}
       >
         {/* Modal Header */}
-        <div
+        <div style={{ width:"671px" }}
           className={`${styles['modal-wrapper']} ${
-            data.media.length && !isMobile ? styles['changedWidth'] : ''
+            data?.media?.length && !isMobile ? styles['changedWidth'] : ''
           }`}
         >
           <h3 className={styles['modal-heading']}>
@@ -744,7 +744,7 @@ export const CreatePost: React.FC<Props> = ({
                               (item?.genre ? ` - ${item?.genre?.display} ` : '')
                             }
                             value={
-                              item.hobby?._id + '-' + item?.genre?._id ?? ''
+                              item.hobby?._id + '-' + item?.genre?._id
                             }
                             options={null}
                             key={idx}

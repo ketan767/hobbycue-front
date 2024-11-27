@@ -45,14 +45,14 @@ const StatusDropdown: React.FC<{
   }
 
   return (
-    <div className={styles.dropdown}>
+    <div className={styles.dropdown} onClick={toggleDropdown}>
       <button className={styles.dropdownButton} onClick={toggleDropdown}>
         <span style={{ color: selectedStatus.color }}>
           <Image
             src={selectedStatus.icon}
             alt={selectedStatus.label}
-            width={24}
-            height={24}
+            // width={24}
+            // height={24}
           />
         </span>
         <svg

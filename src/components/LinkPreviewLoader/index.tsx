@@ -29,8 +29,7 @@ const LinkPreviewLoader: React.FC<Props> = () => {
             <ContentLoader
               speed={2}
               width="100%"
-              height={60}
-              viewBox="0 0 300 60"
+              height={100}
               backgroundColor="#f3f3f3"
               foregroundColor="#ecebeb"
             >
