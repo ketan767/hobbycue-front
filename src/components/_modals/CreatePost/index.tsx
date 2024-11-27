@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './CreatePost.module.css'
+import styles1 from './Styles.module.css'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import store, { RootState } from '@/redux/store'
@@ -15,6 +16,7 @@ import {
   updateUserPost,
 } from '@/services/post.service'
 import { closeModal } from '@/redux/slices/modal'
+import CrossIcon from '@/assets/svg/cross.svg'
 
 import DOMPurify from 'dompurify'
 import CreatePostProfileSwitcher from './ProfileSwitcher'
@@ -73,6 +75,10 @@ type NewPostData = {
   media: []
   video_url: any
 }
+type HobbyData = {
+  hobby: string
+  genre: string
+}
 export const CreatePost: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
@@ -91,6 +97,7 @@ export const CreatePost: React.FC<Props> = ({
   const filteredListing = listing.filter((item: any) => item.is_published)
   const { filters } = useSelector((state: RootState) => state.post)
   const [hobbies, setHobbies] = useState([])
+  const [selectedHobbies, setselectedHobbies] = useState<HobbyData[]>([])
   const [editing, setEditing] = useState(false)
   const [data, setData] = useState<NewPostData>({
     type: 'user',
@@ -105,6 +112,12 @@ export const CreatePost: React.FC<Props> = ({
   })
   const [showMetaData, setShowMetaData] = useState(true)
   const editBoxRef = useRef<HTMLDivElement | null>(null)
+
+  const removeSelectedHobby = (hobbyToRemove: any) => {
+    setselectedHobbies((prev) =>
+      prev.filter((hobbyData) => hobbyData.hobby !== hobbyToRemove.hobby),
+    )
+  }
   useEffect(() => {
     if (propData && propData._hobby) {
       setData((prev) => ({
@@ -657,6 +670,22 @@ export const CreatePost: React.FC<Props> = ({
     )
   }
 
+  const alreadyContains = (item: any) => {
+    const alreadyContains = selectedHobbies.some((hobbyData) => {
+      if (hobbyData?.genre && item?.genre?.display) {
+        if (hobbyData?.genre === item?.genre?.display) return true
+      } else {
+        if (!hobbyData?.genre && item?.genre?.display) return false
+        if (hobbyData?.genre && !item?.genre?.display) return false
+
+        if (hobbyData?.hobby === item?.hobby?.display) {
+          return true
+        }
+      }
+    })
+    return alreadyContains
+  }
+
   return (
     <>
       <div
@@ -665,7 +694,8 @@ export const CreatePost: React.FC<Props> = ({
         } ${data?.media?.length && !isMobile ? styles['changedWidth'] : ''}`}
       >
         {/* Modal Header */}
-        <div style={{ width:"671px" }}
+        <div
+          style={{ width: '671px' }}
           className={`${styles['modal-wrapper']} ${
             data?.media?.length && !isMobile ? styles['changedWidth'] : ''
           }`}
@@ -702,6 +732,44 @@ export const CreatePost: React.FC<Props> = ({
                   `}
                 ></div>
               )}
+              {/* <div className={styles1.relative}> */}
+                {selectedHobbies && (
+                  <div className={styles1.hobbyInput}>
+                    {selectedHobbies?.map((item: any) => {
+                      if (typeof item === 'string') return
+                      return (
+                        <button
+                          key={item}
+                          onClick={() => removeSelectedHobby(item)}
+                          style={{
+                            cursor: 'pointer',
+                            borderRadius: 24,
+                            border: 'none',
+                          }}
+                          className={styles1['hobbyInputButton']}
+                        >
+                          <li className={styles1.hobbyInputLi}>
+                            <span className={styles1.noWrap}>
+                              {(item.hobby ? item.hobby : '') +
+                                (item?.genre
+                                  ? ` -
+                                  ${item?.genre} `
+                                  : '')}
+                            </span>
+
+                            <Image
+                              src={CrossIcon}
+                              width={18}
+                              height={18}
+                              alt="cancel"
+                            />
+                          </li>
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
+              {/* </div> */}
 
               <aside>
                 <div>
@@ -731,46 +799,103 @@ export const CreatePost: React.FC<Props> = ({
                     }
                     className={styles['input-select']}
                   >
-                    {hobbies?.map((item: any, idx) => {
-                      return (
+                    <>
+                      {hobbies.length > 0 && (
                         <>
-                          <DropdownOption
-                            _id={undefined}
-                            type={'hobby'}
-                            display={
-                              (item.hobby?.display
-                                ? item.hobby?.display
-                                : item.hobby?.slug) +
-                              (item?.genre ? ` - ${item?.genre?.display} ` : '')
-                            }
-                            value={
-                              item.hobby?._id + '-' + item?.genre?._id
-                            }
-                            options={null}
-                            key={idx}
-                            selected={
-                              item.hobby?._id === data.hobby?._id &&
-                              (data.genre
-                                ? item.genre?._id === data.genre?._id
-                                : item.genre
-                                ? false
-                                : true)
-                            }
-                            item={item}
-                            onChange={(e: any) => {
-                              // const selected = user._hobbies.find(
-                              //   (item: any) => item.hobby?._id === val,
-                              // )
-                              setData((prev: any) => ({
-                                ...prev,
-                                hobby: e?.hobby ?? null,
-                                genre: e?.genre ?? null,
-                              }))
-                            }}
-                          />
+                          {hobbies?.map((item: any, idx) => {
+                            return (
+                              <>
+                                <DropdownOption
+                                  _id={undefined}
+                                  type={'hobby'}
+                                  display={
+                                    (item.hobby?.display
+                                      ? item.hobby?.display
+                                      : item.hobby?.slug) +
+                                    (item?.genre
+                                      ? ` - ${item?.genre?.display} `
+                                      : '')
+                                  }
+                                  value={
+                                    item.hobby?._id + '-' + item?.genre?._id
+                                  }
+                                  options={null}
+                                  key={idx}
+                                  // selected={
+                                  //   item.hobby?._id === data.hobby?._id &&
+                                  //   (data.genre
+                                  //     ? item.genre?._id === data.genre?._id
+                                  //     : item.genre
+                                  //     ? false
+                                  //     : true)
+                                  // }
+                                  selected={alreadyContains(item)}
+                                  item={item}
+                                  onChange={(e: any) => {
+                                    // const selected = user._hobbies.find(
+                                    //   (item: any) => item.hobby?._id === val,
+                                    // )
+                                    const alreadyContains =
+                                      selectedHobbies.some((hobbyData) => {
+                                        console.log(
+                                          'hobbyData.hobby',
+                                          hobbyData.hobby,
+                                          'e?.hobby?.display',
+                                          e?.hobby?.display,
+                                        )
+                                        if (
+                                          hobbyData?.genre &&
+                                          e?.genre?.display
+                                        ) {
+                                          if (
+                                            hobbyData?.genre ===
+                                            e?.genre?.display
+                                          )
+                                            return true
+                                        } else {
+                                          if (
+                                            !hobbyData?.genre &&
+                                            e?.genre?.display
+                                          )
+                                            return false
+                                          if (
+                                            hobbyData?.genre &&
+                                            !e?.genre?.display
+                                          )
+                                            return false
+
+                                          if (
+                                            hobbyData?.hobby ===
+                                            e?.hobby?.display
+                                          ) {
+                                            return true
+                                          }
+                                        }
+                                      })
+
+                                    const newHobbyData = alreadyContains
+                                      ? selectedHobbies
+                                      : [
+                                          ...selectedHobbies,
+                                          {
+                                            hobby: e?.hobby?.display ?? null,
+                                            genre: e?.genre?.display ?? null,
+                                          },
+                                        ]
+                                    setselectedHobbies(newHobbyData)
+                                    setData((prev: any) => ({
+                                      ...prev,
+                                      hobby: e?.hobby ?? null,
+                                      genre: e?.genre ?? null,
+                                    }))
+                                  }}
+                                />
+                              </>
+                            )
+                          })}{' '}
                         </>
-                      )
-                    })}
+                      )}
+                    </>
                   </InputSelect>
                   {errors.hobby && (
                     <p className={styles['error-text']}>{errors.hobby}</p>

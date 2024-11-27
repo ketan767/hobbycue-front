@@ -1,0 +1,55 @@
+.relative {
+  position: relative;
+  /* min-width: 6.25rem;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  max-width: 215px; */
+  width: 215px;
+  z-index: 10;
+}
+.hobbyInput {
+  /* width: 100%; */
+  width: 260px;
+  z-index: 10;
+  top: 116px;
+  left: 104px;
+  background-color: #fff;
+  min-height: 35px;
+  min-width: 6.25rem;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  /* flex-wrap: wrap; */
+  row-gap: var(--spacing-8);
+  column-gap: var(--spacing-8);
+  animation: fadeDown 0.3s ease forwards;
+  overflow: hidden;
+  padding-left: 5px;
+}
+
+.hobbyInput li {
+  list-style: none;
+  padding: var(--spacing-4) calc(var(--spacing-8) + var(--spacing-4));
+  background: #f7f5f9;
+  border-radius: 24px;
+  border: 1px solid #8064a2;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+  color: #8064a2;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.hobbyInput li.active {
+  color: #8064a2;
+  font-weight: 500;
+}
+
+.hobbyInputButton:focus {
+  outline: 2px solid #8064a2;
+}
+.noWrap {
+  text-wrap: nowrap;
+}
