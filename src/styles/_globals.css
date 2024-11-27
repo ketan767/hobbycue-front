@@ -302,7 +302,7 @@ select:-webkit-autofill {
 }
 .ql-container {
   font-size: 14px !important;
-  max-width: 800px;
+  /* max-width: 800px; */
   width: 100%;
   font-family: 'Poppins';
 }

@@ -279,8 +279,10 @@ font-family:'Poppins';
 }
 .content-container {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   margin-top: 9px;
+  gap: 9px;
   align-items: flex-end;
 }
 

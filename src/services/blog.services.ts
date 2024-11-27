@@ -51,7 +51,7 @@ export const searchBlogs = async (searchCriteria: any) => {
       queryParams.append(key, searchCriteria[key])
     }
     const response = await axiosInstance.get(
-      `/blogs/blog-search?${queryParams}`,
+      `/blogs/blog-search-advanced?${queryParams}`,
     )
     return { res: response.data, err: null }
   } catch (error) {

@@ -906,9 +906,9 @@ export const Navbar: React.FC<Props> = ({}) => {
               />
             </section>
 
-          <div onClick={()=>router.push('/admin/dashboard')} style={{ position:"absolute", left:"calc(50% - 24.5px)", top:"calc(50% - 24.5px)", cursor:"pointer" }}>
+          {/* <div onClick={()=>router.push('/admin/dashboard')} style={{ position:"absolute", left:"calc(50% - 24.5px)", top:"calc(50% - 24.5px)", cursor:"pointer" }}>
             {toggleDashboard}
-          </div>
+          </div> */}
 
             <section className={styles['navbar-right']}>
               <ul className={styles['right-listing-expanded']}>
