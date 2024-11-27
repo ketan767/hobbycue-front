@@ -115,7 +115,25 @@ export const CreatePost: React.FC<Props> = ({
 
   const removeSelectedHobby = (hobbyToRemove: any) => {
     setselectedHobbies((prev) =>
-      prev.filter((hobbyData) => hobbyData.hobby !== hobbyToRemove.hobby),
+      prev.filter((hobbyData) => {
+        if (hobbyData.genre && hobbyToRemove.genre) {
+          if (hobbyData.genre === hobbyToRemove.genre) {
+            return false
+          } else {
+            return true
+          }
+        } else if (hobbyData.genre && !hobbyToRemove.genre) {
+          return true
+        } else if (!hobbyData.genre && hobbyToRemove.genre) {
+          return true
+        } else {
+          if (hobbyData.hobby === hobbyToRemove.hobby) {
+            return false
+          } else {
+            return true
+          }
+        }
+      }),
     )
   }
   useEffect(() => {
@@ -732,47 +750,9 @@ export const CreatePost: React.FC<Props> = ({
                   `}
                 ></div>
               )}
-              {/* <div className={styles1.relative}> */}
-                {selectedHobbies && (
-                  <div className={styles1.hobbyInput}>
-                    {selectedHobbies?.map((item: any) => {
-                      if (typeof item === 'string') return
-                      return (
-                        <button
-                          key={item}
-                          onClick={() => removeSelectedHobby(item)}
-                          style={{
-                            cursor: 'pointer',
-                            borderRadius: 24,
-                            border: 'none',
-                          }}
-                          className={styles1['hobbyInputButton']}
-                        >
-                          <li className={styles1.hobbyInputLi}>
-                            <span className={styles1.noWrap}>
-                              {(item.hobby ? item.hobby : '') +
-                                (item?.genre
-                                  ? ` -
-                                  ${item?.genre} `
-                                  : '')}
-                            </span>
-
-                            <Image
-                              src={CrossIcon}
-                              width={18}
-                              height={18}
-                              alt="cancel"
-                            />
-                          </li>
-                        </button>
-                      )
-                    })}
-                  </div>
-                )}
-              {/* </div> */}
 
               <aside>
-                <div>
+                <div className={styles1.z20}>
                   <CreatePostProfileSwitcher
                     data={data}
                     setData={setData}
@@ -781,6 +761,44 @@ export const CreatePost: React.FC<Props> = ({
                     className={styles['profile-switcher-parent']}
                   />
                 </div>
+                <section className={styles1.z10}>
+                  {selectedHobbies && (
+                    <section className={styles1.hobbyInput}>
+                      {selectedHobbies?.map((item: any) => {
+                        if (typeof item === 'string') return
+                        return (
+                          <button
+                            key={item}
+                            onClick={() => removeSelectedHobby(item)}
+                            style={{
+                              cursor: 'pointer',
+                              borderRadius: 24,
+                              border: 'none',
+                            }}
+                            className={styles1['hobbyInputButton']}
+                          >
+                            <li className={styles1.hobbyInputLi}>
+                              <span className={styles1.noWrap}>
+                                {(item.hobby ? item.hobby : '') +
+                                  (item?.genre
+                                    ? ` -
+                                  ${item?.genre} `
+                                    : '')}
+                              </span>
+
+                              <Image
+                                src={CrossIcon}
+                                width={18}
+                                height={18}
+                                alt="cancel"
+                              />
+                            </li>
+                          </button>
+                        )
+                      })}
+                    </section>
+                  )}
+                </section>
 
                 <div
                   className={`${styles['input-box']}  ${
