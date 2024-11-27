@@ -283,7 +283,6 @@ font-family:'Poppins';
   justify-content: space-between;
   margin-top: 9px;
   gap: 9px;
-  align-items: flex-end;
 }
 
 .hide {
@@ -958,6 +957,7 @@ font-family:'Poppins';
     max-height: 24px;
     z-index: 1;
     order: 3;
+    margin-top: -12px;
   }
   .qunatity {
     padding-top: 9px;
