@@ -304,21 +304,20 @@
 }
 
 .posts-meta-data-container {
-  /* display: flex; */
+  display: flex; 
   width: 100%;
   max-width: inherit;
-  /* padding: 16px; */
+  padding: 16px; 
   align-items: center;
   gap: 24px;
   background: var(--Purple-3, #F7F5F9);
 }
-
-/* .posts-meta-img, */
+ .posts-meta-img,
 .posts-meta-img {
-  height: 376.31px;
-  width: 100%;
-  /* border-radius: 5px; */
-  border: 1.5px solid #8064a2;
+  height: 100px;
+  width: 100px;
+   border-radius: 5px; 
+  border: 1.5px solid #8064a2 !important;
   border-inline: none;
   overflow: hidden;
 }

@@ -258,7 +258,11 @@ const PostCard: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div style={{height:"auto"}} className={styles['post-card-wrapper']} onClick={handleCardClick}>
+      <div
+        style={{ height: 'auto' }}
+        className={styles['post-card-wrapper']}
+        onClick={handleCardClick}
+      >
         {/* Card Header */}
         {(!has_link ||
           props.currentSection === 'posts' ||
@@ -385,7 +389,10 @@ const PostCard: React.FC<Props> = (props) => {
             </div>
             <div ref={editReportDeleteRef} className={styles.actionIcon}>
               {openAction === true && (
-                <div style={{ marginTop:"12px" }} className={styles.editReportDelete}>
+                <div
+                  style={{ marginTop: '12px' }}
+                  className={styles.editReportDelete}
+                >
                   {postedByMe && (
                     <>
                       <button
@@ -457,7 +464,10 @@ const PostCard: React.FC<Props> = (props) => {
                 </defs>
               </svg>
               {optionsActive && fromProfile && (
-                <ul style={{ marginTop:"12px" }} className={styles.optionsContainer}>
+                <ul
+                  style={{ marginTop: '12px' }}
+                  className={styles.optionsContainer}
+                >
                   <li
                     onClick={
                       onPinPost !== undefined
@@ -562,13 +572,11 @@ const PostCard: React.FC<Props> = (props) => {
               {has_link && props.currentSection !== 'links' && (
                 <div
                   className={
-                    !linkLoading ?
-                    (isVideoLink(url)
-                      ? styles['post-video-link']
-                      : styles['posts-meta-parent']
-                    ) : (
-                      styles['posts-meta-loader']
-                    )
+                    !linkLoading
+                      ? isVideoLink(url)
+                        ? styles['post-video-link']
+                        : styles['posts-meta-parent']
+                      : styles['posts-meta-loader']
                   }
                 >
                   {linkLoading ? (
@@ -646,7 +654,10 @@ const PostCard: React.FC<Props> = (props) => {
                   height={130}
                 />
               </a>
-              <div style={isMobile ? {height:"109px"}: {}} className={styles.metaContent}>
+              <div
+                style={isMobile ? { height: '109px' } : {}}
+                className={styles.metaContent}
+              >
                 <a href={url} target="_blank" className={styles.contentHead}>
                   {' '}
                   {metaData?.title}{' '}
