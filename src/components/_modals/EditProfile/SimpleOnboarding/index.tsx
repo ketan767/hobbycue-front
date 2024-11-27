@@ -1432,6 +1432,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                   onChange={handleInputChangeAddress}
                   autoComplete="new"
                   onKeyDown={handleLocationKeyDown}
+                  style={{paddingRight: '28px'}}
                 />
                 <Image
                   src={LocationIcon}
@@ -1456,28 +1457,53 @@ const SimpleOnboarding: React.FC<Props> = ({
               </div>
               {/* <div> */}
               {ShowAutoAddress && (
-                <div className={styles['dropdown']} ref={locationDropdownRef}>
-                  {suggestions.map((suggestion, index) => (
-                    <p
-                      onClick={() => {
-                        handleSelectAddressTwo(
-                          suggestion.description,
-                          suggestion.place_id,
-                        )
-                        setSelectedAddress(suggestion.description)
-                      }}
-                      key={index}
-                      className={
-                        index === focusedLocationIdx
-                          ? styles['dropdown-option-focus']
-                          : ''
-                      }
-                    >
-                      {suggestion.description}
-                    </p>
-                  ))}
-                </div>
-              )}
+    <div className={styles['dropdown']} ref={locationDropdownRef}>
+      {suggestions.map((suggestion, index) => {
+        const regex = new RegExp(`(${addressDataString})`, 'i');
+        const highlightedDescription = suggestion.description.replace(
+          regex,
+          (match) => `<span style="color: black;">${match}</span>`
+        );
+        return (
+          <p
+            ref={(el) => {
+              if (index === focusedLocationIdx && el) {
+                el.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'nearest',
+                });
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+                handleSelectAddressTwo(
+                  suggestion.description,
+                  suggestion.place_id
+                );
+                setSelectedAddress(suggestion.description);
+              }
+            }}
+            onClick={() => {
+              handleSelectAddressTwo(
+                suggestion.description,
+                suggestion.place_id
+              );
+              setSelectedAddress(suggestion.description);
+            }}
+            key={index}
+            className={
+              index === focusedLocationIdx
+                ? styles['dropdown-option-focus']
+                : ''
+            }
+            dangerouslySetInnerHTML={{ __html: highlightedDescription }}
+          />
+        );
+      })}
+    </div>
+  )}
               {/* </div> */}
               {/* {ShowDropdown && dropdownList.length !== 0 && (
                 <div className={styles['dropdown']}>
