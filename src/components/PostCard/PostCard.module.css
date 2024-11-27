@@ -309,7 +309,8 @@
   max-width: inherit;
   padding: 16px; 
   align-items: center;
-  gap: 24px;
+  
+  gap: 8px;
   background: var(--Purple-3, #F7F5F9);
 }
  .posts-meta-img,
@@ -366,7 +367,7 @@ color: #939CA3;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  max-width: 559px;
+  max-width: 500px;
   margin: 0;
   padding: 0;
   white-space: nowrap;
