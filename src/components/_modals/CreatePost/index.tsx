@@ -97,7 +97,7 @@ export const CreatePost: React.FC<Props> = ({
   const filteredListing = listing.filter((item: any) => item.is_published)
   const { filters } = useSelector((state: RootState) => state.post)
   const [hobbies, setHobbies] = useState([])
-  const [selectedHobbies, setselectedHobbies] = useState<HobbyData[]>([])
+  const [selectedHobbies, setSelectedHobbies] = useState<HobbyData[]>([])
   const [editing, setEditing] = useState(false)
   const [data, setData] = useState<NewPostData>({
     type: 'user',
@@ -114,7 +114,7 @@ export const CreatePost: React.FC<Props> = ({
   const editBoxRef = useRef<HTMLDivElement | null>(null)
 
   const removeSelectedHobby = (hobbyToRemove: any) => {
-    setselectedHobbies((prev) =>
+    setSelectedHobbies((prev) =>
       prev.filter((hobbyData) => {
         if (hobbyData.genre && hobbyToRemove.genre) {
           if (hobbyData.genre === hobbyToRemove.genre) {
@@ -564,15 +564,20 @@ export const CreatePost: React.FC<Props> = ({
         content: 'This field is required',
       })
     }
-    if (!data.hobby) {
-      hobbyRef.current?.focus()
-      return setErrors({
-        ...errors,
-        hobby: 'This field is required',
+    if (selectedHobbies.length === 0) {
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Please select atleast one hobby',
       })
+      return
+      // return setErrors({
+      //   ...errors,
+      //   hobby: 'This field is required',
+      // })
     }
     const jsonData: any = {
-      hobbyId: data.hobby?._id,
+      hobbyIds: data.hobby?._id,
 
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
@@ -586,8 +591,8 @@ export const CreatePost: React.FC<Props> = ({
       jsonData.genreId = data.genre._id
     }
 
-    console.log('jsonData', jsonData.hobbyId)
-    console.log('jsonData genreId', jsonData.genreId)
+    // console.log('jsonData', jsonData.hobbyId)
+    // console.log('jsonData genreId', jsonData.genreId)
     setSubmitBtnLoading(true)
 
     if (data.type === 'listing') {
@@ -652,6 +657,9 @@ export const CreatePost: React.FC<Props> = ({
   }, [data])
 
   useEffect(() => {
+    const firstHobby = activeProfile?.data?._hobbies[0]?.hobby?.display
+    const firstGenre = activeProfile?.data?._hobbies[0]?.genre?.display
+    setSelectedHobbies([{ hobby: firstHobby, genre: firstGenre }])
     setData((prev: any) => {
       return { ...prev, type: activeProfile.type, data: activeProfile.data }
     })
@@ -796,6 +804,9 @@ export const CreatePost: React.FC<Props> = ({
                           </button>
                         )
                       })}
+                      {selectedHobbies.length === 0 && (
+                        <p>Please select atleast one hobby</p>
+                      )}
                     </section>
                   )}
                 </section>
@@ -891,16 +902,26 @@ export const CreatePost: React.FC<Props> = ({
                                         }
                                       })
 
-                                    const newHobbyData = alreadyContains
-                                      ? selectedHobbies
-                                      : [
-                                          ...selectedHobbies,
-                                          {
-                                            hobby: e?.hobby?.display ?? null,
-                                            genre: e?.genre?.display ?? null,
-                                          },
-                                        ]
-                                    setselectedHobbies(newHobbyData)
+                                    const newHobbyData =
+                                      alreadyContains ||
+                                      selectedHobbies.length >= 3
+                                        ? selectedHobbies
+                                        : [
+                                            ...selectedHobbies,
+                                            {
+                                              hobby: e?.hobby?.display ?? null,
+                                              genre: e?.genre?.display ?? null,
+                                            },
+                                          ]
+                                    setSelectedHobbies(newHobbyData)
+                                    if (selectedHobbies.length >= 3) {
+                                      setSnackbar({
+                                        display: true,
+                                        type: 'warning',
+                                        message:
+                                          'You can only select up to 3 hobbies',
+                                      })
+                                    }
                                     setData((prev: any) => ({
                                       ...prev,
                                       hobby: e?.hobby ?? null,

@@ -1,6 +1,6 @@
 import { headers } from 'next/headers'
 import axiosInstance, { operation } from './_axios'
-
+type stringOrUndefined = string | undefined
 export const getAllPosts = async (query: string): Promise<ApiReturnObject> => {
   try {
     const res = await axiosInstance.get(`/post/?${query}`)
@@ -31,8 +31,8 @@ export const getAllPostsWithComments = async (
 
 /** Create a User Post `POST: /api/post/user/` */
 export const createUserPost = async (data: {
-  hobbyId: string
-  genreId: string | undefined
+  hobbyIds: string[]
+  genreIds: stringOrUndefined[]
   content: string
   visibility: string
   media: []
@@ -53,8 +53,8 @@ export const createUserPost = async (data: {
 /** Create a Listing Page Post `POST: /api/post/listing/` */
 export const createListingPost = async (data: {
   listingId: string
-  hobbyId: string
-  genreId: string | undefined
+  hobbyIds: string[]
+  genreIds: stringOrUndefined[]
   content: string
   visibility: string
 }): Promise<ApiReturnObject> => {
