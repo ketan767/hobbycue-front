@@ -8,11 +8,11 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import styles from './styles.module.css'
 import Image from 'next/image'
-import CustomEditor from '@/components/CustomEditor'
 import { getAllPosts } from '@/services/post.service'
 import { getAllHobbies } from '@/services/hobby.service'
 import { updatePostByAdmin } from '@/services/admin.service'
 import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic'
 
 type Props = {
     _id: string
@@ -25,6 +25,11 @@ type DropdownListItem = {
     sub_category?: string
     genre?: any
 }
+
+const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
+  ssr: false,
+  loading: () => <h1>Loading...</h1>,
+})
 
 const EditPostModal: React.FC<Props> = ({
     _id,
