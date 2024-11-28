@@ -1113,7 +1113,7 @@ const CommunityLayout: React.FC<Props> = ({
                           (obj: any) => obj?.value === selectedHobby,
                         )?.display ?? selectedHobby
                       }
-                      variant={selectedHobby === '' ? 'secondary' : 'primary'}
+                      variant={selectedHobby === 'All Hobbies' ? 'secondary' : 'primary'}
                     >
                       {[
                         { display: 'All Hobbies', value: 'All Hobbies' },

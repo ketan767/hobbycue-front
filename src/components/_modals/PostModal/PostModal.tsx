@@ -378,7 +378,7 @@ export const PostModal: React.FC<Props> = ({
                 }
               >
                 {linkLoading ? (
-                  <div style={{ width:"100%"}}>
+                  <div style={{ width:"100vw"}}>
                   <LinkPreviewLoader />
                   </div>
                 ) : (
