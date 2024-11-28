@@ -219,7 +219,26 @@ export const searchUsers = async (searchCriteria: any) => {
     console.error('Error searching for users:', error)
     return { res: null, err: error }
   }
-}
+};
+
+export const searchUsersAdvanced = async (searchCriteria:any) => {
+  try {
+  
+    const queryParams = new URLSearchParams();
+    for (const key in searchCriteria) {
+      if (searchCriteria.hasOwnProperty(key)) {
+        queryParams.append(key, searchCriteria[key]);
+      }
+    }
+    console.log(`/user/user-search-advanced?${queryParams.toString()}`);
+    
+    const response = await axiosInstance.get(`/user/user-search-advanced?${queryParams.toString()}`);
+    return { res: response.data, err: null };
+  } catch (error) {
+    console.error('Error searching for users:', error);
+    return { res: null, err: error };
+  }
+};
 
 export const getAllUserUrls = async (): Promise<ApiReturnObject> => {
   try {

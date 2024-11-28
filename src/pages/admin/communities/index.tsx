@@ -289,13 +289,13 @@ const AdminCommunities: React.FC = () => {
                     <td>
                       <div className={styles.resultItem}>
                         <div className={styles.detailsContainer}>
-                          <div className={styles.userName}>
+                          <Link className={styles.userName} href={`/hobby/${user?.hobby?.slug}`}>
                             {`${user?.hobby?.display}${
                               user?.genre?.display
                                 ? ' - ' + user?.genre?.display
                                 : ''
                             }`}
-                          </div>
+                          </Link>
                         </div>
                       </div>
                     </td>
