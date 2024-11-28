@@ -87,7 +87,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
       console.log('Error while creating blog at handleAddBlog()!', err)
     }
   }
-  console.log(data)
+
   return (
     <>
       <Head>

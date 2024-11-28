@@ -1,8 +1,15 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './EditBlog.module.css'
 import Image from 'next/image'
+import EditBlogHobbyModal from './EditHobby'
+import { useRouter } from 'next/router'
+import { useGetBlogById } from '@/services/blog.services'
+import { BlogHobby } from '@/types/blog'
+import axiosInstance from '@/services/_axios'
+
 interface Props {
   setIsModalOpen: any
+  data: any
 }
 
 const penIcon = (
@@ -49,128 +56,285 @@ const starIcon = (
     />
   </svg>
 )
+let baseURL = 'https://hobbycue.com/blog/'
+function formatDate(isoDate: any) {
+  const date = new Date(isoDate)
+
+  // Format the date to '26 NOV 2024'
+  const day = date.getDate().toString().padStart(2, '0') // Ensure 2 digits for day
+  const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase() // Abbreviated month in uppercase
+  const year = date.getFullYear() // Full year
+
+  return `${day} ${month} ${year}`
+}
 const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
+  const router = useRouter()
+
+  const {
+    data: Singleblog,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useGetBlogById(`url=${router.query.url}&populate=author,_hobbies`)
+  const data = {
+    blog_url: Singleblog?.data?.blog[0],
+  }
+
+  const blog = data?.blog_url || {}
+  const author = blog?.author
+  const [editHobby, setEditHobby] = useState(false)
+  const [urlText, setUrlText] = useState('')
+  const [keyWords, setKeyWords] = useState('')
+
+  useEffect(() => {
+    if (blog) {
+      setUrlText(blog?.url)
+      setKeyWords(blog.keywords)
+    }
+  }, [blog])
+
+  const handleClose = () => {
+    setEditHobby(false)
+  }
+
+  const handleURLUpdate = (e: any) => {
+    let value = e.target.value
+    setUrlText(value)
+    console.log(value.length)
+  }
+  const updateBlog = async (blogId: String) => {
+    let updatedFields = {
+      url: urlText,
+      keywords: keyWords,
+    }
+    const token = localStorage.getItem('token')
+
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }
+    const { data } = await axiosInstance.patch(
+      `blogs/${blogId}`,
+      updatedFields,
+      headers,
+    )
+
+    if (!data) {
+      console.error('Error updating blog:', data.error)
+      return null
+    }
+    refetch()
+    router.push(`/blog/${urlText}`)
+    console.log('Blog updated successfully:', data)
+    return data
+  }
+
+  // utils/api.ts
+
+  const updateBlogStatus = async (
+    blogId: string,
+    status: 'Draft' | 'Pending' | 'Published',
+  ): Promise<void> => {
+    const token = localStorage.getItem('token') // Retrieve token from local storage
+    if (!token) throw new Error('User is not authenticated')
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    }
+
+    const { data } = await axiosInstance.patch(
+      `blogs/${blogId}/status`,
+      { status },
+      { headers },
+    )
+    if (data) {
+      refetch()
+      console.log(data)
+    }
+  }
+
+  console.log(blog)
+  let props = { setEditHobby, handleClose, data, refetch }
+
   return (
-    <section className={styles.mainContainer}>
-      <div className={styles.closeButtonContainer}>
-        <button
-          className={styles.closeButton}
-          onClick={() => setIsModalOpen(false)}
-        >
-          x
-        </button>
-      </div>
+    <>
+      {Singleblog && !isLoading && !isError && (
+        <>
+          {editHobby ? (
+            <>
+              <EditBlogHobbyModal {...props} />
+            </>
+          ) : (
+            <section className={styles.mainContainer}>
+              <div className={styles.closeButtonContainer}>
+                <button
+                  className={styles.closeButton}
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  x
+                </button>
+              </div>
 
-      <div className={styles.containerWrapper}>
-        <header className={styles.header}>
-          <h2 className={styles.status}>
-            Status: <span className={styles.statusSpan}>Draft</span>
-          </h2>
-          <div className={styles.actionButtons}>
-            <button className={styles.previewButton}>Preview</button>
-            <button className={styles.publishButton}>Publish</button>
-          </div>
-        </header>
+              <div className={styles.containerWrapper}>
+                <header className={styles.header}>
+                  <h2 className={styles.status}>
+                    Status:{' '}
+                    <span className={styles.statusSpan}>{blog?.status}</span>
+                  </h2>
+                  <div className={styles.actionButtons}>
+                    <button className={styles.previewButton}>Preview</button>
+                    <button
+                      onClick={() => updateBlogStatus(blog._id, 'Pending')}
+                      className={styles.publishButton}
+                    >
+                      Publish
+                    </button>
+                  </div>
+                </header>
 
-        {/* blogURL */}
-        <div className={styles.blogUrlWrapper}>
-          <label className={styles.blogLabel} htmlFor="URL">
-            Blog URL <span className={styles.Star}>*</span>{' '}
-            <span className={styles.urlSpan}>www.extra.com</span>
-          </label>
-          <input className={styles.urlInput} type="text" placeholder="URL" />
-        </div>
+                {/* blogURL */}
+                <div className={styles.blogUrlWrapper}>
+                  <label className={styles.blogLabel} htmlFor="URL">
+                    Blog URL <span className={styles.Star}>*</span>{' '}
+                    <span className={styles.urlSpan}>
+                      {baseURL}
+                      {urlText}{' '}
+                    </span>
+                  </label>
+                  <input
+                    className={styles.urlInput}
+                    type="text"
+                    value={urlText}
+                    placeholder="URL"
+                    maxLength={48}
+                    onChange={handleURLUpdate}
+                  />
+                </div>
 
-        {/* search pic */}
-        <div className={styles.searchPicWrapper}>
-          <p className={styles.searchPicText}>
-            <span className={styles.searchSpan}>Search Pic:</span>
-            <span className={styles.authorSpan}>Author</span>
-          </p>
-          <div className={styles.searchPicContent}>
-            <figure className={styles.searchPicFigure}>
-              <Image
-                className={styles.searchPicImage}
-                height={30}
-                width={30}
-                src="https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt=""
-              />
-            </figure>
-            <div className={styles.searchPicDetails}>
-              <h3 className={styles.searchPicTitle}>
-                40 Solor Travel Tips to Remember for a Memorable Trip
-              </h3>
-              <h4 className={styles.searchPicSubtitle}>
-                Practical Advise based on Personal Experience
-              </h4>
-              <p className={styles.searchPicAuthor}>
-                Rakesh Shah | 10 Mar 2024
-              </p>
-            </div>
-          </div>
-        </div>
+                {/* search pic */}
+                <div className={styles.searchPicWrapper}>
+                  <p className={styles.searchPicText}>
+                    <span className={styles.searchSpan}>Search Pic:</span>
+                    <span className={styles.authorSpan}>Author</span>
+                  </p>
+                  <div className={styles.searchPicContent}>
+                    <figure className={styles.searchPicFigure}>
+                      <Image
+                        className={styles.searchPicImage}
+                        height={400}
+                        width={400}
+                        src={author?.profile_image}
+                        alt=""
+                      />
+                    </figure>
+                    <div className={styles.searchPicDetails}>
+                      <h3 className={styles.searchPicTitle}>{blog?.title}</h3>
+                      <h4 className={styles.searchPicSubtitle}>
+                        {blog?.tagline}
+                      </h4>
+                      <p className={styles.searchPicAuthor}>
+                        {author?.full_name} | {formatDate(blog?.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <hr className={styles.hr} />
+                {/* middle content */}
+                <div className={styles.middleWrapper}>
+                  {/* left */}
+                  <div className={styles.leftContent}>
+                    <figure className={styles.leftFigure}>
+                      <Image
+                        className={styles.leftImage}
+                        width={300}
+                        height={300}
+                        src={data?.blog_url?.cover_pic}
+                        alt="profile cover"
+                      />
+                    </figure>
+                    <h3 className={styles.leftTitle}>{blog?.title}</h3>
+                    <p className={styles.leftSubtitle}>{blog?.tagline}</p>
+                    <div className={styles.leftDetails}>
+                      <p className={styles.leftAuthorInfo}>
+                        <span className={styles.leftAuthor}>
+                          {author?.full_name}
+                        </span>
+                        <span className={styles.leftDate}>
+                          {formatDate(blog?.createdAt)}
+                        </span>
+                      </p>
+                      <p className={styles.leftTags}>
+                        <span className={styles.leftStarIcon}>{starIcon}</span>
 
-        {/* middle content */}
-        <div className={styles.middleWrapper}>
-          {/* left */}
-          <div className={styles.leftContent}>
-            <figure className={styles.leftFigure}>
-              <Image
-                className={styles.leftImage}
-                width={30}
-                height={30}
-                src="https://images.unsplash.com/photo-1622861431895-903d0da34168?q=80&w=1886&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt="profile cover"
-              />
-            </figure>
-            <h3 className={styles.leftTitle}>
-              40 solo travel tips to remember for a memorable trip
-            </h3>
-            <p className={styles.leftSubtitle}>
-              Practical Advise based on Personal Experience
-            </p>
-            <div className={styles.leftDetails}>
-              <p className={styles.leftAuthorInfo}>
-                <span className={styles.leftAuthor}>Akash sing</span>
-                <span className={styles.leftDate}>12 sep 2023</span>
-              </p>
-              <p className={styles.leftTags}>
-                <span className={styles.leftStarIcon}>{starIcon}</span>
-                <span className={styles.leftTag}>photography</span>
-                <span className={styles.leftTag}>tour</span>
-              </p>
-            </div>
-          </div>
+                        {blog?._hobbies?.map((h: BlogHobby, i: React.Key) => (
+                          <span key={i} className={styles.leftTag}>
+                            {h.hobby?.display}
+                          </span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
 
-          {/* right */}
-          <div className={styles.rightContent}>
-            <h4 className={styles.blogCardHeader}>
-              <span className={styles.blogCardText}>Blog Card pic</span>:
-              <span className={styles.blogCardType}>Cover</span>
-            </h4>
-            <h3 className={styles.keywordsHeader}>KeyWords</h3>
-            <textarea className={styles.keywordsTextarea} rows={10}></textarea>
-            <div className={styles.hobbiesSection}>
-              <h2 className={styles.hobbiesHeader}>
-                Hobbies <span className={styles.penIcon}>{penIcon}</span>
-              </h2>
-              <p className={styles.hobbiesButtons}>
-                <button className={styles.hobbyButton}>photography</button>
-                <button className={styles.hobbyButton}>photography1</button>
-                <button className={styles.hobbyButton}>photography2</button>
-                <button className={styles.hobbyButton}>photography3</button>
-              </p>
-            </div>
-          </div>
-        </div>
+                  {/* right */}
+                  <div className={styles.rightContent}>
+                    <h4 className={styles.blogCardHeader}>
+                      <span className={styles.blogCardText}>Blog Card pic</span>
+                      :<span className={styles.blogCardType}>Cover</span>
+                    </h4>
+                    <h3 className={styles.keywordsHeader}>KeyWords</h3>
+                    <textarea
+                      className={styles.keywordsTextarea}
+                      rows={10}
+                      value={keyWords}
+                      onChange={(e) => setKeyWords(e.target.value)}
+                    ></textarea>
+                    <div className={styles.hobbiesSection}>
+                      <h2 className={styles.hobbiesHeader}>
+                        Hobbies{' '}
+                        <span
+                          className={styles.penIcon}
+                          onClick={() => setEditHobby(true)}
+                        >
+                          {penIcon}
+                        </span>
+                      </h2>
+                      <p className={styles.hobbiesButtons}>
+                        {blog?._hobbies?.map((h: BlogHobby, i: React.Key) => (
+                          <button key={i} className={styles.hobbyButton}>
+                            {h.hobby?.display}
+                          </button>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
-        <div className={styles.footerButtons}>
-          <button className={styles.backButton}>Back</button>
-          <button className={styles.saveButton}>Save</button>
-        </div>
-      </div>
-    </section>
+                <div className={styles.footerButtons}>
+                  <button
+                    className={styles.backButton}
+                    onClick={() => setIsModalOpen(false)}
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={() => updateBlog(blog._id)}
+                    className={styles.saveButton}
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </section>
+          )}
+        </>
+      )}
+
+      {isLoading && <p>Loading</p>}
+    </>
   )
 }
 

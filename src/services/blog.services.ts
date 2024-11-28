@@ -1,3 +1,4 @@
+import { useQuery } from 'react-query'
 import axiosInstance, { operation } from './_axios'
 
 /** Get User Details `GET /api/user/?{query}`  */
@@ -152,5 +153,50 @@ export const uploadBlogImage = async (formData: FormData, blogId: string) => {
     return { res, err: null }
   } catch (err) {
     return { err: err, res: null }
+  }
+}
+
+export const useGetBlogById = (query: string) => {
+  return useQuery({
+    queryKey: ['blogs', query],
+    queryFn: async () => {
+      let url = `/blogs/?${query}`
+      const { data } = await axiosInstance.get(url)
+
+      return data
+    },
+  })
+}
+
+export async function addHobby(blogId, hobbyData) {
+  const token =
+    typeof window !== 'undefined' ? localStorage.getItem('token') : null
+
+  if (!token) {
+    throw new Error('Token not found. Please log in.')
+  }
+
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/blogs/${blogId}/hobbies`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(hobbyData),
+      },
+    )
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.error || 'Failed to add hobby')
+    }
+
+    return await response.json() // Parsed JSON response
+  } catch (error) {
+    console.error('Error adding hobby:', error)
+    throw error
   }
 }

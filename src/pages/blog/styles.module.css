@@ -17,10 +17,16 @@
   max-width: 1296px;
   margin: 0 auto;
 }
-
+.filterContainer {
+  max-width: 280px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 .main-container {
   background-color: #f2f0f5;
   padding-top: 12px;
+  display: flex;
 }
 .blog-header {
   max-width: 872px;

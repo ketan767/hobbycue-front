@@ -31,6 +31,7 @@ import dynamic from 'next/dynamic'
 import FilledButton from '@/components/_buttons/FilledButton'
 import ModalWrapper from '@/components/Modal'
 import EditBlog from '@/components/_modals/EditBlog/EditBlog'
+import { Blog } from '@/types/blog'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 type Props = {
@@ -60,7 +61,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   const [isAuthorizedToView, setIsAuthorizedToView] = useState(false)
   const [isEditing, setIsEditing] = useState(false) // to check if the author is shown the editable interface
   // const [hasChanged, setHasChanged] = useState(false)
-  const [blog, setBlog] = useState(data?.blog_url || {})
+  const [blog, setBlog] = useState<Blog | {}>(data?.blog_url || {})
   const titleRef = useRef<HTMLTextAreaElement | null>(null)
   const taglineRef = useRef<HTMLTextAreaElement | null>(null)
   const cameraInputRef = useRef<HTMLInputElement | null>(null)
@@ -171,7 +172,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   }
 
   useEffect(() => {
-    setBlog(data.blog_url)
+    setBlog(data.blog_url || {})
   }, [data])
 
   useEffect(() => {
@@ -269,7 +270,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                 <textarea
                   className={styles['blog-title'] + ' ' + styles.editInput}
                   placeholder="Title"
-                  value={blog.title}
+                  value={blog?.title || ''}
                   name="title"
                   onChange={(e) => handleChange(e, 'title')}
                   onBlur={() => handleEditBlog('title')}
@@ -652,7 +653,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
       )}
 
       <ModalWrapper isOpen={isModalOpen} onClose={setIsModalOpen}>
-        <EditBlog setIsModalOpen={setIsModalOpen} />
+        <EditBlog setIsModalOpen={setIsModalOpen} data={data} />
       </ModalWrapper>
     </>
   )
