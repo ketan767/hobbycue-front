@@ -495,7 +495,8 @@ flex: 1 0 0;
     /* overflow: hidden; */
   }
 
-  .editor-container{
+  .editor-container {
+
     width: 100% !important;
   }
 

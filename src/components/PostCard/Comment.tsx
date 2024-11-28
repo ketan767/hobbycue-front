@@ -47,11 +47,14 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
       document.removeEventListener('click', handleClickOutside)
     }
   }, [])
-
+  
+  
   const postedByMe =
     (comment?.author_type === 'User' &&
       comment?._author?.email === user?.email) ||
     (comment?.author_type === 'Listing' && comment?._author?.admin === user._id)
+
+    const commentUrl = `${window.location.origin}/comment/${comment._id}`
 
   const showFeatUnderDev = () => {
     setSnackbar({
@@ -294,14 +297,14 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
               <div style={{ marginTop:"12px" }} className={styles.editReportDelete}>
                 {postedByMe && (
                   <>
-                    <button
+                    {/* <button
                       onClick={() => {
                         setEditComment(true)
                         setOpenAction(false)
                       }}
                     >
                       Edit
-                    </button>
+                    </button> */}
                     <button
                       onClick={() => {
                         setShowDelModal(true)
@@ -313,7 +316,16 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
                   </>
                 )}
                 {!postedByMe && (
-                  <button onClick={showFeatUnderDev}>Report</button>
+                  <button onClick={() => {
+                    dispatch(
+                      openModal({
+                        type: 'PostReportModal',
+                        closable: true,
+                        propData: { reported_url: commentUrl },
+                      }),
+                    )
+                    setOpenAction(false)
+                  }}>Report</button>
                 )}
               </div>
             )}

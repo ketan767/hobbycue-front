@@ -385,8 +385,6 @@ const HobbyAboutEditModal: React.FC<Props> = ({
             marginBottom:4
           }}>{'Keywords'}</h3>
           {!user.is_onboarded && showSkip ? skipSvg : null}
-        
-        
             <input type='text'/>
           </div>
         </section>
