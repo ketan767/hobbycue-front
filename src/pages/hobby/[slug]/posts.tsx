@@ -11,7 +11,7 @@ import PageContentBox from '@/layouts/PageContentBox'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import HobbyPageLayout from '@/layouts/HobbyPageLayout'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
-import { getAllPosts } from '@/services/post.service'
+import { getAllHobbyPosts, getAllPosts } from '@/services/post.service'
 import { RootState } from '@/redux/store'
 import { useDispatch, useSelector } from 'react-redux'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
@@ -44,12 +44,13 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
 
   const getPost = async () => {
     setLoadingPosts(true)
-    const queryParam =
-      data?.level === 5
-        ? `_genre=${data._id}&populate=_author,_genre,_hobby`
-        : `_hobby=${data._id}&populate=_author,_genre,_hobby`
+    const queryParam = `hobbyId=${data._id}&populate=_author,_genre,_hobby,_allHobbies,_allGenres`
+    // const queryParam =
+    //   data?.level === 5
+    //     ? `_genre=${data._id}&populate=_author,_genre,_hobby,_allHobbies,_allGenres`
+    //     : `_hobby=${data._id}&populate=_author,_genre,_hobby,_allHobbies,_allGenres`
 
-    const { err, res } = await getAllPosts(queryParam)
+    const { err, res } = await getAllHobbyPosts(queryParam)
 
     if (err) return console.log(err)
     if (res.data.success) {
@@ -172,12 +173,17 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
                 posts.length === 0 &&
                 isLoggedIn && (
                   <div
-                  style={
-                    isMobile
-                      ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
-                      : undefined
-                  }
-                   className={styles['no-posts-container']}>
+                    style={
+                      isMobile
+                        ? {
+                            marginTop: '8px',
+                            height: '100px',
+                            borderRadius: '0px',
+                          }
+                        : undefined
+                    }
+                    className={styles['no-posts-container']}
+                  >
                     <p>No posts available</p>
                   </div>
                 )
@@ -217,12 +223,17 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
               ) : (
                 posts.length === 0 && (
                   <div
-                  style={
-                    isMobile
-                      ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
-                      : undefined
-                  } 
-                  className={styles['no-posts-container']}>
+                    style={
+                      isMobile
+                        ? {
+                            marginTop: '8px',
+                            height: '100px',
+                            borderRadius: '0px',
+                          }
+                        : undefined
+                    }
+                    className={styles['no-posts-container']}
+                  >
                     <p>No posts available</p>
                   </div>
                 )

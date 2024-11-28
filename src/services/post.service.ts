@@ -11,6 +11,16 @@ export const getAllPosts = async (query: string): Promise<ApiReturnObject> => {
   }
 }
 
+export const getAllHobbyPosts = async (query: string): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.get(`/post/hobby-posts?${query}`)
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 /** Gets all User Posts with Comments data `GET: /api/post/with-comments/` */
 export const getAllPostsWithComments = async (
   query: string,

@@ -148,6 +148,9 @@ type PostData = {
   author_type: string
   createdAt: any
   _hobby: any
+  _genre: any
+  _allHobbies: any
+  _allGenres: any
   visibility: any
   content: any
 }
@@ -2384,8 +2387,31 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             : page?._author?.title}
                         </div>
                         <div className={styles.userTagline}>
-                          {convertDateToString(page?.createdAt) || '\u00a0'}{' '}
-                          {' | ' + page?._hobby.display || '\u00a0'}{' '}
+                          {convertDateToString(page?.createdAt) || '\u00a0'}
+                          {' | '}
+                          {page?._allHobbies?.length > 0 ? (
+                            page?._allHobbies?.map(
+                              (hobby: any, index: number) => {
+                                return (
+                                  <span key={index}>
+                                    {`${hobby?.display}${
+                                      page?._allGenres[index-1]?.display
+                                        ? ' - ' +
+                                          page?._allGenres[index-1]?.display
+                                        : ''
+                                    }`}
+                                    {index < page?._allHobbies?.length - 1
+                                      ? ', '
+                                      : ''}
+                                  </span>
+                                )
+                              },
+                            )
+                          ) : (
+                            <span>{`${page?._hobby?.display}${
+                              page._genre ? ' - ' + page?._genre?.display : ''
+                            }`}</span>
+                          )}
                           {' | ' + page.visibility}
                         </div>
                         <div

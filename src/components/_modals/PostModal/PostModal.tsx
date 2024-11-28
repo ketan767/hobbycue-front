@@ -170,7 +170,7 @@ export const PostModal: React.FC<Props> = ({
 
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
-      `_id=${activePost._id}&populate=_author,_genre,_hobby`,
+      `_id=${activePost._id}&populate=_author,_genre,_hobby,_allHobbies,_allGenres`,
     )
     if (err) return console.log(err)
     if (res.data.success) {
@@ -301,8 +301,32 @@ export const PostModal: React.FC<Props> = ({
                     {dateFormat?.format(new Date(activePost?.createdAt))}
                     {' | '}
                   </span>
+                  {activePost?._allHobbies?.length > 0 ? (
+                    activePost?._allHobbies?.map(
+                      (hobby: any, index: number) => {
+                        return (
+                          <span key={index}>
+                            {`${hobby?.display}${
+                              activePost?._allGenres[index - 1]?.display
+                                ? ' - ' +
+                                  activePost?._allGenres[index - 1]?.display
+                                : ''
+                            }`}
+                            {index < activePost?._allHobbies?.length - 1
+                              ? ', '
+                              : ''}
+                          </span>
+                        )
+                      },
+                    )
+                  ) : (
+                    <span>{`${activePost?._hobby?.display}${
+                      activePost._genre
+                        ? ' - ' + activePost?._genre?.display
+                        : ''
+                    }`}</span>
+                  )}
                   <span>
-                    {activePost?._hobby?.display}{' '}
                     {activePost?._genre?.display &&
                       ` - ` + activePost?._genre.display}
                     {' | '}
@@ -370,7 +394,7 @@ export const PostModal: React.FC<Props> = ({
             )}
             {activePost?.has_link && activePost?.media.length == 0 && (
               <div
-                style={linkLoading ? { margin:"none"} : { }}
+                style={linkLoading ? { margin: 'none' } : {}}
                 className={
                   isVideoLink(url)
                     ? styles['post-video-link']
@@ -378,8 +402,8 @@ export const PostModal: React.FC<Props> = ({
                 }
               >
                 {linkLoading ? (
-                  <div style={{ width:"100vw"}}>
-                  <LinkPreviewLoader />
+                  <div style={{ width: '100vw' }}>
+                    <LinkPreviewLoader />
                   </div>
                 ) : (
                   <>

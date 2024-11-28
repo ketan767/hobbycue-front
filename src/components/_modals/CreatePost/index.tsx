@@ -580,8 +580,9 @@ export const CreatePost: React.FC<Props> = ({
     }
     const allHobbyIds = selectedHobbies.map((h) => h.hobbyId)
     const allGenreIds = selectedHobbies.map((h) => h.genreId)
-    // console.log("allHobbyIds",allHobbyIds)
-    // console.log("allGenreIds",allGenreIds)
+    console.log("allHobbyIds",allHobbyIds)
+    console.log("allGenreIds",allGenreIds)
+    console.log("editing",editing)
     const jsonData: any = {
       hobbyIds: allHobbyIds,
       genreIds: allGenreIds,
@@ -611,13 +612,13 @@ export const CreatePost: React.FC<Props> = ({
         return console.log(err)
       }
       if (res.data.success) {
-        store.dispatch(
-          setFilters({
-            location: data.visibility !== '' ? data.visibility : null,
-            hobby: data.hobby?._id ?? '',
-            genre: data.genre?._id ?? '',
-          }),
-        )
+        // store.dispatch(
+        //   setFilters({
+        //     location: data.visibility !== '' ? data.visibility : null,
+        //     hobby: data.hobby?._id ?? '',
+        //     genre: data.genre?._id ?? '',
+        //   }),
+        // )
         store.dispatch(
           updateActiveProfile({ type: data.type, data: data.data }),
         )
@@ -639,13 +640,13 @@ export const CreatePost: React.FC<Props> = ({
       return console.log(err)
     }
     if (res.data.success) {
-      store.dispatch(
-        setFilters({
-          location: data.visibility !== '' ? data.visibility : null,
-          hobby: data.hobby?._id ?? '',
-          genre: data.genre?._id ?? '',
-        }),
-      )
+      // store.dispatch(
+      //   setFilters({
+      //     location: data.visibility !== '' ? data.visibility : null,
+      //     hobby: data.hobby?._id ?? '',
+      //     genre: data.genre?._id ?? '',
+      //   }),
+      // )
       store.dispatch(updateActiveProfile({ type: data.type, data: data.data }))
       store.dispatch(closeModal())
       // window.location.reload()
