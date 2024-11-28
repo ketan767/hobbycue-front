@@ -78,6 +78,8 @@ type NewPostData = {
 type HobbyData = {
   hobby: string
   genre: string
+  hobbyId: string
+  genreId: string
 }
 export const CreatePost: React.FC<Props> = ({
   onComplete,
@@ -576,9 +578,13 @@ export const CreatePost: React.FC<Props> = ({
       //   hobby: 'This field is required',
       // })
     }
+    const allHobbyIds = selectedHobbies.map((h) => h.hobbyId)
+    const allGenreIds = selectedHobbies.map((h) => h.genreId)
+    // console.log("allHobbyIds",allHobbyIds)
+    // console.log("allGenreIds",allGenreIds)
     const jsonData: any = {
-      hobbyIds: data.hobby?._id,
-
+      hobbyIds: allHobbyIds,
+      genreIds: allGenreIds,
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
       media:
@@ -587,9 +593,9 @@ export const CreatePost: React.FC<Props> = ({
       has_link: hasLink,
       video_url: data.video_url ? data.video_url : null,
     }
-    if (typeof data.genre === 'object' && typeof data.genre?._id === 'string') {
-      jsonData.genreId = data.genre._id
-    }
+    // if (typeof data.genre === 'object' && typeof data.genre?._id === 'string') {
+    //   jsonData.genreId = data.genre._id
+    // }
 
     // console.log('jsonData', jsonData.hobbyId)
     // console.log('jsonData genreId', jsonData.genreId)
@@ -659,7 +665,24 @@ export const CreatePost: React.FC<Props> = ({
   useEffect(() => {
     const firstHobby = activeProfile?.data?._hobbies[0]?.hobby?.display
     const firstGenre = activeProfile?.data?._hobbies[0]?.genre?.display
-    setSelectedHobbies([{ hobby: firstHobby, genre: firstGenre }])
+    const firstHobbyId = activeProfile?.data?._hobbies[0]?.hobby?._id
+      ? activeProfile?.data?._hobbies[0]?.hobby?._id
+      : undefined
+    const firstGenreId = activeProfile?.data?._hobbies[0]?.genre?._id
+      ? activeProfile?.data?._hobbies[0]?.genre?._id
+      : undefined
+    setSelectedHobbies([
+      {
+        hobby: firstHobby,
+        genre: firstGenre,
+        hobbyId: firstHobbyId,
+        genreId: firstGenreId,
+      },
+    ])
+    // console.log(
+    //   'firstHobby activeProfile?.data?._hobbies[0]',
+    //   activeProfile?.data?._hobbies[0],
+    // )
     setData((prev: any) => {
       return { ...prev, type: activeProfile.type, data: activeProfile.data }
     })
@@ -902,6 +925,13 @@ export const CreatePost: React.FC<Props> = ({
                                         }
                                       })
 
+                                    // selectedHobbies.forEach((hobb) => {
+                                    //   console.log('Hobby', hobb.hobby)
+                                    //   console.log('hobbyId', hobb.hobbyId)
+                                    //   console.log('genre', hobb.genre)
+                                    //   console.log('genreId', hobb.genreId)
+                                    // })
+
                                     const newHobbyData =
                                       alreadyContains ||
                                       selectedHobbies.length >= 3
@@ -911,6 +941,12 @@ export const CreatePost: React.FC<Props> = ({
                                             {
                                               hobby: e?.hobby?.display ?? null,
                                               genre: e?.genre?.display ?? null,
+                                              hobbyId: e?.hobby?._id
+                                                ? e?.hobby?._id
+                                                : undefined,
+                                              genreId: e?.genre?._id
+                                                ? e?.genre?._id
+                                                : undefined,
                                             },
                                           ]
                                     setSelectedHobbies(newHobbyData)
