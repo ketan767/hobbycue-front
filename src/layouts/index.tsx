@@ -9,6 +9,7 @@ import {
   updateActiveProfile,
   updateIsAuthenticated,
   updateIsLoggedIn,
+  updateIsUserDataLoaded,
   updateUser,
   updateUserListing,
 } from '@/redux/slices/user'
@@ -103,6 +104,7 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
 
       // dispatch(updateActiveProfile({ type: 'user', data: res.data.data.user }))
     }
+    dispatch(updateIsUserDataLoaded(true))
   }, [isLoggedIn, isAuthenticated])
 
   // /** If user is not onboarded then open the Onboarding model. */

@@ -53,7 +53,7 @@ import CommunityTopDropdown from '@/components/_formElements/CommunityTopDropdow
 import { CommunityDropdownOption } from '@/components/_formElements/CommunityDropdownOption/CommunityDropdownOption'
 import PanelDropdownList from './PanelDropdownList'
 import { showProfileError } from '@/redux/slices/user'
-import { TrendingHobbiesByUser } from '@/services/user.service'
+import { searchUsers, searchUsersAdvanced, TrendingHobbiesByUser } from '@/services/user.service'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -155,7 +155,9 @@ const CommunityLayout: React.FC<Props> = ({
   const [trendingHobbies, setTrendingHobbies] = useState([])
   const [seeMoreMembers, setSeeMoreMembers] = useState(0)
   const [seeMoreTrendHobbies, setSeeMoreTrendHobbies] = useState(true)
+  const [showModal, setShowModal] = useState(false);
   const [hobbyMembers, setHobbymembers] = useState<HobbyMember[]>([])
+  const [selectedUser, setSelectedUser] = useState<any>()
   const [whatsNew, setWhatsNew] = useState([])
   const [SeeMorewhatsNew, setSeeMoreWhatsNew] = useState(true)
   const [childData, setChildData] = useState<singlePostProps | null>({
@@ -163,11 +165,14 @@ const CommunityLayout: React.FC<Props> = ({
     whatsNew: [],
     trendingHobbies: [],
   })
-
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const hideThirdColumnTabs = ['pages', 'links', 'store', 'blogs']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
   const { refreshNum } = useSelector((state: RootState) => state.post)
   const router = useRouter()
+
+  
+  
 
   const toggleSeeMore = () => {
     setSeeMoreHobby(!seeMoreHobby)
@@ -569,9 +574,8 @@ const CommunityLayout: React.FC<Props> = ({
             }
             visibilityArr.push(obj)
             if (address.city || address.label) {
-              obj.display = `${address.city} -  ${
-                address.label ? address.label : 'Default'
-              } `
+              obj.display = `${address.city} -  ${address.label ? address.label : 'Default'
+                } `
               obj.value = `${address.city ?? 'Home'}`
             }
 
@@ -625,9 +629,8 @@ const CommunityLayout: React.FC<Props> = ({
       }
       visibilityArr.push(obj)
       if (address.city || address.label) {
-        obj.display = `${address.city} -  ${
-          address.label ? address.label : 'Default'
-        } `
+        obj.display = `${address.city} -  ${address.label ? address.label : 'Default'
+          } `
       }
 
       if (address.pin_code) {
@@ -708,12 +711,18 @@ const CommunityLayout: React.FC<Props> = ({
       return
     }
 
-    const to = email
+    let to = email
+    
     if (!to || to === '') {
       setErrorMessage('This field is required')
       return
     }
-    if (!validateEmail(to)) {
+
+    if(selectedUser.display_name===email) {
+      to = selectedUser?.email
+    }
+
+    if (!validateEmail(to)&& selectedUser.display_name!==email) {
       setErrorMessage('Please enter a valid email')
       return
     }
@@ -739,6 +748,7 @@ const CommunityLayout: React.FC<Props> = ({
         message: 'Invitation sent',
       })
       setEmail('')
+      setSelectedUser({})
     }
     if (err) {
       setEmail('')
@@ -819,10 +829,52 @@ const CommunityLayout: React.FC<Props> = ({
     activeProfile.data?._hobbies?.map((item: any) => ({
       value: item.hobby?._id,
       genreId: item.genre?._id, // Add genre id to the object
-      display: `${item.hobby?.display}${item?.genre?.display ? ' - ' : ''}${
-        item?.genre?.display ?? ''
-      }`,
+      display: `${item.hobby?.display}${item?.genre?.display ? ' - ' : ''}${item?.genre?.display ?? ''
+        }`,
     })) ?? []
+
+  // user search for invite 
+
+  const fetchUsers = async (query: string) => {
+    try {
+      let searchCriteria = {
+        name: query,
+      }
+      const { res, err } = await searchUsersAdvanced(searchCriteria)
+      console.log("Data : ",res.data);
+      
+      setFilteredUsers(res.data);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    setEmail(input);
+    setErrorMessage('');
+
+    if (input.startsWith('@') && input.length > 1) {
+      setShowModal(true);
+    } else {
+      setShowModal(false);
+    }
+  };
+
+  const handleUserSelect = (selectedUser: any) => {
+    setEmail(selectedUser.display_name);
+    setSelectedUser(selectedUser);
+    setShowModal(false);
+  };
+
+  // Effect to call API when email starts with @ and modal is open
+  useEffect(() => {
+    if (showModal) {
+      const query = email.slice(1); // Remove "@" from query
+      console.log(query);
+      fetchUsers(query || ''); // Fetch all users if query is empty
+    }
+  }, [email, showModal]);
 
   return (
     <>
@@ -905,9 +957,9 @@ const CommunityLayout: React.FC<Props> = ({
                           }
                           className={
                             selectedHobby === hobby.hobby?._id &&
-                            (selectedGenre !== ''
-                              ? selectedGenre === hobby.genre?._id
-                              : '')
+                              (selectedGenre !== ''
+                                ? selectedGenre === hobby.genre?._id
+                                : '')
                               ? styles.selectedItem
                               : ''
                           }
@@ -975,11 +1027,10 @@ const CommunityLayout: React.FC<Props> = ({
         <main>
           {!singlePostPage && (
             <header
-              className={`${styles['community-header']} ${
-                hideThirdColumnTabs.includes(activeTab)
-                  ? styles['community-header-small']
-                  : ''
-              }`}
+              className={`${styles['community-header']} ${hideThirdColumnTabs.includes(activeTab)
+                ? styles['community-header-small']
+                : ''
+                }`}
             >
               <div className={styles['community-header-left']}>
                 <section
@@ -1014,12 +1065,12 @@ const CommunityLayout: React.FC<Props> = ({
                             activeProfile.data?.type == 1
                               ? `default-people-listing-icon ${styles['img-listing']}`
                               : activeProfile.data?.type == 2
-                              ? `${styles['img-listing']} default-place-listing-icon`
-                              : activeProfile.data?.type == 3
-                              ? `${styles['img-listing']} default-program-listing-icon`
-                              : activeProfile.data?.type == 4
-                              ? `${styles['img-listing']} default-product-listing-icon`
-                              : `${styles['contentImage']} default-people-listing-icon`
+                                ? `${styles['img-listing']} default-place-listing-icon`
+                                : activeProfile.data?.type == 3
+                                  ? `${styles['img-listing']} default-program-listing-icon`
+                                  : activeProfile.data?.type == 4
+                                    ? `${styles['img-listing']} default-product-listing-icon`
+                                    : `${styles['contentImage']} default-people-listing-icon`
                           }
                         ></div>
                       )}
@@ -1062,7 +1113,7 @@ const CommunityLayout: React.FC<Props> = ({
                           (obj: any) => obj?.value === selectedHobby,
                         )?.display ?? selectedHobby
                       }
-                      variant={selectedHobby === '' ? 'secondary' : 'primary'}
+                      variant={selectedHobby === 'All Hobbies' ? 'secondary' : 'primary'}
                     >
                       {[
                         { display: 'All Hobbies', value: 'All Hobbies' },
@@ -1223,12 +1274,11 @@ const CommunityLayout: React.FC<Props> = ({
                               obj.hobby._id === selectedHobby &&
                               obj?.genre?._id === selectedGenre,
                           )?.genre &&
-                            ` - ${
-                              activeProfile.data?._hobbies?.find(
-                                (obj: any) =>
-                                  obj.hobby._id === selectedHobby &&
-                                  selectedGenre === obj?.genre?._id,
-                              )?.genre?.display
+                            ` - ${activeProfile.data?._hobbies?.find(
+                              (obj: any) =>
+                                obj.hobby._id === selectedHobby &&
+                                selectedGenre === obj?.genre?._id,
+                            )?.genre?.display
                             } `}
                         </span>{' '}
                         in <span>{selectedLocation}</span>
@@ -1246,9 +1296,8 @@ const CommunityLayout: React.FC<Props> = ({
           )}
 
           <section
-            className={`${styles['children-wrapper']} ${
-              singlePostPage ? styles['single-post-children-wrapper'] : ''
-            } `}
+            className={`${styles['children-wrapper']} ${singlePostPage ? styles['single-post-children-wrapper'] : ''
+              } `}
           >
             {/* {children} */}
             {/* It might have key issue here */}
@@ -1281,31 +1330,28 @@ const CommunityLayout: React.FC<Props> = ({
                         obj?.hobby?._id === selectedHobby &&
                         obj?.genre?._id === selectedGenre,
                     )?.genre &&
-                      ` - ${
-                        activeProfile.data?._hobbies?.find(
-                          (obj: any) =>
-                            obj.hobby._id === selectedHobby &&
-                            selectedGenre === obj?.genre?._id,
-                        )?.genre?.display
+                      ` - ${activeProfile.data?._hobbies?.find(
+                        (obj: any) =>
+                          obj.hobby._id === selectedHobby &&
+                          selectedGenre === obj?.genre?._id,
+                      )?.genre?.display
                       } `}
                   </span>{' '}
                   in <span>{selectedLocation}</span>
                 </h3>
               </header>
               {/* <span className={styles['divider']}></span> */}
-              <section>
+              <section className={styles['.invite-wrapper']}>
                 <input
                   autoComplete="new"
                   value={email}
                   placeholder="Email"
                   name="society"
-                  onChange={(e: any) => {
-                    setEmail(e.target.value)
-                    setErrorMessage('')
-                  }}
+                  onChange={handleInputChange}
                   type="email"
                   id=""
                   className={errorMessage !== '' ? styles['error-input'] : ''}
+                  //style={selectedUser?.email?{color:'blue'}:{color:'black'}}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       inviteBtnRef?.current?.click()
@@ -1328,8 +1374,40 @@ const CommunityLayout: React.FC<Props> = ({
                 {errorMessage !== '' && (
                   <span className={styles['error-invite']}>{errorMessage}</span>
                 )}
+
+                {showModal && (
+                  <div className={styles['modal-container']}>
+                    <ul className={styles['modal-list']}>
+                      <h4 className={styles['user-name']} style={{fontWeight:'600',marginLeft:'12px',marginTop:'8px'}}>Hobbycue</h4>
+                      {filteredUsers.length > 0 ? (
+                        filteredUsers.map((user: any) => (
+                          <li
+                            key={user.id}
+                            className={styles['modal-item']}
+                            onClick={() => handleUserSelect(user)}
+                          >
+                            <img
+                              src={user.profile_image || defaultUserIcon.src} // Ensure `defaultUserIcon` is defined
+                              alt={user.display_name}
+                              className={styles['profile-pic']}
+                            />
+                            <div>
+                              <p className={styles['user-name']}>{user.display_name||user.full_name.slice(0, 20) + '...'}</p>
+                            <p className={styles['user-name']} style={{fontSize:12}}>{user.tagline?user.tagline.slice(0, 25) + '...' : ''}</p>
+                            </div>
+                            
+                          </li>
+                        ))
+                      ) : (
+                        <li className={styles['modal-item']}>No users found</li>
+                      )}
+                    </ul>
+                  </div>
+                )}
               </section>
             </section>
+
+
 
             <section
               ref={membersContainerRef}

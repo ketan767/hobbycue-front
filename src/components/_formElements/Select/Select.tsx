@@ -60,8 +60,10 @@ const InputSelect: React.FC<Props> = ({
     setactive(false)
   }
 
+  const notSelected = value == "All Locations" && value == "Select..." && value == null && value == undefined && value == "All Hobbies"
+
   return (
-    <div className={`${styles.container} ${className ? className : ''}`}>
+    <div style={{backgroundColor : `${notSelected && "#8064a2"}`}} className={`${styles.container} ${className ? className : ''}`}>
       <header className={styles.header} onClick={handleHeaderClick}>
         {type && type === 'page' ? (
           <div className={styles['page-type']}>

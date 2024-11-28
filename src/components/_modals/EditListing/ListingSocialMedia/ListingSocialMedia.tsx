@@ -15,6 +15,8 @@ import { RootState } from '@/redux/store'
 import { updateListing } from '@/services/listing.service'
 import SaveModal from '../../SaveModal/saveModal'
 import { getSocialNetworks } from '@/services/socialnetworks.service'
+import DropdownComponent from '../../EditProfile/SocialMedia/Dropdown'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   data?: ProfilePageData['pageData']
@@ -162,108 +164,126 @@ const ListingSocialMediaEditModal = ({
         switch (true) {
           case key.startsWith('facebook'):
             arr.push({
+              error: false,
               socialMedia: 'Facebook',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('instagram'):
             arr.push({
+              error: false,
               socialMedia: 'Instagram',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('twitter'):
             arr.push({
+              error: false,
               socialMedia: 'Twitter',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('youtube'):
             arr.push({
+              error: false,
               socialMedia: 'Youtube',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('soundcloud'):
             arr.push({
+              error: false,
               socialMedia: 'SoundCloud',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('pinterest'):
             arr.push({
+              error: false,
               socialMedia: 'Pinterest',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('medium'):
             arr.push({
+              error: false,
               socialMedia: 'Medium',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('telegram'):
             arr.push({
+              error: false,
               socialMedia: 'Telegram',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('tripadvisor'):
             arr.push({
+              error: false,
               socialMedia: 'TripAdvisor',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('ultimate_guitar'):
             arr.push({
+              error: false,
               socialMedia: 'Ultimate Guitar',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('strava'):
             arr.push({
+              error: false,
               socialMedia: 'Strava',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('deviantarts'):
             arr.push({
+              error: false,
               socialMedia: 'DeviantArts',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('behance'):
             arr.push({
+              error: false,
               socialMedia: 'Behance',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('goodreads'):
             arr.push({
+              error: false,
               socialMedia: 'GoodReads',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('smule'):
             arr.push({
+              error: false,
               socialMedia: 'Smule',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('chess'):
             arr.push({
+              error: false,
               socialMedia: 'Chess.com',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('bgg'):
             arr.push({
+              error: false,
               socialMedia: 'BGG',
               url: listingSocialMediaUrls[key],
             })
             break
           case key.startsWith('others'):
             arr.push({
+              error: false,
               socialMedia: 'Others',
               url: listingSocialMediaUrls[key],
             })
@@ -284,6 +304,7 @@ const ListingSocialMediaEditModal = ({
     {
       socialMedia: '',
       url: '',
+      error: false,
     },
   ])
   const [initialData, setInitialData] = useState([
@@ -310,7 +331,7 @@ const ListingSocialMediaEditModal = ({
   }
 
   const addSocialMedia = () => {
-    const newSocialMedia = { socialMedia: '', url: '' }
+    const newSocialMedia = { socialMedia: '', url: '', error: false }
     setMediaData((prevMediaData) => [...prevMediaData.slice(), newSocialMedia])
   }
 
@@ -332,7 +353,14 @@ const ListingSocialMediaEditModal = ({
     }
   }
 
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+
   const handleSubmit = async () => {
+    let errorSaving = false
     setSubmitBtnLoading(true)
     let reqBody: any = {}
     let socialMediaCounts: { [key: string]: number } = {}
@@ -343,6 +371,18 @@ const ListingSocialMediaEditModal = ({
 
       // Increment the count for the current social media
       socialMediaCounts[socialMedia] = (socialMediaCounts[socialMedia] || 0) + 1
+
+      const defaultURL = defaultSocialMediaURLs[socialMedia as SocialMediaOption]
+      const isValidUrl =
+        url !== defaultURL && url.startsWith(defaultURL) && url.length > defaultURL.length
+
+      if (!isValidUrl) {
+        setMediaData((prev: any) => {
+          prev[i].error = true
+          return prev
+        })
+        errorSaving = true
+      }
 
       let key
       switch (socialMedia) {
@@ -462,6 +502,15 @@ const ListingSocialMediaEditModal = ({
         reqBody[key] = url
       }
     }
+    if(errorSaving === true){
+      setSubmitBtnLoading(false)
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Please enter a valid URL',
+      })
+      return console.log('Invalid URL')
+    } else {
     const { err, res } = await updateListing(listingModalData._id, {
       social_media_urls: reqBody,
     })
@@ -476,6 +525,7 @@ const ListingSocialMediaEditModal = ({
       console.log('res', res)
       window.location.reload()
       dispatch(closeModal())
+    }
     }
   }
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
@@ -567,7 +617,7 @@ const ListingSocialMediaEditModal = ({
         {mediaData.map((item: any, idx: any) => {
           return (
             <div className={styles.inputContainer} key={idx}>
-              <Select
+              {/* <Select
                 value={item.socialMedia}
                 onChange={(e) => {
                   let selectedSocialMedia = e.target.value as SocialMediaOption
@@ -608,8 +658,29 @@ const ListingSocialMediaEditModal = ({
                       </MenuItem>
                     )
                   })}
-              </Select>
+              </Select> */}
+              <div style={{width:"184px", height:"40px"}}>
+              <DropdownComponent
+                options={allOptions}
+                placeholder={'Select Social Media'}
+                value={item.socialMedia}
+                onChange={(e) => {
+                  const selectedSocialMedia = e as SocialMediaOption;
+                  const defaultUrl = defaultSocialMediaURLs[selectedSocialMedia];
 
+                  console.log({ e, selectedSocialMedia, defaultUrl });
+              
+                  const updatedMediaData = [...mediaData];
+                  updatedMediaData[idx] = {
+                    ...item,
+                    socialMedia: selectedSocialMedia,
+                    url: defaultUrl,
+                  };
+              
+                  setMediaData(updatedMediaData);
+                }}
+              />
+            </div>
               <div className={styles['input-box']}>
                 <input
                   type="text"
@@ -621,6 +692,7 @@ const ListingSocialMediaEditModal = ({
                     let val = e.target.value
                     onChange(idx, 'url', val)
                   }}
+                  style={item.error ? { borderColor: 'red' } : {}}
                 />
               </div>
               <Image

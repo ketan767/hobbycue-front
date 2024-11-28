@@ -557,6 +557,10 @@ const NoResult = () => {
         link += `?page-type=Program`
         dispatch(setCategory(''))
         dispatch(setPageType('Program'))
+      } else {
+        link += `?category=${category}`
+        dispatch(setCategory(category))
+        dispatch(setPageType(''))
       }
     }
     if (hobby) {
