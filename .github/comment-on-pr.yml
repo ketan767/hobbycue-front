@@ -1,0 +1,17 @@
+name: Comment as Specific User
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  comment-as-user:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add comment as specific user
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          token: ${{ secrets.MY_SECRET_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            @ellipsis-dev review this
