@@ -14,4 +14,10 @@ jobs:
           token: ${{ secrets.MY_SECRET_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            @ellipsis-dev review this
+            Hello @${{ github.actor }},
+
+            Thank you for your contribution! Please ensure that:
+            - Your PR follows the contribution guidelines.
+            - You have added or updated relevant documentation/tests.
+
+            We'll review your PR soon. 😊
