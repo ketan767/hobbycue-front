@@ -363,7 +363,6 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
       url: '',
     },
   ])
-  console.log({ mediaData })
 
   const dispatch = useDispatch()
 
@@ -429,9 +428,10 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
 
       if (!isValidUrl) {
         setMediaData((prev: any) => {
-          prev[i].error = true
-          return prev
-        })
+          const updatedMediaData = [...prev]; 
+          updatedMediaData[i].error = true; 
+          return updatedMediaData; 
+        });
         errorSaving = true
       }
       let key
@@ -554,12 +554,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
     }
     if(errorSaving === true){
       setSubmitBtnLoading(false)
-      setSnackbar({
-        display: true,
-        type: 'warning',
-        message: 'Please enter a valid URL',
-      })
-      return console.log('Invalid URL')
+      return
     } else {
       const { err, res } = await updateMyProfileDetail({
         social_media_urls: reqBody,
@@ -785,15 +780,19 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                   value={item.url}
                   name="url"
                   onChange={(e) => {
-                    let val = e.target.value
-                    onChange(idx, 'url', val)
-                    setMediaData((prev: any) =>{
-                      prev[idx].error = false
-                      return prev
-                    })
+                    let val = e.target.value;
+                    onChange(idx, 'url', val);
+                    setMediaData((prev: any) => {
+                      const updatedMediaData = [...prev]; 
+                      updatedMediaData[idx].error = true; 
+                      return updatedMediaData;
+                    });
                   }}
-                  style={item?.error === true ?{ borderColor: "red"} :{}}
+                  style={item?.error === true ? { borderColor: "red" } : {}}
                 />
+                {
+                  item?.error === true ? <p style={{color: "#c0504d", fontSize: "12px", position:"absolute", bottom:"-17px", left:"5px"}}>Please enter a valid URL</p> : null
+                }
               </div>
               <Image
                 src={DeleteIcon}

@@ -308,6 +308,7 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
       style={{ width: "100%", height: "100%", position: "relative" }}
     >
       <input
+        className={styles["dropdown-input"]}
         type="text"
         value={selectQuery}
         onChange={(e) => setSelectQuery(e.target.value)}
