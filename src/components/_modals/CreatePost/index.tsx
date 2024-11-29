@@ -680,6 +680,7 @@ export const CreatePost: React.FC<Props> = ({
         genreId: firstGenreId,
       },
     ])
+    // console.log("Hi")
     // console.log(
     //   'firstHobby activeProfile?.data?._hobbies[0]',
     //   activeProfile?.data?._hobbies[0],
