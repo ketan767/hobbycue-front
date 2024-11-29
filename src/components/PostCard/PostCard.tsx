@@ -336,7 +336,7 @@ const PostCard: React.FC<Props> = (props) => {
                 ></div>
               )}
             </Link>
-            <div>
+            <div style={{ maxWidth:"calc(100% - 110px)" }}>
               <Link
                 href={
                   postData?.author_type === 'User'
@@ -360,7 +360,7 @@ const PostCard: React.FC<Props> = (props) => {
                     : dispatch(openModal({ type: 'auth', closable: true }))
                 }}
               >
-                <p className={styles['author-name']}>
+                <p style={{width:"100%"}} className={styles['author-name']}>
                   {postData?.author_type === 'User'
                     ? postData?._author?.full_name
                     : postData?.author_type === 'Listing'

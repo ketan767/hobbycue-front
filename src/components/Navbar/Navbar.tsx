@@ -907,7 +907,7 @@ export const Navbar: React.FC<Props> = ({}) => {
             </section>
 
               {
-                isLoggedIn && user?.is_admin && (
+                isLoggedIn && !user?.is_admin && (
                 <div className={styles['toggle-button']} onClick={()=>router.push('/admin/dashboard')}>
                   {toggleDashboard}
                 </div>
