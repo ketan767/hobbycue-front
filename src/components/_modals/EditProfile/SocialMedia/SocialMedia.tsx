@@ -784,7 +784,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                     onChange(idx, 'url', val);
                     setMediaData((prev: any) => {
                       const updatedMediaData = [...prev]; 
-                      updatedMediaData[idx].error = true; 
+                      updatedMediaData[idx].error = false; 
                       return updatedMediaData;
                     });
                   }}

@@ -362,12 +362,13 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
               position: "fixed",
               ...(dropdownPosition === "down"
                 ? {
-                    top: inputRef.current?.getBoundingClientRect().bottom || 0,
+                    top: (inputRef.current?.getBoundingClientRect().bottom || 0) + 1, // Add 1px for "down"
                   }
                 : {
                     bottom:
                       window.innerHeight -
-                        (inputRef.current?.getBoundingClientRect().top || 0) || 0,
+                      (inputRef.current?.getBoundingClientRect().top || 0) -
+                      1, // Subtract 1px for "up"
                   }),
               left: inputRef.current?.getBoundingClientRect().left || 0,
               width: inputRef.current?.offsetWidth || "auto",
