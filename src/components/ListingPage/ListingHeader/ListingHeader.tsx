@@ -20,7 +20,7 @@ import {
   updateViewAs,
 } from '@/redux/slices/site'
 import { openModal, updateImageUrl, updateShareUrl } from '@/redux/slices/modal'
-import { dateFormat } from '@/utils'
+import { dateFormat, isMobile } from '@/utils'
 import CustomTooltip from '@/components/Tooltip/ToolTip'
 import Calendar from '@/assets/svg/calendar-light.svg'
 import Time from '@/assets/svg/clock-light.svg'
@@ -123,7 +123,7 @@ const ListingHeader: React.FC<Props> = ({
       message: 'This feature is under development',
     })
   }
-  const isMobile = useMediaQuery('(max-width:1100px)')
+  const isMob = isMobile()
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
     let files = e.target.files
@@ -574,8 +574,18 @@ const ListingHeader: React.FC<Props> = ({
     }
   }
   const Dropdownref = useRef<HTMLDivElement>(null)
+  const mobileDropdownRef = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
+      if (isMob) {
+        if (
+          mobileDropdownRef.current &&
+          !mobileDropdownRef.current.contains(event.target as Node)
+        ) {
+          setOpen(false) // Close the dropdown when clicked outside
+        }
+        return
+      }
       if (
         Dropdownref.current &&
         !Dropdownref.current.contains(event.target as Node)
@@ -589,6 +599,14 @@ const ListingHeader: React.FC<Props> = ({
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [Dropdownref])
+
+  // useEffect cleanup of view-as on unmount
+  useEffect(() => {
+    return () => {
+      dispatch(updateViewAs(''))
+      dispatch(updateListingLayoutMode('edit'))
+    }
+  }, [])
 
   useEffect(() => {
     setVarientData(data.product_variant)
@@ -732,7 +750,40 @@ const ListingHeader: React.FC<Props> = ({
     </svg>
   )
   return (
-    <>
+    <div>
+      {isMob && viewAs && (
+        <div className={styles.mobileViewAs}>
+          <div>
+            {viewAs === 'print' ? (
+              <FilledButton
+                className={styles.viewButtonPrint}
+                onClick={() => window.print()}
+              >
+                <PrintIcon /> Print
+              </FilledButton>
+            ) : (
+              <div className={styles.viewingAs}>
+                You are viewing this page as a{' '}
+                <span>
+                  {viewAs === 'signed-in'
+                    ? 'User Signed In'
+                    : 'User Not Signed In'}
+                </span>
+              </div>
+            )}
+          </div>
+          <button
+            onClick={() => {
+              dispatch(updateListingLayoutMode('edit'))
+              dispatch(updateViewAs(''))
+            }}
+            className={styles.viewButton}
+            style={{ textAlign: 'center', fontWeight: 600 }}
+          >
+            View as Admin
+          </button>
+        </div>
+      )}
       <header
         className={`site-container ${styles['header']} ${
           data.type === 4 && styles['product-header']
@@ -742,7 +793,7 @@ const ListingHeader: React.FC<Props> = ({
         <div className={styles['profile-img-wrapper']}>
           <div className={styles['relative']}>
             {data.type === 4 ? (
-              !isMobile && <VerticalSlider data={data} />
+              !isMob && <VerticalSlider data={data} />
             ) : data?.profile_image && data.type !== 4 ? (
               <img
                 onClick={OpenProfileImage}
@@ -816,7 +867,7 @@ const ListingHeader: React.FC<Props> = ({
                         <p key={i} className={styles.date}>
                           {formatDateRange(obj?.from_date, obj?.to_date)}
 
-                          {isMobile &&
+                          {isMob &&
                           showDays === false &&
                           data.event_date_time?.length > 1 &&
                           (!data.event_weekdays ||
@@ -830,7 +881,7 @@ const ListingHeader: React.FC<Props> = ({
                               </span>
                             </>
                           ) : null}
-                          {isMobile &&
+                          {isMob &&
                             showDays &&
                             data.event_date_time.length - 1 === i && (
                               <>
@@ -875,7 +926,7 @@ const ListingHeader: React.FC<Props> = ({
                             {obj?.to_day !== obj?.from_day &&
                               ' - ' + obj?.to_day}
                             , {obj?.from_time}
-                            {isMobile && showDays === false ? (
+                            {isMob && showDays === false ? (
                               <>
                                 ...{' '}
                                 <span
@@ -889,7 +940,7 @@ const ListingHeader: React.FC<Props> = ({
                                 {' '}
                                 -
                                 {showDays === false &&
-                                !isMobile &&
+                                !isMob &&
                                 data.event_weekdays.length > 1 ? (
                                   <>
                                     {' ... '}
@@ -906,7 +957,7 @@ const ListingHeader: React.FC<Props> = ({
                                   obj?.to_time
                                 )}
                                 {data.event_weekdays.length - 1 === i &&
-                                  isMobile && (
+                                  isMob && (
                                     <>
                                       {' '}
                                       <span
@@ -969,7 +1020,7 @@ const ListingHeader: React.FC<Props> = ({
                   ((data.event_weekdays && data?.event_weekdays?.length > 1) ||
                     (data?.event_date_time &&
                       data?.event_date_time?.length > 1)) &&
-                  !isMobile && (
+                  !isMob && (
                     <div
                       onClick={() => setShowDays((prev) => !prev)}
                       className={`${showDays ? '' : styles['rotate']} ${
@@ -1055,7 +1106,7 @@ const ListingHeader: React.FC<Props> = ({
                     >
                       {data?.tagline}
                     </p>
-                    {isMobile && data.tagline.length > 50 && (
+                    {isMob && data.tagline.length > 50 && (
                       <span
                         className={styles['dropdown-icon']}
                         onClick={() => setShowFullTagline((prev) => !prev)}
@@ -1097,7 +1148,7 @@ const ListingHeader: React.FC<Props> = ({
                               <p key={i} className={styles.date}>
                                 {formatDateRange(obj?.from_date, obj?.to_date)}
 
-                                {isMobile &&
+                                {isMob &&
                                 showDays === false &&
                                 data.event_date_time?.length > 1 &&
                                 (!data.event_weekdays ||
@@ -1113,7 +1164,7 @@ const ListingHeader: React.FC<Props> = ({
                                     </span>
                                   </>
                                 ) : null}
-                                {isMobile &&
+                                {isMob &&
                                   showDays &&
                                   data.event_date_time.length - 1 === i && (
                                     <>
@@ -1165,7 +1216,7 @@ const ListingHeader: React.FC<Props> = ({
                                   {obj?.to_day !== obj?.from_day &&
                                     ' - ' + obj?.to_day}
                                   , {obj?.from_time}
-                                  {isMobile && showDays === false ? (
+                                  {isMob && showDays === false ? (
                                     <>
                                       ...{' '}
                                       <span
@@ -1181,7 +1232,7 @@ const ListingHeader: React.FC<Props> = ({
                                       {' '}
                                       -
                                       {showDays === false &&
-                                      !isMobile &&
+                                      !isMob &&
                                       data.event_weekdays.length > 1 ? (
                                         <>
                                           {' ... '}
@@ -1198,7 +1249,7 @@ const ListingHeader: React.FC<Props> = ({
                                         obj?.to_time
                                       )}
                                       {data.event_weekdays.length - 1 === i &&
-                                        isMobile && (
+                                        isMob && (
                                           <>
                                             {' '}
                                             <span
@@ -1262,7 +1313,7 @@ const ListingHeader: React.FC<Props> = ({
                           data?.event_weekdays?.length > 1) ||
                           (data?.event_date_time &&
                             data?.event_date_time?.length > 1)) &&
-                        !isMobile && (
+                        !isMob && (
                           <div
                             onClick={() => setShowDays((prev) => !prev)}
                             className={`${showDays ? '' : styles['rotate']} ${
@@ -1287,7 +1338,7 @@ const ListingHeader: React.FC<Props> = ({
         ) : (
           <>
             <section className={styles['product-header-content']}>
-              {isMobile ? (
+              {isMob ? (
                 <VerticalSlider data={data} />
               ) : active_img_product?.type === 'image' &&
                 data?.profile_image ? (
@@ -1465,7 +1516,7 @@ const ListingHeader: React.FC<Props> = ({
                       </div>
                       <div className="">
                         <div className={styles['flex-container']}>
-                          <label>{isMobile ? 'Qty:' : 'Quantity:'}</label>
+                          <label>{isMob ? 'Qty:' : 'Quantity:'}</label>
                           <div className={styles['qunatity']}>
                             <div className={styles['quantity']}>
                               <button
@@ -1489,7 +1540,7 @@ const ListingHeader: React.FC<Props> = ({
                       </div>
                     </div>
                   </div>
-                  {!isMobile && (
+                  {!isMob && (
                     <div className={styles['cta-product-btn']}>{button}</div>
                   )}
                 </div>
@@ -1791,7 +1842,10 @@ const ListingHeader: React.FC<Props> = ({
           </CustomTooltip>
 
           {/* More Options Button */}
-          <div className={styles['action-btn-dropdown-wrapper']}>
+          <div
+            className={styles['action-btn-dropdown-wrapper']}
+            ref={mobileDropdownRef}
+          >
             <CustomTooltip title="Click to view options">
               <div
                 onClick={(e) => handleDropdown()}
@@ -1829,7 +1883,7 @@ const ListingHeader: React.FC<Props> = ({
           }}
         />
       }
-    </>
+    </div>
   )
 }
 

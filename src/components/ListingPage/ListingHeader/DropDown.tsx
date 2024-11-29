@@ -6,6 +6,7 @@ import { RootState } from '@/redux/store'
 import { showProfileError } from '@/redux/slices/user'
 import { useRouter } from 'next/router'
 import { updateListingLayoutMode, updateViewAs } from '@/redux/slices/site'
+import { isMobile } from '@/utils'
 
 type Props = {
   handleClose?: any
@@ -136,6 +137,8 @@ const Dropdown: React.FC<Props> = ({
     handleClose()
   }
 
+  const isMob = isMobile()
+
   return (
     <>
       <div className={styles['dropdown']} ref={ref}>
@@ -147,7 +150,9 @@ const Dropdown: React.FC<Props> = ({
               <li
                 ref={viewAsRef}
                 className={styles.viewAsLi}
-                onMouseEnter={() => setShowViewAsOptions((prev) => !prev)}
+                onMouseEnter={() =>
+                  isMob ? null : setShowViewAsOptions((prev) => !prev)
+                }
                 // onMouseLeave={() => setShowViewAsOptions(false)}
               >
                 <div onClick={() => setShowViewAsOptions((prev) => !prev)}>

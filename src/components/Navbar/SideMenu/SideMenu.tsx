@@ -277,7 +277,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
   const ExplorePosts = async () => {
     dispatch(setShowPageLoader(true))
     const { res: PostRes, err: PostErr } = await getAllPosts(
-      `sort=-createdAt&populate=_author,_hobby`,
+      `sort=-createdAt&populate=_author,_hobby,_allHobbies,_allGenres`,
     )
 
     const PostsPages = PostRes?.data.data?.posts

@@ -16,6 +16,8 @@ import { closeModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
 import SaveModal from '../../SaveModal/saveModal'
 import { getSocialNetworks } from '@/services/socialnetworks.service'
+import DropdownComponent from './Dropdown'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   data?: ProfilePageData['pageData']
@@ -131,54 +133,54 @@ const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
 }
 
 const desiredOrder = [
-  "Facebook",
-  "Instagram",
-  "Twitter",
-  "YouTube",
-  "SoundCloud",
-  "Pinterest",
-  "TripAdvisor",
-  "Ultimate Guitar",
-  "Strava",
-  "DeviantArt",
-  "Behance",
-  "GoodReads",
-  "Smule",
-  "Chess.com",
-  "BGG",
-  "Medium",
-];
+  'Facebook',
+  'Instagram',
+  'Twitter',
+  'YouTube',
+  'SoundCloud',
+  'Pinterest',
+  'TripAdvisor',
+  'Ultimate Guitar',
+  'Strava',
+  'DeviantArt',
+  'Behance',
+  'GoodReads',
+  'Smule',
+  'Chess.com',
+  'BGG',
+  'Medium',
+]
 
 // Type for social media data
 type SocialMediaData1 = {
-  Mouseover: string;
-  Show: 'Y' | 'N' | ''; // This is already the expected type for Show
-  socialMedia: string;
-  urlPrompt: string;
-};
+  Mouseover: string
+  Show: 'Y' | 'N' | '' // This is already the expected type for Show
+  socialMedia: string
+  urlPrompt: string
+}
 
 const reorderSocialMedia = (data: SocialMediaData1[]): SocialMediaData1[] => {
-  const orderedData: SocialMediaData1[] = [];
-  const remainingData: SocialMediaData1[] = [];
+  const orderedData: SocialMediaData1[] = []
+  const remainingData: SocialMediaData1[] = []
 
   // Iterate through the data and sort accordingly
   data.forEach((item) => {
     // Ensure Show is valid
     if (!['Y', 'N', ''].includes(item.Show)) {
-      item.Show = ''; // Default to empty string if Show is invalid
+      item.Show = '' // Default to empty string if Show is invalid
     }
 
-    const index = desiredOrder.indexOf(item.socialMedia);
+    const index = desiredOrder.indexOf(item.socialMedia)
     if (index !== -1) {
-      orderedData[index] = item;
+      orderedData[index] = item
     } else {
-      remainingData.push(item);
+      remainingData.push(item)
     }
-  });
+  })
 
-  const compactOrderedData = orderedData.filter(Boolean); // Remove undefined items
-  return [...compactOrderedData, ...remainingData]; // Append remaining items that are not in the desired order
-};
+  const compactOrderedData = orderedData.filter(Boolean) // Remove undefined items
+  return [...compactOrderedData, ...remainingData] // Append remaining items that are not in the desired order
+}
 
 const ListingSocialMediaEditModal: React.FC<Props> = ({
   data,
@@ -211,108 +213,126 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
         switch (true) {
           case key.startsWith('facebook'):
             arr.push({
+              error : false,
               socialMedia: 'Facebook',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('instagram'):
             arr.push({
+              error : false,
               socialMedia: 'Instagram',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('twitter'):
             arr.push({
+              error : false,
               socialMedia: 'Twitter',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('youtube'):
             arr.push({
+              error : false,
               socialMedia: 'Youtube',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('soundcloud'):
             arr.push({
+              error : false,
               socialMedia: 'SoundCloud',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('pinterest'):
             arr.push({
+              error : false,
               socialMedia: 'Pinterest',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('medium'):
             arr.push({
+              error : false,
               socialMedia: 'Medium',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('telegram'):
             arr.push({
+              error : false,
               socialMedia: 'Telegram',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('tripadvisor'):
             arr.push({
+              error : false,
               socialMedia: 'TripAdvisor',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('ultimate_guitar'):
             arr.push({
+              error : false,
               socialMedia: 'Ultimate Guitar',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('strava'):
             arr.push({
+              error : false,
               socialMedia: 'Strava',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('deviantarts'):
             arr.push({
+              error : false,
               socialMedia: 'DeviantArts',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('behance'):
             arr.push({
+              error : false,
               socialMedia: 'Behance',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('goodreads'):
             arr.push({
+              error : false,
               socialMedia: 'GoodReads',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('smule'):
             arr.push({
+              error : false,
               socialMedia: 'Smule',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('chess'):
             arr.push({
+              error : false,
               socialMedia: 'Chess.com',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('bgg'):
             arr.push({
+              error : false,
               socialMedia: 'BGG',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('others'):
             arr.push({
+              error : false,
               socialMedia: 'Others',
               url: userSocialMediaUrls[key],
             })
@@ -333,6 +353,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
     {
       socialMedia: '',
       url: '',
+      error: false,
     },
   ])
 
@@ -361,7 +382,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
   }
 
   const addSocialMedia = () => {
-    const newSocialMedia = { socialMedia: '', url: '' }
+    const newSocialMedia = { socialMedia: '', url: '', error: false }
     setMediaData((prevMediaData) => [...prevMediaData.slice(), newSocialMedia])
   }
 
@@ -383,7 +404,14 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
     }
   }
 
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+
   const handleSubmit = async () => {
+    let errorSaving = false
     setSubmitBtnLoading(true)
     let reqBody: any = {}
     let socialMediaCounts: { [key: string]: number } = {}
@@ -395,6 +423,17 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
       // Increment the count for the current social media
       socialMediaCounts[socialMedia] = (socialMediaCounts[socialMedia] || 0) + 1
 
+      const defaultURL = defaultSocialMediaURLs[socialMedia as SocialMediaOption]
+      const isValidUrl =
+        url !== defaultURL && url.startsWith(defaultURL) && url.length > defaultURL.length
+
+      if (!isValidUrl) {
+        setMediaData((prev: any) => {
+          prev[i].error = true
+          return prev
+        })
+        errorSaving = true
+      }
       let key
       switch (socialMedia) {
         case 'Facebook':
@@ -513,21 +552,32 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
         reqBody[key] = url
       }
     }
-    const { err, res } = await updateMyProfileDetail({
-      social_media_urls: reqBody,
-    })
-
-    if (err) {
+    if(errorSaving === true){
       setSubmitBtnLoading(false)
-      return console.log(err)
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Please enter a valid URL',
+      })
+      return console.log('Invalid URL')
+    } else {
+      const { err, res } = await updateMyProfileDetail({
+        social_media_urls: reqBody,
+      })
+  
+      if (err) {
+        setSubmitBtnLoading(false)
+        return console.log(err)
+      }
+  
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        console.log('res', res)
+        window.location.reload()
+        dispatch(closeModal())
+      }
     }
 
-    if (err) return console.log(err)
-    if (res?.data.success) {
-      console.log('res', res)
-      window.location.reload()
-      dispatch(closeModal())
-    }
   }
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
@@ -545,6 +595,9 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
   }, [])
   console.log(user)
 
+  const searchref = useRef<HTMLInputElement | null>(null)
+  const [showSocialMediaDowpdown, setShowSocialMediaDowpdown] = useState(false)
+
   useEffect(() => {
     const changesMade =
       JSON.stringify(mediaData) !== JSON.stringify(initialData)
@@ -557,19 +610,21 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
   useEffect(() => {
     getSocialNetworks()
       .then((result) => {
-        const { res, err } = result;
+        const { res, err } = result
         if (err) {
-          console.error({ err });
+          console.error({ err })
         } else if (res?.data?.data) {
-          const reorderedData = reorderSocialMedia(res.data.data as SocialMediaData1[]);
-          setAllOptions(reorderedData);
-          console.log({ reorderedData });
+          const reorderedData = reorderSocialMedia(
+            res.data.data as SocialMediaData1[],
+          )
+          setAllOptions(reorderedData)
+          console.log({ reorderedData })
         }
       })
       .catch((err) => {
-        console.error({ err });
-      });
-  }, []);
+        console.error({ err })
+      })
+  }, [])
 
   const isMobile = useMediaQuery('(max-width:1100px)')
 
@@ -583,32 +638,32 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
     )
   }
 
-  const selectFieldRefs = useRef<(HTMLDivElement | null)[]>([]); // Array of refs for each Select
-  const [optionsHeight, setOptionsHeight] = useState<string[]>([]); // Heights for each dropdown
+  const selectFieldRefs = useRef<(HTMLDivElement | null)[]>([]) // Array of refs for each Select
+  const [optionsHeight, setOptionsHeight] = useState<string[]>([]) // Heights for each dropdown
 
   useEffect(() => {
     const updateOptionsHeights = () => {
       const newHeights = mediaData.map((_, idx) => {
-        const ref = selectFieldRefs.current[idx];
+        const ref = selectFieldRefs.current[idx]
         if (ref) {
-          const rect = ref.getBoundingClientRect();
-          const availableHeight = window.innerHeight - rect.bottom; // Calculate available space
-          return `${Math.max(availableHeight - 32, 100)}px`; // Add padding and enforce min height
+          const rect = ref.getBoundingClientRect()
+          const availableHeight = window.innerHeight - rect.bottom // Calculate available space
+          return `${Math.max(availableHeight - 32, 100)}px` // Add padding and enforce min height
         }
-        return "25rem"; // Default height
-      });
-      setOptionsHeight(newHeights);
-    };
+        return '25rem' // Default height
+      })
+      setOptionsHeight(newHeights)
+    }
 
     // Initial calculation
-    updateOptionsHeights();
+    updateOptionsHeights()
 
     // Recalculate on resize
-    window.addEventListener("resize", updateOptionsHeights);
+    window.addEventListener('resize', updateOptionsHeights)
     return () => {
-      window.removeEventListener("resize", updateOptionsHeights);
-    };
-  }, [mediaData]);
+      window.removeEventListener('resize', updateOptionsHeights)
+    }
+  }, [mediaData])
   return (
     <div className={styles['modal-wrapper']}>
       {/* Modal Header */}
@@ -630,7 +685,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
 
       <hr className={styles['modal-hr']} />
 
-      <section className={styles['body']}>
+      <section className={styles['body'] + ' ' + 'custom-scrollbar-two'}>
         {!isMobile && (
           <div className={styles['body-header']} onClick={addSocialMedia}>
             <Image
@@ -644,62 +699,83 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
           </div>
         )}
         {/* 700: Social media icon sequence */}
-      {mediaData.map((item: any, idx: any) => {
+        {mediaData.map((item: any, idx: any) => {
           return (
             <div ref={(el) => (selectFieldRefs.current[idx] = el)} className={styles.inputContainer} key={idx}>
-              <Select
-  value={item.socialMedia}
-  onChange={(e) => {
-    const selectedSocialMedia = e.target.value as SocialMediaOption;
-    const defaultUrl = defaultSocialMediaURLs[selectedSocialMedia];
+              {/* <Select
+                value={item.socialMedia}
+                onChange={(e) => {
+                  const selectedSocialMedia = e.target.value as SocialMediaOption;
+                  const defaultUrl = defaultSocialMediaURLs[selectedSocialMedia];
+                
+                  const updatedMediaData = [...mediaData];
+                  updatedMediaData[idx] = {
+                    ...item,
+                    socialMedia: selectedSocialMedia,
+                    url: defaultUrl,
+                  };
+                
+                  setMediaData(updatedMediaData);
+                }}
+                className={styles.dropdown}
+                inputProps={{ 'aria-label': 'Without label' }}
+                MenuProps={{
+                  PaperProps: {
+                    className:  'custom-scrollbar',
+                    style: {
+                      maxHeight: optionsHeight[idx] || 200, 
+                      overflowY: 'auto',
+                    },
+                  },
+                }}
+              >
+                {allOptions
+                  .filter((obj) => obj.Show === 'Y')
+                  .map((option, i) => {
+                    return (
+                      <MenuItem key={i} value={option.socialMedia}>
+                        <div className={styles['menu-item']}>
+                          <img
+                            src={
+                              socialMediaIcons[option.socialMedia as SocialMediaOption]
+                            }
+                            alt={option.socialMedia}
+                            width={24}
+                            height={24}
+                          />
+                          <p
+                            className={styles.iconText}
+                            style={{ marginLeft: '8px' }}
+                          >
+                            {option.socialMedia}
+                          </p>
+                        </div>
+                      </MenuItem>
+                    );
+                  })}
+              </Select> */}
+            <div style={{width:"184px", height:"40px"}}>
+              <DropdownComponent
+                options={allOptions}
+                placeholder={'Select Social Media'}
+                value={item.socialMedia}
+                onChange={(e) => {
+                  const selectedSocialMedia = e as SocialMediaOption;
+                  const defaultUrl = defaultSocialMediaURLs[selectedSocialMedia];
 
-    const updatedMediaData = [...mediaData];
-    updatedMediaData[idx] = {
-      ...item,
-      socialMedia: selectedSocialMedia,
-      url: defaultUrl,
-    };
-
-    setMediaData(updatedMediaData);
-  }}
-  className={styles.dropdown}
-  inputProps={{ 'aria-label': 'Without label' }}
-  MenuProps={{
-    PaperProps: {
-      className:  'custom-scrollbar',
-      style: {
-        maxHeight: optionsHeight[idx] || 200, 
-        overflowY: 'auto',
-      },
-    },
-  }}
->
-  {allOptions
-    .filter((obj) => obj.Show === 'Y')
-    .map((option, i) => {
-      return (
-        <MenuItem key={i} value={option.socialMedia}>
-          <div className={styles['menu-item']}>
-            <img
-              src={
-                socialMediaIcons[option.socialMedia as SocialMediaOption]
-              }
-              alt={option.socialMedia}
-              width={24}
-              height={24}
-            />
-            <p
-              className={styles.iconText}
-              style={{ marginLeft: '8px' }}
-            >
-              {option.socialMedia}
-            </p>
-          </div>
-        </MenuItem>
-      );
-    })}
-</Select>
-
+                  console.log({ e, selectedSocialMedia, defaultUrl });
+              
+                  const updatedMediaData = [...mediaData];
+                  updatedMediaData[idx] = {
+                    ...item,
+                    socialMedia: selectedSocialMedia,
+                    url: defaultUrl,
+                    error: true
+                  };
+                  setMediaData(updatedMediaData);
+                }}
+              />
+            </div>
 
               <div className={styles['input-box']}>
                 <input
@@ -711,7 +787,12 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                   onChange={(e) => {
                     let val = e.target.value
                     onChange(idx, 'url', val)
+                    setMediaData((prev: any) =>{
+                      prev[idx].error = false
+                      return prev
+                    })
                   }}
+                  style={item?.error === true ?{ borderColor: "red"} :{}}
                 />
               </div>
               <Image
@@ -750,6 +831,16 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
           )}
         </button>
       </footer>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </div>
   )
 }
