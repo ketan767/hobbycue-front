@@ -90,7 +90,6 @@ export const CreatePost: React.FC<Props> = ({
   onStatusChange,
   propData,
 }) => {
-  console.warn('propsdata', propData)
   const router = useRouter()
   const { user, listing, activeProfile, isLoggedIn } = useSelector(
     (state: RootState) => state.user,
@@ -580,9 +579,10 @@ export const CreatePost: React.FC<Props> = ({
     }
     const allHobbyIds = selectedHobbies.map((h) => h.hobbyId)
     const allGenreIds = selectedHobbies.map((h) => h.genreId)
-    console.log("allHobbyIds",allHobbyIds)
-    console.log("allGenreIds",allGenreIds)
-    console.log("editing",editing)
+    console.log('allHobbyIds', allHobbyIds)
+    console.log('allGenreIds', allGenreIds)
+    console.log('propsdata', propData)
+
     const jsonData: any = {
       hobbyIds: allHobbyIds,
       genreIds: allGenreIds,
@@ -664,22 +664,64 @@ export const CreatePost: React.FC<Props> = ({
   }, [data])
 
   useEffect(() => {
-    const firstHobby = activeProfile?.data?._hobbies[0]?.hobby?.display
-    const firstGenre = activeProfile?.data?._hobbies[0]?.genre?.display
-    const firstHobbyId = activeProfile?.data?._hobbies[0]?.hobby?._id
-      ? activeProfile?.data?._hobbies[0]?.hobby?._id
-      : undefined
-    const firstGenreId = activeProfile?.data?._hobbies[0]?.genre?._id
-      ? activeProfile?.data?._hobbies[0]?.genre?._id
-      : undefined
-    setSelectedHobbies([
-      {
-        hobby: firstHobby,
-        genre: firstGenre,
-        hobbyId: firstHobbyId,
-        genreId: firstGenreId,
-      },
-    ])
+    if (propData) {
+      const hobbies =
+        activeProfile?.data?._allHobbies?.length > 0
+          ? activeProfile?.data?._allHobbies?.map(
+              (hobby: any) => hobby?.display,
+            )
+          : [activeProfile?.data?._hobby?.display]
+      const genres =
+        activeProfile?.data?._allGenres?.length > 0
+          ? activeProfile?.data?._allGenres?.map((genre: any) => genre?.display)
+          : [activeProfile?.data?._genre?.display]
+
+      const hobbiesIds =
+        activeProfile?.data?._allHobbies?.length > 0
+          ? activeProfile?.data?._allHobbies?.map((hobby: any) => hobby?._id)
+          : [activeProfile?.data?._hobby?._id]
+      const genresIds =
+        activeProfile?.data?._allGenres?.length > 0
+          ? activeProfile?.data?._allGenres?.map((genre: any) => genre?._id)
+          : [activeProfile?.data?._genre?._id]
+
+      // const hobbiesIds = activeProfile?.data?._hobbies[0]?.hobby?._id
+      //   ? activeProfile?.data?._hobbies[0]?.hobby?._id
+      //   : undefined
+      // const genresIds = activeProfile?.data?._hobbies[0]?.genre?._id
+      //   ? activeProfile?.data?._hobbies[0]?.genre?._id
+      //   : undefined
+
+      const alreadySelectedHobbies = hobbies.map(
+        (hobby: any, index: number) => {
+          return {
+            hobby: hobbies[index],
+            genre: genres[index],
+            hobbyId: hobbiesIds[index],
+            genreId: genresIds[index],
+          }
+        },
+      )
+      setSelectedHobbies(alreadySelectedHobbies)
+    } else {
+      const firstHobby = activeProfile?.data?._hobbies[0]?.hobby?.display
+      const firstGenre = activeProfile?.data?._hobbies[0]?.genre?.display
+      const firstHobbyId = activeProfile?.data?._hobbies[0]?.hobby?._id
+        ? activeProfile?.data?._hobbies[0]?.hobby?._id
+        : undefined
+      const firstGenreId = activeProfile?.data?._hobbies[0]?.genre?._id
+        ? activeProfile?.data?._hobbies[0]?.genre?._id
+        : undefined
+      setSelectedHobbies([
+        {
+          hobby: firstHobby,
+          genre: firstGenre,
+          hobbyId: firstHobbyId,
+          genreId: firstGenreId,
+        },
+      ])
+    }
+
     // console.log(
     //   'firstHobby activeProfile?.data?._hobbies[0]',
     //   activeProfile?.data?._hobbies[0],
