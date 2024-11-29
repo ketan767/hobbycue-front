@@ -274,6 +274,23 @@ export const deletePostComment = async (commentId: string) => {
   }
 }
 
+export const editPostComment = async (commentId: string, text: string) => {
+  console.log('editPostComment: ', commentId, text);
+  const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+  try {
+    const res = await axiosInstance.patch(
+      `/post/comment/edit/${commentId}`,
+      { text }, 
+      { headers } 
+    );
+    return { res: res, err: null };
+  } catch (err) {
+    console.log('Error in editPostComment: ', err);
+    return { err: err, res: null };
+  }
+};
+
+
 /** DownVote Post `PATCH: /api/post/remove-upvote/:postId` */
 export const removeVote = async (
   postId: string,
