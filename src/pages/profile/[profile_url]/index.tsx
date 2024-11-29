@@ -82,7 +82,7 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
   const getPost = async () => {
     setLoadingPosts(true)
     const { err, res } = await getAllPosts(
-      `author_type=User&_author=${data.pageData._id}&populate=_author,_genre,_hobby`,
+      `author_type=User&_author=${data.pageData._id}&populate=_author,_genre,_hobby,_allHobbies,_allGenres`,
     )
     setLoadingPosts(false)
     if (err) return console.log(err)

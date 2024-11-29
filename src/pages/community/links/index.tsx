@@ -19,7 +19,7 @@ const CommunityLinks: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const getPost = async () => {
     const params = new URLSearchParams(
-      `has_link=true&populate=_author,_genre,_hobby&sort=-up_votes.count`,
+      `has_link=true&populate=_author,_genre,_hobby,_allHobbies,_allGenres&sort=-up_votes.count`,
     )
     if (filters.hobby !== '') {
       params.append('_hobby', filters.hobby)

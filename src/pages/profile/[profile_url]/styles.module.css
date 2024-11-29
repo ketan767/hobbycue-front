@@ -24,13 +24,13 @@
   background: var(--Base-White, #fff);
 }
 
-.uploadContainer {
-  /* grid-column: span 2;
+/* .uploadContainer {
+  grid-column: span 2;
   display: grid;
   gap: 24px;
   grid-template-columns: 50% 50%;
-  width: 100%; */
-}
+  width: 100%;
+} */
 
 .videos {
   height: 100%;
