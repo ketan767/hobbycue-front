@@ -115,6 +115,25 @@ export const CreatePost: React.FC<Props> = ({
   const editBoxRef = useRef<HTMLDivElement | null>(null)
 
   const removeSelectedHobby = (hobbyToRemove: any) => {
+    const newHobbyData = selectedHobbies.filter((hobbyData) => {
+      if (hobbyData.genre && hobbyToRemove.genre) {
+        if (hobbyData.genre === hobbyToRemove.genre) {
+          return false
+        } else {
+          return true
+        }
+      } else if (hobbyData.genre && !hobbyToRemove.genre) {
+        return true
+      } else if (!hobbyData.genre && hobbyToRemove.genre) {
+        return true
+      } else {
+        if (hobbyData.hobby === hobbyToRemove.hobby) {
+          return false
+        } else {
+          return true
+        }
+      }
+    })
     setSelectedHobbies((prev) =>
       prev.filter((hobbyData) => {
         if (hobbyData.genre && hobbyToRemove.genre) {
@@ -136,6 +155,7 @@ export const CreatePost: React.FC<Props> = ({
         }
       }),
     )
+    console.log('selectedHobbies--->', newHobbyData)
   }
   useEffect(() => {
     if (propData && propData._hobby) {
@@ -584,8 +604,13 @@ export const CreatePost: React.FC<Props> = ({
     console.log('propsdata', propData)
 
     const jsonData: any = {
-      hobbyIds: allHobbyIds,
-      genreIds: allGenreIds,
+      hobbyId1: allHobbyIds[0],
+      hobbyId2: allHobbyIds[1] ? allHobbyIds[1] : '',
+      hobbyId3: allHobbyIds[2] ? allHobbyIds[2] : '',
+      genreId1: allGenreIds[0] ? allGenreIds[0] : '',
+      genreId2: allGenreIds[1] ? allGenreIds[1] : '',
+      genreId3: allGenreIds[2] ? allGenreIds[2] : '',
+      // genreIds: allGenreIds,
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
       media:
@@ -665,44 +690,89 @@ export const CreatePost: React.FC<Props> = ({
 
   useEffect(() => {
     if (propData) {
-      const hobbies =
-        activeProfile?.data?._allHobbies?.length > 0
-          ? activeProfile?.data?._allHobbies?.map(
-              (hobby: any) => hobby?.display,
-            )
-          : [activeProfile?.data?._hobby?.display]
-      const genres =
-        activeProfile?.data?._allGenres?.length > 0
-          ? activeProfile?.data?._allGenres?.map((genre: any) => genre?.display)
-          : [activeProfile?.data?._genre?.display]
+      // let hobbies =
+      //   propData?._allHobbies?.length > 0
+      //     ? propData?._allHobbies?.map((hobby: any) => hobby?.display)
+      //     : [activeProfile?.data?._hobby?.display]
+      // let genres =
+      //   propData?._allGenres?.length > 0
+      //     ? propData?._allGenres?.map((genre: any) => genre?.display)
+      //     : [activeProfile?.data?._genre?.display]
 
-      const hobbiesIds =
-        activeProfile?.data?._allHobbies?.length > 0
-          ? activeProfile?.data?._allHobbies?.map((hobby: any) => hobby?._id)
-          : [activeProfile?.data?._hobby?._id]
-      const genresIds =
-        activeProfile?.data?._allGenres?.length > 0
-          ? activeProfile?.data?._allGenres?.map((genre: any) => genre?._id)
-          : [activeProfile?.data?._genre?._id]
+      // let hobbiesIds =
+      //   propData?._allHobbies?.length > 0
+      //     ? propData?._allHobbies?.map((hobby: any) => hobby?._id)
+      //     : [activeProfile?.data?._hobby?._id]
+      // let genresIds =
+      //   propData?._allGenres?.length > 0
+      //     ? propData?._allGenres?.map((genre: any) => genre?._id)
+      //     : [activeProfile?.data?._genre?._id]
+      // console.log('propData', propData)
+      // let hobbies: string[] = []
+      // let genres: string[] = []
+      // let hobbiesIds: string[] = []
+      // let genresIds: string[] = []
 
-      // const hobbiesIds = activeProfile?.data?._hobbies[0]?.hobby?._id
-      //   ? activeProfile?.data?._hobbies[0]?.hobby?._id
-      //   : undefined
-      // const genresIds = activeProfile?.data?._hobbies[0]?.genre?._id
-      //   ? activeProfile?.data?._hobbies[0]?.genre?._id
-      //   : undefined
-
-      const alreadySelectedHobbies = hobbies.map(
-        (hobby: any, index: number) => {
-          return {
-            hobby: hobbies[index],
-            genre: genres[index],
-            hobbyId: hobbiesIds[index],
-            genreId: genresIds[index],
-          }
-        },
-      )
-      setSelectedHobbies(alreadySelectedHobbies)
+      // if (propData?._allHobbies?.length > 0) {
+      // propData?._allHobbies?.forEach((hobby: any, index: number) => {
+      //   hobbies = [...hobbies, hobby?.display]
+      //   genres = [...genres, propData?._allGenres[index]?.display]
+      //   hobbiesIds = [...hobbiesIds, hobby?._id]
+      //   genresIds = [...genresIds, propData?._allGenres[index]?._id]
+      // })
+      const existingHobbies = []
+      if (propData?._allHobbies?._hobby1?.display) {
+        if (propData?._allHobbies?._hobby1?.display) {
+          existingHobbies.push({
+            hobby: propData?._allHobbies?._hobby1?.display,
+            genre: propData?._allHobbies?._genre1?.display,
+            hobbyId: propData?._allHobbies?._hobby1?._id,
+            genreId: propData?._allHobbies?._genre1?._id,
+          })
+        }
+        if (propData?._allHobbies?._hobby2?.display) {
+          existingHobbies.push({
+            hobby: propData?._allHobbies?._hobby2?.display,
+            genre: propData?._allHobbies?._genre2?.display,
+            hobbyId: propData?._allHobbies?._hobby2?._id,
+            genreId: propData?._allHobbies?._genre2?._id,
+          })
+        }
+        if (propData?._allHobbies?._hobby3?.display) {
+          existingHobbies.push({
+            hobby: propData?._allHobbies?._hobby3?.display,
+            genre: propData?._allHobbies?._genre3?.display,
+            hobbyId: propData?._allHobbies?._hobby3?._id,
+            genreId: propData?._allHobbies?._genre3?._id,
+          })
+        }
+      } else {
+        // hobbies = [propData?._hobby?.display]
+        // genres = [propData?._genre?.display]
+        // hobbiesIds = [propData?._hobby?._id]
+        // genresIds = [propData?._genre?._id]
+        existingHobbies.push({
+          hobby: propData?._hobby?.display,
+          genre: propData?._genre?.display,
+          hobbyId: propData?._hobby?._id,
+          genreId: propData?._genre?._id,
+        })
+      }
+      // console.log('hobbies', hobbies)
+      // console.log('hobbiesIds', hobbiesIds)
+      // console.log('genres', genres)
+      // console.log('genresIds', genresIds)
+      // const alreadySelectedHobbies = hobbies.map(
+      //   (hobby: any, index: number) => {
+      //     return {
+      //       hobby: hobbies[index],
+      //       genre: genres[index],
+      //       hobbyId: hobbiesIds[index],
+      //       genreId: genresIds[index],
+      //     }
+      //   },
+      // )
+      setSelectedHobbies(existingHobbies)
     } else {
       const firstHobby = activeProfile?.data?._hobbies[0]?.hobby?.display
       const firstGenre = activeProfile?.data?._hobbies[0]?.genre?.display
@@ -992,6 +1062,10 @@ export const CreatePost: React.FC<Props> = ({
                                                 : undefined,
                                             },
                                           ]
+                                    console.log(
+                                      'selectedHobbies--->',
+                                      newHobbyData,
+                                    )
                                     setSelectedHobbies(newHobbyData)
                                     if (selectedHobbies.length >= 3) {
                                       setSnackbar({
