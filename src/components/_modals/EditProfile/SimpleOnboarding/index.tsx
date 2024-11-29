@@ -70,6 +70,10 @@ type Props = {
   }
 }
 
+interface ResponseData {
+  message: string
+}
+
 type AddressObj = {
   street_number?: string
   subpremise?: string
@@ -380,6 +384,52 @@ const SimpleOnboarding: React.FC<Props> = ({
     }
   }
 
+  const checkProfileUrl = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      const headers = { Authorization: `Bearer ${token}` }
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${profileUrl}`,
+        { headers },
+      )
+
+      if (!res.data.success) {
+        let profileurlname =
+          data?.full_name?.replace(/[^a-zA-Z0-9-]/g, '-') || ''
+        let profileUrlExistId = data.profile_url
+        const newProfileUrl = profileurlname + '-' + profileUrlExistId
+        setData((prev) => ({
+          ...prev,
+          profile_url: newProfileUrl,
+        }))
+        return newProfileUrl
+      } else {
+        const newProfileUrl =
+          data?.full_name?.replace(/[^a-zA-Z0-9-]/g, '-') || ''
+        setData((prev) => ({
+          ...prev,
+          profile_url: newProfileUrl,
+        }))
+        return true
+      }
+    } catch (error) {
+      if (error) {
+        let profileurlname =
+          data?.full_name?.replace(/[^a-zA-Z0-9-]/g, '-') || ''
+        let profileUrlExistId = data.profile_url
+        const newProfileUrl = profileurlname + '-' + profileUrlExistId
+        setData((prev) => ({
+          ...prev,
+          profile_url: newProfileUrl,
+        }))
+        return newProfileUrl
+      } else {
+        console.error('An error occurred:', error)
+      }
+      return false
+    }
+  }
+
   const handleSubmit = async (checkErrors = true) => {
     let inputhobby = null
     let hasErrors = false
@@ -558,6 +608,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (error || !response?.data?.success) return
 
 
+
     console.warn('userId', response?.data?.data?.user?._id)
     console.warn('newurl', profileUrl)
     const urldata = {
@@ -568,6 +619,7 @@ const SimpleOnboarding: React.FC<Props> = ({
 
     dispatch(updateUser(updateUrlResponse?.data?.data?.user))
      window.location.href = '/community'
+
 
     dispatch(closeModal())
   }
@@ -583,32 +635,6 @@ const SimpleOnboarding: React.FC<Props> = ({
       setNextDisabled(false)
     }
   }, [data])
-
-  const checkProfileUrl = async () => {
-    const token = localStorage.getItem('token')
-
-    const headers = { Authorization: `Bearer ${token}` }
-
-    try {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${profileUrl}`,
-        { headers },
-      )
-
-      setData((prev) => ({
-        ...prev,
-        profile_url: data?.full_name?.replace(/[^a-zA-Z0-9-]/g, '-') || '',
-      }))
-      return true
-    } catch (err) {
-      console.log('err', err)
-      setInputErrs((prev) => ({
-        ...prev,
-        profile_url: 'This profile URL is already taken',
-      }))
-      return false
-    }
-  }
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {

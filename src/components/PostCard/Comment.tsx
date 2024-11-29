@@ -294,14 +294,14 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
               <div style={{ marginTop:"12px" }} className={styles.editReportDelete}>
                 {postedByMe && (
                   <>
-                    <button
+                    {/* <button
                       onClick={() => {
                         setEditComment(true)
                         setOpenAction(false)
                       }}
                     >
                       Edit
-                    </button>
+                    </button> */}
                     <button
                       onClick={() => {
                         setShowDelModal(true)
