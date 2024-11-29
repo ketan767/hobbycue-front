@@ -217,10 +217,10 @@ const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
 
                 {/* search pic */}
                 <div className={styles.searchPicWrapper}>
-                  <p className={styles.searchPicText}>
+                  {/* <p className={styles.searchPicText}>
                     <span className={styles.searchSpan}>Search Pic:</span>
                     <span className={styles.authorSpan}>Author</span>
-                  </p>
+                  </p> */}
                   <div className={styles.searchPicContent}>
                     <figure className={styles.searchPicFigure}>
                       <Image
@@ -281,10 +281,10 @@ const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
 
                   {/* right */}
                   <div className={styles.rightContent}>
-                    <h4 className={styles.blogCardHeader}>
+                    {/* <h4 className={styles.blogCardHeader}>
                       <span className={styles.blogCardText}>Blog Card pic</span>
                       :<span className={styles.blogCardType}>Cover</span>
-                    </h4>
+                    </h4> */}
                     <h3 className={styles.keywordsHeader}>KeyWords</h3>
                     <textarea
                       className={styles.keywordsTextarea}

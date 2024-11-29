@@ -12,6 +12,27 @@ import { useRouter } from 'next/router'
 import BlogCard from '@/components/BlogCard/BlogCard'
 import Head from 'next/head'
 import BlogFilter from '@/components/Blog/Filter/BlogFilter'
+type Hobby = {
+  _id: string
+  blog_id: string
+  genre: any
+  hobby: {
+    _id: string
+    slug: string
+    display: string
+  }
+  createdAt: string
+  updatedAt: string
+}
+
+type Blog = {
+  _id: string
+  _hobbies: Hobby[]
+  keywords: string[]
+  author: Author
+  status: string
+  createdAt: string
+}
 
 type Props = {
   data: any
@@ -27,6 +48,30 @@ export interface FormValues {
   endDate: string
 }
 
+type Author = {
+  full_name: string | null
+  display_name: string | null
+}
+
+type DataItem = {
+  _hobbies: Hobby[]
+  keywords: string[]
+  author: Author | null
+  status: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+type Filters = {
+  hobby?: string | null
+  genre?: string | null
+  keywords?: string | null
+  author?: string | null
+  status?: string | null
+  startDate?: string | null
+  endDate?: string | null
+}
+
 const Explore: React.FC<Props> = ({ data }) => {
   const router = useRouter()
   const { type } = router.query
@@ -39,6 +84,81 @@ const Explore: React.FC<Props> = ({ data }) => {
     startDate: 'Start Date',
     endDate: 'End Date',
   })
+
+  const filterBlogs = (data: Blog[], filters: Filters): Blog[] => {
+    // If all filters are null or undefined, return an empty array
+    if (Object.values(filters).every((value) => !value)) {
+      return []
+    }
+
+    return data.filter((item) => {
+      // Match for hobbies
+      const hobbyMatch = filters.hobby
+        ? item._hobbies.some((h) =>
+            h.hobby?.display
+              .toLowerCase()
+              .includes(filters.hobby!.toLowerCase()),
+          )
+        : true
+
+      // Match for genre
+      const genreMatch = filters.genre
+        ? item._hobbies.some((h) => {
+            return (
+              h.genre &&
+              h.genre?.display
+                ?.toLowerCase()
+                .includes(filters.genre!.toLowerCase())
+            )
+          })
+        : true
+
+      // Match for keywords
+      const keywordMatch = filters.keywords
+        ? item.keywords.some((keyword) =>
+            keyword.toLowerCase().includes(filters.keywords!.toLowerCase()),
+          )
+        : true
+
+      // Match for author
+      const authorMatch = filters.author
+        ? item.author.full_name
+            .toLowerCase()
+            .includes(filters.author!.toLowerCase())
+        : true
+
+      // Match for status
+      const statusMatch = filters.status
+        ? item.status.toLowerCase() === filters.status!.toLowerCase()
+        : true
+
+      // Match for date range
+      const startDate =
+        filters.startDate !== 'startDate' ? new Date(filters.startDate) : null
+      const endDate =
+        filters.endDate !== 'End Date' ? new Date(filters.endDate) : null
+      const createdAt = new Date(item.createdAt)
+      const dateMatch =
+        startDate && endDate
+          ? createdAt >= startDate && createdAt <= endDate
+          : true
+
+      // Combine all conditions with logical AND
+      return (
+        hobbyMatch &&
+        genreMatch &&
+        keywordMatch &&
+        authorMatch &&
+        statusMatch &&
+        dateMatch
+      )
+    })
+  }
+
+  const filteredData = filterBlogs(data, formValues) || []
+  console.log(filteredData)
+  console.log(data)
+
   return (
     <>
       <Head>
@@ -54,7 +174,7 @@ const Explore: React.FC<Props> = ({ data }) => {
 
         <div className={styles.container}>
           <div className={styles.gridContainer}>
-            {data?.map((el: any) => (
+            {filteredData?.map((el: any) => (
               <BlogCard key={el._id} data={el} />
             ))}
           </div>

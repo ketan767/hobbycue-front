@@ -168,7 +168,9 @@ export const useGetBlogById = (query: string) => {
   })
 }
 
-export async function addHobby(blogId, hobbyData) {
+// Example: const axiosInstance = axios.create({ baseURL: 'http://localhost:5000/api' });
+
+export async function addHobby(blogId: string, hobbyData: any) {
   const token =
     typeof window !== 'undefined' ? localStorage.getItem('token') : null
 
@@ -177,26 +179,23 @@ export async function addHobby(blogId, hobbyData) {
   }
 
   try {
-    const response = await fetch(
-      `http://localhost:5000/api/blogs/${blogId}/hobbies`,
+    const response = await axiosInstance.post(
+      `/blogs/${blogId}/hobbies`,
+      hobbyData,
       {
-        method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(hobbyData),
       },
     )
 
-    if (!response.ok) {
-      const errorData = await response.json()
-      throw new Error(errorData.error || 'Failed to add hobby')
-    }
-
-    return await response.json() // Parsed JSON response
+    return response.data // Parsed JSON response
   } catch (error) {
     console.error('Error adding hobby:', error)
-    throw error
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.error || 'Failed to add hobby')
+    } else {
+      throw error
+    }
   }
 }

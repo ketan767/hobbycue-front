@@ -6,6 +6,7 @@ import { format } from 'date-fns'
 import { FormValues } from '@/pages/blog'
 interface CustomDateRangePickerProps {
   setFormValues: React.Dispatch<React.SetStateAction<FormValues>>
+  setShowCalender: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function formatDate(date: Date): string {
@@ -13,6 +14,7 @@ function formatDate(date: Date): string {
 }
 const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
   setFormValues,
+  setShowCalender,
 }) => {
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
     null,
@@ -57,6 +59,9 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
         endDate={endDate}
         onChange={(update) => {
           setDateRange(update)
+          if (update[0] && update[1]) {
+            setShowCalender(false) // Hide calendar after selection is complete
+          }
         }}
         inline
         calendarStartDay={1} // Starts from Monday
