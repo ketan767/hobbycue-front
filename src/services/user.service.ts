@@ -250,6 +250,16 @@ export const getAllUserUrls = async (): Promise<ApiReturnObject> => {
   }
 }
 
+export const updateUserpreferences = async (data : any): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.put(`/user/update-preferences`,data)
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 export const addContactUs = async (
   data: ContactUspayload,
 ): Promise<ApiReturnObject> => {

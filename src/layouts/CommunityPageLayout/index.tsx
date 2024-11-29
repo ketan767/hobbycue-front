@@ -109,6 +109,8 @@ const CommunityLayout: React.FC<Props> = ({
   const { activeProfile, user, isLoggedIn } = useSelector(
     (state: RootState) => state.user,
   )
+
+
   const { allPosts, filters, post_pagination } = useSelector(
     (state: RootState) => state.post,
   )
@@ -121,7 +123,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
   const [selectedHobby, setSelectedHobby] = useState(
-    filters.hobby || 'All Hobbies',
+    filters.hobby ||'All Hobbies',
   )
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(
     filters.genre,
@@ -501,6 +503,22 @@ const CommunityLayout: React.FC<Props> = ({
     fetchTrendingHobbies()
     fetchWhatsNew()
   }, [])
+
+  useEffect(() => {
+    console.log('started fetch');
+    console.log(user,1000);
+    
+    if(user && user.preferences){
+      if(!user.preferences.community_view.all_hobbies){
+        console.log(user.preferences.community_view.preferred_hobby,100);
+        setSelectedHobby(user.preferences.community_view.preferred_hobby.hobby) 
+      }
+      if(!user.preferences.community_view.all_locations){
+        console.log(user.preferences.community_view.preferred_location,100);
+        //setSelectedLocation(user.preferences.community_view.preferred_location) 
+      }
+    }
+  },[user])
 
   useEffect(() => {
     dispatch(updateListingModalData(activeProfile.data))

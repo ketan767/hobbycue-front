@@ -1,0 +1,48 @@
+.customSelect {
+    width: 172px;
+    background: #f7f5f9;
+    border: none;
+    position: relative;
+    /* border: 2px solid #a259ff; */
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    /* background-color: #f9f9f9; */
+}
+
+.selectBox {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.selected {
+    font-size: 14px;
+    font-family:'poppins';
+    color: rgba(8, 9, 10, 1);
+    font-weight: 500;
+    /* color: #333; */
+}
+
+.optionsContainer {
+    position: absolute;
+    width: 100%;
+    top: 102%;
+    left: 0;
+    background-color: #fff;
+    /* border: 2px solid #a259ff; */
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    z-index: 100;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.option {
+    padding: 8px;
+    font-size: 14px;
+    font-family:'poppins';
+    color: rgba(109, 116, 122, 1);
+    cursor: pointer;
+}
+
+.option:hover {
+    background-color: #e6e6e6;
+}
