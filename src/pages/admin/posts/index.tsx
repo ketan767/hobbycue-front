@@ -82,7 +82,7 @@ const AdminDashboard: React.FC = () => {
 
   const fetchPosts = async () => {
     const { res, err } = await getAllPostsWithComments(
-      `populate=_author,_genre,_hobby&limit=${pagelimit}&sort=-createdAt&page=${page}`,
+      `populate=_author,_genre,_hobby,_allHobbies,_allGenres&limit=${pagelimit}&sort=-createdAt&page=${page}`,
     )
     if (err) {
       console.log('An error', err)

@@ -312,7 +312,7 @@ const CommunityLayout: React.FC<Props> = ({
       })
     } else if (selectedHobby === 'All Hobbies') {
       params = new URLSearchParams(
-        `page=${page}&limit=10&populate=_author,_genre,_hobby`,
+        `page=${page}&limit=10&populate=_author,_genre,_hobby,_allHobbies,_allGenres`,
       )
     } else if (
       selectedHobby !== '' &&

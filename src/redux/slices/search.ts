@@ -61,6 +61,9 @@ export interface posts {
   author_type: string
   createdAt: any
   _hobby: any
+  _genre: any
+  _allHobbies: any
+  _allGenres: any
   visibility: any
   content: any
 }
