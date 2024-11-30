@@ -755,6 +755,7 @@ font-family:'Poppins';
 
   .eventDate-parent {
     margin-top: 5px;
+    margin-bottom: 10px;
   }
 
   .eventDate .date {
@@ -867,7 +868,10 @@ font-family:'Poppins';
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 8px;
+    gap: 10px;
+  }
+  .profile-img-wrapper{
+    height: 62px;
   }
   .profile-img-wrapper .name-container {
     display: block;
@@ -955,11 +959,13 @@ font-family:'Poppins';
   .event-date-container-responsive {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    /* align-items: flex-end; */
+    padding-left: 5px;
     max-height: 24px;
     z-index: 1;
     order: 3;
-    margin-top: -12px;
+    /* padding-top: 4px; */
+    /* margin-top: -12px; */
   }
   .qunatity {
     padding-top: 9px;
