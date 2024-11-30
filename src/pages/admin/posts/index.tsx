@@ -62,7 +62,7 @@ const AdminDashboard: React.FC = () => {
   })
   const [showAdminActionModal, setShowAdminActionModal] = useState(false)
   const [searchResults, setSearchResults] = useState<PostProps[]>([])
-  const [id, setId] = useState("")
+  const [id, setId] = useState('')
   const [page, setPage] = useState(1)
   const [pagelimit, setPagelimit] = useState(25)
   const [deleteData, setDeleteData] = useState<{
@@ -78,11 +78,9 @@ const AdminDashboard: React.FC = () => {
     message: '',
   })
 
-  
-
   const fetchPosts = async () => {
     const { res, err } = await getAllPostsWithComments(
-      `populate=_author,_genre,_hobby,_allHobbies,_allGenres&limit=${pagelimit}&sort=-createdAt&page=${page}`,
+      `populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3&limit=${pagelimit}&sort=-createdAt&page=${page}`,
     )
     if (err) {
       console.log('An error', err)
@@ -93,17 +91,17 @@ const AdminDashboard: React.FC = () => {
   }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    if(value===''){
+    const value = event.target.value
+    if (value === '') {
       fetchPosts()
-    }else{
+    } else {
       const searchres = searchResults.filter((item) =>
-        item?._author?.full_name?.toLowerCase().includes(value.toLowerCase())
-      );
-      setSearchResults(searchres);
+        item?._author?.full_name?.toLowerCase().includes(value.toLowerCase()),
+      )
+      setSearchResults(searchres)
     }
     setData((prev) => ({ ...prev, search: { value, error: null } }))
-    }
+  }
 
   const goToPreviousPage = () => {
     setPage(page - 1)
@@ -207,9 +205,9 @@ const AdminDashboard: React.FC = () => {
   }
 
   const handleEdit = (post_id: string) => {
-    setId(post_id);
-    console.log(id);
-    setShowAdminActionModal(true);
+    setId(post_id)
+    console.log(id)
+    setShowAdminActionModal(true)
   }
 
   const handleDelete = (post_id: string) => {
@@ -254,9 +252,7 @@ const AdminDashboard: React.FC = () => {
   return (
     <>
       <AdminLayout>
-
         <div className={styles.searchContainer}>
-
           {/* <div className={styles.admintitle}>Admin Search</div> */}
           <div className={styles.searchAndFilter}>
             <form
@@ -277,7 +273,10 @@ const AdminDashboard: React.FC = () => {
                 {searchSvg}
               </button>
             </form>
-            <p>Count : <span style={{color:'#0096C8'}}>{searchResults.length}</span></p>
+            <p>
+              Count :{' '}
+              <span style={{ color: '#0096C8' }}>{searchResults.length}</span>
+            </p>
             <button className={styles.filterBtn}>{filterSvg}</button>
           </div>
 
@@ -285,9 +284,19 @@ const AdminDashboard: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '18.06%',textAlign:'center' }}>User</th>
-                  <th style={{ width: '19.48%',textAlign:'center' }}>Content</th>
-                  <th style={{ width: '21.54%', textAlign: 'center', whiteSpace: 'nowrap' }}>Posted at</th>
+                  <th style={{ width: '18.06%', textAlign: 'center' }}>User</th>
+                  <th style={{ width: '19.48%', textAlign: 'center' }}>
+                    Content
+                  </th>
+                  <th
+                    style={{
+                      width: '21.54%',
+                      textAlign: 'center',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    Posted at
+                  </th>
                   <th style={{ width: '9.163%' }}>Hobby</th>
                   <th
                     style={{
@@ -298,16 +307,42 @@ const AdminDashboard: React.FC = () => {
                   >
                     Location
                   </th>
-                  <th style={{ width: '6.939%', paddingRight: '16px',textAlign:'center', whiteSpace: 'nowrap'  }}>
+                  <th
+                    style={{
+                      width: '6.939%',
+                      paddingRight: '16px',
+                      textAlign: 'center',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
                     Up Votes
                   </th>
-                  <th style={{ width: '6.672%', paddingRight: '16px',textAlign:'center', whiteSpace: 'nowrap'  }}>
+                  <th
+                    style={{
+                      width: '6.672%',
+                      paddingRight: '16px',
+                      textAlign: 'center',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
                     Down Votes
                   </th>
-                  <th style={{ width: '6.87%', paddingRight: '16px',textAlign:'center' }}>
+                  <th
+                    style={{
+                      width: '6.87%',
+                      paddingRight: '16px',
+                      textAlign: 'center',
+                    }}
+                  >
                     Comments
                   </th>
-                  <th style={{ width: '6.252%', paddingRight: '16px',textAlign:'center' }}>
+                  <th
+                    style={{
+                      width: '6.252%',
+                      paddingRight: '16px',
+                      textAlign: 'center',
+                    }}
+                  >
                     Actions
                   </th>
                 </tr>
@@ -351,10 +386,13 @@ const AdminDashboard: React.FC = () => {
                       }}
                       className={styles.userEmail}
                     ></td>
-                    <td className={styles.userPhone} style={{
-                      width: '20%',
-                       whiteSpace: 'nowrap'
-                    }}>
+                    <td
+                      className={styles.userPhone}
+                      style={{
+                        width: '20%',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
                       {formatDate(post?.createdAt)}
                     </td>
                     <td className={styles.LoginType}>
@@ -390,7 +428,9 @@ const AdminDashboard: React.FC = () => {
             {/* Previous Page Button */}
 
             <button
-              style={page <= 1 ? { visibility: 'hidden' } : { display: 'block' }}
+              style={
+                page <= 1 ? { visibility: 'hidden' } : { display: 'block' }
+              }
               className="admin-next-btn"
               onClick={goToPreviousPage}
             >
@@ -398,7 +438,11 @@ const AdminDashboard: React.FC = () => {
             </button>
 
             <button
-              style={searchResults.length !== pagelimit ? { visibility: 'hidden' } : { display: 'block' }}
+              style={
+                searchResults.length !== pagelimit
+                  ? { visibility: 'hidden' }
+                  : { display: 'block' }
+              }
               className="admin-next-btn"
               onClick={goToNextPage}
             >

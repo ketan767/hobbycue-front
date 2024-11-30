@@ -38,7 +38,7 @@ const EditUserPage: React.FC = () => {
   useEffect(() => {
     const fetchPostData = async () => {
       const { err, res } = await getAllPosts(
-        `_id=${_id}&populate=_author,_genre,_hobby,_allHobbies,_allGenres`,
+        `_id=${_id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`,
       )
       setPost(res?.data.data?.posts[0])
     }

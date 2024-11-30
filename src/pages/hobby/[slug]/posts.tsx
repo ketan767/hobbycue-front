@@ -44,11 +44,11 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
 
   const getPost = async () => {
     setLoadingPosts(true)
-    const queryParam = `hobbyId=${data._id}&populate=_author,_genre,_hobby,_allHobbies,_allGenres`
+    const queryParam = `hobbyId=${data._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`
     // const queryParam =
     //   data?.level === 5
-    //     ? `_genre=${data._id}&populate=_author,_genre,_hobby,_allHobbies,_allGenres`
-    //     : `_hobby=${data._id}&populate=_author,_genre,_hobby,_allHobbies,_allGenres`
+    //     ? `_genre=${data._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`
+    //     : `_hobby=${data._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`
 
     const { err, res } = await getAllHobbyPosts(queryParam)
 
