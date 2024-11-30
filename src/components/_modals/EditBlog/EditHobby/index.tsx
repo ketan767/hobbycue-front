@@ -34,6 +34,8 @@ import { useRouter } from 'next/router'
 import AddHobby from '../../AddHobby/AddHobbyModal'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import AddGenre from '../../AddGenre/AddGenreModal'
+import { addHobby } from '@/services/blog.services'
+import axiosInstance from '@/services/_axios'
 
 type Props = {
   onComplete?: () => void
@@ -59,13 +61,9 @@ type Props = {
       genre: any
     }
   }
+  data: any
+  refetch: any
 }
-const levels = ['Beginner', 'Intermediate', 'Advanced']
-// const levels = {
-//   BEGINNER: 1,
-//   INTERMEDIATE: 2,
-//   ADVANCED: 3,
-// }
 
 type ProfileHobbyData = {
   hobby: DropdownListItem | null
@@ -86,7 +84,7 @@ type Snackbar = {
   closeSnackbar?: () => void
 }
 
-const ProfileHobbyEditModal: React.FC<Props> = ({
+const EditBlogHobbyModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
   confirmationModal,
@@ -100,6 +98,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   setShowAddHobbyModal,
   CheckIsOnboarded,
   propData,
+  data: blog,
+  refetch,
 }) => {
   const dispatch = useDispatch()
   const selectedHobbyToAdd = propData && propData?.selectedHobbyToAdd
@@ -394,6 +394,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       }))
     }
   }
+  // console.log(blog)
 
   const handleAddHobby = async () => {
     await handleGenreSelection()
@@ -454,7 +455,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           genre.display.toLowerCase() === genreInputValue.toLowerCase(),
       )
       if (!matchedGenre) {
-        setShowAddGenreModal(true)
+        setErrorOrmsg('it is not in list')
         setIsChanged(false)
         return
       } else {
@@ -482,42 +483,12 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       setAddHobbyBtnLoading(false)
       return
     }
-    addUserHobby(jsonData, async (err, res) => {
-      if (err) {
-        setAddHobbyBtnLoading(false)
-        return console.log(err)
-      } else {
-        setErrorOrmsg('Hobby added to your list')
-      }
-      let updatedCompletedSteps = [...user.completed_onboarding_steps]
-
-      if (!updatedCompletedSteps.includes('Hobby')) {
-        updatedCompletedSteps.push('Hobby')
-      }
-      let onboarded = false
-      if (user.completed_onboarding_steps.length === 3) {
-        onboarded = true
-      }
-      const { err: updtProfileErr, res: updtProfileRes } =
-        await updateMyProfileDetail({
-          is_onboarded: onboarded,
-          completed_onboarding_steps: updatedCompletedSteps,
-        })
-      const { err: error, res: response } = await getMyProfileDetail()
-      setAddHobbyBtnLoading(false)
-      if (error) return console.log(error)
-
-      if (response?.data.success) {
-        const { is_onboarded } = user
-        dispatch(updateUser({ ...response?.data.data.user, is_onboarded }))
-        setHobbyInputValue('')
-        setGenreInputValue('')
-        setData({ level: 1, hobby: null, genre: null })
-
-        setAddHobbyBtnLoading(false)
-      }
-      setAddHobbyBtnLoading(false)
-    })
+    const result = await addHobby(blog?.blog_url?._id, jsonData)
+    console.log('API Response:', result)
+    setHobbyInputValue('')
+    setGenreInputValue('')
+    setAddHobbyBtnLoading(false)
+    refetch()
     setData({ hobby: null, genre: null, level: 1 })
     setHobbyDropdownList([])
     setGenreDropdownList([])
@@ -712,21 +683,30 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
   }
 
-  const handleDeleteHobby = async (id: string) => {
-    const { err, res } = await deleteUserHobby(id)
-
-    if (err) {
-      return console.log(err)
+  const handleDeleteHobby = async (blogId: String, hobbyId: String) => {
+    const token = localStorage.getItem('token') // Retrieve token from local storage
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     }
+    const { data } = await axiosInstance.delete(
+      `blogs/${blogId}/hobbies/${hobbyId}`,
+      headers,
+    )
 
-    const { err: error, res: response } = await getMyProfileDetail()
-
-    if (error) return console.log(error)
-    if (response?.data.success) {
-      dispatch(updateUser(response?.data.data.user))
-      setErrorOrmsg('Hobby removed from your list')
+    if (!data) {
+      console.error('Error deleting hobby:', data.error)
+      return null
     }
+    refetch()
+    console.log('Hobby deleted successfully:', data)
+    return data
   }
+
+  // Example call
+  // deleteHobbyFromBlog('673f76afe3926199ca76984d', '6628674a03f1df5d78896dd5');
 
   useEffect(() => {
     if (!user._hobbies) {
@@ -955,7 +935,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     return () => clearTimeout(timer)
   }, [hobbyInputValue])
 
-  console.log({ data, isChanged })
+  // console.log({ data, isChanged })
 
   if (showAddHobbyModal) {
     return (
@@ -1034,7 +1014,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             if (res?.data.success) {
               setShowAddGenreModal(false)
               setErrorOrmsg(
-                `<strong>${hobbyInputValue} - ${genreInputValue}</strong> has been requested. You can add it later if approved.`,
+                `<strong>${hobbyInputValue}-${genreInputValue}</strong> has been requested. You can add it later if approved.`,
               )
               setHobbyInputValue('')
               setGenreInputValue('')
@@ -1103,12 +1083,12 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                   <thead>
                     <tr>
                       <td>Hobby - Genre/Style</td>
-                      <td>Level</td>
+                      {/* <td>Level</td> */}
                       <td className={styles.hideActionMobile}>Action</td>
                     </tr>
                   </thead>
                   <tbody style={{ display: 'inline-table' }}>
-                    {userHobbies?.map((hobby: any) => {
+                    {blog?.blog_url?._hobbies?.map((hobby: any) => {
                       return (
                         <tr key={hobby._id}>
                           <td>
@@ -1121,14 +1101,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                             </div>
                           </td>
 
-                          <td>
-                            {/* {hobby.level === 1
-                              ? 'Beginner'
-                              : hobby.level === 2
-                              ? 'Intermediate'
-                              : hobby.level === 3
-                              ? 'Advanced'
-                              : ''} */}
+                          {/* <td>
+                       
                             <Select
                               value={hobby?.level}
                               className={styles['hobby-dropdown']}
@@ -1172,7 +1146,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 </MenuItem>
                               ))}
                             </Select>
-                          </td>
+                          </td> */}
                           <td>
                             <svg
                               tabIndex={0}
@@ -1181,10 +1155,18 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               viewBox="0 0 24 24"
                               fill="none"
                               className={styles['delete-hobby-btn']}
-                              onClick={() => handleDeleteHobby(hobby._id)}
+                              onClick={() =>
+                                handleDeleteHobby(
+                                  blog?.blog_url?._id,
+                                  hobby._id,
+                                )
+                              }
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
-                                  handleDeleteHobby(hobby._id)
+                                  handleDeleteHobby(
+                                    blog?.blog_url?._id,
+                                    hobby._id,
+                                  )
                                 }
                               }}
                             >
@@ -1341,7 +1323,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                           </div>
                         </div>
                       </td>
-                      <td>
+                      {/* <td>
                         <Select
                           ref={selectLevelRef}
                           value={levels[data.level - 1]?.name}
@@ -1389,7 +1371,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                             </MenuItem>
                           ))}
                         </Select>
-                      </td>
+                      </td> */}
 
                       <td>
                         <button
@@ -1449,7 +1431,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             ref={nextButtonRef}
             className="modal-footer-btn submit"
             tabIndex={0}
-            onClick={handleSubmit}
+            onClick={handleClose}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
             {submitBtnLoading ? (
@@ -1473,7 +1455,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             <button
               ref={nextButtonRef}
               className="modal-mob-btn-save"
-              onClick={handleSubmit}
+              onClick={() => handleClose()}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
               Save
@@ -1485,4 +1467,4 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   )
 }
 
-export default ProfileHobbyEditModal
+export default EditBlogHobbyModal

@@ -48,7 +48,7 @@ const EditUserPage: React.FC = () => {
         .catch((err) => console.log({ err }))
     }
   }, [profile_url])
-
+  console.log(user)
   const updateUserFunc = async (e: FormEvent) => {
     e.preventDefault()
     const { err, res } = await updateUserByAdmin(user._id, user)

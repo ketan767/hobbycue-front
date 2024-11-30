@@ -584,9 +584,19 @@ const ModalManager: React.FC = () => {
               {activeModal === 'claim-listing' && (
                 <ClaimModal setSnackbar={setSnackbar} />
               )}
-              {activeModal === 'upload-video-page' && <UploadVideoPage handleClose={handleClose} setConfirmationModal={setConfirmationModal} />}
+              {activeModal === 'upload-video-page' && (
+                <UploadVideoPage
+                  handleClose={handleClose}
+                  setConfirmationModal={setConfirmationModal}
+                />
+              )}
               {activeModal === 'upload-image-page' && <UploadImagePage />}
-              {activeModal === 'upload-video-user' && <UploadVideoUser handleClose={handleClose} setConfirmationModal={setConfirmationModal} />}
+              {activeModal === 'upload-video-user' && (
+                <UploadVideoUser
+                  handleClose={handleClose}
+                  setConfirmationModal={setConfirmationModal}
+                />
+              )}
               {activeModal === 'ExpiredPassword' && <ExpiredPassword />}
               {activeModal === 'social-media-edit' && (
                 <SocialMediaEditModal {...props} />

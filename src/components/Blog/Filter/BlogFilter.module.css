@@ -1,0 +1,175 @@
+.blogsSection {
+  display: flex;
+  width: 229px;
+  padding: 16px 16px 32px 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  border-radius: 8px;
+  border-right: 1px solid var(--Grey-Lighter, #ebedf0);
+  border-bottom: 1px solid var(--Grey-Lighter, #ebedf0);
+  border-left: 1px solid var(--Grey-Lighter, #ebedf0);
+  background: #fff;
+}
+
+.blogsTitle {
+  width: 50px;
+  height: 26px;
+  color: var(--Purple-1, #8064a2);
+  font-family: Poppins;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 133.333% */
+}
+.filter {
+  color: var(--Grey-Darkest, #08090a);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px; /* 114.286% */
+}
+
+.blogsForm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  align-self: stretch;
+}
+.position {
+  position: relative;
+}
+.resultContainer {
+  border-radius: 4px 0px 0px 0px;
+  box-shadow: 0px 8px 12px 0px #939ca31f;
+  box-shadow: 0px 0px 2px 0px #939ca35c;
+
+  width: 100%;
+  height: 200px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: white;
+  padding: 5px;
+  border-radius: 4px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  scrollbar-width: thin;
+}
+.resultContainer span {
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0.005em;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #6d747a;
+}
+.formLabel {
+  color: var(--Grey-Darker, #6d747a);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+}
+
+.formInput {
+  display: flex;
+  height: 40px;
+  padding: 12px;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 8px;
+  border: 1px solid var(--Grey-Lighter, #ebedf0);
+  background: var(--Grey-Hover, #f8f9fa);
+  outline: none;
+}
+.formInput::placeholder {
+  color: var(--Grey-Dark, #939ca3);
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px; /* 133.333% */
+}
+.blogsOptions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  align-self: stretch;
+}
+.dates {
+  color: var(--Grey-Darker, #6d747a);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 157.143% */
+}
+.radioGroup {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.radioItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.radioInput {
+  color: #8064a2;
+}
+
+.radioLabel {
+  color: var(--Grey-Darker, #6d747a);
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 166.667% */
+}
+
+.datePickerContainer p {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.showDate {
+  display: flex;
+  padding: 6px 8px;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px;
+  border: 1px solid var(--Grey-Lighter, #ebedf0);
+  color: var(--Grey-Darkest, #08090a);
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 166.667% */
+}
+.datePickerWrapper {
+  position: relative;
+}
