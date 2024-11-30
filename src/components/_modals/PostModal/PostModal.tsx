@@ -170,7 +170,7 @@ export const PostModal: React.FC<Props> = ({
 
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
-      `_id=${activePost._id}&populate=_author,_genre,_hobby,_allHobbies,_allGenres`,
+      `_id=${activePost._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`,
     )
     if (err) return console.log(err)
     if (res.data.success) {
@@ -301,7 +301,7 @@ export const PostModal: React.FC<Props> = ({
                     {dateFormat?.format(new Date(activePost?.createdAt))}
                     {' | '}
                   </span>
-                  {activePost?._allHobbies?.length > 0 ? (
+                  {/* {activePost?._allHobbies?.length > 0 ? (
                     activePost?._allHobbies?.map(
                       (hobby: any, index: number) => {
                         return (
@@ -319,6 +319,43 @@ export const PostModal: React.FC<Props> = ({
                         )
                       },
                     )
+                  ) : (
+                    <span>{`${activePost?._hobby?.display}${
+                      activePost._genre
+                        ? ' - ' + activePost?._genre?.display
+                        : ''
+                    }`}</span>
+                  )} */}
+                  {activePost?._allHobbies?._hobby1?.display ? (
+                    <>
+                      <span>
+                        {`${activePost?._allHobbies?._hobby1?.display}${
+                          activePost?._allHobbies?._genre1?.display
+                            ? ' - ' + activePost?._allHobbies?._genre1?.display
+                            : ''
+                        }`}
+                        {activePost?._allHobbies?._hobby2?.display ? ', ' : ''}
+                        {`${
+                          activePost?._allHobbies?._hobby2?.display
+                            ? activePost?._allHobbies?._hobby2?.display
+                            : ''
+                        }${
+                          activePost?._allHobbies?._genre2?.display
+                            ? ' - ' + activePost?._allHobbies?._genre2?.display
+                            : ''
+                        }`}
+                        {activePost?._allHobbies?._hobby3?.display ? ', ' : ''}
+                        {`${
+                          activePost?._allHobbies?._hobby3?.display
+                            ? activePost?._allHobbies?._hobby3?.display
+                            : ''
+                        }${
+                          activePost?._allHobbies?._genre3?.display
+                            ? ' - ' + activePost?._allHobbies?._genre3?.display
+                            : ''
+                        }`}
+                      </span>
+                    </>
                   ) : (
                     <span>{`${activePost?._hobby?.display}${
                       activePost._genre

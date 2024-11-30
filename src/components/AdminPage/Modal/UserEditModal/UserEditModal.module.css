@@ -1,0 +1,188 @@
+.mainContainer {
+  max-width: 600px;
+  width: 100%;
+}
+
+.back {
+  display: flex;
+  justify-content: end;
+}
+.back button {
+  border: none;
+  outline: none;
+  background: none;
+  margin: 20px 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+.mainWrapper {
+  max-width: 400px;
+  width: 100%;
+  height: 60vh;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 2px;
+}
+
+.title {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.inputbox {
+  margin-bottom: 1.2rem;
+}
+
+.inputbox label,
+.inputPhoneBox label {
+  display: block;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.inputbox input,
+.inputbox select,
+.inputbox textarea {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+.inputbox textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+.btnWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  margin: 20px 0px;
+}
+
+.saveButton {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.saveButton:hover {
+  background-color: #0056b3;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 3rem;
+}
+.inputPhoneBox {
+  width: 100%;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0px;
+  outline: none;
+}
+.phoneWrapper {
+  display: flex;
+  width: 100%;
+}
+.phoneInput {
+  flex-grow: 1;
+  width: 100%;
+  height: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+.prefix {
+  max-width: 60px;
+  width: 100%;
+  height: 100%;
+  padding: 0.8rem 0;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+.longInputContainer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.longInputContainer label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.longInputContainer input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+}
+
+.twoColumnGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.Addressinputbox {
+  display: flex;
+  flex-direction: column;
+}
+
+.Addressinputbox label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.Addressinputbox input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .twoColumnGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #444;
+}
+
+.lastLogin h3 {
+  font-weight: 500;
+  font-size: 20px;
+}

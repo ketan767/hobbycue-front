@@ -118,7 +118,7 @@ const PostCard: React.FC<Props> = (props) => {
 
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
-      `_id=${postData._id}&populate=_author,_genre,_hobby,_allHobbies,_allGenres`,
+      `_id=${postData._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`,
     )
     if (err) return console.log(err)
     if (res.data.success) {
@@ -134,6 +134,8 @@ const PostCard: React.FC<Props> = (props) => {
   }, [])
 
   useEffect(() => {
+    console.log('postData', postData)
+
     if (has_link) {
       const regex =
         /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
@@ -336,7 +338,7 @@ const PostCard: React.FC<Props> = (props) => {
                 ></div>
               )}
             </Link>
-            <div>
+            <div style={{ maxWidth:"calc(100% - 110px)" }}>
               <Link
                 href={
                   postData?.author_type === 'User'
@@ -360,7 +362,7 @@ const PostCard: React.FC<Props> = (props) => {
                     : dispatch(openModal({ type: 'auth', closable: true }))
                 }}
               >
-                <p className={styles['author-name']}>
+                <p style={{width:"100%"}} className={styles['author-name']}>
                   {postData?.author_type === 'User'
                     ? postData?._author?.full_name
                     : postData?.author_type === 'Listing'
@@ -380,16 +382,51 @@ const PostCard: React.FC<Props> = (props) => {
                   {' | '}
                 </span>
 
-                {postData?._allHobbies?.length > 0 ? (
+                {postData?._allHobbies?._hobby1?.display ? (
+                  <>
+                    <span>
+                      {`${postData?._allHobbies?._hobby1?.display}${
+                        postData?._allHobbies?._genre1?.display
+                          ? ' - ' + postData?._allHobbies?._genre1?.display
+                          : ''
+                      }`}
+                      {postData?._allHobbies?._hobby2?.display ? ', ' : ''}
+                      {`${
+                        postData?._allHobbies?._hobby2?.display
+                          ? postData?._allHobbies?._hobby2?.display
+                          : ''
+                      }${
+                        postData?._allHobbies?._genre2?.display
+                          ? ' - ' + postData?._allHobbies?._genre2?.display
+                          : ''
+                      }`}
+                      {postData?._allHobbies?._hobby3?.display ? ', ' : ''}
+                      {`${
+                        postData?._allHobbies?._hobby3?.display
+                          ? postData?._allHobbies?._hobby3?.display
+                          : ''
+                      }${
+                        postData?._allHobbies?._genre3?.display
+                          ? ' - ' + postData?._allHobbies?._genre3?.display
+                          : ''
+                      }`}
+                    </span>
+                  </>
+                ) : (
+                  <span>{`${postData?._hobby?.display}${
+                    postData._genre ? ' - ' + postData?._genre?.display : ''
+                  }`}</span>
+                )}
+                {/* {postData?._allHobbies?.length > 0 ? (
                   postData?._allHobbies?.map((hobby: any, index: number) => {
                     return (
                       <span key={index}>
                         {`${hobby?.display}${
-                          postData?._allGenres[index-1]?.display
-                            ? ' - ' + postData?._allGenres[index-1]?.display
+                          postData?._allGenres[index]?.display
+                            ? ' - ' + postData?._allGenres[index]?.display
                             : ''
                         }`}
-                        {index < postData?._allHobbies?.length-1 ? ', ' : ''}
+                        {index < postData?._allHobbies?.length - 1 ? ', ' : ''}
                       </span>
                     )
                   })
@@ -397,7 +434,7 @@ const PostCard: React.FC<Props> = (props) => {
                   <span>{`${postData?._hobby?.display}${
                     postData._genre ? ' - ' + postData?._genre?.display : ''
                   }`}</span>
-                )}
+                )} */}
                 <span>
                   {postData?.visibility ? ` | ${postData?.visibility}` : ''}
                 </span>

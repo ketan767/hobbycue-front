@@ -25,7 +25,6 @@ const BlogCard: React.FC<Props> = ({ data }) => {
   const { user } = useSelector((state: RootState) => state.user)
   const type = getListingTypeName(data?.type)
 
-  console.warn({ data })
   function formatDateRange(prop: {
     from_date: string
     to_date: string

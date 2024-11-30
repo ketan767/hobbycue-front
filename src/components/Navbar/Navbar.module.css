@@ -412,7 +412,24 @@
   display: none;
 }
 
+.toggle-button{
+  position: absolute;
+  left: calc(50% - 24.5px) ;
+  top: calc(50% - 24.5px);
+  cursor: pointer;
+}
+
+@media screen and (max-width: 300px) {
+  .toggle-button{
+    position: initial;
+    padding-top: 5px ;
+  }
+}
+
 @media screen and (max-width: 1100px) {
+  .toggle-button{
+    left: calc(50% - 50px) ;
+  }
   .search-icon-container {
     width: 40px;
     height: 40px;

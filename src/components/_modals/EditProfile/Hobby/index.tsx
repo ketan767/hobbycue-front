@@ -20,7 +20,11 @@ import addhobby from '@/assets/svg/addhobby.svg'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { showProfileError, updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
-import { SendHobbyRequest, getAllHobbies, getAllHobbiesWithoutPagi } from '@/services/hobby.service'
+import {
+  SendHobbyRequest,
+  getAllHobbies,
+  getAllHobbiesWithoutPagi,
+} from '@/services/hobby.service'
 import { isEmptyField } from '@/utils'
 import { FormControl, MenuItem, Select } from '@mui/material'
 import Image from 'next/image'

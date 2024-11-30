@@ -2389,24 +2389,34 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userTagline}>
                           {convertDateToString(page?.createdAt) || '\u00a0'}
                           {' | '}
-                          {page?._allHobbies?.length > 0 ? (
-                            page?._allHobbies?.map(
-                              (hobby: any, index: number) => {
-                                return (
-                                  <span key={index}>
-                                    {`${hobby?.display}${
-                                      page?._allGenres[index-1]?.display
-                                        ? ' - ' +
-                                          page?._allGenres[index-1]?.display
-                                        : ''
-                                    }`}
-                                    {index < page?._allHobbies?.length - 1
-                                      ? ', '
-                                      : ''}
-                                  </span>
-                                )
-                              },
-                            )
+                          {page?._allHobbies?._hobby1?.display ? (
+                            <>
+                              {`${page?._allHobbies?._hobby1?.display}${
+                                page?._allHobbies?._genre1?.display
+                                  ? ' - ' + page?._allHobbies?._genre1?.display
+                                  : ''
+                              }`}
+                              {page?._allHobbies?._hobby2?.display ? ', ' : ''}
+                              {`${
+                                page?._allHobbies?._hobby2?.display
+                                  ? page?._allHobbies?._hobby2?.display
+                                  : ''
+                              }${
+                                page?._allHobbies?._genre2?.display
+                                  ? ' - ' + page?._allHobbies?._genre2?.display
+                                  : ''
+                              }`}
+                              {page?._allHobbies?._hobby3?.display ? ', ' : ''}
+                              {`${
+                                page?._allHobbies?._hobby3?.display
+                                  ? page?._allHobbies?._hobby3?.display
+                                  : ''
+                              }${
+                                page?._allHobbies?._genre3?.display
+                                  ? ' - ' + page?._allHobbies?._genre3?.display
+                                  : ''
+                              }`}
+                            </>
                           ) : (
                             <span>{`${page?._hobby?.display}${
                               page._genre ? ' - ' + page?._genre?.display : ''
