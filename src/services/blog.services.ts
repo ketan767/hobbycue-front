@@ -138,6 +138,19 @@ export const updateBlog = async ({
   }
 }
 
+export const deleteBlog = async (blogId: string) => {
+  try {
+    const token = localStorage.getItem(`token`)
+    const headers = { Authorization: `Bearer ${token}` }
+    const res = await axiosInstance.delete(`/blogs/delete/${blogId}`, {
+      headers,
+    })
+    return { res, err: null }
+  } catch (err) {
+    return { res: null, err }
+  }
+}
+
 export const uploadBlogImage = async (formData: FormData, blogId: string) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }

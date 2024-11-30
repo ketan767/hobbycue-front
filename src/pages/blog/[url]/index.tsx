@@ -29,9 +29,13 @@ import BlogContainer from '@/components/Blog/BlogContainer'
 import QuillEditor from '@/pages/brand/QuillEditor'
 import dynamic from 'next/dynamic'
 import FilledButton from '@/components/_buttons/FilledButton'
+
+import { CircularProgress } from '@mui/material'
+
 import ModalWrapper from '@/components/Modal'
 import EditBlog from '@/components/_modals/EditBlog/EditBlog'
 import { Blog } from '@/types/blog'
+
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 type Props = {
@@ -60,8 +64,10 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   const [isAuthor, setIsAuthor] = useState(false)
   const [isAuthorizedToView, setIsAuthorizedToView] = useState(false)
   const [isEditing, setIsEditing] = useState(false) // to check if the author is shown the editable interface
-  // const [hasChanged, setHasChanged] = useState(false)
-  const [blog, setBlog] = useState<Blog | {}>(data?.blog_url || {})
+
+  const [hasChanged, setHasChanged] = useState(false)
+  const [blog, setBlog] = useState(data?.blog_url || {})
+
   const titleRef = useRef<HTMLTextAreaElement | null>(null)
   const taglineRef = useRef<HTMLTextAreaElement | null>(null)
   const cameraInputRef = useRef<HTMLInputElement | null>(null)
@@ -119,6 +125,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
           blogId: blog._id,
           tagline: blog.tagline,
         })
+        router.replace(`/blog/${blog.url}`)
         break
       case 'content':
         setBtnLoading(true)
@@ -126,6 +133,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
           blogId: blog._id,
           content: blog.content,
         })
+        router.reload()
         break
       default:
         console.log('Wrong type passed in handleEditBlog()!')
@@ -174,6 +182,14 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   useEffect(() => {
     setBlog(data.blog_url || {})
   }, [data])
+
+  useEffect(() => {
+    if (blog?.content !== data?.blog_url?.content) {
+      setHasChanged(true)
+    } else {
+      setHasChanged(false)
+    }
+  }, [blog, data])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -237,9 +253,6 @@ const BlogPage: React.FC<Props> = ({ data }) => {
 
   const isMobileScreen = isMobile()
 
-  // console.warn('Blog Data', data)
-
-  // console.log('asifs blog', blog)
 
   return (
     <>
@@ -313,7 +326,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
             )}
 
             {/* Cover Image */}
-            {data?.blog_url?.cover_pic ? (
+            {blog?.cover_pic ? (
               <div
                 onClick={() => {
                   dispatch(
@@ -496,7 +509,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                         content: updatedValue,
                       }))
                     }}
-                    onBlur={() => handleEditBlog('content')}
+                    // onBlur={() => handleEditBlog('content')}
                     className={`${styles.quill} ${styles['ql-editor']} blog-quill`}
                     placeholder={'Text'}
                     modules={{
@@ -516,13 +529,25 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                       },
                     }}
                   />
-                  <FilledButton
-                    className={styles.blogSaveButton}
-                    onClick={() => handleEditBlog('content')}
-                    disabled={btnLoading}
-                  >
-                    Save
-                  </FilledButton>
+                  <div className={styles.blogButtons}>
+                    <FilledButton
+                      className={styles.blogSaveButton}
+                      onClick={() => setIsEditing(false)}
+                    >
+                      Cancel
+                    </FilledButton>
+                    <FilledButton
+                      className={styles.blogSaveButton}
+                      onClick={() => handleEditBlog('content')}
+                      disabled={!hasChanged}
+                    >
+                      {btnLoading ? (
+                        <CircularProgress color="inherit" size={'14px'} />
+                      ) : (
+                        `Save`
+                      )}
+                    </FilledButton>
+                  </div>
                 </div>
               ) : (
                 <div
@@ -530,7 +555,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   dangerouslySetInnerHTML={{
                     __html: data?.blog_url?.content,
                   }}
-                ></div>
+                />
               )}
             </BlogContainer>
           </div>
