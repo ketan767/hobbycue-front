@@ -202,6 +202,9 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
   //       to_date: eventData.from_date,
   //     }))
   // }, [eventData.from_date])
+  const [dayError, setDayError] = useState([])
+
+  useEffect(() => {console.log(dayError)}, [dayError])
 
   const handleSubmit = async () => {
     const modifiedEventData = eventData.map((event) => {
@@ -215,6 +218,42 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
 
     const jsonData = {
       ...modifiedEventData,
+    }
+
+    function dayToIndex(day: string) {
+      switch (day) {
+        case 'Sun':
+          return 0
+        case 'Mon':
+          return 1
+        case 'Tue':
+          return 2
+        case 'Wed':
+          return 3
+        case 'Thu':
+          return 4
+        case 'Fri':
+          return 5
+        case 'Sat':
+          return 6
+        default:
+          return 0
+      }
+    }
+    let errs = 0
+    for(let i = 0; i < weekdays.length; i++){
+      if(dayToIndex(weekdays[i].from_day) > dayToIndex(weekdays[i].to_day)){
+        errs = 1;
+        setDayError((prev)=>{
+          let temp: any = [...prev]
+          temp[i] = 'Invalid Day Range'
+          return temp
+        })
+      }
+    }
+    if(errs === 1){
+      console.log('Error')
+      return
     }
     console.log({ jsonData })
     setSubmitBtnLoading(true)
@@ -335,6 +374,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
   }
 
   const addWeekday = () => {
+    setDayError([])
     if (weekdays.length === 0) {
       const fromDay = days[new Date(initialEventHour.from_date).getDay()]
       const toDay = days[new Date(initialEventHour.to_date).getDay()]
@@ -549,14 +589,15 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                       <input
                         autoComplete="new"
                         value={obj.from_date}
-                        className={styles.inputField}
+                        className={styles.inputField + ` ${styles['date-input']}`}
                         type="date"
                         min={today}
                         onChange={(item) =>
                           handleDateSelection(item, 'from_date', i)
                         }
                       />
-                      <p className={styles['formatted-date']}>
+                      <p
+                        className={styles['formatted-date']}>
                         {formatDateFunc(obj.from_date)}
                       </p>
                     </div>
@@ -577,7 +618,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                       <input
                         autoComplete="new"
                         value={obj.to_date}
-                        className={styles.inputField}
+                        className={styles.inputField + ` ${styles['date-input']}`}
                         type="date"
                         min={obj.from_date}
                         onChange={(e: any) =>
@@ -657,7 +698,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
             ))}
           </div>
           {/* weekdays */}
-          <div className={styles.listContainer + ` ${styles['mt-32']}`}>
+          <div className={styles.listContainer} style={{marginTop:"22px"}}>
             <div onClick={addWeekday} className={styles['adder']}>
               <PlusIcon />
               <p>Add Weekdays</p>
@@ -711,6 +752,9 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                       className={styles['weekday-input']}
                       iconClass={styles['input-icon']}
                     />
+                    {
+                      (dayError[i] !== undefined) && <p className={styles['day-error-message']}>{dayError[i]}</p>
+                    }
                   </div>
                 </div>
                 <p className={styles['comma']}>,</p>
@@ -761,6 +805,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                   <DeleteIcon />
                 </div>
               </div>
+              // here
             ))}
           </div>
         </section>
