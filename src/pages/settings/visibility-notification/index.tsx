@@ -15,7 +15,7 @@ import { RootState } from '@/redux/store'
 import { useMediaQuery } from '@mui/material'
 import SettingsDropdownLayout from '@/layouts/SettingsDropdownLayout'
 import CustomSelect from '@/components/settings/CustomSelect/CustomSelect'
-import { updateUserpreferences } from '@/services/user.service'
+import { getMyProfileDetail, updateUserpreferences } from '@/services/user.service'
 import { updateUser } from '@/redux/slices/user'
 import PreLoader from '@/components/PreLoader'
 
@@ -42,7 +42,8 @@ const VisibilityAndNotification: React.FC<Props> = ({ }) => {
   const user = useSelector(
     (state: RootState) => state?.user?.user,
   )
-
+  
+  const dispatch = useDispatch();
   const [preferences, setPreferences] = useState({
     community_view: { preferred_hobby: { hobby: null, genre: null }, preferred_location: 'All locations' },
     create_post_pref: { preferred_hobby: { hobby: null, genre: null }, preferred_location: 'All locations' },
@@ -69,8 +70,34 @@ const VisibilityAndNotification: React.FC<Props> = ({ }) => {
     }
   }, [user])
 
+  useEffect(() => {
+    if (user.preferences) {
+      const updatedPreferences = {
+        community_view: {
+          preferred_hobby: {
+            hobby: user.preferences.community_view.preferred_hobby?.hobby?._id || null,
+            genre: user.preferences.community_view.preferred_hobby?.genre || null,
+          },
+          preferred_location: user?.preferences.community_view.preferred_location?._id || 'All locations',
+        },
+        create_post_pref: {
+          preferred_hobby: {
+            hobby: user.preferences.create_post_pref.preferred_hobby?.hobby?._id || null,
+            genre: user.preferences.create_post_pref.preferred_hobby?.genre || null,
+          },
+          preferred_location: user.preferences.create_post_pref.preferred_location?._id || 'All locations',
+        },
+        location_visibility: user.preferences.location_visibility || 'My City',
+        email_visibility: user.preferences.email_visibility || 'Everyone',
+        phone_visibility: user.preferences.phone_visibility || 'Everyone',
+      };
+
+      setPreferences(updatedPreferences);
+    }
+  }, [user]);
+
   const updatePreference = async (preferences: any) => {
-    console.log(user);
+    console.log(preferences);
 
     try {
       const { res, err } = await updateUserpreferences({ preferences });
@@ -78,7 +105,9 @@ const VisibilityAndNotification: React.FC<Props> = ({ }) => {
         console.error('Error updating preferences:', err);
       } else {
         console.log('Preferences updated successfully:', res.data);
-        //dispatch(updateUser(res.data.data.user))
+        const user = await getMyProfileDetail();
+        dispatch(updateUser(user.res?.data?.data.user))
+        //window.location.reload();
       }
     } catch (error) {
       console.error('Unexpected error:', error);
@@ -174,44 +203,62 @@ const VisibilityAndNotification: React.FC<Props> = ({ }) => {
               Default and visibility settings{' '}
             </p>
 
+            {user._addresses&&<>
+
             <div className={`${styles.viewOptionContainer}`}>
               <p className={`${styles.textDark}`}> Community View </p>
               <div className={styles['selectContainer']}>
-                <CustomSelect options={Hobbyoptions} onChange={(item) => handleSelectChange('community_view', 'preferred_hobby', item)} />
+                <CustomSelect options={Hobbyoptions}
+                onChange={(item) => handleSelectChange('community_view', 'preferred_hobby', item)} 
+                value={user?.preferences?.community_view?.preferred_hobby?.hobby?.display||Hobbyoptions[0]}/>
                 <p>at</p>
-                <CustomSelect options={LocationOptions} onChange={(item) => handleSelectChange('community_view', 'preferred_location', item)} />
+                <CustomSelect options={LocationOptions} onChange={(item) => handleSelectChange('community_view', 'preferred_location', item)} 
+                  value={user?.preferences?.community_view?.preferred_location?.city||LocationOptions[0]}/>
               </div>
             </div>
 
             <div className={`${styles.viewOptionContainer}`}>
               <p className={`${styles.textDark}`}> Create Post Default </p>
               <div className={styles['selectContainer']}>
-                <CustomSelect options={Hobbyoptions} onChange={(item) => handleSelectChange('create_post_pref', 'preferred_hobby', item)} />
+                <CustomSelect options={Hobbyoptions} 
+                onChange={(item) => handleSelectChange('create_post_pref', 'preferred_hobby', item)} 
+                value={user?.preferences?.create_post_pref?.preferred_hobby?.hobby?.display||Hobbyoptions[0]}
+                />
                 <p>at</p>
-                <CustomSelect options={LocationOptions} onChange={(item) => handleSelectChange('create_post_pref', 'preferred_location', item)} />
+                <CustomSelect options={LocationOptions}
+                 onChange={(item) => handleSelectChange('create_post_pref', 'preferred_location', item)}
+                 value={user?.preferences?.create_post_pref?.preferred_location?.city||LocationOptions[0]}/> 
               </div>
             </div>
 
             <div className={`${styles.viewOptionContainer}`}>
               <p className={`${styles.textDark}`}> Others can view my Location up to </p>
               <div>
-                <CustomSelect options={options} onChange={(item) => handleVisibilityChange('location_visibility', item)} />
+                <CustomSelect options={options} 
+                onChange={(item) => handleVisibilityChange('location_visibility', item)}
+                value={user?.preferences?.location_visibility||options[0]}/>
               </div>
             </div>
 
             <div className={`${styles.viewOptionContainer}`}>
               <p className={`${styles.textDark}`}> Who can view my Email ID </p>
               <div>
-                <CustomSelect options={viewOptions} onChange={(item) => handleVisibilityChange('email_visibility', item)} />
+                <CustomSelect options={viewOptions} 
+                onChange={(item) => handleVisibilityChange('email_visibility', item)}
+                value={user?.preferences?.email_visibility||viewOptions[0]}/>
               </div>
             </div>
 
             <div className={`${styles.viewOptionContainer}`}>
               <p className={`${styles.textDark}`}> Who can view my Phone Number </p>
               <div>
-                <CustomSelect options={viewOptions} onChange={(item) => handleVisibilityChange('phone_visibility', item)} />
+                <CustomSelect options={viewOptions} 
+                onChange={(item) => handleVisibilityChange('phone_visibility', item)}
+                value={user?.preferences?.phone_visibility||viewOptions[0]}/>
               </div>
             </div>
+
+            </>}
 
             <div className={styles.line}></div>
 

@@ -134,7 +134,7 @@ const EditPostModal: React.FC<Props> = ({
 
                 <section className={styles['body']}>
                     {/* Row 1 */}
-                    <div className={styles['input-row']}>
+                    <div className={styles['input-row']} >
                         <div className={styles['input-box-wrapper']}>
                             <label className={styles['label']} style={{
                                 marginTop: '8px',

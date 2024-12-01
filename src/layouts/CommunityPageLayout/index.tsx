@@ -506,16 +506,14 @@ const CommunityLayout: React.FC<Props> = ({
 
   useEffect(() => {
     console.log('started fetch');
-    console.log(user,1000);
-    
     if(user && user.preferences){
       if(!user.preferences.community_view.all_hobbies){
         console.log(user.preferences.community_view.preferred_hobby,100);
-        setSelectedHobby(user.preferences.community_view.preferred_hobby.hobby) 
+        setSelectedHobby(user.preferences.community_view.preferred_hobby.hobby._id) 
       }
       if(!user.preferences.community_view.all_locations){
         console.log(user.preferences.community_view.preferred_location,100);
-        //setSelectedLocation(user.preferences.community_view.preferred_location) 
+        setSelectedLocation(user.preferences.community_view.preferred_location.city) 
       }
     }
   },[user])
@@ -525,6 +523,7 @@ const CommunityLayout: React.FC<Props> = ({
   }, [activeProfile.type])
 
   useEffect(() => {
+    console.log(selectedHobby,1000);
     if (
       activeProfile.data !== null &&
       (activeTab === 'links' || activeTab === 'posts')

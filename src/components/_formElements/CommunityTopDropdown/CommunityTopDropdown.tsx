@@ -20,7 +20,7 @@ const CommunityTopDropdown: React.FC<Props> = ({
   const toggle = () => setactive(!active)
   const dropdownRef = useRef(null)
   const containerRef = useRef<HTMLDivElement>(null)
-console.log({variant})
+//console.log({variant})
   useEffect(() => {
     const closeDropdown = () => {
       setactive(false)
@@ -60,7 +60,7 @@ console.log({variant})
       document.removeEventListener('mousedown', handleOutsideClick)
     }
   }, [])
-  console.log({ value })
+  //console.log({ value })
 
   return (
     <div
