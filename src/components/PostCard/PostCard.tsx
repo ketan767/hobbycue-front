@@ -118,7 +118,7 @@ const PostCard: React.FC<Props> = (props) => {
 
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
-      `_id=${postData._id}&populate=_author,_genre,_hobby`,
+      `_id=${postData._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`,
     )
     if (err) return console.log(err)
     if (res.data.success) {
@@ -134,6 +134,8 @@ const PostCard: React.FC<Props> = (props) => {
   }, [])
 
   useEffect(() => {
+    console.log('postData', postData)
+
     if (has_link) {
       const regex =
         /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
@@ -258,7 +260,11 @@ const PostCard: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div style={{height:"auto"}} className={styles['post-card-wrapper']} onClick={handleCardClick}>
+      <div
+        style={{ height: 'auto' }}
+        className={styles['post-card-wrapper']}
+        onClick={handleCardClick}
+      >
         {/* Card Header */}
         {(!has_link ||
           props.currentSection === 'posts' ||
@@ -332,7 +338,7 @@ const PostCard: React.FC<Props> = (props) => {
                 ></div>
               )}
             </Link>
-            <div>
+            <div style={{ maxWidth:"calc(100% - 110px)" }}>
               <Link
                 href={
                   postData?.author_type === 'User'
@@ -356,7 +362,7 @@ const PostCard: React.FC<Props> = (props) => {
                     : dispatch(openModal({ type: 'auth', closable: true }))
                 }}
               >
-                <p className={styles['author-name']}>
+                <p style={{width:"100%"}} className={styles['author-name']}>
                   {postData?.author_type === 'User'
                     ? postData?._author?.full_name
                     : postData?.author_type === 'Listing'
@@ -375,9 +381,60 @@ const PostCard: React.FC<Props> = (props) => {
                   {dateFormat.format(new Date(postData.createdAt))}
                   {' | '}
                 </span>
-                <span>{`${postData?._hobby?.display}${
-                  postData._genre ? ' - ' + postData?._genre?.display : ''
-                }`}</span>
+
+                {postData?._allHobbies?._hobby1?.display ? (
+                  <>
+                    <span>
+                      {`${postData?._allHobbies?._hobby1?.display}${
+                        postData?._allHobbies?._genre1?.display
+                          ? ' - ' + postData?._allHobbies?._genre1?.display
+                          : ''
+                      }`}
+                      {postData?._allHobbies?._hobby2?.display ? ', ' : ''}
+                      {`${
+                        postData?._allHobbies?._hobby2?.display
+                          ? postData?._allHobbies?._hobby2?.display
+                          : ''
+                      }${
+                        postData?._allHobbies?._genre2?.display
+                          ? ' - ' + postData?._allHobbies?._genre2?.display
+                          : ''
+                      }`}
+                      {postData?._allHobbies?._hobby3?.display ? ', ' : ''}
+                      {`${
+                        postData?._allHobbies?._hobby3?.display
+                          ? postData?._allHobbies?._hobby3?.display
+                          : ''
+                      }${
+                        postData?._allHobbies?._genre3?.display
+                          ? ' - ' + postData?._allHobbies?._genre3?.display
+                          : ''
+                      }`}
+                    </span>
+                  </>
+                ) : (
+                  <span>{`${postData?._hobby?.display}${
+                    postData._genre ? ' - ' + postData?._genre?.display : ''
+                  }`}</span>
+                )}
+                {/* {postData?._allHobbies?.length > 0 ? (
+                  postData?._allHobbies?.map((hobby: any, index: number) => {
+                    return (
+                      <span key={index}>
+                        {`${hobby?.display}${
+                          postData?._allGenres[index]?.display
+                            ? ' - ' + postData?._allGenres[index]?.display
+                            : ''
+                        }`}
+                        {index < postData?._allHobbies?.length - 1 ? ', ' : ''}
+                      </span>
+                    )
+                  })
+                ) : (
+                  <span>{`${postData?._hobby?.display}${
+                    postData._genre ? ' - ' + postData?._genre?.display : ''
+                  }`}</span>
+                )} */}
                 <span>
                   {postData?.visibility ? ` | ${postData?.visibility}` : ''}
                 </span>
@@ -385,7 +442,10 @@ const PostCard: React.FC<Props> = (props) => {
             </div>
             <div ref={editReportDeleteRef} className={styles.actionIcon}>
               {openAction === true && (
-                <div style={{ marginTop:"12px" }} className={styles.editReportDelete}>
+                <div
+                  style={{ marginTop: '12px' }}
+                  className={styles.editReportDelete}
+                >
                   {postedByMe && (
                     <>
                       <button
@@ -457,7 +517,10 @@ const PostCard: React.FC<Props> = (props) => {
                 </defs>
               </svg>
               {optionsActive && fromProfile && (
-                <ul style={{ marginTop:"12px" }} className={styles.optionsContainer}>
+                <ul
+                  style={{ marginTop: '12px' }}
+                  className={styles.optionsContainer}
+                >
                   <li
                     onClick={
                       onPinPost !== undefined
@@ -562,13 +625,11 @@ const PostCard: React.FC<Props> = (props) => {
               {has_link && props.currentSection !== 'links' && (
                 <div
                   className={
-                    !linkLoading ?
-                    (isVideoLink(url)
-                      ? styles['post-video-link']
-                      : styles['posts-meta-parent']
-                    ) : (
-                      styles['posts-meta-loader']
-                    )
+                    !linkLoading
+                      ? isVideoLink(url)
+                        ? styles['post-video-link']
+                        : styles['posts-meta-parent']
+                      : styles['posts-meta-loader']
                   }
                 >
                   {linkLoading ? (
@@ -646,7 +707,10 @@ const PostCard: React.FC<Props> = (props) => {
                   height={130}
                 />
               </a>
-              <div style={isMobile ? {height:"109px"}: {}} className={styles.metaContent}>
+              <div
+                style={isMobile ? { height: '109px' } : {}}
+                className={styles.metaContent}
+              >
                 <a href={url} target="_blank" className={styles.contentHead}>
                   {' '}
                   {metaData?.title}{' '}

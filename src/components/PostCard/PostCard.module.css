@@ -40,6 +40,10 @@
   font-size: 14px;
   line-height: 20px;
   color: #000000;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .post-card-wrapper header .post-other-info {
@@ -242,14 +246,22 @@
 }
 .all-comment-container .comment .content-wrapper {
   padding: var(--spacing-8);
+  max-width: calc(100% - 40px);
   width: 100%;
   background-color: #f8f9fa;
   border-radius: 0px 12px 12px 12px;
 }
 .all-comment-container .comment .content-wrapper > header {
+  /* width: calc(100% - 32px); */
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.author-name{
+  width: calc(100% - 100px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .all-comment-container .comment .content-wrapper .author-name {
   font-weight: 500;
@@ -304,21 +316,21 @@
 }
 
 .posts-meta-data-container {
-  /* display: flex; */
+  display: flex; 
   width: 100%;
   max-width: inherit;
-  /* padding: 16px; */
+  padding: 16px; 
   align-items: center;
-  gap: 24px;
+  
+  gap: 8px;
   background: var(--Purple-3, #F7F5F9);
 }
-
-/* .posts-meta-img, */
+ .posts-meta-img,
 .posts-meta-img {
-  height: 376.31px;
-  width: 100%;
-  /* border-radius: 5px; */
-  border: 1.5px solid #8064a2;
+  height: 100px;
+  width: 100px;
+   border-radius: 5px; 
+  border: 1.5px solid #8064a2 !important;
   border-inline: none;
   overflow: hidden;
 }
@@ -367,7 +379,7 @@ color: #939CA3;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  max-width: 559px;
+  max-width: 500px;
   margin: 0;
   padding: 0;
   white-space: nowrap;
@@ -384,15 +396,15 @@ color: #939CA3;
   font-weight: 400;
   /* 14px font size + 12px gap */
   /* line-height: 26px; */
-  max-width: 559px;
+  max-width: 500px;
   margin: 0;
   padding: 0;
   white-space: normal; /* Allow wrapping */
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box; /* Enable line clamping */
-  -webkit-line-clamp: 2; /* Show only 2 lines */
-  line-clamp: 2;
+  -webkit-line-clamp: 1; /* Show only 2 lines */
+  line-clamp: 1;
   -webkit-box-orient: vertical; /* Set the box orientation to vertical */
 }
 
@@ -784,5 +796,8 @@ background: rgba(128, 100, 162, 0.25);
 }
 .metaImgContainer {
   width: 125px;
+}
+.videoPlayer {
+  height: 100%;
 }
 }

@@ -106,7 +106,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     if (!postId) return
 
     const params = new URLSearchParams(
-      `populate=_author,_genre,_hobby&_id=${postId}`,
+      `populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3&_id=${postId}`,
     )
 
     setIsLoadingPosts(true)
@@ -474,6 +474,17 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       </main>
     )
   }
+  const hobbiesInTitle = data.postsData?._allHobbies[0]?.display
+    ? data.postsData?._allHobbies[1]?.display
+      ? data.postsData?._allHobbies[2]?.display
+        ? `${data.postsData?._allHobbies[0]?.display}, ${data.postsData?._allHobbies[1]?.display}, ${data.postsData?._allHobbies[2]?.display}`
+        : `${data.postsData?._allHobbies[0]?.display}, ${data.postsData?._allHobbies[1]?.display}`
+      : `${data.postsData?._allHobbies[0]?.display}`
+    : data.postsData?._hobby?.display
+
+  const singleHobbyInTitle = data.postsData?._allHobbies[0]?.display
+    ? data.postsData?._allHobbies[0]?.display
+    : data.postsData?._hobby?.display
   console.warn('postcontentttttttttttttttttt', data.postcontent)
   return (
     <>
@@ -499,9 +510,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
             data?.postsData?.author_type === 'User'
               ? data.postsData?._author?.full_name
               : data.postsData?._author?.title
-          } - ${data.postsData?._hobby?.display} at ${
-            data.postsData?.visibility
-          }`}`}
+          } - ${singleHobbyInTitle} at ${data.postsData?.visibility}`}`}
         </title>
       </Head>
       <CommunityPageLayout activeTab="posts" singlePostPage={false} hide={true}>
@@ -528,7 +537,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   // const postId = new URL(url).pathname.split('/').pop()
   const { post_id } = query
   const queryParams = new URLSearchParams(
-    `populate=_author,_genre,_hobby&_id=${post_id}`,
+    `populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3&_id=${post_id}`,
   )
   const { err, res } = await getAllPosts(queryParams.toString())
 

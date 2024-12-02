@@ -17,41 +17,42 @@ import CommentIcon from '@/assets/icons/CommentIcon'
 import ReportIcon from '@/assets/icons/ReportIcon'
 import DownvoteIcon from '@/assets/icons/DownvoteIcon'
 import RepostIconBlog from '@/assets/icons/RepostIconBlog'
+import { CircularProgress } from '@mui/material'
+import DeletePrompt from '../DeletePrompt/DeletePrompt'
 
 type Props = {
   data: any
+  isEditing: boolean
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
+  isAuthor: boolean
+  vote: { up: boolean; down: boolean }
+  setVote: React.Dispatch<
+    React.SetStateAction<{
+      up: boolean
+      down: boolean
+    }>
+  >
 }
 
-const BlogActionBar: React.FC<Props> = ({ data }) => {
-  console.log('asifs data', data)
+const BlogActionBar: React.FC<Props> = ({
+  data,
+  setIsEditing,
+  isEditing,
+  isAuthor,
+  vote,
+  setVote,
+}) => {
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
     message: '',
   })
   const [showMenu, setShowMenu] = useState(false)
-  const [vote, setVote] = useState<{ up: boolean; down: boolean }>({
-    up: false,
-    down: false,
-  })
   const [btnLoading, setBtnLoading] = useState(false)
 
   const dispatch = useDispatch()
   const router = useRouter()
   const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
-
-  /** Set upvote, downvote state initially from the DB */
-  useEffect(() => {
-    const initialUpvote = data?.blog_url?.up_votes?._users?.some(
-      (id: any) => id === user._id,
-    )
-    if (initialUpvote) setVote({ up: true, down: false })
-
-    const initialDownvote = data?.blog_url?.down_votes?._users?.some(
-      (id: any) => id === user._id,
-    )
-    if (initialDownvote) setVote({ up: false, down: true })
-  }, [user, data])
 
   const showFeatUnderDev = () => {
     setSnackbar({
@@ -139,6 +140,10 @@ const BlogActionBar: React.FC<Props> = ({ data }) => {
       case 'report':
         dispatch(openModal({ type: 'PostReportModal', closable: true }))
         break
+      case 'delete':
+        // <DeletePrompt triggerOpen={true}  /> make a delete states
+        showFeatUnderDev()
+        break
     }
 
     setBtnLoading(false)
@@ -162,27 +167,6 @@ const BlogActionBar: React.FC<Props> = ({ data }) => {
     setShowMenu(false)
   }
 
-  // const handleMenuClick = (action: string) => {
-  //   switch (action) {
-  //     case 'reshare':
-  //       showFeatUnderDev()
-  //       break
-  //     case 'comment':
-  //       router.push('#comments')
-  //       break
-  //     case 'report':
-  //       dispatch(openModal({ type: 'PostReportModal', closable: true }))
-  //       break
-  //     case 'downvote':
-  //       showFeatUnderDev()
-  //       break
-  //     default:
-  //       console.log('Provide right action for handleMenuClick()!')
-  //       break
-  //   }
-  //   setShowMenu(false)
-  // }
-
   useEffect(() => {
     window.addEventListener('click', () => setShowMenu(false))
     return () => window.removeEventListener('click', () => setShowMenu(false))
@@ -190,52 +174,98 @@ const BlogActionBar: React.FC<Props> = ({ data }) => {
 
   const isMob = isMobile()
 
+  const isDraft = data?.blog_url?.status === 'Draft'
+
   return (
     <div className={styles.actions} onClick={(e) => e.stopPropagation()}>
       <CustomizedTooltips title="UpVote">
         <button
-          disabled={btnLoading}
+          disabled={isEditing || isDraft}
           onClick={() => handleActionsWithAuth('upvote')}
         >
-          <UpvoteIcon fill={vote.up} />
+          {btnLoading ? (
+            <CircularProgress color="inherit" size={'24px'} />
+          ) : (
+            <UpvoteIcon fill={vote.up} />
+          )}
         </button>
       </CustomizedTooltips>
       <CustomizedTooltips title="Bookmark">
-        <button onClick={() => handleActionsWithAuth('bookmark')}>
+        <button
+          onClick={() => handleActionsWithAuth('bookmark')}
+          disabled={isEditing}
+        >
           <BookmarkIcon />
         </button>
       </CustomizedTooltips>
       <CustomizedTooltips title="Share">
-        <button onClick={() => handleActionsWithoutAuth('share')}>
+        <button
+          onClick={() => handleActionsWithoutAuth('share')}
+          disabled={isEditing || isDraft}
+        >
           <ShareIcon />
         </button>
       </CustomizedTooltips>
       <div style={{ position: 'relative' }}>
         <CustomizedTooltips title="Click to view options">
-          <button onClick={() => setShowMenu(!showMenu)} className={styles.btn}>
+          <button
+            onClick={() => setShowMenu(!showMenu)}
+            className={styles.btn}
+            disabled={isEditing}
+          >
             <MenuIcon />
           </button>
         </CustomizedTooltips>
         {showMenu && (
           <div className={`${styles.menu}`}>
-            <button onClick={() => handleActionsWithAuth('repost')}>
-              <RepostIconBlog /> Repost
-            </button>
-            {!isMob && (
-              <button onClick={() => handleActionsWithoutAuth('comment')}>
-                <CommentIcon />
-                Comment
-              </button>
+            {isAuthor ? (
+              <>
+                <button
+                  onClick={() => {
+                    setIsEditing(true)
+                    setShowMenu(false)
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() =>
+                    dispatch(
+                      openModal({ type: 'SupportUserModal', closable: true }),
+                    )
+                  }
+                >
+                  Support
+                </button>
+                <button onClick={() => handleActionsWithAuth('delete')}>
+                  Delete
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => handleActionsWithAuth('repost')}>
+                  <RepostIconBlog /> Repost
+                </button>
+                {!isMob && (
+                  <button onClick={() => handleActionsWithoutAuth('comment')}>
+                    <CommentIcon />
+                    Comment
+                  </button>
+                )}
+                <button onClick={() => handleActionsWithAuth('report')}>
+                  <ReportIcon /> Report
+                </button>
+                <button onClick={() => handleActionsWithAuth('downvote')}>
+                  {btnLoading ? (
+                    <CircularProgress color="inherit" size={'24px'} />
+                  ) : (
+                    <>
+                      <DownvoteIcon fill={vote.down} /> Downvote
+                    </>
+                  )}
+                </button>
+              </>
             )}
-            <button onClick={() => handleActionsWithAuth('report')}>
-              <ReportIcon /> Report
-            </button>
-            <button
-              disabled={btnLoading}
-              onClick={() => handleActionsWithAuth('downvote')}
-            >
-              <DownvoteIcon fill={vote.down} /> Downvote
-            </button>
           </div>
         )}
       </div>

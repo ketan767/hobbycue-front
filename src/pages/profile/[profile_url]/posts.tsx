@@ -53,7 +53,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   const getPost = async () => {
     setLoadingPosts(true)
     const { err, res } = await getAllPosts(
-      `author_type=User&_author=${data.pageData._id}&populate=_author,_genre,_hobby`,
+      `author_type=User&_author=${data.pageData._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`,
     )
     setLoadingPosts(false)
     if (err) return console.log(err)

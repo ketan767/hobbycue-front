@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './CreatePost.module.css'
+import styles1 from './Styles.module.css'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import store, { RootState } from '@/redux/store'
@@ -15,6 +16,7 @@ import {
   updateUserPost,
 } from '@/services/post.service'
 import { closeModal } from '@/redux/slices/modal'
+import CrossIcon from '@/assets/svg/cross.svg'
 
 import DOMPurify from 'dompurify'
 import CreatePostProfileSwitcher from './ProfileSwitcher'
@@ -73,6 +75,12 @@ type NewPostData = {
   media: []
   video_url: any
 }
+type HobbyData = {
+  hobby: string
+  genre: string
+  hobbyId: string
+  genreId: string
+}
 export const CreatePost: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
@@ -82,7 +90,6 @@ export const CreatePost: React.FC<Props> = ({
   onStatusChange,
   propData,
 }) => {
-  console.warn('propsdata', propData)
   const router = useRouter()
   const { user, listing, activeProfile, isLoggedIn } = useSelector(
     (state: RootState) => state.user,
@@ -91,6 +98,7 @@ export const CreatePost: React.FC<Props> = ({
   const filteredListing = listing.filter((item: any) => item.is_published)
   const { filters } = useSelector((state: RootState) => state.post)
   const [hobbies, setHobbies] = useState([])
+  const [selectedHobbies, setSelectedHobbies] = useState<HobbyData[]>([])
   const [editing, setEditing] = useState(false)
   const [data, setData] = useState<NewPostData>({
     type: 'user',
@@ -105,6 +113,50 @@ export const CreatePost: React.FC<Props> = ({
   })
   const [showMetaData, setShowMetaData] = useState(true)
   const editBoxRef = useRef<HTMLDivElement | null>(null)
+
+  const removeSelectedHobby = (hobbyToRemove: any) => {
+    const newHobbyData = selectedHobbies.filter((hobbyData) => {
+      if (hobbyData.genre && hobbyToRemove.genre) {
+        if (hobbyData.genre === hobbyToRemove.genre) {
+          return false
+        } else {
+          return true
+        }
+      } else if (hobbyData.genre && !hobbyToRemove.genre) {
+        return true
+      } else if (!hobbyData.genre && hobbyToRemove.genre) {
+        return true
+      } else {
+        if (hobbyData.hobby === hobbyToRemove.hobby) {
+          return false
+        } else {
+          return true
+        }
+      }
+    })
+    setSelectedHobbies((prev) =>
+      prev.filter((hobbyData) => {
+        if (hobbyData.genre && hobbyToRemove.genre) {
+          if (hobbyData.genre === hobbyToRemove.genre) {
+            return false
+          } else {
+            return true
+          }
+        } else if (hobbyData.genre && !hobbyToRemove.genre) {
+          return true
+        } else if (!hobbyData.genre && hobbyToRemove.genre) {
+          return true
+        } else {
+          if (hobbyData.hobby === hobbyToRemove.hobby) {
+            return false
+          } else {
+            return true
+          }
+        }
+      }),
+    )
+    console.log('selectedHobbies--->', newHobbyData)
+  }
   useEffect(() => {
     if (propData && propData._hobby) {
       setData((prev) => ({
@@ -533,16 +585,32 @@ export const CreatePost: React.FC<Props> = ({
         content: 'This field is required',
       })
     }
-    if (!data.hobby) {
-      hobbyRef.current?.focus()
-      return setErrors({
-        ...errors,
-        hobby: 'This field is required',
+    if (selectedHobbies.length === 0) {
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Please select atleast one hobby',
       })
+      return
+      // return setErrors({
+      //   ...errors,
+      //   hobby: 'This field is required',
+      // })
     }
-    const jsonData: any = {
-      hobbyId: data.hobby?._id,
+    const allHobbyIds = selectedHobbies.map((h) => h.hobbyId)
+    const allGenreIds = selectedHobbies.map((h) => h.genreId)
+    console.log('allHobbyIds', allHobbyIds)
+    console.log('allGenreIds', allGenreIds)
+    console.log('propsdata', propData)
 
+    const jsonData: any = {
+      hobbyId1: allHobbyIds[0],
+      hobbyId2: allHobbyIds[1] ? allHobbyIds[1] : '',
+      hobbyId3: allHobbyIds[2] ? allHobbyIds[2] : '',
+      genreId1: allGenreIds[0] ? allGenreIds[0] : '',
+      genreId2: allGenreIds[1] ? allGenreIds[1] : '',
+      genreId3: allGenreIds[2] ? allGenreIds[2] : '',
+      // genreIds: allGenreIds,
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
       media:
@@ -551,12 +619,12 @@ export const CreatePost: React.FC<Props> = ({
       has_link: hasLink,
       video_url: data.video_url ? data.video_url : null,
     }
-    if (typeof data.genre === 'object' && typeof data.genre?._id === 'string') {
-      jsonData.genreId = data.genre._id
-    }
+    // if (typeof data.genre === 'object' && typeof data.genre?._id === 'string') {
+    //   jsonData.genreId = data.genre._id
+    // }
 
-    console.log('jsonData', jsonData.hobbyId)
-    console.log('jsonData genreId', jsonData.genreId)
+    // console.log('jsonData', jsonData.hobbyId)
+    // console.log('jsonData genreId', jsonData.genreId)
     setSubmitBtnLoading(true)
 
     if (data.type === 'listing') {
@@ -569,13 +637,13 @@ export const CreatePost: React.FC<Props> = ({
         return console.log(err)
       }
       if (res.data.success) {
-        store.dispatch(
-          setFilters({
-            location: data.visibility !== '' ? data.visibility : null,
-            hobby: data.hobby?._id ?? '',
-            genre: data.genre?._id ?? '',
-          }),
-        )
+        // store.dispatch(
+        //   setFilters({
+        //     location: data.visibility !== '' ? data.visibility : null,
+        //     hobby: data.hobby?._id ?? '',
+        //     genre: data.genre?._id ?? '',
+        //   }),
+        // )
         store.dispatch(
           updateActiveProfile({ type: data.type, data: data.data }),
         )
@@ -597,13 +665,13 @@ export const CreatePost: React.FC<Props> = ({
       return console.log(err)
     }
     if (res.data.success) {
-      store.dispatch(
-        setFilters({
-          location: data.visibility !== '' ? data.visibility : null,
-          hobby: data.hobby?._id ?? '',
-          genre: data.genre?._id ?? '',
-        }),
-      )
+      // store.dispatch(
+      //   setFilters({
+      //     location: data.visibility !== '' ? data.visibility : null,
+      //     hobby: data.hobby?._id ?? '',
+      //     genre: data.genre?._id ?? '',
+      //   }),
+      // )
       store.dispatch(updateActiveProfile({ type: data.type, data: data.data }))
       store.dispatch(closeModal())
       // window.location.reload()
@@ -621,6 +689,113 @@ export const CreatePost: React.FC<Props> = ({
   }, [data])
 
   useEffect(() => {
+    if (propData) {
+      // let hobbies =
+      //   propData?._allHobbies?.length > 0
+      //     ? propData?._allHobbies?.map((hobby: any) => hobby?.display)
+      //     : [activeProfile?.data?._hobby?.display]
+      // let genres =
+      //   propData?._allGenres?.length > 0
+      //     ? propData?._allGenres?.map((genre: any) => genre?.display)
+      //     : [activeProfile?.data?._genre?.display]
+
+      // let hobbiesIds =
+      //   propData?._allHobbies?.length > 0
+      //     ? propData?._allHobbies?.map((hobby: any) => hobby?._id)
+      //     : [activeProfile?.data?._hobby?._id]
+      // let genresIds =
+      //   propData?._allGenres?.length > 0
+      //     ? propData?._allGenres?.map((genre: any) => genre?._id)
+      //     : [activeProfile?.data?._genre?._id]
+      // console.log('propData', propData)
+      // let hobbies: string[] = []
+      // let genres: string[] = []
+      // let hobbiesIds: string[] = []
+      // let genresIds: string[] = []
+
+      // if (propData?._allHobbies?.length > 0) {
+      // propData?._allHobbies?.forEach((hobby: any, index: number) => {
+      //   hobbies = [...hobbies, hobby?.display]
+      //   genres = [...genres, propData?._allGenres[index]?.display]
+      //   hobbiesIds = [...hobbiesIds, hobby?._id]
+      //   genresIds = [...genresIds, propData?._allGenres[index]?._id]
+      // })
+      const existingHobbies = []
+      if (propData?._allHobbies?._hobby1?.display) {
+        if (propData?._allHobbies?._hobby1?.display) {
+          existingHobbies.push({
+            hobby: propData?._allHobbies?._hobby1?.display,
+            genre: propData?._allHobbies?._genre1?.display,
+            hobbyId: propData?._allHobbies?._hobby1?._id,
+            genreId: propData?._allHobbies?._genre1?._id,
+          })
+        }
+        if (propData?._allHobbies?._hobby2?.display) {
+          existingHobbies.push({
+            hobby: propData?._allHobbies?._hobby2?.display,
+            genre: propData?._allHobbies?._genre2?.display,
+            hobbyId: propData?._allHobbies?._hobby2?._id,
+            genreId: propData?._allHobbies?._genre2?._id,
+          })
+        }
+        if (propData?._allHobbies?._hobby3?.display) {
+          existingHobbies.push({
+            hobby: propData?._allHobbies?._hobby3?.display,
+            genre: propData?._allHobbies?._genre3?.display,
+            hobbyId: propData?._allHobbies?._hobby3?._id,
+            genreId: propData?._allHobbies?._genre3?._id,
+          })
+        }
+      } else {
+        // hobbies = [propData?._hobby?.display]
+        // genres = [propData?._genre?.display]
+        // hobbiesIds = [propData?._hobby?._id]
+        // genresIds = [propData?._genre?._id]
+        existingHobbies.push({
+          hobby: propData?._hobby?.display,
+          genre: propData?._genre?.display,
+          hobbyId: propData?._hobby?._id,
+          genreId: propData?._genre?._id,
+        })
+      }
+      // console.log('hobbies', hobbies)
+      // console.log('hobbiesIds', hobbiesIds)
+      // console.log('genres', genres)
+      // console.log('genresIds', genresIds)
+      // const alreadySelectedHobbies = hobbies.map(
+      //   (hobby: any, index: number) => {
+      //     return {
+      //       hobby: hobbies[index],
+      //       genre: genres[index],
+      //       hobbyId: hobbiesIds[index],
+      //       genreId: genresIds[index],
+      //     }
+      //   },
+      // )
+      setSelectedHobbies(existingHobbies)
+    } else {
+      const firstHobby = activeProfile?.data?._hobbies[0]?.hobby?.display
+      const firstGenre = activeProfile?.data?._hobbies[0]?.genre?.display
+      const firstHobbyId = activeProfile?.data?._hobbies[0]?.hobby?._id
+        ? activeProfile?.data?._hobbies[0]?.hobby?._id
+        : undefined
+      const firstGenreId = activeProfile?.data?._hobbies[0]?.genre?._id
+        ? activeProfile?.data?._hobbies[0]?.genre?._id
+        : undefined
+      setSelectedHobbies([
+        {
+          hobby: firstHobby,
+          genre: firstGenre,
+          hobbyId: firstHobbyId,
+          genreId: firstGenreId,
+        },
+      ])
+    }
+
+    // console.log(
+    //   'firstHobby activeProfile?.data?._hobbies[0]',
+    //   activeProfile?.data?._hobbies[0],
+    // )
     setData((prev: any) => {
       return { ...prev, type: activeProfile.type, data: activeProfile.data }
     })
@@ -657,16 +832,32 @@ export const CreatePost: React.FC<Props> = ({
     )
   }
 
+  const alreadyContains = (item: any) => {
+    const alreadyContains = selectedHobbies.some((hobbyData) => {
+      if (hobbyData?.genre && item?.genre?.display) {
+        if (hobbyData?.genre === item?.genre?.display) return true
+      } else {
+        if (!hobbyData?.genre && item?.genre?.display) return false
+        if (hobbyData?.genre && !item?.genre?.display) return false
+
+        if (hobbyData?.hobby === item?.hobby?.display) {
+          return true
+        }
+      }
+    })
+    return alreadyContains
+  }
+
   return (
     <>
       <div
-        style={{width: '671px'}}
         className={`${styles['modal-wrapper']} ${
           confirmationModal ? styles['ins-active'] : ''
         } ${data?.media?.length && !isMobile ? styles['changedWidth'] : ''}`}
       >
         {/* Modal Header */}
-        <div style={{ width:"671px" }}
+        <div
+          style={{ width: '671px' }}
           className={`${styles['modal-wrapper']} ${
             data?.media?.length && !isMobile ? styles['changedWidth'] : ''
           }`}
@@ -705,7 +896,7 @@ export const CreatePost: React.FC<Props> = ({
               )}
 
               <aside>
-                <div>
+                <div className={styles1.z20}>
                   <CreatePostProfileSwitcher
                     data={data}
                     setData={setData}
@@ -714,6 +905,47 @@ export const CreatePost: React.FC<Props> = ({
                     className={styles['profile-switcher-parent']}
                   />
                 </div>
+                <section className={styles1.z10}>
+                  {selectedHobbies && (
+                    <section className={styles1.hobbyInput}>
+                      {selectedHobbies?.map((item: any) => {
+                        if (typeof item === 'string') return
+                        return (
+                          <button
+                            key={item}
+                            onClick={() => removeSelectedHobby(item)}
+                            style={{
+                              cursor: 'pointer',
+                              borderRadius: 24,
+                              border: 'none',
+                            }}
+                            className={styles1['hobbyInputButton']}
+                          >
+                            <li className={styles1.hobbyInputLi}>
+                              <span className={styles1.noWrap}>
+                                {(item.hobby ? item.hobby : '') +
+                                  (item?.genre
+                                    ? ` -
+                                  ${item?.genre} `
+                                    : '')}
+                              </span>
+
+                              <Image
+                                src={CrossIcon}
+                                width={18}
+                                height={18}
+                                alt="cancel"
+                              />
+                            </li>
+                          </button>
+                        )
+                      })}
+                      {selectedHobbies.length === 0 && (
+                        <p>Please select atleast one hobby</p>
+                      )}
+                    </section>
+                  )}
+                </section>
 
                 <div
                   className={`${styles['input-box']}  ${
@@ -732,46 +964,130 @@ export const CreatePost: React.FC<Props> = ({
                     }
                     className={styles['input-select']}
                   >
-                    {hobbies?.map((item: any, idx) => {
-                      return (
+                    <>
+                      {hobbies.length > 0 && (
                         <>
-                          <DropdownOption
-                            _id={undefined}
-                            type={'hobby'}
-                            display={
-                              (item.hobby?.display
-                                ? item.hobby?.display
-                                : item.hobby?.slug) +
-                              (item?.genre ? ` - ${item?.genre?.display} ` : '')
-                            }
-                            value={
-                              item.hobby?._id + '-' + item?.genre?._id
-                            }
-                            options={null}
-                            key={idx}
-                            selected={
-                              item.hobby?._id === data.hobby?._id &&
-                              (data.genre
-                                ? item.genre?._id === data.genre?._id
-                                : item.genre
-                                ? false
-                                : true)
-                            }
-                            item={item}
-                            onChange={(e: any) => {
-                              // const selected = user._hobbies.find(
-                              //   (item: any) => item.hobby?._id === val,
-                              // )
-                              setData((prev: any) => ({
-                                ...prev,
-                                hobby: e?.hobby ?? null,
-                                genre: e?.genre ?? null,
-                              }))
-                            }}
-                          />
+                          {hobbies?.map((item: any, idx) => {
+                            return (
+                              <>
+                                <DropdownOption
+                                  _id={undefined}
+                                  type={'hobby'}
+                                  display={
+                                    (item.hobby?.display
+                                      ? item.hobby?.display
+                                      : item.hobby?.slug) +
+                                    (item?.genre
+                                      ? ` - ${item?.genre?.display} `
+                                      : '')
+                                  }
+                                  value={
+                                    item.hobby?._id + '-' + item?.genre?._id
+                                  }
+                                  options={null}
+                                  key={idx}
+                                  // selected={
+                                  //   item.hobby?._id === data.hobby?._id &&
+                                  //   (data.genre
+                                  //     ? item.genre?._id === data.genre?._id
+                                  //     : item.genre
+                                  //     ? false
+                                  //     : true)
+                                  // }
+                                  selected={alreadyContains(item)}
+                                  item={item}
+                                  onChange={(e: any) => {
+                                    // const selected = user._hobbies.find(
+                                    //   (item: any) => item.hobby?._id === val,
+                                    // )
+                                    const alreadyContains =
+                                      selectedHobbies.some((hobbyData) => {
+                                        console.log(
+                                          'hobbyData.hobby',
+                                          hobbyData.hobby,
+                                          'e?.hobby?.display',
+                                          e?.hobby?.display,
+                                        )
+                                        if (
+                                          hobbyData?.genre &&
+                                          e?.genre?.display
+                                        ) {
+                                          if (
+                                            hobbyData?.genre ===
+                                            e?.genre?.display
+                                          )
+                                            return true
+                                        } else {
+                                          if (
+                                            !hobbyData?.genre &&
+                                            e?.genre?.display
+                                          )
+                                            return false
+                                          if (
+                                            hobbyData?.genre &&
+                                            !e?.genre?.display
+                                          )
+                                            return false
+
+                                          if (
+                                            hobbyData?.hobby ===
+                                            e?.hobby?.display
+                                          ) {
+                                            return true
+                                          }
+                                        }
+                                      })
+
+                                    // selectedHobbies.forEach((hobb) => {
+                                    //   console.log('Hobby', hobb.hobby)
+                                    //   console.log('hobbyId', hobb.hobbyId)
+                                    //   console.log('genre', hobb.genre)
+                                    //   console.log('genreId', hobb.genreId)
+                                    // })
+
+                                    const newHobbyData =
+                                      alreadyContains ||
+                                      selectedHobbies.length >= 3
+                                        ? selectedHobbies
+                                        : [
+                                            ...selectedHobbies,
+                                            {
+                                              hobby: e?.hobby?.display ?? null,
+                                              genre: e?.genre?.display ?? null,
+                                              hobbyId: e?.hobby?._id
+                                                ? e?.hobby?._id
+                                                : undefined,
+                                              genreId: e?.genre?._id
+                                                ? e?.genre?._id
+                                                : undefined,
+                                            },
+                                          ]
+                                    console.log(
+                                      'selectedHobbies--->',
+                                      newHobbyData,
+                                    )
+                                    setSelectedHobbies(newHobbyData)
+                                    if (selectedHobbies.length >= 3) {
+                                      setSnackbar({
+                                        display: true,
+                                        type: 'warning',
+                                        message:
+                                          'You can only select up to 3 hobbies',
+                                      })
+                                    }
+                                    setData((prev: any) => ({
+                                      ...prev,
+                                      hobby: e?.hobby ?? null,
+                                      genre: e?.genre ?? null,
+                                    }))
+                                  }}
+                                />
+                              </>
+                            )
+                          })}{' '}
                         </>
-                      )
-                    })}
+                      )}
+                    </>
                   </InputSelect>
                   {errors.hobby && (
                     <p className={styles['error-text']}>{errors.hobby}</p>

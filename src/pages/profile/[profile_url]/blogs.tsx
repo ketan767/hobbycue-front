@@ -19,8 +19,9 @@ import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import ErrorPage from '@/components/ErrorPage'
 import { useMediaQuery } from '@mui/material'
 
-import { getAllBlogs } from '@/services/blog.services'
+import { createBlog, getAllBlogs } from '@/services/blog.services'
 import BlogCard from '@/components/BlogCard/BlogCard'
+import PlusIcon from '@/assets/icons/PlusIcon'
 
 interface Props {
   data: ProfilePageData
@@ -31,6 +32,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
   const { user } = useSelector((state: RootState) => state.user)
+  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const [expandAll, setExpandAll] = useState(profile)
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
@@ -72,6 +74,20 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
     }
   }, [])
 
+  const handleAddBlog = async (e: any) => {
+    try {
+      const { res, err } = await createBlog()
+      if (err) throw err
+      if (!res?.data?.success)
+        throw new Error(res?.data?.message || 'Error creating blog!')
+      const url = res?.data?.data?.url
+      if (url) router.push(`/blog/${url}`)
+      else throw new Error('Unsuccessful!')
+    } catch (err) {
+      console.log('Error while creating blog at handleAddBlog()!', err)
+    }
+  }
+
   return (
     <>
       <Head>
@@ -106,6 +122,16 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
           </aside>
 
           <main>
+            {profileLayoutMode === 'edit' && (
+              <div
+                className={styles.uploadButtonDescktop}
+                style={{ marginBottom: 12 }}
+                onClick={handleAddBlog}
+              >
+                <div className={styles.newTag}>ADD NEW</div>
+                <PlusIcon />
+              </div>
+            )}
             {data?.blogsData.length !== 0 ? (
               <div className={styles['three-column-grid-blogs']}>
                 {data?.blogsData.map((blog: any) => {
@@ -117,12 +143,17 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
                 className={`${styles['dual-section-wrapper']} ${styles['mob-min-height']} ${styles['mob-h-auto']}`}
               >
                 <div
-                style={
-                  isMobile
-                    ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
-                    : undefined
-                }
-                className={styles['no-posts-div']}>
+                  style={
+                    isMobile
+                      ? {
+                          marginTop: '8px',
+                          height: '100px',
+                          borderRadius: '0px',
+                        }
+                      : undefined
+                  }
+                  className={styles['no-posts-div']}
+                >
                   <p className={styles['no-posts-text']}>No Blogs Available</p>
                 </div>
                 {isMobile ? null : (
@@ -157,9 +188,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     return { notFound: true }
 
   const { err: error, res: response } = await getAllBlogs(
-    `populate=_hobbies,author&author=${user?._id}&status=Published`,
+    `populate=_hobbies,author&author=${user?._id}`,
   )
-  console.warn('blogdataaaaaa', response)
 
   const data = {
     pageData: res.data.data.users[0],
@@ -167,6 +197,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     mediaData: null,
     listingsData: null,
     blogsData: response?.data?.data?.blog,
+    response: response?.data,
   }
   return {
     props: {

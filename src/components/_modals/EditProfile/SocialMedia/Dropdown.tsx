@@ -265,6 +265,7 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
   }, [selectQuery, options]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    setHighlightIndex(0);
     if (!showOptions || filteredOptions.length === 0) return;
 
     if (e.key === "ArrowDown") {
@@ -282,15 +283,23 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
       if (highlightIndex !== -1) {
         const selectedOption = filteredOptions[highlightIndex];
         setSelectQuery(selectedOption.socialMedia);
-        onChange(selectQuery);
+        onChange(selectedOption.socialMedia);
         setShowOptions(false);
       }
     }
   };
 
+  const [dropdownMaxHeight, setDropdownMaxHeight] = useState(0);
+  const [dropdownPosition, setDropdownPosition] = useState("down");
+
   useEffect(() => {
-    console.log(selectQuery)
-    console.log(value)
+    if (showOptions && inputRef.current) {
+      const rect = inputRef.current.getBoundingClientRect();
+      const spaceAbove = rect.top;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      spaceBelow > spaceAbove ? setDropdownPosition("down") : setDropdownPosition("up");
+      setDropdownMaxHeight(Math.max(spaceAbove, spaceBelow) - 10);
+    }
   }, [showOptions]);
 
   return (
@@ -299,12 +308,13 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
       style={{ width: "100%", height: "100%", position: "relative" }}
     >
       <input
+        className={styles["dropdown-input"]}
         type="text"
         value={selectQuery}
         onChange={(e) => setSelectQuery(e.target.value)}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        onKeyDown={handleKeyDown} // Attach keydown event
+        onKeyDown={handleKeyDown}
         ref={inputRef}
         style={{
           width: "100%",
@@ -350,16 +360,26 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
             className="custom-scrollbar-two"
             style={{
               position: "fixed",
-              top: inputRef.current?.getBoundingClientRect().bottom || 0,
+              ...(dropdownPosition === "down"
+                ? {
+                    top: (inputRef.current?.getBoundingClientRect().bottom || 0) + 1, // Add 1px for "down"
+                  }
+                : {
+                    bottom:
+                      window.innerHeight -
+                      (inputRef.current?.getBoundingClientRect().top || 0) -
+                      1, // Subtract 1px for "up"
+                  }),
               left: inputRef.current?.getBoundingClientRect().left || 0,
               width: inputRef.current?.offsetWidth || "auto",
               zIndex: 9999,
-              maxHeight: "300px",
+              maxHeight: dropdownMaxHeight,
               overflowY: "scroll",
               background: "white",
               boxShadow:
                 "0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12)",
               borderRadius: "8px",
+              transitionDuration: "0.1s",
             }}
           >
             {filteredOptions

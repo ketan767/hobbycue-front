@@ -215,7 +215,7 @@
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  max-width: 559px;
+  max-width: 100%;
   margin: 0;
   padding: 0;
   white-space: nowrap;
@@ -232,7 +232,7 @@
   font-weight: 400;
   line-height: 20px;
   /* 125% */
-  max-width: 500px;
+  max-width: 100%;
   margin: 0;
   padding: 0;
   white-space: nowrap;
@@ -408,7 +408,7 @@
 
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
-    width: 100%;
+    width: 100vw !important;
     border-radius: 0;
     height: calc(100% - 3.5rem);
   }

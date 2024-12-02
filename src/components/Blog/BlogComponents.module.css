@@ -16,6 +16,11 @@
   outline: none;
 }
 
+.actions button:disabled {
+  opacity: 70%;
+  cursor: not-allowed;
+}
+
 @keyframes fadeDownWithScale {
   from {
     opacity: 0;
@@ -107,10 +112,14 @@
 }
 
 @media (max-width: 1100px) {
+  .blogContainer {
+    width: 100%;
+  }
+
   .actions {
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.12);
     padding: 6px;
-    margin-bottom: 12px;
+    /* margin-bottom: 12px; */
     width: 100%;
     justify-content: center;
   }

@@ -148,6 +148,9 @@ type PostData = {
   author_type: string
   createdAt: any
   _hobby: any
+  _genre: any
+  _allHobbies: any
+  _allGenres: any
   visibility: any
   content: any
 }
@@ -722,7 +725,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
           }),
           searchUsers(data),
           searchBlogs({
-            search: searchValue,
+            searchValue: searchValue,
+            limit: 20,
+            page: 1,
           }),
           searchPosts(searchData),
           searchAllHobbies(query2),
@@ -1077,28 +1082,21 @@ const MainContent: React.FC<SearchResultsProps> = ({
             blogRes.err,
           )
         } else {
-          const sortedBlog = blogRes.res.data?.sort((a: any, b: any) => {
-            const titleA = a.title?.toLowerCase()
-            const titleB = b.title?.toLowerCase()
-            const indexA = titleA.indexOf(searchValue?.toLowerCase())
-            const indexB = titleB.indexOf(searchValue?.toLowerCase())
+          const blogs = blogRes.res.data
 
-            if (indexA === 0 && indexB !== 0) {
-              return -1
-            } else if (indexB === 0 && indexA !== 0) {
-              return 1
-            }
-            return titleA.localeCompare(titleB)
-          })
-
-          console.log('blog search results:', sortedBlog)
+          console.log('blog search results:', blogs)
           dispatch(
             setBlogsSearchResult({
-              data: sortedBlog,
+              data: blogs,
               message: 'Search completed successfully.',
               success: true,
             }),
           )
+          if (blogs.length < 20) {
+            setHasNoMoreBlogsPages(true)
+          } else {
+            setHasNoMoreBlogsPages(false)
+          }
         }
 
         // const { res: PostRes, err: PostErr } = await searchPosts(searchData)
@@ -1597,6 +1595,45 @@ const MainContent: React.FC<SearchResultsProps> = ({
     setIsSearchingMore(false)
     setPostsPageNum(postsPageNum + 1)
   }
+  const fetchMoreBlogPages = async () => {
+    if (isSearchingMore || hasNoMoreBlogsPages) return
+    setIsSearchingMore(true)
+
+    let searchData = {}
+    if (queryString) {
+      searchData = { ...searchData, searchValue: queryString }
+    }
+    searchData = {
+      ...searchData,
+      page: blogsPageNum + 1,
+      limit: 20,
+    }
+    const { res: BlogRes, err: BlogErr } = await searchBlogs(searchData)
+    if (BlogErr) {
+      console.error('An error occurred during the blog search:', BlogErr)
+      dispatch(setSearchLoading(false))
+      return
+    }
+
+    const blogs = BlogRes.data
+    console.log('blogs..............', blogs)
+
+    if (blogs.length === 0) {
+      setHasNoMoreBlogsPages(true)
+      setIsSearchingMore(false)
+      return
+    }
+
+    dispatch(
+      setBlogsSearchResult({
+        data: [...BlogsResults, ...blogs],
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+    setIsSearchingMore(false)
+    setBlogsPageNum(blogsPageNum + 1)
+  }
 
   useEffect(() => {
     let lastCall = 0
@@ -1637,6 +1674,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
             fetchMoreProductPages()
           } else if (filter === 'posts') {
             fetchMorePostsPages()
+          } else if (filter === 'blogs') {
+            fetchMoreBlogPages()
           }
         }
       }
@@ -2348,8 +2387,41 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             : page?._author?.title}
                         </div>
                         <div className={styles.userTagline}>
-                          {convertDateToString(page?.createdAt) || '\u00a0'}{' '}
-                          {' | ' + page?._hobby.display || '\u00a0'}{' '}
+                          {convertDateToString(page?.createdAt) || '\u00a0'}
+                          {' | '}
+                          {page?._allHobbies?._hobby1?.display ? (
+                            <>
+                              {`${page?._allHobbies?._hobby1?.display}${
+                                page?._allHobbies?._genre1?.display
+                                  ? ' - ' + page?._allHobbies?._genre1?.display
+                                  : ''
+                              }`}
+                              {page?._allHobbies?._hobby2?.display ? ', ' : ''}
+                              {`${
+                                page?._allHobbies?._hobby2?.display
+                                  ? page?._allHobbies?._hobby2?.display
+                                  : ''
+                              }${
+                                page?._allHobbies?._genre2?.display
+                                  ? ' - ' + page?._allHobbies?._genre2?.display
+                                  : ''
+                              }`}
+                              {page?._allHobbies?._hobby3?.display ? ', ' : ''}
+                              {`${
+                                page?._allHobbies?._hobby3?.display
+                                  ? page?._allHobbies?._hobby3?.display
+                                  : ''
+                              }${
+                                page?._allHobbies?._genre3?.display
+                                  ? ' - ' + page?._allHobbies?._genre3?.display
+                                  : ''
+                              }`}
+                            </>
+                          ) : (
+                            <span>{`${page?._hobby?.display}${
+                              page._genre ? ' - ' + page?._genre?.display : ''
+                            }`}</span>
+                          )}
                           {' | ' + page.visibility}
                         </div>
                         <div
@@ -2427,6 +2499,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     </div>
                   ),
+                )}
+                {showAllBlogs && (
+                  <div className={styles.loaders}>
+                    {!hasNoMoreBlogsPages ? <SearchLoader /> : ''}
+                  </div>
                 )}
                 <div className={styles['view-more-btn-container']}>
                   {showAllBlogs
