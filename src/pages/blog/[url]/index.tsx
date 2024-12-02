@@ -507,7 +507,6 @@ const BlogPage: React.FC<Props> = ({ data }) => {
               {isEditing ? (
                 <div className={styles.blogEditor}>
                   <ReactQuill
-                    // ref={inputRef}
                     theme="snow"
                     value={blog.content}
                     onChange={(updatedValue) => {
@@ -546,7 +545,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                     <FilledButton
                       className={styles.blogSaveButton}
                       onClick={() => handleEditBlog('content')}
-                      disabled={!hasChanged}
+                      disabled={!hasChanged || btnLoading}
                     >
                       {btnLoading ? (
                         <CircularProgress color="inherit" size={'14px'} />
