@@ -44,6 +44,7 @@ export default function CustomSelect({ options, onChange,value }: CustomSelectPr
             <div
               key={index}
               className={styles.option}
+              //style={selected===option?{background:'',color:''}:{}}
               onClick={() => handleOptionClick(option)}
             >
               {option}

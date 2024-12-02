@@ -195,9 +195,7 @@ const VisibilityAndNotification: React.FC<Props> = ({ }) => {
             <SettingsSidebar active="visibility-notification" />
           )}
           <div className={styles.container}>
-            <p className={styles.underDev}>
-              Below features are under development. Come back soon to view this.
-            </p>
+            
             <p className={`${styles.textLight} ${styles.title}`}>
               {' '}
               Default and visibility settings{' '}
@@ -261,6 +259,10 @@ const VisibilityAndNotification: React.FC<Props> = ({ }) => {
             </>}
 
             <div className={styles.line}></div>
+
+            <p className={styles.underDev}>
+              Below features are under development. Come back soon to view this.
+            </p>
 
             <p className={`${styles.textLight} ${styles.title}`}>
               {' '}

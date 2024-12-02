@@ -504,19 +504,29 @@ const CommunityLayout: React.FC<Props> = ({
     fetchWhatsNew()
   }, [])
 
+
   useEffect(() => {
-    console.log('started fetch');
-    if(user && user.preferences){
-      if(!user.preferences.community_view.all_hobbies){
-        console.log(user.preferences.community_view.preferred_hobby,100);
-        setSelectedHobby(user.preferences.community_view.preferred_hobby.hobby._id) 
+    const timer = setTimeout(() => {
+      console.log('started fetch');
+      if (user && user.preferences) {
+        if (!user.preferences.community_view.all_hobbies) {
+          console.log(user.preferences.community_view.preferred_hobby, 100);
+          setSelectedHobby(user.preferences.community_view.preferred_hobby.hobby._id);
+  
+          if (user.preferences.community_view.preferred_hobby.genre) {
+            setSelectedGenre(user.preferences.community_view.preferred_hobby.genre);
+          }
+        }
+  
+        if (!user.preferences.community_view.all_locations) {
+          console.log(user.preferences.community_view.preferred_location, 100);
+          setSelectedLocation(user.preferences.community_view.preferred_location.city.split(' ')[0]);
+        }
       }
-      if(!user.preferences.community_view.all_locations){
-        console.log(user.preferences.community_view.preferred_location,100);
-        setSelectedLocation(user.preferences.community_view.preferred_location.city) 
-      }
-    }
-  },[user])
+    }, 500);
+  
+    return () => clearTimeout(timer);
+  }, [user]);
 
   useEffect(() => {
     dispatch(updateListingModalData(activeProfile.data))
@@ -524,6 +534,11 @@ const CommunityLayout: React.FC<Props> = ({
 
   useEffect(() => {
     console.log(selectedHobby,1000);
+    console.log(selectedLocation,1000);
+    console.log(user?.preferences?.community_view?.preferred_location?.city,100000);
+    
+    
+    
     if (
       activeProfile.data !== null &&
       (activeTab === 'links' || activeTab === 'posts')

@@ -37,6 +37,7 @@
 
 .option {
     padding: 8px;
+    font-weight: 400;
     font-size: 14px;
     font-family:'poppins';
     color: rgba(109, 116, 122, 1);
