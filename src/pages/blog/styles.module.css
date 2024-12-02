@@ -522,6 +522,11 @@
 }
 
 @media screen and (max-width: 1100px) {
+  .blogContent {
+    padding: 16px;
+    border-radius: 0;
+  }
+
   .container {
     background-color: #ebedf0;
   }
