@@ -7,14 +7,12 @@ import {
   getAllHobbiesWithoutPagi,
 } from '@/services/hobby.service'
 import { isEmptyField } from '@/utils'
+import { DropdownListItem } from '@/components/_modals/AdminModals/EditpostsModal'
 
 interface BlogFilterProps {
   setFormValues: React.Dispatch<React.SetStateAction<FormValues>>
   formValues: FormValues
 }
-
-const results = ['hobby1', 'h2', 'h3', 'h4']
-const results1 = ['hobby1', 'h2', 'h3', 'h4']
 
 const BlogFilter: React.FC<BlogFilterProps> = ({
   setFormValues,
@@ -27,7 +25,7 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
   const [showCalender, setShowCalender] = useState(false)
   const [showStyle, setShowStyle] = useState(false)
   const [showHobby, setShowHobby] = useState(false)
-  const [data, setData] = useState<Data>({ hobby: null, genre: null })
+  const [data, setData] = useState({ hobby: null, genre: null })
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
   const [hobbyDropdownList, setHobbyDropdownList] = useState<any[]>([])
@@ -57,10 +55,6 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
     setGenreInputValue('')
     setGenreDropdownList([])
     setGenreId('')
-
-    setData((prev) => {
-      return { ...prev, hobby: null }
-    })
 
     if (isEmptyField(e.target.value)) {
       setHobbyDropdownList([])
@@ -111,14 +105,16 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
   }
 
   const handleGenreInputChange = async (e: any) => {
+    const { name, value, type, checked } = e.target
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: type === 'radio' ? (checked ? value : prevValues.status) : value,
+    }))
     setGenreInputValue(e.target.value)
 
-    setData((prev) => {
-      return { ...prev, genre: null }
-    })
     if (isEmptyField(e.target.value)) return setGenreDropdownList([])
-    const query = `fields=display&show=true&genre=${genreid}&level=5`
-    const query2 = `fields=display,show&genre=${genreid}&level=5`
+    const query = `fields=display&show=true&genre=${genreId}&level=5`
+    const query2 = `fields=display,show&genre=${genreId}&level=5`
 
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
@@ -159,7 +155,6 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
   const handleHobbySelection = async (selectedHobby: DropdownListItem) => {
     setGenreId('')
 
-    setData((prev) => ({ ...prev, hobby: selectedHobby }))
     setHobbyInputValue(selectedHobby?.display ?? hobbyInputValue)
 
     if (
@@ -184,7 +179,7 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
     setShowHobby(false)
   }
 
-  const handleGenreSelection = async (x) => {
+  const handleGenreSelection = async (x: any) => {
     setFormValues((prevValues) => ({
       ...prevValues,
       genre: x?.display,
@@ -261,7 +256,7 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
             placeholder="Select Genre/Style"
             className={styles.formInput}
             value={formValues.genre}
-            onChange={handleChange}
+            onChange={handleGenreInputChange}
             onClick={() => setShowStyle(true)}
           />
           {showStyle && genreDropdownList.length > 0 && (
