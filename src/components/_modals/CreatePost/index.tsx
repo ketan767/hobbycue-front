@@ -100,6 +100,7 @@ export const CreatePost: React.FC<Props> = ({
   const [hobbies, setHobbies] = useState([])
   const [selectedHobbies, setSelectedHobbies] = useState<HobbyData[]>([])
   const [editing, setEditing] = useState(false)
+  const { hasChanges } = useSelector((state: RootState) => state.modal)
   const [data, setData] = useState<NewPostData>({
     type: 'user',
     data: null,
@@ -157,6 +158,9 @@ export const CreatePost: React.FC<Props> = ({
     )
     console.log('selectedHobbies--->', newHobbyData)
   }
+  useEffect(() => {
+    console.log('hasChanges', hasChanges)
+  }, [hasChanges])
   useEffect(() => {
     if (propData && propData._hobby) {
       setData((prev) => ({
@@ -690,36 +694,6 @@ export const CreatePost: React.FC<Props> = ({
 
   useEffect(() => {
     if (propData) {
-      // let hobbies =
-      //   propData?._allHobbies?.length > 0
-      //     ? propData?._allHobbies?.map((hobby: any) => hobby?.display)
-      //     : [activeProfile?.data?._hobby?.display]
-      // let genres =
-      //   propData?._allGenres?.length > 0
-      //     ? propData?._allGenres?.map((genre: any) => genre?.display)
-      //     : [activeProfile?.data?._genre?.display]
-
-      // let hobbiesIds =
-      //   propData?._allHobbies?.length > 0
-      //     ? propData?._allHobbies?.map((hobby: any) => hobby?._id)
-      //     : [activeProfile?.data?._hobby?._id]
-      // let genresIds =
-      //   propData?._allGenres?.length > 0
-      //     ? propData?._allGenres?.map((genre: any) => genre?._id)
-      //     : [activeProfile?.data?._genre?._id]
-      // console.log('propData', propData)
-      // let hobbies: string[] = []
-      // let genres: string[] = []
-      // let hobbiesIds: string[] = []
-      // let genresIds: string[] = []
-
-      // if (propData?._allHobbies?.length > 0) {
-      // propData?._allHobbies?.forEach((hobby: any, index: number) => {
-      //   hobbies = [...hobbies, hobby?.display]
-      //   genres = [...genres, propData?._allGenres[index]?.display]
-      //   hobbiesIds = [...hobbiesIds, hobby?._id]
-      //   genresIds = [...genresIds, propData?._allGenres[index]?._id]
-      // })
       const existingHobbies = []
       if (propData?._allHobbies?._hobby1?.display) {
         if (propData?._allHobbies?._hobby1?.display) {
@@ -747,10 +721,6 @@ export const CreatePost: React.FC<Props> = ({
           })
         }
       } else {
-        // hobbies = [propData?._hobby?.display]
-        // genres = [propData?._genre?.display]
-        // hobbiesIds = [propData?._hobby?._id]
-        // genresIds = [propData?._genre?._id]
         existingHobbies.push({
           hobby: propData?._hobby?.display,
           genre: propData?._genre?.display,
@@ -758,20 +728,6 @@ export const CreatePost: React.FC<Props> = ({
           genreId: propData?._genre?._id,
         })
       }
-      // console.log('hobbies', hobbies)
-      // console.log('hobbiesIds', hobbiesIds)
-      // console.log('genres', genres)
-      // console.log('genresIds', genresIds)
-      // const alreadySelectedHobbies = hobbies.map(
-      //   (hobby: any, index: number) => {
-      //     return {
-      //       hobby: hobbies[index],
-      //       genre: genres[index],
-      //       hobbyId: hobbiesIds[index],
-      //       genreId: genresIds[index],
-      //     }
-      //   },
-      // )
       setSelectedHobbies(existingHobbies)
     } else {
       const firstHobby = activeProfile?.data?._hobbies[0]?.hobby?.display
@@ -828,6 +784,7 @@ export const CreatePost: React.FC<Props> = ({
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
+        content={'Would you like to post before exit ?'}
       />
     )
   }
@@ -1075,6 +1032,9 @@ export const CreatePost: React.FC<Props> = ({
                                           'You can only select up to 3 hobbies',
                                       })
                                     }
+                                    if (onStatusChange) {
+                                      onStatusChange(true)
+                                    }
                                     setData((prev: any) => ({
                                       ...prev,
                                       hobby: e?.hobby ?? null,
@@ -1100,6 +1060,9 @@ export const CreatePost: React.FC<Props> = ({
                       onChange={(e: any) => {
                         let val = e.target.value
                         setData((prev: any) => ({ ...prev, visibility: val }))
+                        // if (onStatusChange) {
+                        //   onStatusChange(true)
+                        // }
                       }}
                       value={data.visibility}
                       className={styles['input-select']}
@@ -1173,6 +1136,7 @@ export const CreatePost: React.FC<Props> = ({
                 image={true}
                 error={errors.content}
                 hasLink={hasLink && showMetaData}
+                onStatusChange={onStatusChange}
               />
               {data.video_url && (
                 <div className={styles.videoWrapper}>

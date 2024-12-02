@@ -64,12 +64,11 @@ import { types } from 'util'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import UserReport from './EditProfile/ReportUser'
 import ListingReport from './EditListing/ListingReport'
-import ContactToOwner from './EditListing/ListingContactOwner'
 import ConfirmEmail from './ConfirmEmail/ConfirmEmail'
 import ListingSupportModal from './EditListing/ListingSupport'
 import SupportUserModal from './EditProfile/supportUser'
 import AddHobby from './AddHobby/AddHobbyModal'
-import ListingContactToOwner from './EditListing/ListingContactOwner'
+import ListingContactOwner from './EditListing/ListingContactOwner'
 import UserContactToOwner from './EditProfile/UserContactOwner'
 import { PostModal } from './PostModal/PostModal'
 import { setHasChanges } from '@/redux/slices/modal'
@@ -474,13 +473,13 @@ const ModalManager: React.FC = () => {
               {activeModal === 'listing-onboarding' && (
                 <ListingOnboardingModal {...props} />
               )}
-              {activeModal === 'create-post' && (
-                <CreatePost propData={propData} />
-              )}
+              {activeModal === 'create-post' && <CreatePost {...props} />}
               {activeModal === 'update-post' && (
                 <CreatePost propData={propData} />
               )}
-              {activeModal === 'upload-image' && <UploadImageModal />}
+              {activeModal === 'upload-image' && (
+                <UploadImageModal {...props} />
+              )}
 
               {activeModal === 'profile-general-edit' && (
                 <ProfileGeneralEditModal {...props} />
@@ -563,7 +562,7 @@ const ModalManager: React.FC = () => {
                 <ListingReview {...props} />
               )}
               {activeModal === 'Listing-Contact-To-Owner' && (
-                <ListingContactToOwner {...props} />
+                <ListingContactOwner {...props} />
               )}
               {activeModal === 'User-Contact-To-Owner' && (
                 <UserContactToOwner {...props} />
@@ -582,7 +581,7 @@ const ModalManager: React.FC = () => {
               )}
 
               {activeModal === 'claim-listing' && (
-                <ClaimModal setSnackbar={setSnackbar} />
+                <ClaimModal {...props} setSnackbar={setSnackbar} />
               )}
               {activeModal === 'upload-video-page' && (
                 <UploadVideoPage

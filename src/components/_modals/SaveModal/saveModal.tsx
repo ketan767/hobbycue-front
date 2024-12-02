@@ -23,6 +23,7 @@ type Props = {
   OnBoarding?: any
   hasChange?: any
   reloadrouter?: any
+  content?: string
 }
 
 const SaveModal: React.FC<Props> = ({
@@ -33,6 +34,7 @@ const SaveModal: React.FC<Props> = ({
   OnBoarding = false,
   hasChange,
   reloadrouter,
+  content='Would you like to save before exit ?'
 }) => {
   const [YesBtnLoading, setYesBtnLoading] = useState<boolean>(false)
   const { user } = useSelector((state: RootState) => state.user)
@@ -60,6 +62,7 @@ const SaveModal: React.FC<Props> = ({
   }
 
   const handleYesClick = async () => {
+    if (setConfirmationModal) setConfirmationModal(false)
     setYesBtnLoading(true)
     await handleSubmit()
     setYesBtnLoading(false)
@@ -121,7 +124,7 @@ const SaveModal: React.FC<Props> = ({
           className={styles['modal-close-icon']}
           onClick={handleClose}
         /> */}
-        <p> Would you like to save before exit ? </p>
+        <p>{content}</p>
         <div className={styles['buttons']}>
           <FilledButton className={styles['button1']} onClick={handleYesClick}>
             {YesBtnLoading ? (
