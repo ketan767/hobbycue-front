@@ -6,6 +6,9 @@ import { useRouter } from 'next/router'
 import { useGetBlogById } from '@/services/blog.services'
 import { BlogHobby } from '@/types/blog'
 import axiosInstance from '@/services/_axios'
+import placeHolderImage from '@/assets/image/placeholder.jpg'
+
+export const placeholderImg = placeHolderImage
 
 interface Props {
   setIsModalOpen: any
@@ -227,7 +230,7 @@ const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
                         className={styles.searchPicImage}
                         height={400}
                         width={400}
-                        src={author?.profile_image}
+                        src={author?.profile_image ?? placeHolderImage}
                         alt=""
                       />
                     </figure>
@@ -252,7 +255,7 @@ const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
                         className={styles.leftImage}
                         width={300}
                         height={300}
-                        src={data?.blog_url?.cover_pic}
+                        src={data?.blog_url?.cover_pic ?? placeHolderImage}
                         alt="profile cover"
                       />
                     </figure>
@@ -333,7 +336,11 @@ const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
         </>
       )}
 
-      {isLoading && <p>Loading</p>}
+      {isLoading && (
+        <div>
+          <p>Loading</p>
+        </div>
+      )}
     </>
   )
 }
