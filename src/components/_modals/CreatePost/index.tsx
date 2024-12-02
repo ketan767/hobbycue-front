@@ -596,10 +596,6 @@ export const CreatePost: React.FC<Props> = ({
         message: 'Please select atleast one hobby',
       })
       return
-      // return setErrors({
-      //   ...errors,
-      //   hobby: 'This field is required',
-      // })
     }
     const allHobbyIds = selectedHobbies.map((h) => h.hobbyId)
     const allGenreIds = selectedHobbies.map((h) => h.genreId)
@@ -614,7 +610,7 @@ export const CreatePost: React.FC<Props> = ({
       genreId1: allGenreIds[0] ? allGenreIds[0] : '',
       genreId2: allGenreIds[1] ? allGenreIds[1] : '',
       genreId3: allGenreIds[2] ? allGenreIds[2] : '',
-      // genreIds: allGenreIds,
+
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
       media:
@@ -623,12 +619,7 @@ export const CreatePost: React.FC<Props> = ({
       has_link: hasLink,
       video_url: data.video_url ? data.video_url : null,
     }
-    // if (typeof data.genre === 'object' && typeof data.genre?._id === 'string') {
-    //   jsonData.genreId = data.genre._id
-    // }
 
-    // console.log('jsonData', jsonData.hobbyId)
-    // console.log('jsonData genreId', jsonData.genreId)
     setSubmitBtnLoading(true)
 
     if (data.type === 'listing') {
@@ -669,13 +660,6 @@ export const CreatePost: React.FC<Props> = ({
       return console.log(err)
     }
     if (res.data.success) {
-      // store.dispatch(
-      //   setFilters({
-      //     location: data.visibility !== '' ? data.visibility : null,
-      //     hobby: data.hobby?._id ?? '',
-      //     genre: data.genre?._id ?? '',
-      //   }),
-      // )
       store.dispatch(updateActiveProfile({ type: data.type, data: data.data }))
       store.dispatch(closeModal())
       // window.location.reload()
@@ -693,7 +677,7 @@ export const CreatePost: React.FC<Props> = ({
   }, [data])
 
   useEffect(() => {
-    if (propData) {
+    if (propData && propData?._allHobbies) {
       const existingHobbies = []
       if (propData?._allHobbies?._hobby1?.display) {
         if (propData?._allHobbies?._hobby1?.display) {
