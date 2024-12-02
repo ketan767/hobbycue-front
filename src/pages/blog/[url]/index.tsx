@@ -106,7 +106,8 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   }
 
   const handleEditBlog = async (type: string) => {
-    if (!isEditing) return
+    if (!isEditing || !blog) return
+
     let response: any = {}
     switch (type) {
       case 'title':
@@ -120,14 +121,18 @@ const BlogPage: React.FC<Props> = ({ data }) => {
           router.replace(`/blog/${newUrl}`)
         }
         break
+
       case 'tagline':
+        if (!blog.tagline) return
         response = await updateBlog({
           blogId: blog._id,
           tagline: blog.tagline,
         })
         router.replace(`/blog/${blog.url}`)
         break
+
       case 'content':
+        if (!blog.content) return
         setBtnLoading(true)
         response = await updateBlog({
           blogId: blog._id,
@@ -135,13 +140,16 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         })
         router.reload()
         break
+
       default:
         console.log('Wrong type passed in handleEditBlog()!')
         break
     }
+
     if (response?.err || !response?.res?.data?.success) {
       console.log('Error in handleEditBlog()!', response.err)
     }
+
     setBtnLoading(false)
   }
 
@@ -333,7 +341,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                       type: 'View-Image-Modal',
                       closable: false,
                       // imageurl: data?.blog_url?.cover_pic,
-                      imageurl: blog.cover_pic,
+                      imageurl: blog?.cover_pic ?? '',
                     }),
                   )
                 }}
@@ -341,13 +349,13 @@ const BlogPage: React.FC<Props> = ({ data }) => {
               >
                 <img
                   // src={data?.blog_url?.cover_pic}
-                  src={blog.cover_pic}
+                  src={blog.cover_pic ?? ''}
                   className={styles.coverBlur}
                   alt="cover image"
                 />
                 <img
                   // src={data?.blog_url?.cover_pic}
-                  src={blog.cover_pic}
+                  src={blog.cover_pic ?? ''}
                   className={styles.coverPic}
                   alt="cover image"
                 />
@@ -557,22 +565,6 @@ const BlogPage: React.FC<Props> = ({ data }) => {
               )}
             </BlogContainer>
           </div>
-
-          {/* {!data.blog_url.content && (
-            <div className={styles['iframe-container']}>
-              <iframe
-                className={styles['iframe']}
-                src={`https://blog.hobbycue.com/blog/${blogUrl}`}
-              ></iframe>
-            </div>
-          )} */}
-
-          {/* <div className={styles['iframe-container']}>
-            <div
-              className={styles['iframe']}
-              dangerouslySetInnerHTML={{ __html: data.blog_url?.content }}
-            ></div>
-          </div> */}
 
           <div className={styles['profile-wrapper']}>
             <div className={`${styles['header-user']}`}>
