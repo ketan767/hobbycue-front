@@ -19,6 +19,21 @@ import { getMyProfileDetail, updateUserpreferences } from '@/services/user.servi
 import { updateUser } from '@/redux/slices/user'
 import PreLoader from '@/components/PreLoader'
 
+interface Preferences {
+  [key: string]: any; 
+  community_view: {
+    preferred_hobby: { hobby: string | null; genre: string | null };
+    preferred_location: string;
+  };
+  create_post_pref: {
+    preferred_hobby: { hobby: string | null; genre: string | null };
+    preferred_location: string;
+  };
+  location_visibility: string;
+  email_visibility: string;
+  phone_visibility: string;
+}
+
 type Props = {}
 const options = [
   'My City',
@@ -44,7 +59,7 @@ const VisibilityAndNotification: React.FC<Props> = ({ }) => {
   )
   
   const dispatch = useDispatch();
-  const [preferences, setPreferences] = useState({
+  const [preferences, setPreferences] = useState<any>({
     community_view: { preferred_hobby: { hobby: null, genre: null }, preferred_location: 'All locations' },
     create_post_pref: { preferred_hobby: { hobby: null, genre: null }, preferred_location: 'All locations' },
     location_visibility: 'My City',
@@ -120,7 +135,7 @@ const VisibilityAndNotification: React.FC<Props> = ({ }) => {
     let updatedPreferences = { ...preferences };
 
     if (subKey === 'preferred_hobby' && value !== 'All hobbies') {
-      const [hobbyName, genreName] = value.split(' - ');
+      const [hobbyName, genreName] = (value as string).split(' - ');
 
       const selectedHobby = user._hobbies.find((hobby: any) => {
         const isHobbyMatch = hobby.hobby.display === hobbyName;
