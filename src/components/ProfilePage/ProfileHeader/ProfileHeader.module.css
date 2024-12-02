@@ -434,9 +434,19 @@
   .actions-container-desktop {
     display: none;
   }
+
   .actions-container-mobile {
-    display: flex;
+    display: block;
     margin: 10px 0;
+  }
+
+  .makeMyPageButton {
+    background-color: white !important;
+    width: 100%;
+  }
+
+  .makeMyPageMobileWrapper {
+    padding-inline: 16px;
   }
 
   .action-btn-wrapper {
