@@ -291,7 +291,7 @@ export const PostModal: React.FC<Props> = ({
               )}
 
               <div className={styles['title']}>
-                <p>
+                <p className="truncateOneLine">
                   {activePost.author_type === 'User'
                     ? activePost?._author?.full_name
                     : activePost?._author?.title}
@@ -373,8 +373,8 @@ export const PostModal: React.FC<Props> = ({
               </div>
             </div>
           </Link>
-          <div className={`${styles['header-options']}`}>
-            {/* <svg
+          {/* <div className={`${styles['header-options']}`}> */}
+          {/* <svg
               className={styles['more-actions-icon']}
               width="24"
               height="24"
@@ -393,7 +393,7 @@ export const PostModal: React.FC<Props> = ({
                 </clipPath>
               </defs>
             </svg> */}
-          </div>
+          {/* </div> */}
         </div>
         <div className={`${styles['body-wrapper']}`}>
           <div className={`${styles['body']}`}>

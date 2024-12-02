@@ -18,7 +18,7 @@ export const getMyProfileDetail = async () => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
-  const query = 'populate=_hobbies,_addresses,primary_address,_listings'
+  const query = 'populate=_hobbies,_addresses,primary_address,_listings,preferences.community_view.preferred_hobby.hobby,preferences.create_post_pref.preferred_hobby.hobby,preferences.community_view.preferred_location,preferences.create_post_pref.preferred_location'
   try {
     const res = await axiosInstance.get(`/user/me?${query}`, { headers })
     return { res: res, err: null }
@@ -186,6 +186,20 @@ export const updateUserProfile = async (formData: FormData) => {
   }
 }
 
+export const updateUserpreferences = async (data : any): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.put(`/user/update-preferences`,data,{
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 /** Update User Cover  `POST /user/me/cover-image`
  * - FormData Required Key: `user-cover` */
 export const updateUserCover = async (formData: FormData) => {
@@ -249,6 +263,8 @@ export const getAllUserUrls = async (): Promise<ApiReturnObject> => {
     return { err: error, res: null }
   }
 }
+
+
 
 export const addContactUs = async (
   data: ContactUspayload,

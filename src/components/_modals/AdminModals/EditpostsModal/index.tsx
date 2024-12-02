@@ -130,32 +130,27 @@ const EditPostModal: React.FC<Props> = ({ _id, handleClose }) => {
 
         <hr className={styles['modal-hr']} />
 
-        <section className={styles['body']}>
-          {/* Row 1 */}
-          <div className={styles['input-row']}>
-            <div className={styles['input-box-wrapper']}>
-              <label
-                className={styles['label']}
-                style={{
-                  marginTop: '8px',
-                  marginBottom: '4px',
-                }}
-              >
-                Content <span className={styles['required-star']}>*</span>
-              </label>
-              <CustomEditor
-                value={post?.content}
-                onChange={(value: any) => {
-                  setPost((prev: any) => {
-                    return { ...prev, content: value }
-                  })
-                }}
-                setData={setPost}
-                data={post}
-                image={true}
-              />
-            </div>
-          </div>
+                <section className={styles['body']}>
+                    {/* Row 1 */}
+                    <div className={styles['input-row']} >
+                        <div className={styles['input-box-wrapper']}>
+                            <label className={styles['label']} style={{
+                                marginTop: '8px',
+                                marginBottom:'4px'
+                            }}>Content <span className={styles['required-star']}>*</span></label>
+                            <CustomEditor
+                                value={post?.content}
+                                onChange={(value: any) => {
+                                    setPost((prev: any) => {
+                                        return { ...prev, content: value }
+                                    })
+                                }}
+                                setData={setPost}
+                                data={post}
+                                image={true}
+                            />
+                        </div>
+                    </div>
 
           {/* Row 2 */}
           <div className={styles['input-row']}>

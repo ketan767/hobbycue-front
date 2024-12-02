@@ -352,7 +352,7 @@ const AdminDashboard: React.FC = () => {
                   <tr key={index}>
                     <td>
                       <div className={styles.resultItem}>
-                        <div className={styles.avatarContainer}>
+                        <Link href={`/profile/${post?._author?.profile_url}`} className={styles.avatarContainer}>
                           {post.profile_image ? (
                             <img
                               src={post?._author?.profile_image}
@@ -370,13 +370,13 @@ const AdminDashboard: React.FC = () => {
                               height={40}
                             />
                           )}
-                        </div>
+                        </Link>
                         <div className={styles.detailsContainer}>
-                          <div className={styles.userName}>
+                          <Link href={`/profile/${post?._author?.profile_url}`} className={styles.userName}>
                             {post?._author?.full_name ||
                               post?._author?.title ||
                               ''}
-                          </div>
+                          </Link>
                         </div>
                       </div>
                     </td>
