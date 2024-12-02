@@ -67,6 +67,7 @@ const VisibilityAndNotification: React.FC = () => {
       }
 
       const { err: error, res: response } = await getMyProfileDetail()
+      
       if (error) return console.log(error)
 
       if (response?.data.success) {

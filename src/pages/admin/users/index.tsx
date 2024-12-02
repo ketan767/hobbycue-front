@@ -34,7 +34,7 @@ interface ModalProps {
   setIsModalOpen: (value: boolean) => void
 }
 
-interface ModalState {
+export interface ModalState {
   onboarded: string
   joined: { start: string; end: string }
   loginModes: string[]
