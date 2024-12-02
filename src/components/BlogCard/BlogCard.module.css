@@ -1,3 +1,7 @@
+.author {
+  max-width: 180px;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -12,6 +16,9 @@
   max-height: 329px;
 }
 .authorAndDate {
+  display: flex;
+  align-items: center;
+
   color: var(--Purple-1, #8064A2);
 font-family: Poppins;
 font-size: 14px;

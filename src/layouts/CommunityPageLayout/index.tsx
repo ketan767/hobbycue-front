@@ -58,6 +58,7 @@ import {
   searchUsersAdvanced,
   TrendingHobbiesByUser,
 } from '@/services/user.service'
+import AddHobbyImg from '@/assets/image/AddHobbyImg.png'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -1357,7 +1358,7 @@ const CommunityLayout: React.FC<Props> = ({
                 <input
                   autoComplete="new"
                   value={email}
-                  placeholder="Email"
+                  placeholder="Email or @ mention "
                   name="society"
                   onChange={handleInputChange}
                   type="email"
@@ -1563,6 +1564,14 @@ const CommunityLayout: React.FC<Props> = ({
                             )}
                             <span>{`${hobby.display}`}</span>
                           </Link>
+                          {/* <img
+                            src={AddHobbyImg.src}
+                            height={20}
+                            width={20}
+                            alt="Add"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => handleAddTrendingHobby(hobby)}
+                          /> */}
                         </li>
                       )
                     })}
