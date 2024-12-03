@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import store, { RootState } from '@/redux/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { checkIfUrlExists, isEmptyField, isVideoLink, isInstagramLink } from '@/utils'
+import { checkIfUrlExists, isEmptyField, isVideoLink, isInstagramReelLink } from '@/utils'
 import { getAllHobbies } from '@/services/hobby.service'
 import {
   createListingPost,
@@ -1177,13 +1177,13 @@ export const CreatePost: React.FC<Props> = ({
                         controls={true}
                       />
                     </div>
-                  ) : (
-                      isInstagramLink(url) ? (
-                        <div  style={{background:"#fff", display:"flex", justifyContent:"center", alignItems:"center"}}>
+                  ) : ( isInstagramReelLink(url) ? (
+                      <div onClick={()=>window.open(url,"_blank")}  style={{background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"8px", cursor:"pointer"}}>
+                      <div style={{width:"230.63px", height:"410px", display:"flex", alignItems:"center"}}>
                       <img
-                      style={{cursor:"pointer"}}
+                        style={{cursor:"pointer", maxHeight:"410px"}}
                         onClick={()=>window.open(url, '_blank')}
-                        height="410px"
+                        width="230.63px"
                           src={
                             (typeof metaData?.image === 'string' &&
                               metaData.image) ||
@@ -1193,14 +1193,15 @@ export const CreatePost: React.FC<Props> = ({
                           }
                           alt=""
                         />
-                        {/* <iframe
-                          className='no-scroll'
-                          src={`https://www.instagram.com/reel/${getInstagramPostId(url)}/embed`}
-                          height="575px"
-                          frameBorder="0"
-                          allowFullScreen
-                          scrolling="no"
-                        /> */}
+                      </div>
+                        <div style={{display:"flex", flexDirection:"column", gap:"16px", fontSize:"15px", justifyContent:"start", height:"100%"}} >
+                          <p style={{fontWeight:"500"}}>
+                            {metaData?.title}
+                          </p>
+                          <p style={{color:"#333"}}>
+                            {metaData?.description.split(':')[0]}
+                          </p>
+                        </div>
                     </div>
                       ) : (
                         <div className={styles['show-metadata']}>

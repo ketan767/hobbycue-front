@@ -15,6 +15,8 @@ import { setActivePost } from '@/redux/slices/post'
 import styles from './BlogCard.module.css'
 import { showProfileError } from '@/redux/slices/user'
 import { addBlogComment, getBlogComment } from '@/services/blog.services'
+import CustomizedTooltips from '@/components/Tooltip/ToolTip'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   data: any
@@ -48,6 +50,8 @@ const BlogComments = ({
     display: false,
     message: '',
   })
+  const [inputFocus, setInputFocus] = useState(false)
+  const [inputError, setInputError] = useState("")
   const { activeModal, closable } = useSelector(
     (state: RootState) => state.modal,
   )
@@ -63,6 +67,10 @@ const BlogComments = ({
     event.preventDefault()
     if (isLoggedIn) {
       event.preventDefault()
+      if (inputValue.trim() === "") {
+        setInputError("Comment cannot be empty");
+        return;
+      }
       if (user.is_onboarded === false) {
         router.push(`/profile/${user.profile_url}`)
         dispatch(showProfileError(true))
@@ -96,6 +104,14 @@ const BlogComments = ({
     } else {
       dispatch(openModal({ type: 'auth', closable: true }))
     }
+  }
+
+  function closeSnackbar() {
+    setSnackbar({
+      display: false,
+      message: '',
+      type: 'success',
+    })
   }
 
   const showFeatureUnderDevelopment = () => {
@@ -141,6 +157,7 @@ const BlogComments = ({
                 className={styles['input']}
                 placeholder="Write a comment..."
                 onChange={(e: any) => {
+                  setInputError('')
                   if (getInput) {
                     getInput(e.target.value)
                   }
@@ -148,6 +165,19 @@ const BlogComments = ({
                 }}
                 ref={inputRef}
                 maxRows={5}
+                onFocus={() => {
+                  setInputFocus(true)
+                }}
+                onBlur={() => {
+                  setInputFocus(false)
+                }}
+                style={
+                  inputError !== ''
+                    ? { border: '1px solid #c0504D' }
+                    : inputFocus
+                    ? { border: '1px solid #7F63A1' }
+                    : {}
+                }
               />
               <button
                 type="submit"
@@ -168,6 +198,9 @@ const BlogComments = ({
                   />
                 </svg>
               </button>
+              {inputError !== '' && (
+                <p className={styles['input-error']}>{inputError}</p>
+              )}
             </form>
           </div>
         </section>
@@ -308,27 +341,62 @@ const BlogComments = ({
                       />
 
                       {/* More Action Button */}
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        onClick={showFeatureUnderDevelopment}
-                        cursor={'pointer'}
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          gap: '16px',
+                        }}
                       >
-                        <g clip-path="url(#clip0_173_72884)">
-                          <path
-                            d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
-                            fill="#6D747A"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_173_72884">
-                            <rect width="24" height="24" fill="white" />
-                          </clipPath>
-                        </defs>
-                      </svg>
+                        <CustomizedTooltips  title={"Bookmark"}>
+                        <svg
+                        
+                        onClick={showFeatureUnderDevelopment}
+                          width="20"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g clip-path="url(#clip0_23450_42646)">
+                            <path
+                              d="M9.90017 14.7377L9.58301 14.5897L9.26584 14.7377L4.08301 17.1563V2.77843C4.08301 2.06179 4.60964 1.58398 5.11872 1.58398H14.0473C14.5564 1.58398 15.083 2.06179 15.083 2.77843V17.1563L9.90017 14.7377Z"
+                              stroke="#8064A2"
+                              stroke-width="1.5"
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id="clip0_23450_42646">
+                              <rect width="20" height="20" fill="white" />
+                            </clipPath>
+                          </defs>
+                        </svg>
+                        </CustomizedTooltips>
+                        <CustomizedTooltips title={"Options"}>
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          onClick={showFeatureUnderDevelopment}
+                          cursor={'pointer'}
+                        >
+                          <g clip-path="url(#clip0_173_72884)">
+                            <path
+                              d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
+                              fill="#6D747A"
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id="clip0_173_72884">
+                              <rect width="24" height="24" fill="white" />
+                            </clipPath>
+                          </defs>
+                        </svg>
+                        </CustomizedTooltips>
+                      </div>
                     </footer>
                   </section>
                 </div>
@@ -350,15 +418,24 @@ const BlogComments = ({
           <p
             className={styles['see-more-comments']}
             onClick={() => {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-              setDisplayMoreComments(false);
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+              setDisplayMoreComments(false)
             }}
           >
             Go to top
           </p>
         )}
-
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

@@ -218,7 +218,7 @@ const BlogActionBar: React.FC<Props> = ({
         </CustomizedTooltips>
         {showMenu && (
           <div className={`${styles.menu}`}>
-            {isAuthor ? (
+            {isAuthor || !user.is_admin ? (
               <>
                 <button
                   onClick={() => {
