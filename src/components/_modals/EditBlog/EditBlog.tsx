@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import styles from './EditBlog.module.css'
 import Image from 'next/image'
 import EditBlogHobbyModal from './EditHobby'
@@ -6,10 +6,17 @@ import { useRouter } from 'next/router'
 import { useGetBlogById } from '@/services/blog.services'
 import { BlogHobby } from '@/types/blog'
 import axiosInstance from '@/services/_axios'
+import { CircularProgress } from '@mui/material'
+import FilledButton from '@/components/_buttons/FilledButton'
+import { useDispatch } from 'react-redux'
+import { closeModal, openModal } from '@/redux/slices/modal'
+import OutlinedButton from '@/components/_buttons/OutlinedButton'
+import BlogCard from '@/components/BlogCard/BlogCard'
 
 interface Props {
-  setIsModalOpen: any
-  data: any
+  propData: any
+  // setIsModalOpen: any
+  // data: any
 }
 
 const penIcon = (
@@ -67,25 +74,32 @@ function formatDate(isoDate: any) {
 
   return `${day} ${month} ${year}`
 }
-const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
+const EditBlog: React.FC<Props> = ({
+  // setIsModalOpen
+  propData,
+}) => {
   const router = useRouter()
 
-  const {
-    data: Singleblog,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useGetBlogById(`url=${router.query.url}&populate=author,_hobbies`)
-  const data = {
-    blog_url: Singleblog?.data?.blog[0],
-  }
+  // const {
+  //   data: Singleblog,
+  //   isLoading,
+  //   isError,
+  //   error,
+  //   refetch,
+  // } = useGetBlogById(`url=${router.query.url}&populate=author,_hobbies`)
+  // const data = {
+  //   blog_url: Singleblog?.data?.blog[0],
+  // }
 
-  const blog = data?.blog_url || {}
+  // const blog = data?.blog_url || {}
+  const { blog, setIsEditing } = propData
   const author = blog?.author
   const [editHobby, setEditHobby] = useState(false)
   const [urlText, setUrlText] = useState('')
   const [keyWords, setKeyWords] = useState('')
+  const [saveBtnLoading, setSaveBtnLoading] = useState(false)
+  const [publishBtnLoading, setPublishBtnLoading] = useState(false)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (blog) {
@@ -100,10 +114,24 @@ const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
 
   const handleURLUpdate = (e: any) => {
     let value = e.target.value
+
+    // Replace spaces with hyphens
+    value = value.replace(/\s+/g, '-')
+
+    // Remove unwanted characters (anything other than alphanumerics, hyphens, and slashes)
+    value = value.replace(/[^a-zA-Z0-9-\/]/g, '')
+
+    // Convert to lowercase
+    value = value.toLowerCase()
+
+    // Replace multiple consecutive hyphens with a single hyphen
+    value = value.replace(/-{2,}/g, '-')
+
+    // Update the state
     setUrlText(value)
-    console.log(value.length)
   }
   const updateBlog = async (blogId: String) => {
+    setSaveBtnLoading(true)
     let updatedFields = {
       url: urlText,
       keywords: keyWords,
@@ -121,12 +149,13 @@ const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
       updatedFields,
       headers,
     )
+    setSaveBtnLoading(false)
 
     if (!data) {
       console.error('Error updating blog:', data.error)
       return null
     }
-    refetch()
+    // refetch()
     router.push(`/blog/${urlText}`)
     console.log('Blog updated successfully:', data)
     return data
@@ -138,202 +167,233 @@ const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
     blogId: string,
     status: 'Draft' | 'Pending' | 'Published',
   ): Promise<void> => {
-    const token = localStorage.getItem('token') // Retrieve token from local storage
-    if (!token) throw new Error('User is not authenticated')
+    try {
+      setPublishBtnLoading(true)
+      const token = localStorage.getItem('token') // Retrieve token from local storage
+      if (!token) throw new Error('User is not authenticated')
 
-    const headers = {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    }
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
 
-    const { data } = await axiosInstance.patch(
-      `blogs/${blogId}/status`,
-      { status },
-      { headers },
-    )
-    if (data) {
-      refetch()
-      console.log(data)
+      const { data } = await axiosInstance.patch(
+        `blogs/${blogId}/status`,
+        { status },
+        { headers },
+      )
+      setPublishBtnLoading(false)
+      if (data) {
+        // refetch()
+        console.log(data)
+      }
+    } catch (err) {
+      console.log('Error in Publising Blog', err)
     }
   }
 
-  console.log(blog)
-  let props = { setEditHobby, handleClose, data, refetch }
+  let props = {
+    setEditHobby,
+    handleClose,
+    data: blog,
+    // refetch
+  }
+
+  const handlePreview = () => {
+    setIsEditing(false)
+    dispatch(closeModal())
+  }
 
   return (
     <>
-      {Singleblog && !isLoading && !isError && (
-        <>
-          {editHobby ? (
-            <>
-              <EditBlogHobbyModal {...props} />
-            </>
-          ) : (
-            <section className={styles.mainContainer}>
-              <div className={styles.closeButtonContainer}>
-                <button
-                  className={styles.closeButton}
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  x
-                </button>
+      {/* {Singleblog && !isLoading && !isError && ( */}
+      <>
+        {editHobby ? (
+          <>
+            <EditBlogHobbyModal {...props} />
+          </>
+        ) : (
+          <section className={styles.mainContainer}>
+            <div className={styles.closeButtonContainer}>
+              <button
+                className={styles.closeButton}
+                // onClick={() => setIsModalOpen(false)}
+              >
+                x
+              </button>
+            </div>
+
+            <div className={styles.containerWrapper}>
+              <header className={styles.header}>
+                <h2 className={styles.status}>
+                  Status:{' '}
+                  <span className={styles.statusSpan}>{blog?.status}</span>
+                </h2>
+                <div className={styles.actionButtons}>
+                  <OutlinedButton
+                    className={styles.previewButton}
+                    onClick={handlePreview}
+                  >
+                    Preview
+                  </OutlinedButton>
+                  <OutlinedButton
+                    onClick={() => updateBlogStatus(blog._id, 'Pending')}
+                    className={styles.publishButton}
+                    disabled={publishBtnLoading || blog?.status !== 'Draft'}
+                  >
+                    {publishBtnLoading ? (
+                      <CircularProgress size={14} color="inherit" />
+                    ) : (
+                      'Publish'
+                    )}
+                  </OutlinedButton>
+                </div>
+              </header>
+
+              {/* blogURL */}
+              <div className={styles.blogUrlWrapper}>
+                <label className={styles.blogLabel} htmlFor="URL">
+                  Blog URL <span className={styles.Star}>*</span>{' '}
+                  <span className={styles.urlSpan}>
+                    {baseURL}
+                    {urlText}{' '}
+                  </span>
+                </label>
+                <input
+                  className={styles.urlInput}
+                  type="text"
+                  value={urlText}
+                  placeholder="URL"
+                  maxLength={48}
+                  onChange={handleURLUpdate}
+                />
               </div>
 
-              <div className={styles.containerWrapper}>
-                <header className={styles.header}>
-                  <h2 className={styles.status}>
-                    Status:{' '}
-                    <span className={styles.statusSpan}>{blog?.status}</span>
-                  </h2>
-                  <div className={styles.actionButtons}>
-                    <button className={styles.previewButton}>Preview</button>
-                    <button
-                      onClick={() => updateBlogStatus(blog._id, 'Pending')}
-                      className={styles.publishButton}
-                    >
-                      Publish
-                    </button>
-                  </div>
-                </header>
-
-                {/* blogURL */}
-                <div className={styles.blogUrlWrapper}>
-                  <label className={styles.blogLabel} htmlFor="URL">
-                    Blog URL <span className={styles.Star}>*</span>{' '}
-                    <span className={styles.urlSpan}>
-                      {baseURL}
-                      {urlText}{' '}
-                    </span>
-                  </label>
-                  <input
-                    className={styles.urlInput}
-                    type="text"
-                    value={urlText}
-                    placeholder="URL"
-                    maxLength={48}
-                    onChange={handleURLUpdate}
-                  />
-                </div>
-
-                {/* search pic */}
-                <div className={styles.searchPicWrapper}>
-                  {/* <p className={styles.searchPicText}>
+              {/* search pic */}
+              <div className={styles.searchPicWrapper}>
+                {/* <p className={styles.searchPicText}>
                     <span className={styles.searchSpan}>Search Pic:</span>
                     <span className={styles.authorSpan}>Author</span>
                   </p> */}
-                  <div className={styles.searchPicContent}>
-                    <figure className={styles.searchPicFigure}>
-                      <Image
-                        className={styles.searchPicImage}
-                        height={400}
-                        width={400}
-                        src={author?.profile_image}
-                        alt=""
-                      />
-                    </figure>
-                    <div className={styles.searchPicDetails}>
-                      <h3 className={styles.searchPicTitle}>{blog?.title}</h3>
-                      <h4 className={styles.searchPicSubtitle}>
-                        {blog?.tagline}
-                      </h4>
-                      <p className={styles.searchPicAuthor}>
-                        {author?.full_name} | {formatDate(blog?.createdAt)}
-                      </p>
-                    </div>
+                <div className={styles.searchPicContent}>
+                  <figure className={styles.searchPicFigure}>
+                    <Image
+                      className={styles.searchPicImage}
+                      height={400}
+                      width={400}
+                      src={author?.profile_image}
+                      alt=""
+                    />
+                  </figure>
+                  <div className={styles.searchPicDetails}>
+                    <h3 className={styles.searchPicTitle}>{blog?.title}</h3>
+                    <h4 className={styles.searchPicSubtitle}>
+                      {blog?.tagline}
+                    </h4>
+                    <p className={styles.searchPicAuthor}>
+                      {author?.full_name} | {formatDate(blog?.createdAt)}
+                    </p>
                   </div>
                 </div>
-                <hr className={styles.hr} />
-                {/* middle content */}
-                <div className={styles.middleWrapper}>
-                  {/* left */}
-                  <div className={styles.leftContent}>
-                    <figure className={styles.leftFigure}>
-                      <Image
-                        className={styles.leftImage}
-                        width={300}
-                        height={300}
-                        src={data?.blog_url?.cover_pic}
-                        alt="profile cover"
-                      />
-                    </figure>
-                    <h3 className={styles.leftTitle}>{blog?.title}</h3>
-                    <p className={styles.leftSubtitle}>{blog?.tagline}</p>
-                    <div className={styles.leftDetails}>
-                      <p className={styles.leftAuthorInfo}>
-                        <span className={styles.leftAuthor}>
-                          {author?.full_name}
-                        </span>
-                        <span className={styles.leftDate}>
-                          {formatDate(blog?.createdAt)}
-                        </span>
-                      </p>
-                      <p className={styles.leftTags}>
-                        <span className={styles.leftStarIcon}>{starIcon}</span>
+              </div>
+              <hr className={styles.hr} />
+              {/* middle content */}
+              <div className={styles.middleWrapper}>
+                {/* left */}
+                {/* <div className={styles.leftContent}>
+                  <figure className={styles.leftFigure}>
+                    <Image
+                      className={styles.leftImage}
+                      width={300}
+                      height={300}
+                      src={blog?.cover_pic}
+                      alt="profile cover"
+                    />
+                  </figure>
+                  <h3 className={styles.leftTitle}>{blog?.title}</h3>
+                  <p className={styles.leftSubtitle}>{blog?.tagline}</p>
+                  <div className={styles.leftDetails}>
+                    <p className={styles.leftAuthorInfo}>
+                      <span className={styles.leftAuthor}>
+                        {author?.full_name}
+                      </span>
+                      <span className={styles.leftDate}>
+                        {formatDate(blog?.createdAt)}
+                      </span>
+                    </p>
+                    <p className={styles.leftTags}>
+                      <span className={styles.leftStarIcon}>{starIcon}</span>
 
-                        {blog?._hobbies?.map((h: BlogHobby, i: React.Key) => (
-                          <span key={i} className={styles.leftTag}>
-                            {h.hobby?.display}
-                          </span>
-                        ))}
-                      </p>
-                    </div>
+                      {blog?._hobbies?.map((h: BlogHobby, i: React.Key) => (
+                        <span key={i} className={styles.leftTag}>
+                          {h.hobby?.display}
+                        </span>
+                      ))}
+                    </p>
                   </div>
+                </div> */}
+                <BlogCard data={blog} />
 
-                  {/* right */}
-                  <div className={styles.rightContent}>
-                    {/* <h4 className={styles.blogCardHeader}>
+                {/* right */}
+                <div className={styles.rightContent}>
+                  {/* <h4 className={styles.blogCardHeader}>
                       <span className={styles.blogCardText}>Blog Card pic</span>
                       :<span className={styles.blogCardType}>Cover</span>
                     </h4> */}
-                    <h3 className={styles.keywordsHeader}>KeyWords</h3>
-                    <textarea
-                      className={styles.keywordsTextarea}
-                      rows={10}
-                      value={keyWords}
-                      onChange={(e) => setKeyWords(e.target.value)}
-                    ></textarea>
-                    <div className={styles.hobbiesSection}>
-                      <h2 className={styles.hobbiesHeader}>
-                        Hobbies{' '}
-                        <span
-                          className={styles.penIcon}
-                          onClick={() => setEditHobby(true)}
-                        >
-                          {penIcon}
-                        </span>
-                      </h2>
-                      <p className={styles.hobbiesButtons}>
-                        {blog?._hobbies?.map((h: BlogHobby, i: React.Key) => (
-                          <button key={i} className={styles.hobbyButton}>
-                            {h.hobby?.display}
-                          </button>
-                        ))}
-                      </p>
-                    </div>
+                  <h3 className={styles.keywordsHeader}>KeyWords</h3>
+                  <textarea
+                    className={styles.keywordsTextarea}
+                    rows={10}
+                    value={keyWords}
+                    onChange={(e) => setKeyWords(e.target.value)}
+                  ></textarea>
+                  <div className={styles.hobbiesSection}>
+                    <h2 className={styles.hobbiesHeader}>
+                      Hobbies{' '}
+                      <span
+                        className={styles.penIcon}
+                        onClick={() => setEditHobby(true)}
+                      >
+                        {penIcon}
+                      </span>
+                    </h2>
+                    <p className={styles.hobbiesButtons}>
+                      {blog?._hobbies?.map((h: BlogHobby, i: React.Key) => (
+                        <button key={i} className={styles.hobbyButton}>
+                          {h.hobby?.display}
+                        </button>
+                      ))}
+                    </p>
                   </div>
                 </div>
-
-                <div className={styles.footerButtons}>
-                  <button
-                    className={styles.backButton}
-                    onClick={() => setIsModalOpen(false)}
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={() => updateBlog(blog._id)}
-                    className={styles.saveButton}
-                  >
-                    Save
-                  </button>
-                </div>
               </div>
-            </section>
-          )}
-        </>
-      )}
+            </div>
 
-      {isLoading && <p>Loading</p>}
+            <div className={styles.footerButtons}>
+              <button
+                className={styles.backButton}
+                onClick={() => dispatch(closeModal())}
+              >
+                Back
+              </button>
+              <FilledButton
+                onClick={() => updateBlog(blog._id)}
+                className={styles.saveButton}
+                disabled={saveBtnLoading}
+              >
+                {saveBtnLoading ? (
+                  <CircularProgress size={14} color="inherit" />
+                ) : (
+                  'Save'
+                )}
+              </FilledButton>
+            </div>
+          </section>
+        )}
+      </>
+      {/* )} */}
+
+      {/* {isLoading && <p>Loading</p>} */}
     </>
   )
 }

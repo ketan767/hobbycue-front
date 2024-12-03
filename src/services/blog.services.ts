@@ -206,7 +206,7 @@ export async function addHobby(blogId: string, hobbyData: any) {
   } catch (error: any) {
     console.error('Error adding hobby:', error)
     if (error.response && error.response.data) {
-      throw new Error(error.response.data.error || 'Failed to add hobby')
+      throw new Error(error?.response?.data?.error || 'Failed to add hobby')
     } else {
       throw error
     }
