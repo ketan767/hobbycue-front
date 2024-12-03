@@ -159,9 +159,9 @@ const Explore: React.FC<Props> = ({ data }) => {
         <title>HobbyCue - Blog</title>
       </Head>
       <div className={styles['main-container']}>
-        <div className={styles.filterContainer}>
+        {/* <div className={styles.filterContainer}>
           <BlogFilter formValues={formValues} setFormValues={setFormValues} />
-        </div>
+        </div> */}
 
         <div className={styles.container}>
           <div className={styles.gridContainer}>

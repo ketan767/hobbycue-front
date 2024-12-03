@@ -9,6 +9,17 @@
     /* background-color: #f9f9f9; */
 }
 
+.customSelectDisabled {
+    width: 172px;
+    background: #f7f5f9;
+    border: none;
+    position: relative;
+    cursor: not-allowed !important;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    /* background-color: #f9f9f9; */
+}
+
 .selectBox {
     padding: 8px;
     cursor: pointer;
@@ -42,6 +53,19 @@
     font-family:'poppins';
     color: rgba(109, 116, 122, 1);
     cursor: pointer;
+}
+
+.optionDisabled {
+    padding: 8px;
+    font-weight: 400;
+    font-size: 14px;
+    font-family:'poppins';
+    color: rgba(109, 116, 122, 1);
+
+}
+
+.notAllow {
+    cursor: not-allowed !important;
 }
 
 .option:hover {
