@@ -643,7 +643,7 @@ export const CreatePost: React.FC<Props> = ({
           updateActiveProfile({ type: data.type, data: data.data }),
         )
         store.dispatch(closeModal())
-        // window.location.reload()
+        window.location.reload()
         store.dispatch(increaseRefreshNum())
         router.push('/community')
       }
