@@ -281,22 +281,24 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         <div className={styles.all}>
           <div className={styles['blog-header']}>
             <div className={styles.wrapper}>
-              <div className={styles.buttonWrapper}>
-                <button
-                  onClick={() =>
-                    dispatch(
-                      openModal({
-                        type: 'blogPublish',
-                        closable: true,
-                        propData: { blog, setIsEditing },
-                      }),
-                    )
-                  }
-                  style={{ cursor: 'pointer' }}
-                >
-                  {downarrow}
-                </button>
-              </div>
+              {isAuthor && (
+                <div className={styles.buttonWrapper}>
+                  <button
+                    onClick={() =>
+                      dispatch(
+                        openModal({
+                          type: 'blogPublish',
+                          closable: true,
+                          propData: { blog, setIsEditing },
+                        }),
+                      )
+                    }
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {downarrow}
+                  </button>
+                </div>
+              )}
               {isEditing ? (
                 <textarea
                   className={styles['blog-title'] + ' ' + styles.editInput}

@@ -96,7 +96,9 @@ const BlogCard: React.FC<Props> = ({ data }) => {
     </svg>
   )
 
-  const itsMe = data?.admin === user?._id
+  console.log("asifs data", data)
+
+  const itsMe = data?.author?._id === user?._id
   const isMobile = useMediaQuery('(max-width:1100px)')
 
   return (
@@ -121,6 +123,17 @@ const BlogCard: React.FC<Props> = ({ data }) => {
         )} */}
 
         <div className={styles.imgContainer}>
+          {itsMe && (
+            <div
+              className={`${styles.status} ${
+                data?.status === 'Published'
+                  ? styles.published
+                  : styles.unpublished
+              }`}
+            >
+              {data?.status}
+            </div>
+          )}
           {data?.cover_pic ? (
             <>
               <div

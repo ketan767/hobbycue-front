@@ -164,11 +164,13 @@
 }
 .searchPicContent {
   display: flex;
-  gap: 30px;
+  gap: 20px;
 }
 .searchPicFigure {
   width: 64px;
+  min-width: 64px;
   height: 64px;
+  min-height: 64px;
 }
 .searchPicImage {
   width: 100%;
