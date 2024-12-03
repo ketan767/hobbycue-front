@@ -277,12 +277,10 @@ const EditBlog: React.FC<Props> = ({
                   </p> */}
                 <div className={styles.searchPicContent}>
                   <figure className={styles.searchPicFigure}>
-                    <Image
+                    <img
                       className={styles.searchPicImage}
-                      height={400}
-                      width={400}
                       src={author?.profile_image}
-                      alt=""
+                      alt="Author Pic"
                     />
                   </figure>
                   <div className={styles.searchPicDetails}>
