@@ -244,6 +244,13 @@ export const isVideoLink = (url: string) => {
   return videoRegex.some((regex) => regex.test(url));
 };
 
+export const isInstagramLink = (url: string) => {
+  const instagramLink = [
+    /^(https?:\/\/)?(www\.)?(instagram\.com|instagr\.am)(\/.*)?$/
+  ];
+  return instagramLink.some((regex) => regex.test(url));
+};
+
 export const convertDateToString = (date: string): string => {
   const dateString = new Date(date).toString();
   const day = dateString.slice(8, 10);

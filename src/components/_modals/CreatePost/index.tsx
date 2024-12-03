@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import store, { RootState } from '@/redux/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { checkIfUrlExists, isEmptyField, isVideoLink } from '@/utils'
+import { checkIfUrlExists, isEmptyField, isVideoLink, isInstagramLink } from '@/utils'
 import { getAllHobbies } from '@/services/hobby.service'
 import {
   createListingPost,
@@ -360,6 +360,8 @@ export const CreatePost: React.FC<Props> = ({
     DropdownListItem[]
   >([])
   const [visibilityData, setVisibilityData] = useState(['public'])
+
+  useEffect(() => {console.log("metaData",metaData)}, [metaData])
 
   useEffect(() => {
     const isUrl = checkIfUrlExists(data.content.replace(/<img .*?>/g, ''))
@@ -736,6 +738,11 @@ export const CreatePost: React.FC<Props> = ({
     return alreadyContains
   }
 
+  const getInstagramPostId = (url: any) => {
+    const match = url.match(/instagram\.com\/(?:reel|p)\/([^/]+)/);
+    return match ? match[1] : null;
+  };
+
   return (
     <>
       <div
@@ -1107,7 +1114,32 @@ export const CreatePost: React.FC<Props> = ({
                       />
                     </div>
                   ) : (
-                    <div className={styles['show-metadata']}>
+                      isInstagramLink(url) ? (
+                        <div  style={{background:"#fff", display:"flex", justifyContent:"center", alignItems:"center"}}>
+                      <img
+                      style={{cursor:"pointer"}}
+                        onClick={()=>window.open(url, '_blank')}
+                        height="410px"
+                          src={
+                            (typeof metaData?.image === 'string' &&
+                              metaData.image) ||
+                            (typeof metaData?.icon === 'string' &&
+                              metaData.icon) ||
+                            defaultImg
+                          }
+                          alt=""
+                        />
+                        {/* <iframe
+                          className='no-scroll'
+                          src={`https://www.instagram.com/reel/${getInstagramPostId(url)}/embed`}
+                          height="575px"
+                          frameBorder="0"
+                          allowFullScreen
+                          scrolling="no"
+                        /> */}
+                    </div>
+                      ) : (
+                        <div className={styles['show-metadata']}>
                       <svg
                         className={styles['metadata-close-icon']}
                         onClick={() => {
@@ -1178,6 +1210,7 @@ export const CreatePost: React.FC<Props> = ({
                         </p>
                       )}
                     </div>
+                      )
                   )}
                 </>
               )}
