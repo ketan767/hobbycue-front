@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
 import EditIcon from '@/assets/svg/edit-icon.svg'
 import { openModal } from '@/redux/slices/modal'
-import { getAllPosts } from '@/services/post.service'
+import { getAllHobbyPosts } from '@/services/post.service'
 import { GetServerSideProps } from 'next'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import post, {
@@ -323,6 +323,7 @@ const CommunityLayout: React.FC<Props> = ({
       selectedHobby !== 'My Hobbies'
     ) {
       params.append('_hobby', selectedHobby)
+      params.append('hobbyId', selectedHobby)
     } else {
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item?.hobby?._id)
@@ -363,8 +364,7 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
     if (page === 1) dispatch(updateLoading(true))
-
-    const { err, res } = await getAllPosts(params.toString())
+    const { err, res } = await getAllHobbyPosts(params.toString())
     if (err) return console.log(err)
     if (res?.data?.success) {
       let posts = res.data.data.posts.map((post: any) => {

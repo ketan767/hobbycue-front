@@ -69,6 +69,9 @@ const ListingReview: React.FC<Props> = ({
     const value = event.target.value
     setData((prev) => ({ ...prev, description: value }))
     setInputErrs({ error: null })
+    if (onStatusChange) {
+      onStatusChange(true)
+    }
   }
 
   const handleSubmit = async () => {
@@ -97,8 +100,8 @@ const ListingReview: React.FC<Props> = ({
       })
       setSubmitBtnLoading(false)
       setTimeout(() => {
-        router.reload()
-      }, 2500)
+        dispatch(closeModal())
+      }, 500)
     } else if (err) {
       setSubmitBtnLoading(false)
       setSnackbar({
@@ -107,24 +110,27 @@ const ListingReview: React.FC<Props> = ({
         message: 'Something went wrong',
       })
       console.log(err)
+      setTimeout(() => {
+        dispatch(closeModal())
+      }, 500)
     }
   }
 
-  const HandleSaveError = async () => {
-    if (
-      !data.description ||
-      data.description?.trim() === '' ||
-      data.description === '<p><br></p>'
-    ) {
-      setIsError(true)
-    }
-  }
+  // const HandleSaveError = async () => {
+  //   if (
+  //     !data.description ||
+  //     data.description?.trim() === '' ||
+  //     data.description === '<p><br></p>'
+  //   ) {
+  //     setIsError(true)
+  //   }
+  // }
 
-  useEffect(() => {
-    if (confirmationModal) {
-      HandleSaveError()
-    }
-  }, [confirmationModal])
+  // useEffect(() => {
+  //   if (confirmationModal) {
+  //     HandleSaveError()
+  //   }
+  // }, [confirmationModal])
 
   useEffect(() => {
     if (isError) {
@@ -173,6 +179,7 @@ const ListingReview: React.FC<Props> = ({
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
+        content={'Would you like to send before exit?'}
       />
     )
   }

@@ -97,6 +97,7 @@ type User = {
   tagline: string
   primary_address: { city: string }
   profile_url: string
+  _hobbies: any[]
 }
 type PeopleData = {
   profile_image: string
@@ -1851,7 +1852,43 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{user?.full_name}</div>
                         <div className={styles.userTagline}>
-                          {user?.tagline || '\u00a0'}
+                          {user?.tagline ? (
+                            user?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  user?._hobbies[0]?.hobby?.display
+                                    ? user?._hobbies[0]?.hobby?.display
+                                    : ''
+                                }${
+                                  user?._hobbies[0]?.genre?.display
+                                    ? ' - ' + user?._hobbies[0]?.genre?.display
+                                    : ''
+                                }`}
+                                {user?._hobbies[1]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  user?._hobbies[1]?.hobby?.display
+                                    ? user?._hobbies[1]?.hobby?.display
+                                    : ''
+                                }${
+                                  user?._hobbies[1]?.genre?.display
+                                    ? ' - ' + user?._hobbies[1]?.genre?.display
+                                    : ''
+                                }`}
+                                {user?._hobbies[2]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  user?._hobbies[2]?.hobby?.display
+                                    ? user?._hobbies[2]?.hobby?.display
+                                    : ''
+                                }${
+                                  user?._hobbies[2]?.genre?.display
+                                    ? ' - ' + user?._hobbies[2]?.genre?.display
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className={styles.userLocation}>
                           {user.primary_address?.city || '\u00a0'}

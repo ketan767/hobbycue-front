@@ -275,7 +275,7 @@ const PostCard: React.FC<Props> = (props) => {
               href={
                 postData?.author_type === 'User'
                   ? `/profile/${postData?._author?.profile_url}`
-                  : `/${pageType(postData?._author.type)}/${
+                  : `/${pageType(postData?._author?.type)}/${
                       postData?._author?.page_url
                     }`
               }
