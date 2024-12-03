@@ -324,6 +324,9 @@ const CommunityLayout: React.FC<Props> = ({
     ) {
       params.append('_hobby', selectedHobby)
       params.append('hobbyId', selectedHobby)
+      if (selectedGenre) {
+        params.append('genreId', selectedGenre)
+      }
     } else {
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item?.hobby?._id)
