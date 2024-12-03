@@ -418,6 +418,7 @@ select:-webkit-autofill {
   line-height: 16px;
   font-weight: 500;
 }
+
 @media screen and (max-width: 1100px) {
   .content-box-wrapper {
     border: none;
