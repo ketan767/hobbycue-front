@@ -90,7 +90,7 @@ const StatusDropdown: React.FC<{
         //     </li>
         //   ))}
         // </ul>
-        <Select open className={styles['hideSelect']}>
+        <Select open className={`${styles.dropdownMenu} ${styles['hideSelect']}`}>
           {statusOptions.map((status,i)=><MenuItem key={i}>
           <li
               key={status.label}

@@ -140,7 +140,7 @@ export const Navbar: React.FC<Props> = ({}) => {
         }))
       }
     }
-  }, [q,router.pathname])
+  }, [q, router.pathname])
 
   // useEffect(() => {
   //   if (!(router.asPath === '/explore')) {
@@ -632,7 +632,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
   useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick)
-    
+
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick)
     }
@@ -751,7 +751,7 @@ export const Navbar: React.FC<Props> = ({}) => {
         // style={{ backgroundColor: viewAs === 'print' ? '#F2F0F5' : '' }}
       >
         {viewAs !== 'print' && (
-          <nav className={`site-container `} style={{position:"relative"}}>
+          <nav className={`site-container `} style={{ position: 'relative' }}>
             <section className={styles['navbar-left']}>
               <Link
                 onClick={(e) => {
@@ -913,7 +913,6 @@ export const Navbar: React.FC<Props> = ({}) => {
                 </div>
                 )
               }
-          
 
             <section className={styles['navbar-right']}>
               <ul className={styles['right-listing-expanded']}>
@@ -1359,39 +1358,39 @@ export const Navbar: React.FC<Props> = ({}) => {
                       <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
                     </Link>
 
-                  {showDropdown === 'user-menu' && (
-                    <div className={styles['user-menu-dropdown']}>
-                      <section className={styles['general-info']}>
-                        <Link
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'start',
-                          }}
-                          prefetch={true}
-                          href={`/profile/${user.profile_url}`}
-                        >
-                          <div className={styles['profile-name']}>
-                            {user?.profile_image ? (
-                              <img
-                                className={styles['img']}
-                                src={user.profile_image}
-                                alt=""
-                                width={48}
-                                height={48}
-                              />
-                            ) : (
-                              <div
-                                className={`${styles['img']} default-user-icon`}
-                              ></div>
-                            )}
-                            <h4>{user.full_name}</h4>
-                          </div>
-                          <button className={styles['view-profile-btn']}>
-                            View Profile
-                          </button>
-                        </Link>
-                      </section>
+                    {showDropdown === 'user-menu' && (
+                      <div className={styles['user-menu-dropdown']}>
+                        <section className={styles['general-info']}>
+                          <Link
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'start',
+                            }}
+                            prefetch={true}
+                            href={`/profile/${user.profile_url}`}
+                          >
+                            <div className={styles['profile-name']}>
+                              {user?.profile_image ? (
+                                <img
+                                  className={styles['img']}
+                                  src={user.profile_image}
+                                  alt=""
+                                  width={48}
+                                  height={48}
+                                />
+                              ) : (
+                                <div
+                                  className={`${styles['img']} default-user-icon`}
+                                ></div>
+                              )}
+                              <h4>{user.full_name}</h4>
+                            </div>
+                            <button className={styles['view-profile-btn']}>
+                              View Profile
+                            </button>
+                          </Link>
+                        </section>
 
                         <span className={styles['divider']}></span>
 

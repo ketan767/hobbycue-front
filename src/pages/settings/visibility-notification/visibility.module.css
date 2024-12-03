@@ -12,6 +12,15 @@
   line-height: 22px;
   color: #6d747a;
 }
+.selectContainer
+  {
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+    gap:10px
+  }
+
+  
 
 .textDark {
   font-weight: 400;

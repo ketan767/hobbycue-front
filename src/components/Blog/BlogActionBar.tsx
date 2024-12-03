@@ -17,6 +17,8 @@ import CommentIcon from '@/assets/icons/CommentIcon'
 import ReportIcon from '@/assets/icons/ReportIcon'
 import DownvoteIcon from '@/assets/icons/DownvoteIcon'
 import RepostIconBlog from '@/assets/icons/RepostIconBlog'
+import { CircularProgress } from '@mui/material'
+import DeletePrompt from '../DeletePrompt/DeletePrompt'
 
 type Props = {
   data: any
@@ -138,6 +140,10 @@ const BlogActionBar: React.FC<Props> = ({
       case 'report':
         dispatch(openModal({ type: 'PostReportModal', closable: true }))
         break
+      case 'delete':
+        // <DeletePrompt triggerOpen={true}  /> make a delete states
+        showFeatUnderDev()
+        break
     }
 
     setBtnLoading(false)
@@ -168,14 +174,20 @@ const BlogActionBar: React.FC<Props> = ({
 
   const isMob = isMobile()
 
+  const isDraft = data?.blog_url?.status === 'Draft'
+
   return (
     <div className={styles.actions} onClick={(e) => e.stopPropagation()}>
       <CustomizedTooltips title="UpVote">
         <button
-          disabled={btnLoading || isEditing}
+          disabled={isEditing || isDraft}
           onClick={() => handleActionsWithAuth('upvote')}
         >
-          <UpvoteIcon fill={vote.up} />
+          {btnLoading ? (
+            <CircularProgress color="inherit" size={'24px'} />
+          ) : (
+            <UpvoteIcon fill={vote.up} />
+          )}
         </button>
       </CustomizedTooltips>
       <CustomizedTooltips title="Bookmark">
@@ -189,7 +201,7 @@ const BlogActionBar: React.FC<Props> = ({
       <CustomizedTooltips title="Share">
         <button
           onClick={() => handleActionsWithoutAuth('share')}
-          disabled={isEditing}
+          disabled={isEditing || isDraft}
         >
           <ShareIcon />
         </button>
@@ -225,11 +237,7 @@ const BlogActionBar: React.FC<Props> = ({
                 >
                   Support
                 </button>
-                <button
-                  onClick={() => {
-                    setShowMenu(false)
-                  }}
-                >
+                <button onClick={() => handleActionsWithAuth('delete')}>
                   Delete
                 </button>
               </>
@@ -247,11 +255,14 @@ const BlogActionBar: React.FC<Props> = ({
                 <button onClick={() => handleActionsWithAuth('report')}>
                   <ReportIcon /> Report
                 </button>
-                <button
-                  disabled={btnLoading}
-                  onClick={() => handleActionsWithAuth('downvote')}
-                >
-                  <DownvoteIcon fill={vote.down} /> Downvote
+                <button onClick={() => handleActionsWithAuth('downvote')}>
+                  {btnLoading ? (
+                    <CircularProgress color="inherit" size={'24px'} />
+                  ) : (
+                    <>
+                      <DownvoteIcon fill={vote.down} /> Downvote
+                    </>
+                  )}
                 </button>
               </>
             )}

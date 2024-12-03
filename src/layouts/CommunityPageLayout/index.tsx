@@ -58,6 +58,7 @@ import {
   searchUsersAdvanced,
   TrendingHobbiesByUser,
 } from '@/services/user.service'
+import AddHobbyImg from '@/assets/image/AddHobbyImg.png'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -113,6 +114,7 @@ const CommunityLayout: React.FC<Props> = ({
   const { activeProfile, user, isLoggedIn } = useSelector(
     (state: RootState) => state.user,
   )
+
   const { allPosts, filters, post_pagination } = useSelector(
     (state: RootState) => state.post,
   )
@@ -507,10 +509,49 @@ const CommunityLayout: React.FC<Props> = ({
   }, [])
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log('started fetch')
+      if (user && user.preferences) {
+        if (!user.preferences.community_view.preferred_hobby.hobby) {
+          setSelectedHobby('All Hobbies')
+        } else if (!user.preferences.community_view.all_hobbies) {
+          setSelectedHobby(
+            user.preferences.community_view.preferred_hobby.hobby._id,
+          )
+
+          if (user.preferences.community_view.preferred_hobby.genre) {
+            setSelectedGenre(
+              user.preferences.community_view.preferred_hobby.genre,
+            )
+          }
+        }
+
+        if (!user.preferences.community_view.all_locations) {
+          console.log(user.preferences.community_view.preferred_location, 100)
+          setSelectedLocation(
+            user.preferences.community_view.preferred_location.city.split(
+              ' ',
+            )[0],
+          )
+        }
+      }
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [user])
+
+  useEffect(() => {
     dispatch(updateListingModalData(activeProfile.data))
   }, [activeProfile.type])
 
   useEffect(() => {
+    console.log(selectedHobby, 1000)
+    console.log(selectedLocation, 1000)
+    console.log(
+      user?.preferences?.community_view?.preferred_location?.city,
+      100000,
+    )
+
     if (
       activeProfile.data !== null &&
       (activeTab === 'links' || activeTab === 'posts')
@@ -1360,7 +1401,7 @@ const CommunityLayout: React.FC<Props> = ({
                 <input
                   autoComplete="new"
                   value={email}
-                  placeholder="Email"
+                  placeholder="Email or @ mention "
                   name="society"
                   onChange={handleInputChange}
                   type="email"
@@ -1566,6 +1607,14 @@ const CommunityLayout: React.FC<Props> = ({
                             )}
                             <span>{`${hobby.display}`}</span>
                           </Link>
+                          {/* <img
+                            src={AddHobbyImg.src}
+                            height={20}
+                            width={20}
+                            alt="Add"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => handleAddTrendingHobby(hobby)}
+                          /> */}
                         </li>
                       )
                     })}
