@@ -1,0 +1,79 @@
+import React from 'react'
+import styles from './DisplayState.module.css'
+import { ModalState } from '@/pages/admin/users'
+import { formatDate } from '../../Modal/UserFilterModal/UserFilter'
+import { format } from 'path'
+
+interface Props {
+  modalState: ModalState
+}
+
+const DisplayState: React.FC<Props> = ({ modalState }) => {
+  const displayState = () => {
+    return Object.entries(modalState).map(([key, value]) => {
+      if (key === 'onboarded' && typeof value === 'string' && value) {
+        // For 'onboarded', display 'Onb'
+        return (
+          <div key={key} className={styles.stateItem}>
+            <strong>Onb:</strong> {value}
+          </div>
+        )
+      } else if (key === 'joined' && typeof value === 'object' && value) {
+        // For 'joined', handle start and end date logic
+        const { start, end } = value
+        if (start && !end) {
+          return (
+            <div key={key} className={styles.stateItem}>
+              <strong>joined:</strong> {`> ${formatDate(start)}`}
+            </div>
+          )
+        } else if (!start && end) {
+          return (
+            <div key={key} className={styles.stateItem}>
+              <strong>joined:</strong> {`> ${formatDate(end)}`}
+            </div>
+          )
+        } else if (start && end) {
+          return (
+            <div key={key} className={styles.stateItem}>
+              <strong>joined:</strong>{' '}
+              {`${formatDate(start)} - ${formatDate(end)}`}
+            </div>
+          )
+        }
+      } else if (Array.isArray(value) && value.length > 0) {
+        // For arrays, display as a single line
+        return (
+          <div key={key} className={styles.stateItem}>
+            <strong>{key}:</strong> {value.join(', ')}
+          </div>
+        )
+      } else if (typeof value === 'object' && value) {
+        // For objects, display in compact form
+        const filteredObject = Object.entries(value).filter(([, v]) => v !== '')
+        if (filteredObject.length > 0) {
+          return (
+            <div key={key} className={styles.stateItem}>
+              <strong>{key}:</strong>{' '}
+              {filteredObject
+                .map(([subKey, subValue]) => `${subKey}: ${subValue}`)
+                .join(', ')}
+            </div>
+          )
+        }
+      } else if (typeof value === 'string' && value) {
+        // For all other strings, display in one line
+        return (
+          <div key={key} className={styles.stateItem}>
+            <strong>{key}:</strong> {value}
+          </div>
+        )
+      }
+      return null
+    })
+  }
+
+  return <div className={styles.modal}>{displayState()}</div>
+}
+
+export default DisplayState

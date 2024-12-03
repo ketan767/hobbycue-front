@@ -29,6 +29,7 @@ import ToggleButton from '@/components/_buttons/ToggleButton'
 import ModalWrapper from '@/components/Modal'
 import UserFilter from '@/components/AdminPage/Modal/UserFilterModal/UserFilter'
 import EditUser from '@/components/AdminPage/Modal/UserEditModal/UserEditModal'
+import DisplayState from '@/components/AdminPage/Users/DiplayState/DisplayState'
 interface ModalProps {
   isModalOpen: boolean
   setIsModalOpen: (value: boolean) => void
@@ -319,6 +320,15 @@ const AdminDashboard: React.FC = () => {
       })
     }
   }
+  const hasNonEmptyValues = (state: ModalState) => {
+    return !Object.entries(state).every(
+      ([_, value]) =>
+        !value ||
+        (Array.isArray(value) && value.length === 0) ||
+        (typeof value === 'object' &&
+          Object.values(value).every((v) => v === '')),
+    )
+  }
 
   return (
     <>
@@ -339,12 +349,24 @@ const AdminDashboard: React.FC = () => {
                 {searchSvg}
               </button>
             </form>
+            {hasNonEmptyValues(modalState) && (
+              <DisplayState modalState={modalState} />
+            )}
+
             <button
               className={styles.filterBtn}
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => setIsModalOpen(!isModalOpen)}
             >
               {filterSvg}
             </button>
+            {isModalOpen && (
+              <UserFilter
+                modalState={modalState}
+                setModalState={setModalState}
+                setIsModalOpen={setIsModalOpen}
+                setApplyFilter={setApplyFilter}
+              />
+            )}
           </div>
 
           <div className={styles.resultsContainer}>
@@ -629,17 +651,6 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         <div>
-          <ModalWrapper
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-          >
-            <UserFilter
-              modalState={modalState}
-              setModalState={setModalState}
-              setIsModalOpen={setIsModalOpen}
-              setApplyFilter={setApplyFilter}
-            />
-          </ModalWrapper>
           <ModalWrapper
             isOpen={isEditModalOpen}
             onClose={() => setIsEditModalOpen(false)}

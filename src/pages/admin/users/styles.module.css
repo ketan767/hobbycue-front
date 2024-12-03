@@ -86,6 +86,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  position: relative;
 }
 
 /* Search form styles */

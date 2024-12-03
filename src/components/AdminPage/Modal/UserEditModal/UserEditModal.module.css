@@ -1,6 +1,7 @@
 .mainContainer {
   max-width: 600px;
   width: 100%;
+  padding: 10px;
 }
 
 .back {
@@ -24,6 +25,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 2px;
+  scrollbar-width: thin;
 }
 
 .title {
