@@ -277,7 +277,7 @@ const EditBlog: React.FC<Props> = ({
                   </p> */}
                 <div className={styles.searchPicContent}>
                   <figure className={styles.searchPicFigure}>
-                    <img
+                    <Image
                       className={styles.searchPicImage}
                       src={author?.profile_image}
                       alt="Author Pic"
