@@ -106,7 +106,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     if (!postId) return
 
     const params = new URLSearchParams(
-      `populate=_author,_genre,_hobby,_allHobbies,_allGenres&_id=${postId}`,
+      `populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3&_id=${postId}`,
     )
 
     setIsLoadingPosts(true)
@@ -537,7 +537,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   // const postId = new URL(url).pathname.split('/').pop()
   const { post_id } = query
   const queryParams = new URLSearchParams(
-    `populate=_author,_genre,_hobby,_allHobbies,_allGenres&_id=${post_id}`,
+    `populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3&_id=${post_id}`,
   )
   const { err, res } = await getAllPosts(queryParams.toString())
 

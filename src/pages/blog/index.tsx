@@ -62,16 +62,6 @@ type DataItem = {
   updatedAt: string
 }
 
-type Filters = {
-  hobby?: string | null
-  genre?: string | null
-  keywords?: string | null
-  author?: string | null
-  status?: string | null
-  startDate?: string | null
-  endDate?: string | null
-}
-
 const Explore: React.FC<Props> = ({ data }) => {
   const router = useRouter()
   const { type } = router.query
@@ -85,7 +75,7 @@ const Explore: React.FC<Props> = ({ data }) => {
     endDate: 'End Date',
   })
 
-  const filterBlogs = (data: Blog[], filters: Filters): Blog[] => {
+  const filterBlogs = (data: Blog[], filters: FormValues): Blog[] => {
     // If all filters are null or undefined, return an empty array
     if (Object.values(filters).every((value) => !value)) {
       return []
@@ -122,7 +112,8 @@ const Explore: React.FC<Props> = ({ data }) => {
 
       // Match for author
       const authorMatch = filters.author
-        ? item.author.full_name
+        ? item.author.full_name &&
+          item.author.full_name
             .toLowerCase()
             .includes(filters.author!.toLowerCase())
         : true
@@ -168,9 +159,9 @@ const Explore: React.FC<Props> = ({ data }) => {
         <title>HobbyCue - Blog</title>
       </Head>
       <div className={styles['main-container']}>
-        <div className={styles.filterContainer}>
+        {/* <div className={styles.filterContainer}>
           <BlogFilter formValues={formValues} setFormValues={setFormValues} />
-        </div>
+        </div> */}
 
         <div className={styles.container}>
           <div className={styles.gridContainer}>

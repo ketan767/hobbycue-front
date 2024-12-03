@@ -6,14 +6,7 @@ import styles from './UserFilter.module.css'
 import GoogleIcon from '@/assets/svg/admin_google.svg'
 import MailIcon from '@/assets/svg/admin_email.svg'
 import FacebookIcon from '@/assets/svg/admin_facebook.svg'
-
-interface ModalState {
-  onboarded: string
-  joined: { start?: string; end?: string }
-  loginModes: string[]
-  pageCount: { min: string; max: string }
-  status: string
-}
+import { ModalState } from '@/pages/admin/users'
 
 interface UserFilterProps {
   modalState: ModalState

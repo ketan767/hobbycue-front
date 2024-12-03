@@ -90,7 +90,6 @@ export const CreatePost: React.FC<Props> = ({
   onStatusChange,
   propData,
 }) => {
-  console.warn('propsdata', propData)
   const router = useRouter()
   const { user, listing, activeProfile, isLoggedIn } = useSelector(
     (state: RootState) => state.user,
@@ -101,6 +100,7 @@ export const CreatePost: React.FC<Props> = ({
   const [hobbies, setHobbies] = useState([])
   const [selectedHobbies, setSelectedHobbies] = useState<HobbyData[]>([])
   const [editing, setEditing] = useState(false)
+  const { hasChanges } = useSelector((state: RootState) => state.modal)
   const [data, setData] = useState<NewPostData>({
     type: 'user',
     data: null,
@@ -116,6 +116,25 @@ export const CreatePost: React.FC<Props> = ({
   const editBoxRef = useRef<HTMLDivElement | null>(null)
 
   const removeSelectedHobby = (hobbyToRemove: any) => {
+    const newHobbyData = selectedHobbies.filter((hobbyData) => {
+      if (hobbyData.genre && hobbyToRemove.genre) {
+        if (hobbyData.genre === hobbyToRemove.genre) {
+          return false
+        } else {
+          return true
+        }
+      } else if (hobbyData.genre && !hobbyToRemove.genre) {
+        return true
+      } else if (!hobbyData.genre && hobbyToRemove.genre) {
+        return true
+      } else {
+        if (hobbyData.hobby === hobbyToRemove.hobby) {
+          return false
+        } else {
+          return true
+        }
+      }
+    })
     setSelectedHobbies((prev) =>
       prev.filter((hobbyData) => {
         if (hobbyData.genre && hobbyToRemove.genre) {
@@ -137,7 +156,11 @@ export const CreatePost: React.FC<Props> = ({
         }
       }),
     )
+    console.log('selectedHobbies--->', newHobbyData)
   }
+  useEffect(() => {
+    console.log('hasChanges', hasChanges)
+  }, [hasChanges])
   useEffect(() => {
     if (propData && propData._hobby) {
       setData((prev) => ({
@@ -575,19 +598,21 @@ export const CreatePost: React.FC<Props> = ({
         message: 'Please select atleast one hobby',
       })
       return
-      // return setErrors({
-      //   ...errors,
-      //   hobby: 'This field is required',
-      // })
     }
     const allHobbyIds = selectedHobbies.map((h) => h.hobbyId)
     const allGenreIds = selectedHobbies.map((h) => h.genreId)
-    console.log("allHobbyIds",allHobbyIds)
-    console.log("allGenreIds",allGenreIds)
-    console.log("editing",editing)
+    console.log('allHobbyIds', allHobbyIds)
+    console.log('allGenreIds', allGenreIds)
+    console.log('propsdata', propData)
+
     const jsonData: any = {
-      hobbyIds: allHobbyIds,
-      genreIds: allGenreIds,
+      hobbyId1: allHobbyIds[0],
+      hobbyId2: allHobbyIds[1] ? allHobbyIds[1] : '',
+      hobbyId3: allHobbyIds[2] ? allHobbyIds[2] : '',
+      genreId1: allGenreIds[0] ? allGenreIds[0] : '',
+      genreId2: allGenreIds[1] ? allGenreIds[1] : '',
+      genreId3: allGenreIds[2] ? allGenreIds[2] : '',
+
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
       media:
@@ -596,12 +621,7 @@ export const CreatePost: React.FC<Props> = ({
       has_link: hasLink,
       video_url: data.video_url ? data.video_url : null,
     }
-    // if (typeof data.genre === 'object' && typeof data.genre?._id === 'string') {
-    //   jsonData.genreId = data.genre._id
-    // }
 
-    // console.log('jsonData', jsonData.hobbyId)
-    // console.log('jsonData genreId', jsonData.genreId)
     setSubmitBtnLoading(true)
 
     if (data.type === 'listing') {
@@ -625,7 +645,7 @@ export const CreatePost: React.FC<Props> = ({
           updateActiveProfile({ type: data.type, data: data.data }),
         )
         store.dispatch(closeModal())
-        // window.location.reload()
+        window.location.reload()
         store.dispatch(increaseRefreshNum())
         router.push('/community')
       }
@@ -642,13 +662,6 @@ export const CreatePost: React.FC<Props> = ({
       return console.log(err)
     }
     if (res.data.success) {
-      // store.dispatch(
-      //   setFilters({
-      //     location: data.visibility !== '' ? data.visibility : null,
-      //     hobby: data.hobby?._id ?? '',
-      //     genre: data.genre?._id ?? '',
-      //   }),
-      // )
       store.dispatch(updateActiveProfile({ type: data.type, data: data.data }))
       store.dispatch(closeModal())
       // window.location.reload()
@@ -666,22 +679,61 @@ export const CreatePost: React.FC<Props> = ({
   }, [data])
 
   useEffect(() => {
-    const firstHobby = activeProfile?.data?._hobbies[0]?.hobby?.display
-    const firstGenre = activeProfile?.data?._hobbies[0]?.genre?.display
-    const firstHobbyId = activeProfile?.data?._hobbies[0]?.hobby?._id
-      ? activeProfile?.data?._hobbies[0]?.hobby?._id
-      : undefined
-    const firstGenreId = activeProfile?.data?._hobbies[0]?.genre?._id
-      ? activeProfile?.data?._hobbies[0]?.genre?._id
-      : undefined
-    setSelectedHobbies([
-      {
-        hobby: firstHobby,
-        genre: firstGenre,
-        hobbyId: firstHobbyId,
-        genreId: firstGenreId,
-      },
-    ])
+    if (propData && propData?._allHobbies) {
+      const existingHobbies = []
+      if (propData?._allHobbies?._hobby1?.display) {
+        if (propData?._allHobbies?._hobby1?.display) {
+          existingHobbies.push({
+            hobby: propData?._allHobbies?._hobby1?.display,
+            genre: propData?._allHobbies?._genre1?.display,
+            hobbyId: propData?._allHobbies?._hobby1?._id,
+            genreId: propData?._allHobbies?._genre1?._id,
+          })
+        }
+        if (propData?._allHobbies?._hobby2?.display) {
+          existingHobbies.push({
+            hobby: propData?._allHobbies?._hobby2?.display,
+            genre: propData?._allHobbies?._genre2?.display,
+            hobbyId: propData?._allHobbies?._hobby2?._id,
+            genreId: propData?._allHobbies?._genre2?._id,
+          })
+        }
+        if (propData?._allHobbies?._hobby3?.display) {
+          existingHobbies.push({
+            hobby: propData?._allHobbies?._hobby3?.display,
+            genre: propData?._allHobbies?._genre3?.display,
+            hobbyId: propData?._allHobbies?._hobby3?._id,
+            genreId: propData?._allHobbies?._genre3?._id,
+          })
+        }
+      } else {
+        existingHobbies.push({
+          hobby: propData?._hobby?.display,
+          genre: propData?._genre?.display,
+          hobbyId: propData?._hobby?._id,
+          genreId: propData?._genre?._id,
+        })
+      }
+      setSelectedHobbies(existingHobbies)
+    } else {
+      const firstHobby = activeProfile?.data?._hobbies[0]?.hobby?.display
+      const firstGenre = activeProfile?.data?._hobbies[0]?.genre?.display
+      const firstHobbyId = activeProfile?.data?._hobbies[0]?.hobby?._id
+        ? activeProfile?.data?._hobbies[0]?.hobby?._id
+        : undefined
+      const firstGenreId = activeProfile?.data?._hobbies[0]?.genre?._id
+        ? activeProfile?.data?._hobbies[0]?.genre?._id
+        : undefined
+      setSelectedHobbies([
+        {
+          hobby: firstHobby,
+          genre: firstGenre,
+          hobbyId: firstHobbyId,
+          genreId: firstGenreId,
+        },
+      ])
+    }
+
     // console.log(
     //   'firstHobby activeProfile?.data?._hobbies[0]',
     //   activeProfile?.data?._hobbies[0],
@@ -718,6 +770,7 @@ export const CreatePost: React.FC<Props> = ({
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
+        content={'Would you like to post before exit ?'}
       />
     )
   }
@@ -957,6 +1010,10 @@ export const CreatePost: React.FC<Props> = ({
                                                 : undefined,
                                             },
                                           ]
+                                    console.log(
+                                      'selectedHobbies--->',
+                                      newHobbyData,
+                                    )
                                     setSelectedHobbies(newHobbyData)
                                     if (selectedHobbies.length >= 3) {
                                       setSnackbar({
@@ -965,6 +1022,9 @@ export const CreatePost: React.FC<Props> = ({
                                         message:
                                           'You can only select up to 3 hobbies',
                                       })
+                                    }
+                                    if (onStatusChange) {
+                                      onStatusChange(true)
                                     }
                                     setData((prev: any) => ({
                                       ...prev,
@@ -991,6 +1051,9 @@ export const CreatePost: React.FC<Props> = ({
                       onChange={(e: any) => {
                         let val = e.target.value
                         setData((prev: any) => ({ ...prev, visibility: val }))
+                        // if (onStatusChange) {
+                        //   onStatusChange(true)
+                        // }
                       }}
                       value={data.visibility}
                       className={styles['input-select']}
@@ -1064,6 +1127,7 @@ export const CreatePost: React.FC<Props> = ({
                 image={true}
                 error={errors.content}
                 hasLink={hasLink && showMetaData}
+                onStatusChange={onStatusChange}
               />
               {data.video_url && (
                 <div className={styles.videoWrapper}>

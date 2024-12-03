@@ -53,7 +53,7 @@
   border-radius: 4px 0px 0px 0px;
   box-shadow: 0px 8px 12px 0px #939ca31f;
   box-shadow: 0px 0px 2px 0px #939ca35c;
-
+  cursor: pointer;
   width: 100%;
   height: 200px;
   overflow-y: scroll;

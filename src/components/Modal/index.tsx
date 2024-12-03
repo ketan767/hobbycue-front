@@ -4,7 +4,7 @@ import styles from './Modal.module.css'
 
 interface ModalProps {
   isOpen: boolean
-  onClose: () => void
+  onClose: (() => void) | React.Dispatch<React.SetStateAction<any>>
   children: React.ReactNode
 }
 

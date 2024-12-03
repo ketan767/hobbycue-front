@@ -97,6 +97,7 @@ type User = {
   tagline: string
   primary_address: { city: string }
   profile_url: string
+  _hobbies: any[]
 }
 type PeopleData = {
   profile_image: string
@@ -1851,7 +1852,43 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{user?.full_name}</div>
                         <div className={styles.userTagline}>
-                          {user?.tagline || '\u00a0'}
+                          {user?.tagline ? (
+                            user?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  user?._hobbies[0]?.hobby?.display
+                                    ? user?._hobbies[0]?.hobby?.display
+                                    : ''
+                                }${
+                                  user?._hobbies[0]?.genre?.display
+                                    ? ' - ' + user?._hobbies[0]?.genre?.display
+                                    : ''
+                                }`}
+                                {user?._hobbies[1]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  user?._hobbies[1]?.hobby?.display
+                                    ? user?._hobbies[1]?.hobby?.display
+                                    : ''
+                                }${
+                                  user?._hobbies[1]?.genre?.display
+                                    ? ' - ' + user?._hobbies[1]?.genre?.display
+                                    : ''
+                                }`}
+                                {user?._hobbies[2]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  user?._hobbies[2]?.hobby?.display
+                                    ? user?._hobbies[2]?.hobby?.display
+                                    : ''
+                                }${
+                                  user?._hobbies[2]?.genre?.display
+                                    ? ' - ' + user?._hobbies[2]?.genre?.display
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className={styles.userLocation}>
                           {user.primary_address?.city || '\u00a0'}
@@ -2389,24 +2426,34 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userTagline}>
                           {convertDateToString(page?.createdAt) || '\u00a0'}
                           {' | '}
-                          {page?._allHobbies?.length > 0 ? (
-                            page?._allHobbies?.map(
-                              (hobby: any, index: number) => {
-                                return (
-                                  <span key={index}>
-                                    {`${hobby?.display}${
-                                      page?._allGenres[index-1]?.display
-                                        ? ' - ' +
-                                          page?._allGenres[index-1]?.display
-                                        : ''
-                                    }`}
-                                    {index < page?._allHobbies?.length - 1
-                                      ? ', '
-                                      : ''}
-                                  </span>
-                                )
-                              },
-                            )
+                          {page?._allHobbies?._hobby1?.display ? (
+                            <>
+                              {`${page?._allHobbies?._hobby1?.display}${
+                                page?._allHobbies?._genre1?.display
+                                  ? ' - ' + page?._allHobbies?._genre1?.display
+                                  : ''
+                              }`}
+                              {page?._allHobbies?._hobby2?.display ? ', ' : ''}
+                              {`${
+                                page?._allHobbies?._hobby2?.display
+                                  ? page?._allHobbies?._hobby2?.display
+                                  : ''
+                              }${
+                                page?._allHobbies?._genre2?.display
+                                  ? ' - ' + page?._allHobbies?._genre2?.display
+                                  : ''
+                              }`}
+                              {page?._allHobbies?._hobby3?.display ? ', ' : ''}
+                              {`${
+                                page?._allHobbies?._hobby3?.display
+                                  ? page?._allHobbies?._hobby3?.display
+                                  : ''
+                              }${
+                                page?._allHobbies?._genre3?.display
+                                  ? ' - ' + page?._allHobbies?._genre3?.display
+                                  : ''
+                              }`}
+                            </>
                           ) : (
                             <span>{`${page?._hobby?.display}${
                               page._genre ? ' - ' + page?._genre?.display : ''

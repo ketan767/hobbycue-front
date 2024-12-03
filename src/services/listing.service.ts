@@ -335,6 +335,21 @@ export const searchPages = async (searchCriteria: any) => {
     return { res: null, err: error }
   }
 }
+export const searchPagesRelated = async (searchCriteria: any) => {
+  try {
+    const queryParams = new URLSearchParams()
+    for (const key in searchCriteria) {
+      queryParams.append(key, searchCriteria[key])
+    }
+    const response = await axiosInstance.get(
+      `/listing/listing-search?${queryParams}`,
+    )
+    return { res: response.data, err: null }
+  } catch (error) {
+    console.error('Error searching for pages:', error)
+    return { res: null, err: error }
+  }
+}
 
 export const GetListingEvents = async (search_id: any, relation?: string) => {
   try {

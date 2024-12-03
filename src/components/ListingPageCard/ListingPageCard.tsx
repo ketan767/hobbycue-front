@@ -27,7 +27,7 @@ const ListingPageCard: React.FC<Props> = (props) => {
 
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
-      `_id=${postData._id}&populate=_author,_genre,_hobby,_allHobbies,_allGenres`,
+      `_id=${postData._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`,
     )
     if (err) return console.log(err)
     if (res.data.success) {
