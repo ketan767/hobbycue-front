@@ -281,7 +281,7 @@ const CommunityLayout: React.FC<Props> = ({
   }
   useEffect(() => {
     scrollToTop()
-  }, [selectedHobby])
+  }, [selectedHobby,selectedGenre])
 
   const fetchPosts = async (page = 1) => {
     if (showPageLoader) {
@@ -561,7 +561,7 @@ const CommunityLayout: React.FC<Props> = ({
         fetchPosts()
       }
     }
-  }, [selectedHobby, selectedLocation, activeProfile?.type, refreshNum])
+  }, [selectedHobby,selectedGenre, selectedLocation, activeProfile?.type, refreshNum])
 
   useEffect(() => {
     if (selectedHobby !== '' && selectedLocation !== '') {
