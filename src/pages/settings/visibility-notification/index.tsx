@@ -165,7 +165,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
       const selectedHobby = user._hobbies.find((hobby: any) => {
         const isHobbyMatch = hobby.hobby.display === hobbyName
 
-        // Check if the genre matches only if genreName is provided
+        // Check if the genre matches only if genreName is 
         const isGenreMatch = genreName
           ? hobby.genre?.display === genreName
           : true
@@ -241,9 +241,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
             <SettingsSidebar active="visibility-notification" />
           )}
           <div className={styles.container}>
-            <p className={styles.underDev}>
-              Below features are under development. Come back soon to view this.
-            </p>
+            
             <p className={`${styles.textLight} ${styles.title}`}>
               {' '}
               Default and visibility settings{' '}
@@ -255,7 +253,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                   <p className={`${styles.textDark}`}> Community View </p>
                   <div className={styles['selectContainer']}>
                     <CustomSelect
-                      disabled={true}
+                      // disabled={true}
                       options={Hobbyoptions}
                       onChange={(item) =>
                         handleSelectChange(
@@ -271,7 +269,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                     />
                     <p>at</p>
                     <CustomSelect
-                      disabled={true}
+                      // disabled={true}
                       options={LocationOptions}
                       onChange={(item) =>
                         handleSelectChange(
@@ -292,7 +290,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                   <p className={`${styles.textDark}`}> Create Post Default </p>
                   <div className={styles['selectContainer']}>
                     <CustomSelect
-                      disabled={true}
+                      // disabled={true}
                       options={Hobbyoptions}
                       onChange={(item) =>
                         handleSelectChange(
@@ -308,7 +306,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                     />
                     <p>at</p>
                     <CustomSelect
-                      disabled={true}
+                      // disabled={true}
                       options={LocationOptions}
                       onChange={(item) =>
                         handleSelectChange(
