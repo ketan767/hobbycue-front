@@ -91,6 +91,7 @@ import SimpleOnboarding from './EditProfile/SimpleOnboarding'
 import ProductCategoryModal from './EditListing/ProductCategory/ProductCategory'
 import HobbyAboutEditModal from './EditHobby/About'
 import FBNoEmail from './FBNoEmail'
+import BlogPublish from './BlogPublish'
 
 const CustomBackdrop: React.FC = () => {
   const { activeModal } = useSelector((state: RootState) => state.modal)
@@ -464,6 +465,7 @@ const ModalManager: React.FC = () => {
                     </header>
                   </>
                 )}
+              {activeModal === 'blogPublish' && <BlogPublish propData={propData} />}
               {activeModal === 'FBNoEmail' && <FBNoEmail />}
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
@@ -654,6 +656,7 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'User-Contact-To-Owner' &&
                 activeModal !== 'ListingSupportModal' &&
                 activeModal !== 'SupportUserModal' &&
+                activeModal !== 'blogPublish' &&
                 !showAddGenreModal &&
                 !showAddHobbyModal && (
                   <CloseIcon

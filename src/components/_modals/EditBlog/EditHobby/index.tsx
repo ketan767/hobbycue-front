@@ -62,7 +62,7 @@ type Props = {
     }
   }
   data: any
-  refetch: any
+  // refetch: any
 }
 
 type ProfileHobbyData = {
@@ -99,7 +99,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
   CheckIsOnboarded,
   propData,
   data: blog,
-  refetch,
+  // refetch,
 }) => {
   const dispatch = useDispatch()
   const selectedHobbyToAdd = propData && propData?.selectedHobbyToAdd
@@ -488,7 +488,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
     setHobbyInputValue('')
     setGenreInputValue('')
     setAddHobbyBtnLoading(false)
-    refetch()
+    // refetch()
     setData({ hobby: null, genre: null, level: 1 })
     setHobbyDropdownList([])
     setGenreDropdownList([])
@@ -700,7 +700,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
       console.error('Error deleting hobby:', data.error)
       return null
     }
-    refetch()
+    // refetch()
     console.log('Hobby deleted successfully:', data)
     return data
   }

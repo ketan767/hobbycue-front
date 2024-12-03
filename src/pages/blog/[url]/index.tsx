@@ -282,7 +282,18 @@ const BlogPage: React.FC<Props> = ({ data }) => {
           <div className={styles['blog-header']}>
             <div className={styles.wrapper}>
               <div className={styles.buttonWrapper}>
-                <button onClick={() => setIsModalOpen(true)}>
+                <button
+                  onClick={() =>
+                    dispatch(
+                      openModal({
+                        type: 'blogPublish',
+                        closable: true,
+                        propData: { blog, setIsEditing },
+                      }),
+                    )
+                  }
+                  style={{ cursor: 'pointer' }}
+                >
                   {downarrow}
                 </button>
               </div>
@@ -667,9 +678,9 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         </div>
       )}
 
-      <ModalWrapper isOpen={isModalOpen} onClose={setIsModalOpen}>
+      {/* <ModalWrapper isOpen={isModalOpen} onClose={setIsModalOpen}>
         <EditBlog setIsModalOpen={setIsModalOpen} data={data} />
-      </ModalWrapper>
+      </ModalWrapper> */}
     </>
   )
 }

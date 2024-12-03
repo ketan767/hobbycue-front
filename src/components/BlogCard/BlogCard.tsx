@@ -150,10 +150,10 @@ const BlogCard: React.FC<Props> = ({ data }) => {
                   position: 'absolute',
                   bottom: 0,
                   width: '100%',
-                  height: '1px',
+                  height: '100%',
                   background: '#939ca3',
                 }}
-              ></div>{' '}
+              ></div>
             </div>
           )}
         </div>
