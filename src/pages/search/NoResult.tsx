@@ -33,6 +33,7 @@ import {
   setUserLocation,
   setUserName,
 } from '@/redux/slices/search'
+import { getUsersByName } from '@/services/user.service'
 type DropdownListItem = {
   _id: string
   display: string
@@ -78,19 +79,28 @@ const NoResult = () => {
   const nameInputRef = useRef<HTMLInputElement>(null)
   const postedByRef = useRef<HTMLInputElement>(null)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState(false)
+  const [showNameDropdown, setShowNameDropdown] = useState(false)
+  const [showPostedByDropdown, setShowPostedByDropdown] = useState(false)
   const [showAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   // const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
 
   const [focusedHobbyIndex, setFocusedHobbyIndex] = useState<number>(-1)
   const [focusedLocationIdx, setFocusedLocationIdx] = useState<number>(-1)
+  const [focusedNameIdx, setFocusedNameIdx] = useState<number>(-1)
+  const [focusedPostedByIdx, setFocusedPostedByIdx] = useState<number>(-1)
   const [isHobbySelected, setIsHobbySelected] = useState<boolean>(false)
   const [isLocationSelected, setIsLocationSelected] = useState<boolean>(false)
+  const [isNameSelected, setIsNameSelected] = useState<boolean>(false)
+  const [isPostedBySelected, setIsPostedBySelected] = useState<boolean>(false)
+
   const [currUserName, setCurrUserName] = useState<string>('')
   const [currPostedBy, setCurrPostedBy] = useState<string>('')
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     ExtendedDropdownListItem[]
   >([])
+  const [nameDropdownList, setNameDropdownList] = useState<string[]>([])
+  const [postedByDropdownList, setPostedByDropdownList] = useState<string[]>([])
   const [suggestions, setSuggestions] = useState<
     { description: string[]; place_id: string }[]
   >([])
@@ -231,6 +241,113 @@ const NoResult = () => {
         } else if (focusedHobbyIndex === -1 && hobby.length !== 0) {
           setShowHobbyDropdown(false)
           // handleGenreInputFocus();
+        }
+        break
+      default:
+        break
+    }
+
+    // Scroll into view logic
+    const container = searchHobbyRef.current
+    const selectedItem = container?.children[focusedHobbyIndex] as HTMLElement
+
+    if (selectedItem && container) {
+      const containerRect = container.getBoundingClientRect()
+      const itemRect = selectedItem.getBoundingClientRect()
+
+      // Check if the item is out of view and adjust the scroll position
+      if (itemRect.bottom + selectedItem.offsetHeight >= containerRect.bottom) {
+        container.scrollTop +=
+          itemRect.bottom - containerRect.bottom + selectedItem.offsetHeight + 5
+      } else if (
+        itemRect.top <=
+        containerRect.top + selectedItem.offsetHeight
+      ) {
+        container.scrollTop -=
+          containerRect.top - itemRect.top + selectedItem.offsetHeight + 5
+      }
+    }
+  }
+
+  const handleNameInputChange = async (e: any) => {
+    dispatch(setUserName(e.target.value))
+
+    setFocusedNameIdx(-1)
+
+    if (isEmptyField(e.target.value)) return setNameDropdownList([])
+
+    const query = `name=${e.target.value}`
+    const { err, res } = await getUsersByName(query)
+
+    if (err) return console.log(err)
+    const fetchedNames = res.data.data?.map((person: any) => person?.full_name)
+    setNameDropdownList(fetchedNames)
+  }
+  const handleNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        setFocusedNameIdx((prevIndex) =>
+          prevIndex < nameDropdownList.length - 1 ? prevIndex + 1 : prevIndex,
+        )
+        break
+      case 'ArrowUp':
+        setFocusedNameIdx((prevIndex) =>
+          prevIndex > 0 ? prevIndex - 1 : prevIndex,
+        )
+        break
+
+      case 'Enter':
+        e.stopPropagation()
+        if (userName.length !== 0 && focusedNameIdx === -1) {
+          //AddButtonRef.current?.click()
+          if (filter === 'users') {
+            let query = {}
+            query = { ...query, filter: 'users' }
+            if (currUserName) {
+              query = { ...query, name: currUserName }
+            }
+            if (userHobby) {
+              query = { ...query, hobby: userHobby }
+            }
+            if (userLocation) {
+              query = { ...query, location: userLocation }
+            }
+            router.push({
+              pathname: `/search`,
+              query: query,
+            })
+          }
+        } else if (focusedNameIdx !== -1) {
+          setShowNameDropdown(false)
+          if (showNameDropdown) {
+            const val = nameDropdownList[focusedNameIdx] || userName
+            dispatch(setUserName(val))
+            setCurrUserName(val)
+            console.log("name",val)
+          }
+
+          if (isNameSelected) {
+            if (filter === 'users') {
+              let query = {}
+              query = { ...query, filter: 'users' }
+              if (currUserName) {
+                query = { ...query, name: currUserName }
+              }
+              if (userHobby) {
+                query = { ...query, hobby: userHobby }
+              }
+              if (userLocation) {
+                query = { ...query, location: userLocation }
+              }
+              router.push({
+                pathname: `/search`,
+                query: query,
+              })
+            }
+          }
+          setIsNameSelected(true)
+        } else if (focusedNameIdx === -1 && userName.length !== 0) {
+          setShowNameDropdown(false)
         }
         break
       default:
@@ -700,35 +817,21 @@ const NoResult = () => {
                   name="name"
                   className={styles.hobbySearch}
                   onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                    if (e.key === 'Enter') {
-                      dispatch(setUserName(currUserName))
+                    if (e.key !== 'Enter') {
+                      setShowNameDropdown(true)
+                      setIsNameSelected(false)
                     }
-                    if (e.key === 'Enter') {
-                      let query = {}
-                      query = { ...query, filter: 'users' }
-                      if (currUserName) {
-                        query = { ...query, name: currUserName }
-                      }
-                      if (userHobby) {
-                        query = { ...query, hobby: userHobby }
-                      }
-                      if (userLocation) {
-                        query = { ...query, location: userLocation }
-                      }
-                      router.push({
-                        pathname: `/search`,
-                        query: query,
-                      })
-                    }
+                    handleNameKeyDown(e)
                   }}
                   value={currUserName}
                   onBlur={() =>
                     setTimeout(() => {
-                      setShowHobbyDropdown(false)
+                      setShowNameDropdown(false)
                     }, 300)
                   }
                   onChange={(e) => {
                     setCurrUserName(e.target.value)
+                    handleNameInputChange(e)
                   }}
                   sx={{
                     '& label': {
@@ -754,6 +857,27 @@ const NoResult = () => {
                     },
                   }}
                 />
+                {showNameDropdown && nameDropdownList?.length !== 0 && (
+                  <div className={styles.dropdownHobby} ref={searchHobbyRef}>
+                    {nameDropdownList?.map((name, index) => {
+                      return (
+                        <p
+                          key={index}
+                          onClick={() => {
+                            dispatch(setUserName(name))
+                          }}
+                          className={
+                            index === focusedNameIdx
+                              ? styles['dropdown-option-focus']
+                              : ''
+                          }
+                        >
+                          {name}
+                        </p>
+                      )
+                    })}
+                  </div>
+                )}
               </div>
             )}
 
