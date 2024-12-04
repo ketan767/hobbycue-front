@@ -134,7 +134,6 @@ const PostCard: React.FC<Props> = (props) => {
   }, [])
 
   useEffect(() => {
-    console.log('postData', postData)
 
     if (has_link) {
       const regex =
