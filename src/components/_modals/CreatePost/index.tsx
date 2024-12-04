@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import store, { RootState } from '@/redux/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { checkIfUrlExists, isEmptyField, isVideoLink } from '@/utils'
+import { checkIfUrlExists, isEmptyField, isVideoLink, isInstagramReelLink } from '@/utils'
 import { getAllHobbies } from '@/services/hobby.service'
 import {
   createListingPost,
@@ -383,6 +383,8 @@ export const CreatePost: React.FC<Props> = ({
     DropdownListItem[]
   >([])
   const [visibilityData, setVisibilityData] = useState(['public'])
+
+  useEffect(() => {console.log("metaData",metaData)}, [metaData])
 
   useEffect(() => {
     const isUrl = checkIfUrlExists(data.content.replace(/<img .*?>/g, ''))
@@ -789,6 +791,11 @@ export const CreatePost: React.FC<Props> = ({
     return alreadyContains
   }
 
+  const getInstagramPostId = (url: any) => {
+    const match = url.match(/instagram\.com\/(?:reel|p)\/([^/]+)/);
+    return match ? match[1] : null;
+  };
+
   return (
     <>
       <div
@@ -1170,8 +1177,34 @@ export const CreatePost: React.FC<Props> = ({
                         controls={true}
                       />
                     </div>
-                  ) : (
-                    <div className={styles['show-metadata']}>
+                  ) : ( isInstagramReelLink(url) ? (
+                      <div onClick={()=>window.open(url,"_blank")}  style={{background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"8px", cursor:"pointer"}}>
+                      <div style={{width:"230.63px", height:"410px", display:"flex", alignItems:"center"}}>
+                      <img
+                        style={{cursor:"pointer", maxHeight:"410px"}}
+                        onClick={()=>window.open(url, '_blank')}
+                        width="230.63px"
+                          src={
+                            (typeof metaData?.image === 'string' &&
+                              metaData.image) ||
+                            (typeof metaData?.icon === 'string' &&
+                              metaData.icon) ||
+                            defaultImg
+                          }
+                          alt=""
+                        />
+                      </div>
+                        <div style={{display:"flex", flexDirection:"column", gap:"16px", fontSize:"15px", justifyContent:"start", height:"100%"}} >
+                          <p style={{fontWeight:"500"}}>
+                            {metaData?.title}
+                          </p>
+                          <p style={{color:"#333"}}>
+                            {metaData?.description.split(':')[0]}
+                          </p>
+                        </div>
+                    </div>
+                      ) : (
+                        <div className={styles['show-metadata']}>
                       <svg
                         className={styles['metadata-close-icon']}
                         onClick={() => {
@@ -1242,6 +1275,7 @@ export const CreatePost: React.FC<Props> = ({
                         </p>
                       )}
                     </div>
+                      )
                   )}
                 </>
               )}

@@ -275,7 +275,7 @@ const ListingPageLayout: React.FC<Props> = ({
       )}
       {/* Navigation Links */}
       <nav className={styles['nav']}>
-        <div className={styles.navContainer}>
+        <div style={viewAs === 'print' ? { height: '0' } : {}} className={styles.navContainer}>
           <div className={`${styles['navigation-tabs']}`}>
             {viewAs !== 'print' &&
               tabs.map((tab) => {
