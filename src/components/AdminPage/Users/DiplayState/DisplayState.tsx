@@ -26,12 +26,14 @@ const DisplayState: React.FC<Props> = ({ modalState }) => {
           return (
             <div key={key} className={styles.stateItem}>
               <strong>joined: {`>`} </strong> {`${formatDate(start)}`}
+              <span className={styles.divider}>|</span>
             </div>
           )
         } else if (!start && end) {
           return (
             <div key={key} className={styles.stateItem}>
               <strong>joined: {`>`} </strong> {`${formatDate(end)}`}
+              <span className={styles.divider}>|</span>
             </div>
           )
         } else if (start && end) {
@@ -39,6 +41,7 @@ const DisplayState: React.FC<Props> = ({ modalState }) => {
             <div key={key} className={styles.stateItem}>
               <strong>joined:</strong>{' '}
               {`${formatDate(start)} - ${formatDate(end)}`}
+              <span className={styles.divider}>|</span>
             </div>
           )
         }
@@ -47,6 +50,7 @@ const DisplayState: React.FC<Props> = ({ modalState }) => {
         return (
           <div key={key} className={styles.stateItem}>
             <strong>{key}:</strong> {value.join(', ')}
+            <span className={styles.divider}>|</span>
           </div>
         )
       } else if (typeof value === 'object' && value) {
