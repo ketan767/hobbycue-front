@@ -189,6 +189,13 @@
   border: 1px solid #8064a2;
   object-fit: contain;
 }
+.input-error{
+  position: absolute;
+  color: #c0504D;
+  font-size: 12px;
+  left:5px;
+  bottom: -12px;
+}
 .comment-input-wrapper {
   position: relative;
   width: 100%;

@@ -127,7 +127,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
   const [selectedHobby, setSelectedHobby] = useState(
-    filters.hobby || 'All Hobbies',
+    user?.preferences?.community_view?.preferred_hobby?.hobby?._id,
   )
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(
     filters.genre,
@@ -281,7 +281,7 @@ const CommunityLayout: React.FC<Props> = ({
   }
   useEffect(() => {
     scrollToTop()
-  }, [selectedHobby,selectedGenre])
+  }, [selectedHobby, selectedGenre])
 
   const fetchPosts = async (page = 1) => {
     if (showPageLoader) {
@@ -509,35 +509,29 @@ const CommunityLayout: React.FC<Props> = ({
   }, [])
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log('started fetch')
-      if (user && user.preferences) {
-        if (!user.preferences.community_view.preferred_hobby.hobby) {
-          setSelectedHobby('All Hobbies')
-        } else if (!user.preferences.community_view.all_hobbies) {
-          setSelectedHobby(
-            user.preferences.community_view.preferred_hobby.hobby._id,
-          )
+    if (!user) return
+    if (user && user.preferences) {
+      if (!user.preferences.community_view.preferred_hobby.hobby) {
+        // setSelectedHobby('All Hobbies')
+      } else if (!user.preferences.community_view.all_hobbies) {
+        setSelectedHobby(
+          user.preferences.community_view.preferred_hobby.hobby._id,
+        )
 
-          if (user.preferences.community_view.preferred_hobby.genre) {
-            setSelectedGenre(
-              user.preferences.community_view.preferred_hobby.genre,
-            )
-          }
-        }
-
-        if (!user.preferences.community_view.all_locations) {
-          console.log(user.preferences.community_view.preferred_location, 100)
-          setSelectedLocation(
-            user.preferences.community_view.preferred_location.city.split(
-              ' ',
-            )[0],
+        if (user.preferences.community_view.preferred_hobby.genre) {
+          setSelectedGenre(
+            user.preferences.community_view.preferred_hobby.genre,
           )
         }
       }
-    }, 500)
 
-    return () => clearTimeout(timer)
+      if (!user.preferences.community_view.all_locations) {
+        console.log(user.preferences.community_view.preferred_location, 100)
+        setSelectedLocation(
+          user.preferences.community_view.preferred_location.city.split(' ')[0],
+        )
+      }
+    }
   }, [user])
 
   useEffect(() => {
@@ -561,7 +555,13 @@ const CommunityLayout: React.FC<Props> = ({
         fetchPosts()
       }
     }
-  }, [selectedHobby,selectedGenre, selectedLocation, activeProfile?.type, refreshNum])
+  }, [
+    selectedHobby,
+    selectedGenre,
+    selectedLocation,
+    activeProfile?.type,
+    refreshNum,
+  ])
 
   useEffect(() => {
     if (selectedHobby !== '' && selectedLocation !== '') {
@@ -589,7 +589,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   useEffect(() => {
     setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
-    setSelectedHobby(!filters.hobby ? 'All Hobbies' : filters.hobby)
+    if(filters.hobby) setSelectedHobby(filters.hobby)
     setSelectedLocation(filters.location ?? '')
   }, [filters.genre, filters.hobby, filters.location])
 

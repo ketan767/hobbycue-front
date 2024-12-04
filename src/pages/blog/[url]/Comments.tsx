@@ -45,6 +45,8 @@ const BlogComments = ({ data }: Props) => {
     display: false,
     message: '',
   })
+  const [inputFocus, setInputFocus] = useState(false)
+  const [inputError, setInputError] = useState("")
   const { activeModal, closable } = useSelector(
     (state: RootState) => state.modal,
   )
@@ -61,6 +63,10 @@ const BlogComments = ({ data }: Props) => {
     event.preventDefault()
     if (isLoggedIn) {
       event.preventDefault()
+      if (inputValue.trim() === "") {
+        setInputError("Comment cannot be empty");
+        return;
+      }
       if (user.is_onboarded === false) {
         router.push(`/profile/${user.profile_url}`)
         dispatch(showProfileError(true))
@@ -94,6 +100,14 @@ const BlogComments = ({ data }: Props) => {
     } else {
       dispatch(openModal({ type: 'auth', closable: true }))
     }
+  }
+
+  function closeSnackbar() {
+    setSnackbar({
+      display: false,
+      message: '',
+      type: 'success',
+    })
   }
 
   const showFeatureUnderDevelopment = () => {
@@ -147,6 +161,19 @@ const BlogComments = ({ data }: Props) => {
                 }}
                 ref={inputRef}
                 maxRows={5}
+                onFocus={() => {
+                  setInputFocus(true)
+                }}
+                onBlur={() => {
+                  setInputFocus(false)
+                }}
+                style={
+                  inputError !== ''
+                    ? { border: '1px solid #c0504D' }
+                    : inputFocus
+                    ? { border: '1px solid #7F63A1' }
+                    : {}
+                }
               />
               <button
                 type="submit"
@@ -167,6 +194,9 @@ const BlogComments = ({ data }: Props) => {
                   />
                 </svg>
               </button>
+              {inputError !== '' && (
+                <p className={styles['input-error']}>{inputError}</p>
+              )}
             </form>
           </div>
         </section>
