@@ -96,8 +96,6 @@ const BlogCard: React.FC<Props> = ({ data }) => {
     </svg>
   )
 
-  console.log("asifs data", data)
-
   const itsMe = data?.author?._id === user?._id
   const isMobile = useMediaQuery('(max-width:1100px)')
 
@@ -174,13 +172,15 @@ const BlogCard: React.FC<Props> = ({ data }) => {
         <div className={styles.content}>
           <div className={styles.contentHead}>
             <div className={styles.contentTitle}>
-              <p className={styles.title}> {data?.title} </p>
+              <p className={`${styles.title} truncateTwoLines`}>
+                {data?.title}
+              </p>
             </div>
           </div>
           <div className={styles.contentTitle}>
             <p className={styles.tagline}>
               {' '}
-              {data?.description ? data?.description : '\u00A0'}
+              {data?.tagline ? data?.tagline : '\u00A0'}
             </p>
           </div>
 
