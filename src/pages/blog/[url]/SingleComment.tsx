@@ -37,7 +37,7 @@ const SingleComment: React.FC<Props> = ({
           openModal({
             type: 'PostReportModal',
             closable: true,
-            propData: comment._id,
+            propData: comment?._id || '',
           }),
         )
         break
@@ -64,7 +64,7 @@ const SingleComment: React.FC<Props> = ({
   }, [])
 
   return (
-    <div key={comment._id} className={styles['comment']}>
+    <div key={comment?._id} className={styles['comment']}>
       {/* Profile Image */}
       <>
         {comment?._author?.profile_image ? (
