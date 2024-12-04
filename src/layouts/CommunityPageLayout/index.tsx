@@ -130,7 +130,7 @@ const CommunityLayout: React.FC<Props> = ({
     user?.preferences?.community_view?.preferred_hobby?.hobby?._id,
   )
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(
-    filters.genre,
+    user?.preferences?.community_view?.preferred_hobby?.genre?._id,
   )
   const [selectedLocation, setSelectedLocation] = useState<string>(
     user?.preferences?.community_view?.preferred_location?.city?.split(' ')[0],
@@ -524,7 +524,7 @@ const CommunityLayout: React.FC<Props> = ({
 
         if (user.preferences.community_view.preferred_hobby.genre) {
           setSelectedGenre(
-            user.preferences.community_view.preferred_hobby.genre,
+            user.preferences.community_view.preferred_hobby.genre._id,
           )
         }
       }
@@ -590,7 +590,7 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
+    if (filters.genre) setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
     if (filters.hobby) setSelectedHobby(filters.hobby)
     if (filters.location) {
       console.log('###########################3', filters.location)

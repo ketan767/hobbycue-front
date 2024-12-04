@@ -107,7 +107,8 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
               user.preferences.community_view.preferred_hobby?.hobby?._id ||
               null,
             genre:
-              user.preferences.community_view.preferred_hobby?.genre || null,
+              user.preferences.community_view.preferred_hobby?.genre?._id ||
+              null,
           },
           preferred_location:
             user?.preferences.community_view.preferred_location?._id ||
@@ -119,7 +120,8 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
               user.preferences.create_post_pref.preferred_hobby?.hobby?._id ||
               null,
             genre:
-              user.preferences.create_post_pref.preferred_hobby?.genre || null,
+              user.preferences.create_post_pref.preferred_hobby?.genre?._id ||
+              null,
           },
           preferred_location:
             user.preferences.create_post_pref.preferred_location?._id ||
@@ -165,7 +167,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
       const selectedHobby = user._hobbies.find((hobby: any) => {
         const isHobbyMatch = hobby.hobby.display === hobbyName
 
-        // Check if the genre matches only if genreName is 
+        // Check if the genre matches only if genreName is
         const isGenreMatch = genreName
           ? hobby.genre?.display === genreName
           : true
@@ -241,7 +243,6 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
             <SettingsSidebar active="visibility-notification" />
           )}
           <div className={styles.container}>
-            
             <p className={`${styles.textLight} ${styles.title}`}>
               {' '}
               Default and visibility settings{' '}
@@ -264,7 +265,10 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                       }
                       value={
                         user?.preferences?.community_view?.preferred_hobby
-                          ?.hobby?.display || Hobbyoptions[0]
+                          ?.hobby?.display +
+                          ' - ' +
+                          user?.preferences?.community_view?.preferred_hobby
+                            ?.genre?.display || Hobbyoptions[0]
                       }
                     />
                     <p>at</p>
@@ -301,7 +305,10 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                       }
                       value={
                         user?.preferences?.create_post_pref?.preferred_hobby
-                          ?.hobby?.display || Hobbyoptions[0]
+                          ?.hobby?.display +
+                          ' - ' +
+                          user?.preferences?.create_post_pref?.preferred_hobby
+                            ?.genre?.display || Hobbyoptions[0]
                       }
                     />
                     <p>at</p>

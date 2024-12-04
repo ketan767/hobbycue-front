@@ -714,14 +714,23 @@ export const CreatePost: React.FC<Props> = ({
       }
       setSelectedHobbies(existingHobbies)
     } else {
-      const firstHobby = activeProfile?.data?._hobbies[0]?.hobby?.display
-      const firstGenre = activeProfile?.data?._hobbies[0]?.genre?.display
-      const firstHobbyId = activeProfile?.data?._hobbies[0]?.hobby?._id
-        ? activeProfile?.data?._hobbies[0]?.hobby?._id
+      const firstHobby =
+        activeProfile?.data?.preferences?.community_view?.preferred_hobby?.hobby
+          ?.display
+      const firstGenre =
+        activeProfile?.data?.preferences?.community_view?.preferred_hobby?.genre
+          ?.display
+      const firstHobbyId = activeProfile?.data?.preferences?.community_view
+        ?.preferred_hobby?.hobby?._id
+        ? activeProfile?.data?.preferences?.community_view?.preferred_hobby
+            ?.hobby?._id
         : undefined
-      const firstGenreId = activeProfile?.data?._hobbies[0]?.genre?._id
-        ? activeProfile?.data?._hobbies[0]?.genre?._id
+      const firstGenreId = activeProfile?.data?.preferences?.community_view
+        ?.preferred_hobby?.genre?._id
+        ? activeProfile?.data?.preferences?.community_view?.preferred_hobby
+            ?.genre?._id
         : undefined
+
       setSelectedHobbies([
         {
           hobby: firstHobby,
