@@ -101,9 +101,12 @@ const SingleComment: React.FC<Props> = ({
 
         {/* Content */}
         <CommentCheckWithUrl>
-          {comment.content.split('\n').map((line: any, index: number) => (
-            <div key={index}>{line}</div>
-          ))}
+          {comment?.content &&
+            comment?.content
+              ?.split('\n')
+              ?.map((line: any, index: number) => (
+                <div key={index}>{line}</div>
+              ))}
         </CommentCheckWithUrl>
 
         {/* Footer */}
