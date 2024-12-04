@@ -2,9 +2,10 @@
   background-color: white;
   position: absolute;
   right: 0;
-  top: 100%;
+  top: 110%;
   z-index: 99;
-  max-width: 338px;
+  max-width: 328px;
+  min-height: 292px;
   width: 100%;
   padding: 16px 0px;
   display: flex;
@@ -80,12 +81,13 @@
   display: flex;
   justify-content: start;
   align-items: center;
-  gap: 10px;
+  gap: 24px;
 }
 
 .filterLabel {
-  max-width: 100px;
-  width: 100%;
+  display: inline-block;
+  width: fit-content;
+  white-space: nowrap;
   color: var(--Grey-Darker, #6d747a);
   font-family: Poppins;
   font-size: 14px;

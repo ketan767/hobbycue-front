@@ -15,7 +15,8 @@ const DisplayState: React.FC<Props> = ({ modalState }) => {
         // For 'onboarded', display 'Onb'
         return (
           <div key={key} className={styles.stateItem}>
-            <strong>Onb:</strong> {value}
+            <strong>Onb:</strong> {value}{' '}
+            <span className={styles.divider}>|</span>
           </div>
         )
       } else if (key === 'joined' && typeof value === 'object' && value) {
@@ -24,13 +25,13 @@ const DisplayState: React.FC<Props> = ({ modalState }) => {
         if (start && !end) {
           return (
             <div key={key} className={styles.stateItem}>
-              <strong>joined:</strong> {`> ${formatDate(start)}`}
+              <strong>joined: {`>`} </strong> {`${formatDate(start)}`}
             </div>
           )
         } else if (!start && end) {
           return (
             <div key={key} className={styles.stateItem}>
-              <strong>joined:</strong> {`> ${formatDate(end)}`}
+              <strong>joined: {`>`} </strong> {`${formatDate(end)}`}
             </div>
           )
         } else if (start && end) {

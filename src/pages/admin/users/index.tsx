@@ -623,7 +623,11 @@ const AdminDashboard: React.FC = () => {
                     </tr>
                   ))}
 
-                {filteredUsers?.length === 0 && <p>No result found</p>}
+                {filteredUsers?.length === 0 && (
+                  <p style={{ display: 'inline', margin: 'auto' }}>
+                    Loading...
+                  </p>
+                )}
               </tbody>
             </table>
           </div>

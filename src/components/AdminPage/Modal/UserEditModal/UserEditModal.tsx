@@ -7,6 +7,7 @@ import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { updateUserByAdmin } from '@/services/admin.service'
 import { getAllHobbies } from '@/services/hobby.service'
+import CloseIcon from '@/assets/icons/CloseIcon'
 
 type DropdownListItem = {
   _id: string
@@ -84,24 +85,187 @@ const EditUser: React.FC<UserEditProps> = ({ id, setIsEditModalOpen }) => {
 
   return (
     <section className={styles.mainContainer}>
-      <div className={styles.back}>
-        <button onClick={() => setIsEditModalOpen(false)}>&#x292B;</button>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Edit User: {user?.full_name}</h1>
+        <CloseIcon
+          className={styles['modal-close-icon']}
+          onClick={() => setIsEditModalOpen(false)}
+        />
       </div>
-      <h1 className={styles.title}>Edit User: {user?.full_name}</h1>
 
       <div className={styles.mainWrapper}>
         <form onSubmit={updateUserFunc}>
-          {/* full name */}
+          <div className={styles.twoColumnGrid}>
+            {/* full name */}
 
-          <div className={styles.inputbox}>
-            <label>Full Name</label>
-            <input
-              type="text"
-              autoComplete="new"
-              value={user?.full_name}
-              onChange={(e) => setUser({ ...user, full_name: e.target.value })}
-            />
+            <div className={styles.inputbox}>
+              <label>Full Name</label>
+              <input
+                type="text"
+                autoComplete="new"
+                value={user?.full_name}
+                onChange={(e) =>
+                  setUser({ ...user, full_name: e.target.value })
+                }
+              />
+            </div>
+
+            {/* email */}
+
+            <div className={styles.inputbox}>
+              <label>Email</label>
+              <input
+                type="text"
+                autoComplete="new"
+                value={user?.email}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
+              />
+            </div>
           </div>
+          <div className={styles.twoColumnGrid}>
+            {/* display name */}
+
+            <div className={styles.inputbox}>
+              <label>Display Name</label>
+              <input
+                type="text"
+                autoComplete="new"
+                value={user?.display}
+                onChange={(e) => setUser({ ...user, display: e.target.value })}
+              />
+            </div>
+            {/* profile url */}
+            <div className={styles.inputbox}>
+              <label>Profile Url</label>
+              <input
+                type="text"
+                autoComplete="new"
+                value={user?.profile_url}
+                onChange={(e) =>
+                  setUser({ ...user, profile_url: e.target.value })
+                }
+              />
+            </div>
+          </div>
+
+          <div className={styles.twoColumnGrid}>
+            {/* birthday */}
+
+            <div className={styles.inputbox}>
+              <label>Year of Birth</label>
+              <input
+                type="date"
+                autoComplete="new"
+                value={user?.year_of_birth}
+                onChange={(e) =>
+                  setUser({ ...user, year_of_birth: e.target.value })
+                }
+              />
+            </div>
+
+            {/* public email */}
+            <div className={styles.inputbox}>
+              <label>Public Email</label>
+              <input
+                type="text"
+                autoComplete="new"
+                value={user?.public_email}
+                onChange={(e) =>
+                  setUser({ ...user, public_email: e.target.value })
+                }
+              />
+            </div>
+          </div>
+
+          <div className={styles.twoColumnGrid}>
+            {/* phone */}
+            <div className={styles.inputPhoneBox}>
+              <label>Phone</label>
+              <div className={styles.phoneWrapper}>
+                <select
+                  name=""
+                  id=""
+                  className={styles.prefix}
+                  onChange={(e) =>
+                    setUser({
+                      ...user,
+                      phone: { ...user.phone, prefix: e.target.value },
+                    })
+                  }
+                >
+                  {user?.phone.prefix && (
+                    <option value={user?.phone.prefix}>
+                      {user?.phone.prefix}
+                    </option>
+                  )}
+                  <option value="+91">+91</option>
+                  <option value="+88">+88</option>
+                  <option value="+89">+89</option>
+                </select>
+
+                <input
+                  className={styles.phoneInput}
+                  type="text"
+                  // maxLength={10}
+                  // minLength={10}
+                  autoComplete="new"
+                  value={user?.phone.number}
+                  onChange={(e) =>
+                    setUser({
+                      ...user,
+                      phone: { ...user.phone, number: e.target.value },
+                    })
+                  }
+                />
+              </div>
+            </div>
+            {/* whatsapp */}
+            <div className={styles.inputPhoneBox}>
+              <label>Whatsapp</label>
+              <div className={styles.phoneWrapper}>
+                <select
+                  className={styles.prefix}
+                  onChange={(e) =>
+                    setUser({
+                      ...user,
+                      whatsapp_number: {
+                        ...user.whatsapp_number,
+                        prefix: e.target.value,
+                      },
+                    })
+                  }
+                >
+                  {user?.whatsapp_number.prefix && (
+                    <option value={user?.whatsapp_number.prefix} disabled>
+                      {user?.whatsapp_number.prefix}
+                    </option>
+                  )}
+                  <option value="+91">+91</option>
+                  <option value="+88">+88</option>
+                  <option value="+89">+89</option>
+                </select>
+                <input
+                  type="text"
+                  className={styles.phoneInput}
+                  // minLength={10}
+                  // maxLength={10}
+
+                  autoComplete="new"
+                  value={user?.whatsapp_number.number}
+                  onChange={(e) =>
+                    setUser({
+                      ...user,
+                      whatsapp_number: {
+                        ...user?.whatsapp_number,
+                        number: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </div>
+            </div>
+          </div>
+
           {/* tag line */}
           <div className={styles.inputbox}>
             <label>Tagline</label>
@@ -112,166 +276,7 @@ const EditUser: React.FC<UserEditProps> = ({ id, setIsEditModalOpen }) => {
               onChange={(e) => setUser({ ...user, tagline: e.target.value })}
             />
           </div>
-          {/* display name */}
 
-          <div className={styles.inputbox}>
-            <label>Display Name</label>
-            <input
-              type="text"
-              autoComplete="new"
-              value={user?.display}
-              onChange={(e) => setUser({ ...user, display: e.target.value })}
-            />
-          </div>
-          {/* profile url */}
-          <div className={styles.inputbox}>
-            <label>Profile Url</label>
-            <input
-              type="text"
-              autoComplete="new"
-              value={user?.profile_url}
-              onChange={(e) =>
-                setUser({ ...user, profile_url: e.target.value })
-              }
-            />
-          </div>
-
-          {/* email */}
-
-          <div className={styles.inputbox}>
-            <label>Email</label>
-            <input
-              type="text"
-              autoComplete="new"
-              value={user?.email}
-              onChange={(e) => setUser({ ...user, email: e.target.value })}
-            />
-          </div>
-          {/* public email */}
-          <div className={styles.inputbox}>
-            <label>Public Email</label>
-            <input
-              type="text"
-              autoComplete="new"
-              value={user?.public_email}
-              onChange={(e) =>
-                setUser({ ...user, public_email: e.target.value })
-              }
-            />
-          </div>
-          {/* phone */}
-          <div className={styles.inputPhoneBox}>
-            <label>Phone</label>
-            <div className={styles.phoneWrapper}>
-              {/* <input
-                className={styles.prefix}
-                type="text"
-                autoComplete="new"
-                value={user?.phone.prefix}
-                onChange={(e) => setUser({ ...user, prefix: e.target.value })}
-              /> */}
-
-              <select
-                name=""
-                id=""
-                className={styles.prefix}
-                onChange={(e) =>
-                  setUser({
-                    ...user,
-                    phone: { ...user.phone, prefix: e.target.value },
-                  })
-                }
-              >
-                {user?.phone.prefix && (
-                  <option value={user?.phone.prefix}>
-                    {user?.phone.prefix}
-                  </option>
-                )}
-                <option value="+91">+91</option>
-                <option value="+88">+88</option>
-                <option value="+89">+89</option>
-              </select>
-
-              <input
-                className={styles.phoneInput}
-                type="text"
-                // maxLength={10}
-                // minLength={10}
-                autoComplete="new"
-                value={user?.phone.number}
-                onChange={(e) =>
-                  setUser({
-                    ...user,
-                    phone: { ...user.phone, number: e.target.value },
-                  })
-                }
-              />
-            </div>
-          </div>
-          {/* whatsapp */}
-          <div className={styles.inputPhoneBox}>
-            <label>Whatsapp</label>
-            <div className={styles.phoneWrapper}>
-              {/* <input
-                className={styles.prefix}
-                type="text"
-                autoComplete="new"
-                value={user?.whatsapp_number.prefix}
-                onChange={(e) => setUser({ ...user, prefix: e.target.value })}
-              /> */}
-
-              <select
-                onChange={(e) =>
-                  setUser({
-                    ...user,
-                    whatsapp_number: {
-                      ...user.whatsapp_number,
-                      prefix: e.target.value,
-                    },
-                  })
-                }
-              >
-                {user?.whatsapp_number.prefix && (
-                  <option value={user?.whatsapp_number.prefix} disabled>
-                    {user?.whatsapp_number.prefix}
-                  </option>
-                )}
-                <option value="+91">+91</option>
-                <option value="+88">+88</option>
-                <option value="+89">+89</option>
-              </select>
-              <input
-                type="text"
-                className={styles.phoneInput}
-                // minLength={10}
-                // maxLength={10}
-                autoComplete="new"
-                value={user?.whatsapp_number.number}
-                onChange={(e) =>
-                  setUser({
-                    ...user,
-                    whatsapp_number: {
-                      ...user?.whatsapp_number,
-                      number: e.target.value,
-                    },
-                  })
-                }
-              />
-            </div>
-          </div>
-          {/* birthday */}
-
-          <div className={styles.inputbox}>
-            <label>Year of Birth</label>
-            <input
-              type="date"
-              autoComplete="new"
-              value={user?.year_of_birth}
-              onChange={(e) =>
-                setUser({ ...user, year_of_birth: e.target.value })
-              }
-            />
-          </div>
           {/* about */}
           <div className={styles.inputbox}>
             <label>About</label>
@@ -431,39 +436,44 @@ const EditUser: React.FC<UserEditProps> = ({ id, setIsEditModalOpen }) => {
               <option value={'true'}>Yes</option>
               <option value={'false'}>No</option>
             </select>
-            <div>{`Completed modals: ${user?.completed_onboarding_steps}`}</div>
+            <div
+              className={styles.completeAction}
+            >{`Completed modals: ${user?.completed_onboarding_steps}`}</div>
           </div>
-          {/* accountActive */}
-          <div className={styles.inputbox}>
-            <label>Is Account activated:</label>
-            <select
-              value={user.is_account_activated.toString()} // Convert boolean to string explicitly
-              onChange={(e) => {
-                setUser({
-                  ...user,
-                  is_account_activated: e.target.value === 'true',
-                })
-              }}
-            >
-              <option value={'true'}>Yes</option>
-              <option value={'false'}>No</option>
-            </select>
-          </div>
-          {/* accountVerified */}
-          <div className={styles.inputbox}>
-            <label>Is Account verified:</label>
-            <select
-              value={user.verified.toString()}
-              onChange={(e) => {
-                setUser({
-                  ...user,
-                  verified: e.target.value === 'true',
-                })
-              }}
-            >
-              <option value={'true'}>Yes</option>
-              <option value={'false'}>No</option>
-            </select>
+
+          <div className={styles.twoColumnGrid}>
+            {/* accountActive */}
+            <div className={styles.inputbox}>
+              <label>Is Account activated:</label>
+              <select
+                value={user.is_account_activated.toString()} // Convert boolean to string explicitly
+                onChange={(e) => {
+                  setUser({
+                    ...user,
+                    is_account_activated: e.target.value === 'true',
+                  })
+                }}
+              >
+                <option value={'true'}>Yes</option>
+                <option value={'false'}>No</option>
+              </select>
+            </div>
+            {/* accountVerified */}
+            <div className={styles.inputbox}>
+              <label>Is Account verified:</label>
+              <select
+                value={user.verified.toString()}
+                onChange={(e) => {
+                  setUser({
+                    ...user,
+                    verified: e.target.value === 'true',
+                  })
+                }}
+              >
+                <option value={'true'}>Yes</option>
+                <option value={'false'}>No</option>
+              </select>
+            </div>
           </div>
 
           <div className={styles.lastLogin}>
@@ -473,7 +483,7 @@ const EditUser: React.FC<UserEditProps> = ({ id, setIsEditModalOpen }) => {
           </div>
           <div className={styles.btnWrapper}>
             <button className={styles.saveButton} type="submit">
-              Save Changes
+              Save
             </button>
           </div>
         </form>

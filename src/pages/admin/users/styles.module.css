@@ -166,6 +166,7 @@
 
 .resultsTable {
   width: 100%;
+  min-height: 300px;
   border-collapse: collapse;
   border-radius: 8px;
 }
