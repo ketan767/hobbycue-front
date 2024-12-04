@@ -21,6 +21,18 @@
   cursor: not-allowed;
 }
 
+.actions button:hover {
+  background: #ccc1da;
+}
+
+.viewMenuParent {
+  position: relative;
+}
+
+.active {
+  background: #ccc1da;
+}
+
 @keyframes fadeDownWithScale {
   from {
     opacity: 0;

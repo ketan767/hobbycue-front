@@ -144,7 +144,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
                       : { columnGap: '24px', rowGap: '24px' }
                   }
                 >
-                  {/* {profileLayoutMode === 'edit' && (
+                  {profileLayoutMode === 'edit' && (
                     <div
                       className={styles.uploadButtonDescktop}
                       onClick={handleAddBlog}
@@ -152,7 +152,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
                       <div className={styles.newTag}>ADD NEW</div>
                       <PlusIcon />
                     </div>
-                  )} */}
+                  )}
                   {data?.blogsData.map((blog: any) => {
                     return <BlogCard key={blog._id} data={blog} />
                   })}
@@ -169,7 +169,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
                   }
                   className={styles['dual-section-wrapper']}
                 >
-                  {/* {profileLayoutMode === 'edit' ? (
+                  {profileLayoutMode === 'edit' ? (
                     <div
                       className={styles.uploadButtonDescktop}
                       onClick={handleAddBlog}
@@ -177,25 +177,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
                       <div className={styles.newTag}>ADD NEW</div>
                       <PlusIcon />
                     </div>
-                  ) : ( */}
-                  <div
-                    style={
-                      isMobile
-                        ? {
-                            marginTop: '8px',
-                            height: '100px',
-                            borderRadius: '0px',
-                          }
-                        : undefined
-                    }
-                    className={styles['no-posts-div']}
-                  >
-                    <p className={styles['no-posts-text']}>
-                      No Blogs Available
-                    </p>
-                  </div>
-                  {/* )} */}
-                  {!isMobile && (
+                  ) : (
                     <div
                       style={
                         isMobile
@@ -213,6 +195,24 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
                       </p>
                     </div>
                   )}
+                  {/* {!isMobile && ( */}
+                  <div
+                    style={
+                      isMobile
+                        ? {
+                            marginTop: '8px',
+                            height: '100px',
+                            borderRadius: '0px',
+                          }
+                        : undefined
+                    }
+                    className={styles['no-posts-div']}
+                  >
+                    <p className={styles['no-posts-text']}>
+                      No Blogs Available
+                    </p>
+                  </div>
+                  {/* )} */}
                   {!isMobile && (
                     <div
                       style={

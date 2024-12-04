@@ -212,3 +212,50 @@ export async function addHobby(blogId: string, hobbyData: any) {
     }
   }
 }
+
+export const upvoteBlogComment = async (commentId: string, userId: string) => {
+  try {
+    const body = { userId }
+
+    const token = localStorage.getItem(`token`)
+    const headers = { Authorization: `Bearer ${token}` }
+
+    const res = await axiosInstance.patch(
+      `/blogs/comment/${commentId}/upvote`,
+      body,
+      {
+        headers,
+      },
+    )
+
+    return { res, err: null }
+  } catch (err) {
+    console.log(`Error in upvoteBlog(): `, err)
+    return { res: null, err }
+  }
+}
+
+export const downvoteBlogComment = async (
+  commentId: string,
+  userId: string,
+) => {
+  try {
+    const body = { userId }
+
+    const token = localStorage.getItem(`token`)
+    const headers = { Authorization: `Bearer ${token}` }
+
+    const res = await axiosInstance.patch(
+      `/blogs/comment/${commentId}/downvote`,
+      body,
+      {
+        headers,
+      },
+    )
+
+    return { res, err: null }
+  } catch (err) {
+    console.log(`Error in upvoteBlog(): `, err)
+    return { res: null, err }
+  }
+}

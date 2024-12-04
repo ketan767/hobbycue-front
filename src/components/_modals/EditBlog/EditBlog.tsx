@@ -92,10 +92,11 @@ const EditBlog: React.FC<Props> = ({
   // }
 
   // const blog = data?.blog_url || {}
-  const { blog, setIsEditing } = propData
+  const { blog, setIsEditing, setBlog } = propData
   const author = blog?.author
   const [editHobby, setEditHobby] = useState(false)
   const [urlText, setUrlText] = useState('')
+  const [urlError, setUrlError] = useState('')
   const [keyWords, setKeyWords] = useState('')
   const [saveBtnLoading, setSaveBtnLoading] = useState(false)
   const [publishBtnLoading, setPublishBtnLoading] = useState(false)
@@ -113,6 +114,7 @@ const EditBlog: React.FC<Props> = ({
   }
 
   const handleURLUpdate = (e: any) => {
+    setUrlError('')
     let value = e.target.value
 
     // Replace spaces with hyphens
@@ -130,35 +132,43 @@ const EditBlog: React.FC<Props> = ({
     // Update the state
     setUrlText(value)
   }
+
   const updateBlog = async (blogId: String) => {
-    setSaveBtnLoading(true)
-    let updatedFields = {
-      url: urlText,
-      keywords: keyWords,
-    }
-    const token = localStorage.getItem('token')
+    try {
+      setSaveBtnLoading(true)
+      let updatedFields = {
+        url: urlText?.trim(),
+        keywords: keyWords,
+      }
+      const token = localStorage.getItem('token')
 
-    const headers = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
+      const headers = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+      const { data } = await axiosInstance.patch(
+        `blogs/${blogId}`,
+        updatedFields,
+        headers,
+      )
+
+      if (!data) {
+        console.error('Error updating blog:', data.error)
+        return null
+      }
+      // refetch()
+      setUrlError('')
+      router.push(`/blog/${urlText}`)
+      console.log('Blog updated successfully:', data)
+      return data
+    } catch (err: any) {
+      if (err?.response?.data?.message === 'Blog with this url already exists!')
+        setUrlError('Blog with this url already exists!')
+      console.log('Error while updating meta data!', err)
     }
-    const { data } = await axiosInstance.patch(
-      `blogs/${blogId}`,
-      updatedFields,
-      headers,
-    )
     setSaveBtnLoading(false)
-
-    if (!data) {
-      console.error('Error updating blog:', data.error)
-      return null
-    }
-    // refetch()
-    router.push(`/blog/${urlText}`)
-    console.log('Blog updated successfully:', data)
-    return data
   }
 
   // utils/api.ts
@@ -195,7 +205,8 @@ const EditBlog: React.FC<Props> = ({
   let props = {
     setEditHobby,
     handleClose,
-    data: blog,
+    blog,
+    setBlog
     // refetch
   }
 
@@ -267,6 +278,7 @@ const EditBlog: React.FC<Props> = ({
                   maxLength={48}
                   onChange={handleURLUpdate}
                 />
+                {urlError && <p className={styles.urlError}>{urlError}</p>}
               </div>
 
               {/* search pic */}
@@ -277,15 +289,19 @@ const EditBlog: React.FC<Props> = ({
                   </p> */}
                 <div className={styles.searchPicContent}>
                   <figure className={styles.searchPicFigure}>
-                    <Image
+                    <img
                       className={styles.searchPicImage}
                       src={author?.profile_image}
                       alt="Author Pic"
                     />
                   </figure>
                   <div className={styles.searchPicDetails}>
-                    <h3 className={styles.searchPicTitle}>{blog?.title}</h3>
-                    <h4 className={styles.searchPicSubtitle}>
+                    <h3 className={`${styles.searchPicTitle} truncateOneLine`}>
+                      {blog?.title}
+                    </h3>
+                    <h4
+                      className={`${styles.searchPicSubtitle} truncateOneLine`}
+                    >
                       {blog?.tagline}
                     </h4>
                     <p className={styles.searchPicAuthor}>
