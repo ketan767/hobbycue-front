@@ -56,6 +56,9 @@ background: var(--Grey-Lighter, #EBEDF0);
     .iconsContainer{
         transform: translateY(-50px);
     }
+    .upArrow {
+        margin-right: 24px;
+    }
     .bottom{
         transform: translateY(-62.5px);
         padding: 11.5px 8px;

@@ -1199,7 +1199,7 @@ export const CreatePost: React.FC<Props> = ({
                             {metaData?.title}
                           </p>
                           <p style={{color:"#333"}}>
-                            {metaData?.description.split(':')[0]}
+                            {metaData?.description?.split(':')[0]}
                           </p>
                         </div>
                     </div>

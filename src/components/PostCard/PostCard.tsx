@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import styles from './PostCard.module.css'
-import { dateFormat, isInstagramReelLink, isVideoLink, pageType } from '@/utils'
+import { dateFormat, isInstagramReelLink, isVideoLink, isHobbycuePageLink, pageType } from '@/utils'
 import Link from 'next/link'
 import BarsIcon from '../../assets/svg/vertical-bars.svg'
 import PostVotes from './Votes'
@@ -671,11 +671,51 @@ const PostCard: React.FC<Props> = (props) => {
                                 {metaData?.title}
                               </p>
                               <p style={{color:"#333"}}>
-                                {metaData?.description.split(':')[0]}
+                                {metaData?.description?.split(':')[0]}
                               </p>
                             </div>
                         </div>
                           ) : (
+                            isHobbycuePageLink(url) ? 
+                        <>
+                          <div className={styles['posts-meta-data-container']}>
+                            <a href={url} target="_blank">
+                              <div className={styles['posts-meta-img']}>
+                                <img
+                                  src={
+                                    (typeof metaData?.image === 'string' &&
+                                      metaData.image) ||
+                                    (typeof metaData?.icon === 'string' &&
+                                      metaData.icon) ||
+                                    defaultImg
+                                  }
+                                  alt="link-image"
+                                  width={80}
+                                  height={80}
+                                />
+                              </div>
+                            </a>
+                            <div className={styles['posts-meta-content']}>
+                              <a
+                                href={url}
+                                target="_blank"
+                                className={styles.contentHead}
+                              >
+                                {metaData?.title}
+                              </a>
+
+                              <a
+                                href={url}
+                                target="_blank"
+                                className={styles.contentUrl}
+                              >
+                                {metaData?.description}
+                              </a>
+                            </div>
+                          </div>
+                        </>
+                        
+                        :
                         <>
                           <div className={styles['posts-meta-data-container']}>
                             <a href={url} target="_blank">
@@ -878,6 +918,9 @@ const PostCard: React.FC<Props> = (props) => {
                   </defs>
                 </svg>
               </CustomizedTooltips>
+                <p style={{color:"#6D747A", fontSize:"14px", fontWeight:"500"}}>
+                  {comments.length > 0 ? comments.length : ''}
+                </p>
               {/* Share Icon */}
               <CustomizedTooltips title="Share">
                 <svg

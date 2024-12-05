@@ -1385,7 +1385,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                                   className={`${styles['img']} default-user-icon`}
                                 ></div>
                               )}
-                              <h4>{user.full_name}</h4>
+                              <h4 style={{width:"130px", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis"}}>{user.full_name}</h4>
                             </div>
                             <button className={styles['view-profile-btn']}>
                               View Profile
