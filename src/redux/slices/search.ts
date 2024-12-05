@@ -11,6 +11,7 @@ export interface User {
   tagline: string
   primary_address: { city: string }
   profile_url: string
+  _hobbies: any[]
 }
 
 export interface Page {

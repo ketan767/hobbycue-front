@@ -13,6 +13,19 @@ export const getAllUserDetail = async (
   }
 }
 
+/** Get User Details `GET /api/user/byName?{query}`  */
+export const getUsersByName = async (
+  query: string,
+): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.get(`/user/byName?${query}`)
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 /** Get LoggedIn User Detail `GET /api/user/me/?{query}` */
 export const getMyProfileDetail = async () => {
   const token = localStorage.getItem('token')

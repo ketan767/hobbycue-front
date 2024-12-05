@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import store, { RootState } from '@/redux/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { checkIfUrlExists, isEmptyField, isVideoLink } from '@/utils'
+import { checkIfUrlExists, isEmptyField, isVideoLink, isInstagramReelLink } from '@/utils'
 import { getAllHobbies } from '@/services/hobby.service'
 import {
   createListingPost,
@@ -100,6 +100,7 @@ export const CreatePost: React.FC<Props> = ({
   const [hobbies, setHobbies] = useState([])
   const [selectedHobbies, setSelectedHobbies] = useState<HobbyData[]>([])
   const [editing, setEditing] = useState(false)
+  const { hasChanges } = useSelector((state: RootState) => state.modal)
   const [data, setData] = useState<NewPostData>({
     type: 'user',
     data: null,
@@ -157,6 +158,9 @@ export const CreatePost: React.FC<Props> = ({
     )
     console.log('selectedHobbies--->', newHobbyData)
   }
+  useEffect(() => {
+    console.log('hasChanges', hasChanges)
+  }, [hasChanges])
   useEffect(() => {
     if (propData && propData._hobby) {
       setData((prev) => ({
@@ -380,6 +384,8 @@ export const CreatePost: React.FC<Props> = ({
   >([])
   const [visibilityData, setVisibilityData] = useState(['public'])
 
+  useEffect(() => {console.log("metaData",metaData)}, [metaData])
+
   useEffect(() => {
     const isUrl = checkIfUrlExists(data.content.replace(/<img .*?>/g, ''))
     setHasLink(isUrl)
@@ -592,10 +598,6 @@ export const CreatePost: React.FC<Props> = ({
         message: 'Please select atleast one hobby',
       })
       return
-      // return setErrors({
-      //   ...errors,
-      //   hobby: 'This field is required',
-      // })
     }
     const allHobbyIds = selectedHobbies.map((h) => h.hobbyId)
     const allGenreIds = selectedHobbies.map((h) => h.genreId)
@@ -610,7 +612,7 @@ export const CreatePost: React.FC<Props> = ({
       genreId1: allGenreIds[0] ? allGenreIds[0] : '',
       genreId2: allGenreIds[1] ? allGenreIds[1] : '',
       genreId3: allGenreIds[2] ? allGenreIds[2] : '',
-      // genreIds: allGenreIds,
+
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
       media:
@@ -619,12 +621,7 @@ export const CreatePost: React.FC<Props> = ({
       has_link: hasLink,
       video_url: data.video_url ? data.video_url : null,
     }
-    // if (typeof data.genre === 'object' && typeof data.genre?._id === 'string') {
-    //   jsonData.genreId = data.genre._id
-    // }
 
-    // console.log('jsonData', jsonData.hobbyId)
-    // console.log('jsonData genreId', jsonData.genreId)
     setSubmitBtnLoading(true)
 
     if (data.type === 'listing') {
@@ -648,7 +645,7 @@ export const CreatePost: React.FC<Props> = ({
           updateActiveProfile({ type: data.type, data: data.data }),
         )
         store.dispatch(closeModal())
-        // window.location.reload()
+        window.location.reload()
         store.dispatch(increaseRefreshNum())
         router.push('/community')
       }
@@ -665,13 +662,6 @@ export const CreatePost: React.FC<Props> = ({
       return console.log(err)
     }
     if (res.data.success) {
-      // store.dispatch(
-      //   setFilters({
-      //     location: data.visibility !== '' ? data.visibility : null,
-      //     hobby: data.hobby?._id ?? '',
-      //     genre: data.genre?._id ?? '',
-      //   }),
-      // )
       store.dispatch(updateActiveProfile({ type: data.type, data: data.data }))
       store.dispatch(closeModal())
       // window.location.reload()
@@ -689,37 +679,7 @@ export const CreatePost: React.FC<Props> = ({
   }, [data])
 
   useEffect(() => {
-    if (propData) {
-      // let hobbies =
-      //   propData?._allHobbies?.length > 0
-      //     ? propData?._allHobbies?.map((hobby: any) => hobby?.display)
-      //     : [activeProfile?.data?._hobby?.display]
-      // let genres =
-      //   propData?._allGenres?.length > 0
-      //     ? propData?._allGenres?.map((genre: any) => genre?.display)
-      //     : [activeProfile?.data?._genre?.display]
-
-      // let hobbiesIds =
-      //   propData?._allHobbies?.length > 0
-      //     ? propData?._allHobbies?.map((hobby: any) => hobby?._id)
-      //     : [activeProfile?.data?._hobby?._id]
-      // let genresIds =
-      //   propData?._allGenres?.length > 0
-      //     ? propData?._allGenres?.map((genre: any) => genre?._id)
-      //     : [activeProfile?.data?._genre?._id]
-      // console.log('propData', propData)
-      // let hobbies: string[] = []
-      // let genres: string[] = []
-      // let hobbiesIds: string[] = []
-      // let genresIds: string[] = []
-
-      // if (propData?._allHobbies?.length > 0) {
-      // propData?._allHobbies?.forEach((hobby: any, index: number) => {
-      //   hobbies = [...hobbies, hobby?.display]
-      //   genres = [...genres, propData?._allGenres[index]?.display]
-      //   hobbiesIds = [...hobbiesIds, hobby?._id]
-      //   genresIds = [...genresIds, propData?._allGenres[index]?._id]
-      // })
+    if (propData && propData?._allHobbies) {
       const existingHobbies = []
       if (propData?._allHobbies?._hobby1?.display) {
         if (propData?._allHobbies?._hobby1?.display) {
@@ -747,10 +707,6 @@ export const CreatePost: React.FC<Props> = ({
           })
         }
       } else {
-        // hobbies = [propData?._hobby?.display]
-        // genres = [propData?._genre?.display]
-        // hobbiesIds = [propData?._hobby?._id]
-        // genresIds = [propData?._genre?._id]
         existingHobbies.push({
           hobby: propData?._hobby?.display,
           genre: propData?._genre?.display,
@@ -758,20 +714,6 @@ export const CreatePost: React.FC<Props> = ({
           genreId: propData?._genre?._id,
         })
       }
-      // console.log('hobbies', hobbies)
-      // console.log('hobbiesIds', hobbiesIds)
-      // console.log('genres', genres)
-      // console.log('genresIds', genresIds)
-      // const alreadySelectedHobbies = hobbies.map(
-      //   (hobby: any, index: number) => {
-      //     return {
-      //       hobby: hobbies[index],
-      //       genre: genres[index],
-      //       hobbyId: hobbiesIds[index],
-      //       genreId: genresIds[index],
-      //     }
-      //   },
-      // )
       setSelectedHobbies(existingHobbies)
     } else {
       const firstHobby = activeProfile?.data?._hobbies[0]?.hobby?.display
@@ -828,6 +770,7 @@ export const CreatePost: React.FC<Props> = ({
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
+        content={'Would you like to post before exit ?'}
       />
     )
   }
@@ -847,6 +790,11 @@ export const CreatePost: React.FC<Props> = ({
     })
     return alreadyContains
   }
+
+  const getInstagramPostId = (url: any) => {
+    const match = url.match(/instagram\.com\/(?:reel|p)\/([^/]+)/);
+    return match ? match[1] : null;
+  };
 
   return (
     <>
@@ -1075,6 +1023,9 @@ export const CreatePost: React.FC<Props> = ({
                                           'You can only select up to 3 hobbies',
                                       })
                                     }
+                                    if (onStatusChange) {
+                                      onStatusChange(true)
+                                    }
                                     setData((prev: any) => ({
                                       ...prev,
                                       hobby: e?.hobby ?? null,
@@ -1100,6 +1051,9 @@ export const CreatePost: React.FC<Props> = ({
                       onChange={(e: any) => {
                         let val = e.target.value
                         setData((prev: any) => ({ ...prev, visibility: val }))
+                        // if (onStatusChange) {
+                        //   onStatusChange(true)
+                        // }
                       }}
                       value={data.visibility}
                       className={styles['input-select']}
@@ -1173,6 +1127,7 @@ export const CreatePost: React.FC<Props> = ({
                 image={true}
                 error={errors.content}
                 hasLink={hasLink && showMetaData}
+                onStatusChange={onStatusChange}
               />
               {data.video_url && (
                 <div className={styles.videoWrapper}>
@@ -1222,8 +1177,34 @@ export const CreatePost: React.FC<Props> = ({
                         controls={true}
                       />
                     </div>
-                  ) : (
-                    <div className={styles['show-metadata']}>
+                  ) : ( isInstagramReelLink(url) ? (
+                      <div onClick={()=>window.open(url,"_blank")}  style={{background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"8px", cursor:"pointer"}}>
+                      <div style={{width:"230.63px", height:"410px", display:"flex", alignItems:"center"}}>
+                      <img
+                        style={{cursor:"pointer", maxHeight:"410px"}}
+                        onClick={()=>window.open(url, '_blank')}
+                        width="230.63px"
+                          src={
+                            (typeof metaData?.image === 'string' &&
+                              metaData.image) ||
+                            (typeof metaData?.icon === 'string' &&
+                              metaData.icon) ||
+                            defaultImg
+                          }
+                          alt=""
+                        />
+                      </div>
+                        <div style={{display:"flex", flexDirection:"column", gap:"16px", fontSize:"15px", justifyContent:"start", height:"100%"}} >
+                          <p style={{fontWeight:"500"}}>
+                            {metaData?.title}
+                          </p>
+                          <p style={{color:"#333"}}>
+                            {metaData?.description.split(':')[0]}
+                          </p>
+                        </div>
+                    </div>
+                      ) : (
+                        <div className={styles['show-metadata']}>
                       <svg
                         className={styles['metadata-close-icon']}
                         onClick={() => {
@@ -1294,6 +1275,7 @@ export const CreatePost: React.FC<Props> = ({
                         </p>
                       )}
                     </div>
+                      )
                   )}
                 </>
               )}

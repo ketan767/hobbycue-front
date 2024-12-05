@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
 import EditIcon from '@/assets/svg/edit-icon.svg'
 import { openModal } from '@/redux/slices/modal'
-import { getAllPosts } from '@/services/post.service'
+import { getAllHobbyPosts } from '@/services/post.service'
 import { GetServerSideProps } from 'next'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import post, {
@@ -115,7 +115,6 @@ const CommunityLayout: React.FC<Props> = ({
     (state: RootState) => state.user,
   )
 
-
   const { allPosts, filters, post_pagination } = useSelector(
     (state: RootState) => state.post,
   )
@@ -128,7 +127,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
   const [selectedHobby, setSelectedHobby] = useState(
-    filters.hobby ||'All Hobbies',
+    user?.preferences?.community_view?.preferred_hobby?.hobby?._id,
   )
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(
     filters.genre,
@@ -282,7 +281,7 @@ const CommunityLayout: React.FC<Props> = ({
   }
   useEffect(() => {
     scrollToTop()
-  }, [selectedHobby])
+  }, [selectedHobby, selectedGenre])
 
   const fetchPosts = async (page = 1) => {
     if (showPageLoader) {
@@ -324,6 +323,10 @@ const CommunityLayout: React.FC<Props> = ({
       selectedHobby !== 'My Hobbies'
     ) {
       params.append('_hobby', selectedHobby)
+      params.append('hobbyId', selectedHobby)
+      if (selectedGenre) {
+        params.append('genreId', selectedGenre)
+      }
     } else {
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item?.hobby?._id)
@@ -364,8 +367,7 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
     if (page === 1) dispatch(updateLoading(true))
-
-    const { err, res } = await getAllPosts(params.toString())
+    const { err, res } = await getAllHobbyPosts(params.toString())
     if (err) return console.log(err)
     if (res?.data?.success) {
       let posts = res.data.data.posts.map((post: any) => {
@@ -506,41 +508,44 @@ const CommunityLayout: React.FC<Props> = ({
     fetchWhatsNew()
   }, [])
 
-
   useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log('started fetch');
-      if (user && user.preferences) {
-        if (!user.preferences.community_view.all_hobbies) {
-          console.log(user.preferences.community_view.preferred_hobby, 100);
-          setSelectedHobby(user.preferences.community_view.preferred_hobby.hobby._id);
-  
-          if (user.preferences.community_view.preferred_hobby.genre) {
-            setSelectedGenre(user.preferences.community_view.preferred_hobby.genre);
-          }
-        }
-  
-        if (!user.preferences.community_view.all_locations) {
-          console.log(user.preferences.community_view.preferred_location, 100);
-          setSelectedLocation(user.preferences.community_view.preferred_location.city.split(' ')[0]);
+    if (!user) return
+    if (user && user.preferences) {
+      if (!user.preferences.community_view.preferred_hobby.hobby) {
+        // setSelectedHobby('All Hobbies')
+      } else if (!user.preferences.community_view.all_hobbies) {
+        setSelectedHobby(
+          user.preferences.community_view.preferred_hobby.hobby._id,
+        )
+
+        if (user.preferences.community_view.preferred_hobby.genre) {
+          setSelectedGenre(
+            user.preferences.community_view.preferred_hobby.genre,
+          )
         }
       }
-    }, 500);
-  
-    return () => clearTimeout(timer);
-  }, [user]);
+
+      if (!user.preferences.community_view.all_locations) {
+        console.log(user.preferences.community_view.preferred_location, 100)
+        setSelectedLocation(
+          user.preferences.community_view.preferred_location.city.split(' ')[0],
+        )
+      }
+    }
+  }, [user])
 
   useEffect(() => {
     dispatch(updateListingModalData(activeProfile.data))
   }, [activeProfile.type])
 
   useEffect(() => {
-    console.log(selectedHobby,1000);
-    console.log(selectedLocation,1000);
-    console.log(user?.preferences?.community_view?.preferred_location?.city,100000);
-    
-    
-    
+    console.log(selectedHobby, 1000)
+    console.log(selectedLocation, 1000)
+    console.log(
+      user?.preferences?.community_view?.preferred_location?.city,
+      100000,
+    )
+
     if (
       activeProfile.data !== null &&
       (activeTab === 'links' || activeTab === 'posts')
@@ -550,7 +555,13 @@ const CommunityLayout: React.FC<Props> = ({
         fetchPosts()
       }
     }
-  }, [selectedHobby, selectedLocation, activeProfile?.type, refreshNum])
+  }, [
+    selectedHobby,
+    selectedGenre,
+    selectedLocation,
+    activeProfile?.type,
+    refreshNum,
+  ])
 
   useEffect(() => {
     if (selectedHobby !== '' && selectedLocation !== '') {
@@ -578,7 +589,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   useEffect(() => {
     setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
-    setSelectedHobby(!filters.hobby ? 'All Hobbies' : filters.hobby)
+    if(filters.hobby) setSelectedHobby(filters.hobby)
     setSelectedLocation(filters.location ?? '')
   }, [filters.genre, filters.hobby, filters.location])
 

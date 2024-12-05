@@ -10,13 +10,27 @@ import DropdownMenu from '@/components/DropdownMenu'
 import { countryData } from '@/utils/countrydata'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { SnackbarState } from '../ModalManager'
+import SaveModal from '../SaveModal/saveModal'
+
 type Props = {
+  onComplete?: () => void
+  onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
+  onStatusChange?: (isChanged: boolean) => void
   data?: ListingPageData['pageData']
   setSnackbar?: React.Dispatch<SetStateAction<SnackbarState>>
 }
 
-const ClaimModal = (props: Props) => {
-  const { setSnackbar } = props
+const ClaimModal: React.FC<Props> = ({
+  confirmationModal,
+  setConfirmationModal,
+  onStatusChange,
+  onComplete,
+  handleClose,
+  setSnackbar,
+}) => {
   const phoneRef = useRef<HTMLInputElement>(null)
   const [selectedCountryCode, setSelectedCountryCode] = useState('+91')
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -157,6 +171,9 @@ const ClaimModal = (props: Props) => {
             message: 'Claim request not sent',
           })
         }
+        if (setConfirmationModal) {
+          setConfirmationModal(false)
+        }
       }
     }
   }
@@ -170,7 +187,16 @@ const ClaimModal = (props: Props) => {
     setListingUrlSpanLength(listingUrlSpanRef?.current?.offsetWidth || 0)
   }, [])
   console.warn(listingUrlSpanRef.current?.offsetWidth)
-
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={HandleClaim}
+        setConfirmationModal={setConfirmationModal}
+        content={'Would you like to send before exit?'}
+      />
+    )
+  }
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -277,7 +303,12 @@ const ClaimModal = (props: Props) => {
                 className={styles['long-input-box']}
                 required
                 name="userRelation"
-                onChange={handleInputChange}
+                onChange={(e) => {
+                  if (onStatusChange) {
+                    onStatusChange(true)
+                  }
+                  handleInputChange(e)
+                }}
                 value={formData.userRelation}
               />
               <p className={styles['helper-text']}>{inputErrs.userRelation}</p>

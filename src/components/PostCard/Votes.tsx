@@ -179,7 +179,7 @@ const PostVotes: React.FC<Props> = ({
           <p className={styles['count']}>
             {data?.up_votes?.count > 999
               ? `${Math.floor(data.up_votes.count / 1000)}k`
-              : data?.up_votes?.count}
+              : data?.up_votes?.count === 0 ? '' : data?.up_votes?.count}
           </p>
         </div>
         <span className={styles['divider']}></span>

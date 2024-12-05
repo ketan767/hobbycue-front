@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import styles from './PostCard.module.css'
-import { dateFormat, isVideoLink, pageType } from '@/utils'
+import { dateFormat, isInstagramReelLink, isVideoLink, pageType } from '@/utils'
 import Link from 'next/link'
 import BarsIcon from '../../assets/svg/vertical-bars.svg'
 import PostVotes from './Votes'
@@ -29,6 +29,7 @@ import { useMediaQuery } from '@mui/material'
 import LinkPreviewLoader from '../LinkPreviewLoader'
 import DeletePrompt from '../DeletePrompt/DeletePrompt'
 import ReactPlayer from 'react-player'
+import VerticalBar from '@/assets/icons/VerticalBar'
 type Props = {
   postData: any
   fromProfile?: boolean
@@ -275,7 +276,7 @@ const PostCard: React.FC<Props> = (props) => {
               href={
                 postData?.author_type === 'User'
                   ? `/profile/${postData?._author?.profile_url}`
-                  : `/${pageType(postData?._author.type)}/${
+                  : `/${pageType(postData?._author?.type)}/${
                       postData?._author?.page_url
                     }`
               }
@@ -648,6 +649,33 @@ const PostCard: React.FC<Props> = (props) => {
                           />
                         </div>
                       ) : (
+                        isInstagramReelLink(url) ? (
+                          <div onClick={()=>window.open(url,"_blank")}  style={{background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"8px", cursor:"pointer", padding:"0 8px"}}>
+                          <div style={{width:"230.63px", maxHeight:"410px"}}>
+                      <img
+                        style={{cursor:"pointer", maxHeight:"410px"}}
+                        onClick={()=>window.open(url, '_blank')}
+                        width="230.63px"
+                          src={
+                            (typeof metaData?.image === 'string' &&
+                              metaData.image) ||
+                            (typeof metaData?.icon === 'string' &&
+                              metaData.icon) ||
+                            defaultImg
+                          }
+                          alt=""
+                        />
+                      </div>
+                            <div style={{display:"flex", flexDirection:"column", gap:"16px", fontSize:"15px", justifyContent:"start", height:"410px"}} >
+                              <p style={{fontWeight:"500"}}>
+                                {metaData?.title}
+                              </p>
+                              <p style={{color:"#333"}}>
+                                {metaData?.description.split(':')[0]}
+                              </p>
+                            </div>
+                        </div>
+                          ) : (
                         <>
                           <div className={styles['posts-meta-data-container']}>
                             <a href={url} target="_blank">
@@ -685,7 +713,7 @@ const PostCard: React.FC<Props> = (props) => {
                             </div>
                           </div>
                         </>
-                      )}
+                      ))}
                     </>
                   )}
                 </div>
@@ -724,15 +752,15 @@ const PostCard: React.FC<Props> = (props) => {
                       : ' '}
                   </p>
                   <p className={styles['date']}>
-                    <span className={styles['separator']}>|</span>
-                    {' ' + dateFormat.format(new Date(postData.createdAt))}
+                    <span className={styles['separator']}><VerticalBar /></span>
+                    <span>{' ' + dateFormat.format(new Date(postData.createdAt))}</span>
                   </p>
                 </div>
                 <div className={styles['meta-author']}>
                   <p className={styles['date']}>{postData?._hobby?.display}</p>
 
                   <p className={styles['date']}>
-                    <span className={styles['separator']}>|</span>
+                    <span className={styles['separator']}><VerticalBar /></span>
                     {' ' + postData?.visibility}
                   </p>
                 </div>
@@ -773,8 +801,8 @@ const PostCard: React.FC<Props> = (props) => {
                           </clipPath>
                         </defs>
                       </svg>
-                      <p className={styles['comments-count']}>
-                        {comments.length}
+                      <p style={{width:"28px", textAlign:"center"}} className={styles['comments-count']}>
+                        {comments.length > 0 ? comments.length : ''}
                       </p>
                     </div>
                   )}
