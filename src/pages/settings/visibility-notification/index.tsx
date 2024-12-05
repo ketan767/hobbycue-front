@@ -263,9 +263,10 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                       value={
                         user?.preferences?.community_view?.preferred_hobby
                           ?.hobby?.display +
-                          ' - ' +
-                          user?.preferences?.community_view?.preferred_hobby
-                            ?.genre?.display || Hobbyoptions[0]
+                        (user?.preferences?.community_view?.preferred_hobby
+                          ?.genre?.display
+                          ? ` - ${user?.preferences?.community_view?.preferred_hobby?.genre?.display}`
+                          : '')
                       }
                     />
                     <p>at</p>
@@ -303,9 +304,10 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                       value={
                         user?.preferences?.create_post_pref?.preferred_hobby
                           ?.hobby?.display +
-                          ' - ' +
-                          user?.preferences?.create_post_pref?.preferred_hobby
-                            ?.genre?.display || Hobbyoptions[0]
+                        (user?.preferences?.create_post_pref?.preferred_hobby
+                          ?.genre?.display
+                          ? ` - ${user?.preferences?.create_post_pref?.preferred_hobby?.genre?.display}`
+                          : '')
                       }
                     />
                     <p>at</p>
