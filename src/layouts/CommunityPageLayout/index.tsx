@@ -127,13 +127,13 @@ const CommunityLayout: React.FC<Props> = ({
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
   const [selectedHobby, setSelectedHobby] = useState(
-    filters.hobby || 'All Hobbies',
+    user?.preferences?.community_view?.preferred_hobby?.hobby?._id,
   )
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(
-    filters.genre,
+    user?.preferences?.community_view?.preferred_hobby?.genre?._id,
   )
-  const [selectedLocation, setSelectedLocation] = useState(
-    filters.location || 'All Locations',
+  const [selectedLocation, setSelectedLocation] = useState<string>(
+    user?.preferences?.community_view?.preferred_location?.city?.split(' ')[0],
   )
 
   const [snackbar, setSnackbar] = useState({
@@ -177,6 +177,8 @@ const CommunityLayout: React.FC<Props> = ({
   const { refreshNum } = useSelector((state: RootState) => state.post)
   const router = useRouter()
 
+  const [seeMoreOpenedFirstTime, setSeeMoreOpenedFirstTime] =
+    useState<boolean>(false)
   const toggleSeeMore = () => {
     setSeeMoreHobby(!seeMoreHobby)
     dispatch(setFilters({ seeMoreHobbies: !seeMoreHobby }))
@@ -281,7 +283,7 @@ const CommunityLayout: React.FC<Props> = ({
   }
   useEffect(() => {
     scrollToTop()
-  }, [selectedHobby,selectedGenre])
+  }, [selectedHobby, selectedGenre])
 
   const fetchPosts = async (page = 1) => {
     if (showPageLoader) {
@@ -394,7 +396,11 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    if (post_pagination !== 1) fetchPosts(post_pagination)
+    if (post_pagination !== 1) {
+      console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#2')
+
+      fetchPosts(post_pagination)
+    }
   }, [post_pagination, router.asPath])
 
   const fetchHobbyMembers = async (hobbies?: HobbyEntry[]) => {
@@ -509,35 +515,48 @@ const CommunityLayout: React.FC<Props> = ({
   }, [])
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log('started fetch')
-      if (user && user.preferences) {
-        if (!user.preferences.community_view.preferred_hobby.hobby) {
-          setSelectedHobby('All Hobbies')
-        } else if (!user.preferences.community_view.all_hobbies) {
-          setSelectedHobby(
-            user.preferences.community_view.preferred_hobby.hobby._id,
-          )
+    if (!user) return
+    if (user && user.preferences) {
+      if (!user.preferences.community_view?.preferred_hobby?.hobby) {
+        setSelectedHobby('All Hobbies')
+      } else if (!user.preferences.community_view.all_hobbies) {
+        setSelectedHobby(
+          user.preferences.community_view.preferred_hobby.hobby._id,
+        )
 
-          if (user.preferences.community_view.preferred_hobby.genre) {
-            setSelectedGenre(
-              user.preferences.community_view.preferred_hobby.genre,
-            )
+        if (user._hobbies?.length > 0) {
+          if (!seeMoreOpenedFirstTime) {
+            user._hobbies?.map((hobb: any, index: number) => {
+              if (
+                hobb?.hobby?._id ===
+                  user.preferences.community_view.preferred_hobby.hobby._id &&
+                index > 2
+              ) {
+                toggleSeeMore()
+                setSeeMoreOpenedFirstTime(true)
+              }
+            })
           }
         }
 
-        if (!user.preferences.community_view.all_locations) {
-          console.log(user.preferences.community_view.preferred_location, 100)
-          setSelectedLocation(
-            user.preferences.community_view.preferred_location.city.split(
-              ' ',
-            )[0],
+        if (user.preferences.community_view.preferred_hobby.genre) {
+          setSelectedGenre(
+            user.preferences.community_view.preferred_hobby.genre._id,
           )
         }
       }
-    }, 500)
 
-    return () => clearTimeout(timer)
+      if (!user.preferences.community_view.all_locations) {
+        console.log(
+          '###########################2',
+          user.preferences.community_view.preferred_location.city.split(' ')[0],
+        )
+
+        setSelectedLocation(
+          user.preferences.community_view.preferred_location.city.split(' ')[0],
+        )
+      }
+    }
   }, [user])
 
   useEffect(() => {
@@ -545,23 +564,23 @@ const CommunityLayout: React.FC<Props> = ({
   }, [activeProfile.type])
 
   useEffect(() => {
-    console.log(selectedHobby, 1000)
-    console.log(selectedLocation, 1000)
-    console.log(
-      user?.preferences?.community_view?.preferred_location?.city,
-      100000,
-    )
-
+    if (!user?.preferences?.community_view) return
     if (
       activeProfile.data !== null &&
       (activeTab === 'links' || activeTab === 'posts')
     ) {
       if (selectedLocation !== '') {
-        console.warn('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT', activeProfile.data)
+        console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT', activeProfile.data)
         fetchPosts()
       }
     }
-  }, [selectedHobby,selectedGenre, selectedLocation, activeProfile?.type, refreshNum])
+  }, [
+    selectedHobby,
+    selectedGenre,
+    selectedLocation,
+    activeProfile?.type,
+    refreshNum,
+  ])
 
   useEffect(() => {
     if (selectedHobby !== '' && selectedLocation !== '') {
@@ -588,9 +607,14 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
-    setSelectedHobby(!filters.hobby ? 'All Hobbies' : filters.hobby)
-    setSelectedLocation(filters.location ?? '')
+    if (filters.genre)
+      setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
+    if (filters.hobby) setSelectedHobby(filters.hobby)
+    if (filters.location) {
+      console.log('###########################3', filters.location)
+
+      setSelectedLocation(filters.location ?? '')
+    }
   }, [filters.genre, filters.hobby, filters.location])
 
   useEffect(() => {
@@ -648,10 +672,29 @@ const CommunityLayout: React.FC<Props> = ({
           if (filters.location === null) {
             dispatch(
               setFilters({
-                location: 'All Locations',
+                location:
+                  user?.preferences?.community_view?.preferred_location?.city?.split(
+                    ' ',
+                  )[0]
+                    ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                        ' ',
+                      )[0]
+                    : 'All Locations',
               }),
             )
-            setSelectedLocation('All Locations')
+            console.log('###########################4', 'All Locations')
+
+            setSelectedLocation(
+              user?.preferences?.community_view?.preferred_location?.city?.split(
+                ' ',
+              )[0]
+                ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                    ' ',
+                  )[0]
+                : 'All Locations',
+            )
+            console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#5')
+            fetchPosts(1)
           }
           setVisibilityData(visibilityArr)
         }
@@ -700,13 +743,36 @@ const CommunityLayout: React.FC<Props> = ({
       }
       setVisibilityData(visibilityArr)
 
-      if (filters.location === null) {
+      if (
+        filters.location === null &&
+        user?.preferences?.community_view?.preferred_location?.city?.split(
+          ' ',
+        )[0]
+      ) {
         dispatch(
           setFilters({
-            location: 'All Locations',
+            location:
+              user?.preferences?.community_view?.preferred_location?.city?.split(
+                ' ',
+              )[0]
+                ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                    ' ',
+                  )[0]
+                : 'All Locations',
           }),
         )
-        setSelectedLocation('All Locations')
+        console.log('###########################5', 'All Locations')
+
+        setSelectedLocation(
+          user?.preferences?.community_view?.preferred_location?.city?.split(
+            ' ',
+          )[0]
+            ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                ' ',
+              )[0]
+            : 'All Locations',
+        )
+        fetchPosts()
       }
     }
   }, [activeProfile])
@@ -716,12 +782,16 @@ const CommunityLayout: React.FC<Props> = ({
       dispatch(openModal({ type: 'auth', closable: true }))
       return
     }
+    console.log('Location-------->', selectedLocation)
+    console.log('selectedLocation === val ------->', selectedLocation === val)
+    console.log('val----->', val)
     dispatch(
       setFilters({
         location: selectedLocation === val ? 'All Locations' : val,
       }),
     )
-    setSelectedLocation((prev) => {
+    console.log('###########################6', val)
+    setSelectedLocation((prev: any) => {
       if (prev === val) {
         return 'All Locations'
       } else {

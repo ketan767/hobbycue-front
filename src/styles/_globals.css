@@ -4,6 +4,15 @@
   text-overflow: ellipsis; /* Displays ellipsis (...) for overflowing text */
 }
 
+.truncateTwoLines {
+  display: -webkit-box;          /* Required for multiline truncation */
+  -webkit-box-orient: vertical; /* Specifies the box's orientation */
+  overflow: hidden;             /* Hides any overflowing text */
+  text-overflow: ellipsis;      /* Adds ellipsis (...) at the end of the visible text */
+  line-clamp: 2;                /* Limits the text to 2 lines */
+  -webkit-line-clamp: 2;        /* Required for multiline truncation */
+}
+
 html {
   scroll-behavior: smooth;
 }

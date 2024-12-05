@@ -206,11 +206,11 @@ const BlogActionBar: React.FC<Props> = ({
           <ShareIcon />
         </button>
       </CustomizedTooltips>
-      <div style={{ position: 'relative' }}>
+      <div className={styles.viewMenuParent}>
         <CustomizedTooltips title="Click to view options">
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className={styles.btn}
+            className={`${styles.btn} ${showMenu ? styles.active : ''}`}
             disabled={isEditing}
           >
             <MenuIcon />
