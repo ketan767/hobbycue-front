@@ -177,6 +177,8 @@ const CommunityLayout: React.FC<Props> = ({
   const { refreshNum } = useSelector((state: RootState) => state.post)
   const router = useRouter()
 
+  const [seeMoreOpenedFirstTime, setSeeMoreOpenedFirstTime] =
+    useState<boolean>(false)
   const toggleSeeMore = () => {
     setSeeMoreHobby(!seeMoreHobby)
     dispatch(setFilters({ seeMoreHobbies: !seeMoreHobby }))
@@ -522,6 +524,21 @@ const CommunityLayout: React.FC<Props> = ({
           user.preferences.community_view.preferred_hobby.hobby._id,
         )
 
+        if (user._hobbies?.length > 0) {
+          if (!seeMoreOpenedFirstTime) {
+            user._hobbies?.map((hobb: any, index: number) => {
+              if (
+                hobb?.hobby?._id ===
+                  user.preferences.community_view.preferred_hobby.hobby._id &&
+                index > 2
+              ) {
+                toggleSeeMore()
+                setSeeMoreOpenedFirstTime(true)
+              }
+            })
+          }
+        }
+
         if (user.preferences.community_view.preferred_hobby.genre) {
           setSelectedGenre(
             user.preferences.community_view.preferred_hobby.genre._id,
@@ -590,7 +607,8 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    if (filters.genre) setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
+    if (filters.genre)
+      setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
     if (filters.hobby) setSelectedHobby(filters.hobby)
     if (filters.location) {
       console.log('###########################3', filters.location)
