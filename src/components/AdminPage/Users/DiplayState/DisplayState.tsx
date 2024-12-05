@@ -26,31 +26,33 @@ const DisplayState: React.FC<Props> = ({ modalState }) => {
           return (
             <div key={key} className={styles.stateItem}>
               <strong>joined: {`>`} </strong> {`${formatDate(start)}`}
-              <span className={styles.divider}>|</span>
             </div>
           )
         } else if (!start && end) {
           return (
             <div key={key} className={styles.stateItem}>
-              <strong>joined: {`>`} </strong> {`${formatDate(end)}`}
               <span className={styles.divider}>|</span>
+              <strong>joined: {`>`} </strong> {`${formatDate(end)}`}
             </div>
           )
         } else if (start && end) {
           return (
             <div key={key} className={styles.stateItem}>
+              <span className={styles.divider}>|</span>
               <strong>joined:</strong>{' '}
               {`${formatDate(start)} - ${formatDate(end)}`}
-              <span className={styles.divider}>|</span>
             </div>
           )
         }
       } else if (Array.isArray(value) && value.length > 0) {
-        // For arrays, display as a single line
+        console.log(value)
         return (
           <div key={key} className={styles.stateItem}>
-            <strong>{key}:</strong> {value.join(', ')}
             <span className={styles.divider}>|</span>
+            <strong>{key}:</strong>{' '}
+            <span style={{ textTransform: 'uppercase' }}>
+              {value.map((x) => x.slice(0, 1)).join(', ')}
+            </span>
           </div>
         )
       } else if (typeof value === 'object' && value) {
@@ -59,10 +61,11 @@ const DisplayState: React.FC<Props> = ({ modalState }) => {
         if (filteredObject.length > 0) {
           return (
             <div key={key} className={styles.stateItem}>
+              <span className={styles.divider}>|</span>
               <strong>{key}:</strong>{' '}
               {filteredObject
-                .map(([subKey, subValue]) => `${subKey}: ${subValue}`)
-                .join(', ')}
+                .map(([subKey, subValue]) => ` ${subValue}`)
+                .join('- ')}
             </div>
           )
         }
@@ -70,6 +73,7 @@ const DisplayState: React.FC<Props> = ({ modalState }) => {
         // For all other strings, display in one line
         return (
           <div key={key} className={styles.stateItem}>
+            <span className={styles.divider}>|</span>
             <strong>{key}:</strong> {value}
           </div>
         )

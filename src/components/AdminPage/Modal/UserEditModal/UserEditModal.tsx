@@ -86,7 +86,15 @@ const EditUser: React.FC<UserEditProps> = ({ id, setIsEditModalOpen }) => {
   return (
     <section className={styles.mainContainer}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Edit User: {user?.full_name}</h1>
+        <h1
+          className={styles.title}
+          title={user?.full_name.length > 30 ? user?.full_name : ''}
+        >
+          Edit User:{' '}
+          {user?.full_name.length > 30
+            ? `${user?.full_name.slice(0, 30)} ...`
+            : user?.full_name}
+        </h1>
         <CloseIcon
           className={styles['modal-close-icon']}
           onClick={() => setIsEditModalOpen(false)}
