@@ -72,9 +72,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
   const [LocationOptions, setLocationOptions] = useState<string | any>([
     'All locations',
   ])
-  const [Hobbyoptions, setHobbyOptions] = useState<string | any>([
-    'All hobbies',
-  ])
+  const [Hobbyoptions, setHobbyOptions] = useState<string | any>([])
 
   useEffect(() => {
     if (user._addresses) {
@@ -84,7 +82,6 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
       ]
 
       const Hobbyoptions = [
-        'All hobbies',
         ...user._hobbies.map((item: any) => {
           const hobbyName = item.hobby.display
           const genreName = item.genre?.display || ''
