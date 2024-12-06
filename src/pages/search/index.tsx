@@ -1261,6 +1261,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       ProductResults.length === 0 &&
       PostsResults.length === 0 &&
       BlogsResults.length === 0 &&
+      ClassesResults.length === 0 &&
+      RentalResults.length === 0 &&
       showAll) ||
     (searchResults.length === 0 && showAllUsers) ||
     (hobbyResults.length === 0 && showAllhobbies) ||
@@ -1269,6 +1271,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
     (EventResults.length === 0 && showAllEvent) ||
     (ProductResults.length === 0 && showAllProducts) ||
     (PostsResults.length === 0 && showAllPosts) ||
+    (ClassesResults.length === 0 && showAllClasses) ||
+    (RentalResults.length === 0 && showAllRentals) ||
     (BlogsResults.length === 0 && showAllBlogs && searchLoading === false)
 
   const isMobile = useMediaQuery('(max-width:1100px)')
@@ -2542,11 +2546,15 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userTagline}>
                           {page?.tagline || '\u00a0'}
                         </div>
-                        <div className={styles.userLocation}>
-                          {page?.author?.full_name}{' '}
-                          {page.createdAt
-                            ? ' | ' + formatDateTimeThree(page.createdAt)
-                            : ''}
+                        <div className={styles.blogAuthor}>
+                          <div className={styles.full_name}>
+                            {page?.author?.full_name}{' '}
+                          </div>
+                          <div>
+                            {page.createdAt
+                              ? ' | ' + formatDateTimeThree(page.createdAt)
+                              : ''}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2896,6 +2904,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
   const showAllPosts = filter === 'posts'
   const showAllBlogs = filter === 'blogs'
   const showAllHobbies = filter === 'hobby'
+  const showAllClasses = filter === 'classes'
+  const showAllRentals = filter === 'rentals'
 
   const noResultsFound =
     (userSearchResults.length === 0 &&
@@ -2906,6 +2916,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
       ProductSearch.length === 0 &&
       PostsSearch.length === 0 &&
       BlogsSearch.length === 0 &&
+      ClassesSearch.length === 0 &&
+      RentalSearch.length === 0 &&
       showAll) ||
     (userSearchResults.length === 0 && showAllUsers) ||
     (hobbySearchResults.length === 0 && showAllHobbies) ||
@@ -2914,6 +2926,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
     (EventSearch.length === 0 && showAllEvent) ||
     (ProductSearch.length === 0 && showAllProducts) ||
     (PostsSearch.length === 0 && showAllPosts) ||
+    (ClassesSearch.length === 0 && showAllClasses) ||
+    (RentalSearch.length === 0 && showAllRentals) ||
     (BlogsSearch.length === 0 && showAllBlogs && searchLoading === false)
 
   return (
