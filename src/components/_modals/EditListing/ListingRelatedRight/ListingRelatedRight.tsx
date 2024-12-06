@@ -16,6 +16,7 @@ import {
 import {
   getAllListingRelationTypes,
   searchPages,
+  searchPagesRelated,
 } from '@/services/listing.service'
 import styles from './styles.module.css'
 import { isEmptyField } from '@/utils'
@@ -171,7 +172,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   const handleSearchPages = async (e: any) => {
     setShowDropdown(true)
     setDropdownLoading(true)
-    const { res, err } = await searchPages({
+    const { res, err } = await searchPagesRelated({
       title: pageInputValue,
     })
     console.log(res)
@@ -256,7 +257,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
       relatedListingsRight.includes(item._id),
     )
 
-    const matchedTitles = matchedListings.map((listing: any) => ({
+    const matchedTitles = matchedListings?.map((listing: any) => ({
       id: listing._id,
       title: listing.title,
     }))

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import styles from './EditBlog.module.css'
 import Image from 'next/image'
 import EditBlogHobbyModal from './EditHobby'
@@ -6,10 +6,19 @@ import { useRouter } from 'next/router'
 import { useGetBlogById } from '@/services/blog.services'
 import { BlogHobby } from '@/types/blog'
 import axiosInstance from '@/services/_axios'
+import { CircularProgress } from '@mui/material'
+import FilledButton from '@/components/_buttons/FilledButton'
+import { useDispatch, useSelector } from 'react-redux'
+import { closeModal, openModal } from '@/redux/slices/modal'
+import OutlinedButton from '@/components/_buttons/OutlinedButton'
+import BlogCard from '@/components/BlogCard/BlogCard'
+import { RootState } from '@/redux/store'
+import Link from 'next/link'
 
 interface Props {
-  setIsModalOpen: any
-  data: any
+  propData: any
+  // setIsModalOpen: any
+  // data: any
 }
 
 const penIcon = (
@@ -67,25 +76,34 @@ function formatDate(isoDate: any) {
 
   return `${day} ${month} ${year}`
 }
-const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
+const EditBlog: React.FC<Props> = ({
+  // setIsModalOpen
+  propData,
+}) => {
   const router = useRouter()
 
-  const {
-    data: Singleblog,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useGetBlogById(`url=${router.query.url}&populate=author,_hobbies`)
-  const data = {
-    blog_url: Singleblog?.data?.blog[0],
-  }
+  // const {
+  //   data: Singleblog,
+  //   isLoading,
+  //   isError,
+  //   error,
+  //   refetch,
+  // } = useGetBlogById(`url=${router.query.url}&populate=author,_hobbies`)
+  // const data = {
+  //   blog_url: Singleblog?.data?.blog[0],
+  // }
 
-  const blog = data?.blog_url || {}
+  // const blog = data?.blog_url || {}
+  const { blog } = useSelector((state: RootState) => state.blog)
+  const { setIsEditing } = propData
   const author = blog?.author
   const [editHobby, setEditHobby] = useState(false)
   const [urlText, setUrlText] = useState('')
+  const [urlError, setUrlError] = useState('')
   const [keyWords, setKeyWords] = useState('')
+  const [saveBtnLoading, setSaveBtnLoading] = useState(false)
+  const [publishBtnLoading, setPublishBtnLoading] = useState(false)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (blog) {
@@ -99,37 +117,62 @@ const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
   }
 
   const handleURLUpdate = (e: any) => {
+    setUrlError('')
     let value = e.target.value
+
+    // Replace spaces with hyphens
+    value = value.replace(/\s+/g, '-')
+
+    // Remove unwanted characters (anything other than alphanumerics, hyphens, and slashes)
+    value = value.replace(/[^a-zA-Z0-9-\/]/g, '')
+
+    // Convert to lowercase
+    value = value.toLowerCase()
+
+    // Replace multiple consecutive hyphens with a single hyphen
+    value = value.replace(/-{2,}/g, '-')
+
+    // Update the state
     setUrlText(value)
-    console.log(value.length)
   }
+
   const updateBlog = async (blogId: String) => {
-    let updatedFields = {
-      url: urlText,
-      keywords: keyWords,
-    }
-    const token = localStorage.getItem('token')
+    try {
+      setSaveBtnLoading(true)
+      let updatedFields = {
+        url: urlText?.trim(),
+        keywords: keyWords,
+      }
+      const token = localStorage.getItem('token')
 
-    const headers = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    }
-    const { data } = await axiosInstance.patch(
-      `blogs/${blogId}`,
-      updatedFields,
-      headers,
-    )
+      const headers = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+      const { data } = await axiosInstance.patch(
+        `blogs/${blogId}`,
+        updatedFields,
+        headers,
+      )
 
-    if (!data) {
-      console.error('Error updating blog:', data.error)
-      return null
+      if (!data) {
+        console.error('Error updating blog:', data.error)
+        return null
+      }
+      // refetch()
+      setUrlError('')
+      router.push(`/blog/${urlText}`)
+      console.log('Blog updated successfully:', data)
+      return data
+    } catch (err: any) {
+      if (err?.response?.data?.message === 'Blog with this url already exists!')
+        setUrlError('Blog with this url already exists!')
+      console.log('Error while updating meta data!', err)
+    } finally {
+      setSaveBtnLoading(false)
     }
-    refetch()
-    router.push(`/blog/${urlText}`)
-    console.log('Blog updated successfully:', data)
-    return data
   }
 
   // utils/api.ts
@@ -138,64 +181,104 @@ const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
     blogId: string,
     status: 'Draft' | 'Pending' | 'Published',
   ): Promise<void> => {
-    const token = localStorage.getItem('token') // Retrieve token from local storage
-    if (!token) throw new Error('User is not authenticated')
+    try {
+      setPublishBtnLoading(true)
+      const token = localStorage.getItem('token') // Retrieve token from local storage
+      if (!token) throw new Error('User is not authenticated')
 
-    const headers = {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    }
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
 
-    const { data } = await axiosInstance.patch(
-      `blogs/${blogId}/status`,
-      { status },
-      { headers },
-    )
-    if (data) {
-      refetch()
-      console.log(data)
+      const { data } = await axiosInstance.patch(
+        `blogs/${blogId}/status`,
+        { status },
+        { headers },
+      )
+      setPublishBtnLoading(false)
+      if (data) {
+        // refetch()
+        console.log(data)
+      }
+    } catch (err) {
+      console.log('Error in Publising Blog', err)
     }
   }
 
-  console.log(blog)
-  let props = { setEditHobby, handleClose, data, refetch }
+  let props = {
+    setEditHobby,
+    handleClose,
+    // refetch
+  }
+
+  // const handlePreview = () => {
+  //   setIsEditing(false)
+  //   dispatch(closeModal())
+  // }
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (editHobby) {
+          setEditHobby(false)
+          e.stopPropagation()
+          return
+        }
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   return (
     <>
-      {Singleblog && !isLoading && !isError && (
-        <>
-          {editHobby ? (
-            <>
-              <EditBlogHobbyModal {...props} />
-            </>
-          ) : (
-            <section className={styles.mainContainer}>
-              <div className={styles.closeButtonContainer}>
-                <button
-                  className={styles.closeButton}
-                  onClick={() => setIsModalOpen(false)}
+      {/* {Singleblog && !isLoading && !isError && ( */}
+      <>
+        {/* {editHobby ? (
+          <>
+            <EditBlogHobbyModal {...props} />
+          </>
+        ) : ( */}
+        <section className={styles.mainContainer}>
+          {/* <div className={styles.closeButtonContainer}>
+            <button
+              className={styles.closeButton}
+              // onClick={() => setIsModalOpen(false)}
+            >
+              x
+            </button>
+          </div> */}
+
+          <div className={styles.containerWrapper}>
+            <header className={styles.header}>
+              <h2 className={styles.status}>
+                Status:{' '}
+                <span className={styles.statusSpan}>{blog?.status}</span>
+              </h2>
+              <div className={styles.actionButtons}>
+                <Link href={`/blog/${urlText}?preview=true`} target="_blank">
+                  <OutlinedButton className={styles.previewButton}>
+                    Preview
+                  </OutlinedButton>
+                </Link>
+                <OutlinedButton
+                  onClick={() => updateBlogStatus(blog._id, 'Pending')}
+                  className={styles.publishButton}
+                  disabled={publishBtnLoading || blog?.status !== 'Draft'}
                 >
-                  x
-                </button>
+                  {publishBtnLoading ? (
+                    <CircularProgress size={14} color="inherit" />
+                  ) : (
+                    'Publish'
+                  )}
+                </OutlinedButton>
               </div>
-
-              <div className={styles.containerWrapper}>
-                <header className={styles.header}>
-                  <h2 className={styles.status}>
-                    Status:{' '}
-                    <span className={styles.statusSpan}>{blog?.status}</span>
-                  </h2>
-                  <div className={styles.actionButtons}>
-                    <button className={styles.previewButton}>Preview</button>
-                    <button
-                      onClick={() => updateBlogStatus(blog._id, 'Pending')}
-                      className={styles.publishButton}
-                    >
-                      Publish
-                    </button>
-                  </div>
-                </header>
-
+            </header>
+            {editHobby ? (
+              <EditBlogHobbyModal {...props} />
+            ) : (
+              <>
                 {/* blogURL */}
                 <div className={styles.blogUrlWrapper}>
                   <label className={styles.blogLabel} htmlFor="URL">
@@ -213,6 +296,7 @@ const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
                     maxLength={48}
                     onChange={handleURLUpdate}
                   />
+                  {urlError && <p className={styles.urlError}>{urlError}</p>}
                 </div>
 
                 {/* search pic */}
@@ -223,17 +307,21 @@ const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
                   </p> */}
                   <div className={styles.searchPicContent}>
                     <figure className={styles.searchPicFigure}>
-                      <Image
+                      <img
                         className={styles.searchPicImage}
-                        height={400}
-                        width={400}
                         src={author?.profile_image}
-                        alt=""
+                        alt="Author Pic"
                       />
                     </figure>
                     <div className={styles.searchPicDetails}>
-                      <h3 className={styles.searchPicTitle}>{blog?.title}</h3>
-                      <h4 className={styles.searchPicSubtitle}>
+                      <h3
+                        className={`${styles.searchPicTitle} truncateOneLine`}
+                      >
+                        {blog?.title}
+                      </h3>
+                      <h4
+                        className={`${styles.searchPicSubtitle} truncateOneLine`}
+                      >
                         {blog?.tagline}
                       </h4>
                       <p className={styles.searchPicAuthor}>
@@ -246,38 +334,39 @@ const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
                 {/* middle content */}
                 <div className={styles.middleWrapper}>
                   {/* left */}
-                  <div className={styles.leftContent}>
-                    <figure className={styles.leftFigure}>
-                      <Image
-                        className={styles.leftImage}
-                        width={300}
-                        height={300}
-                        src={data?.blog_url?.cover_pic}
-                        alt="profile cover"
-                      />
-                    </figure>
-                    <h3 className={styles.leftTitle}>{blog?.title}</h3>
-                    <p className={styles.leftSubtitle}>{blog?.tagline}</p>
-                    <div className={styles.leftDetails}>
-                      <p className={styles.leftAuthorInfo}>
-                        <span className={styles.leftAuthor}>
-                          {author?.full_name}
-                        </span>
-                        <span className={styles.leftDate}>
-                          {formatDate(blog?.createdAt)}
-                        </span>
-                      </p>
-                      <p className={styles.leftTags}>
-                        <span className={styles.leftStarIcon}>{starIcon}</span>
+                  {/* <div className={styles.leftContent}>
+                  <figure className={styles.leftFigure}>
+                    <Image
+                      className={styles.leftImage}
+                      width={300}
+                      height={300}
+                      src={blog?.cover_pic}
+                      alt="profile cover"
+                    />
+                  </figure>
+                  <h3 className={styles.leftTitle}>{blog?.title}</h3>
+                  <p className={styles.leftSubtitle}>{blog?.tagline}</p>
+                  <div className={styles.leftDetails}>
+                    <p className={styles.leftAuthorInfo}>
+                      <span className={styles.leftAuthor}>
+                        {author?.full_name}
+                      </span>
+                      <span className={styles.leftDate}>
+                        {formatDate(blog?.createdAt)}
+                      </span>
+                    </p>
+                    <p className={styles.leftTags}>
+                      <span className={styles.leftStarIcon}>{starIcon}</span>
 
-                        {blog?._hobbies?.map((h: BlogHobby, i: React.Key) => (
-                          <span key={i} className={styles.leftTag}>
-                            {h.hobby?.display}
-                          </span>
-                        ))}
-                      </p>
-                    </div>
+                      {blog?._hobbies?.map((h: BlogHobby, i: React.Key) => (
+                        <span key={i} className={styles.leftTag}>
+                          {h.hobby?.display}
+                        </span>
+                      ))}
+                    </p>
                   </div>
+                </div> */}
+                  <BlogCard data={blog} />
 
                   {/* right */}
                   <div className={styles.rightContent}>
@@ -312,28 +401,39 @@ const EditBlog: React.FC<Props> = ({ setIsModalOpen }) => {
                     </div>
                   </div>
                 </div>
+              </>
+            )}
+          </div>
 
-                <div className={styles.footerButtons}>
-                  <button
-                    className={styles.backButton}
-                    onClick={() => setIsModalOpen(false)}
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={() => updateBlog(blog._id)}
-                    className={styles.saveButton}
-                  >
-                    Save
-                  </button>
-                </div>
-              </div>
-            </section>
-          )}
-        </>
-      )}
+          <div className={styles.footerButtons}>
+            <OutlinedButton
+              className={styles.backButton}
+              onClick={() =>
+                editHobby ? setEditHobby(false) : dispatch(closeModal())
+              }
+            >
+              Back
+            </OutlinedButton>
+            <FilledButton
+              onClick={() =>
+                editHobby ? setEditHobby(false) : updateBlog(blog._id)
+              }
+              className={styles.saveButton}
+              disabled={saveBtnLoading}
+            >
+              {saveBtnLoading ? (
+                <CircularProgress size={14} color="inherit" />
+              ) : (
+                'Save'
+              )}
+            </FilledButton>
+          </div>
+        </section>
+        {/* )} */}
+      </>
+      {/* )} */}
 
-      {isLoading && <p>Loading</p>}
+      {/* {isLoading && <p>Loading</p>} */}
     </>
   )
 }

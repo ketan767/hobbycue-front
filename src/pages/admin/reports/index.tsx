@@ -23,6 +23,7 @@ import {
   getSupports,
 } from '@/services/admin.service'
 import StatusDropdown from '@/components/_formElements/StatusDropdown'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 type UserProps = {
   _id: string
@@ -163,17 +164,16 @@ const AdminReport: React.FC = () => {
     }
   }
   function extractPath(url: any) {
-    console.log(url);
-    
+    console.log(url)
+
     try {
-      const urlObject = new URL(url);
-      return urlObject.pathname.slice(1);
+      const urlObject = new URL(url)
+      return urlObject.pathname.slice(1)
     } catch (error) {
-      console.error("Invalid URL:", url);
-      return url; // or handle it in a way that suits your use case
+      console.error('Invalid URL:', url)
+      return url // or handle it in a way that suits your use case
     }
   }
-  
 
   const pagesLength = (user: any) => {
     return user?._listings?.length || 0
@@ -181,8 +181,9 @@ const AdminReport: React.FC = () => {
   const handleEdit = (profile_url: any) => {
     router.push(`/admin/users/edit/${profile_url}`)
   }
-
+  const dispatch = useDispatch()
   const fetchSearchResults = async () => {
+    dispatch(setShowPageLoader(true))
     const searchValue = data.search.value.trim()
     let searchCriteria = {
       full_name: searchValue,
@@ -190,10 +191,11 @@ const AdminReport: React.FC = () => {
 
     const { res, err } = await searchUsers(searchCriteria)
     if (err) {
+      dispatch(setShowPageLoader(false))
       console.log('An error', err)
     } else {
       setSearchResults(res?.data?.data.supports)
-
+      dispatch(setShowPageLoader(false))
       // Calculate total number of pages based on search results length
       const totalPages = Math.ceil(res.data.length / 50)
       const pages = []

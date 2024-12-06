@@ -171,6 +171,25 @@ font-family:'Poppins';
   bottom: 0;
   right: var(--spacing-8);
 }
+.name {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 ;
+  line-clamp: 2 ;
+  -webkit-box-orient: vertical ;
+  overflow: hidden ;
+  text-overflow: ellipsis ;
+  width: 100% ;
+  max-width: 850px ;
+}
+.tagline {
+  display: -webkit-box;
+  -webkit-line-clamp: 1 ;
+  line-clamp: 1 ;
+  -webkit-box-orient: vertical ;
+  overflow: hidden ;
+  text-overflow: ellipsis ;
+  max-width: 850px ;
+}
 
 .center-container .name {
   font-family: 'Poppins';

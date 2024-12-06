@@ -69,9 +69,15 @@ const CommunityHome: React.FC<Props> = ({}) => {
         <section style={{padding:`${loading && "0"}`}} className={loading ? "":styles['posts-container']}>
           {loading ? (
             <>
-              <PostCardSkeletonLoading />
-              <PostCardSkeletonLoading />
-              <PostCardSkeletonLoading />
+              <div style={{paddingTop:"12px"}}>
+                <PostCardSkeletonLoading />
+              </div>
+              <div style={{paddingTop:"12px"}}>
+                <PostCardSkeletonLoading />
+              </div>
+              <div style={{paddingTop:"12px"}}>
+                <PostCardSkeletonLoading />
+              </div>
             </>
           ) : allPosts.length > 0 ? (
             allPosts.map((post: any) => {

@@ -250,6 +250,10 @@ const AuthForm: React.FC<Props> = (props) => {
         dispatch(updateIsLoggedIn(true))
         dispatch(closeModal())
         const { err: error, res: response } = await getMyProfileDetail()
+        if (response?.data?.data?.user?.is_admin) {
+          window.location.href = '/admin/dashboard'
+          return
+        }
         if (router.pathname === '/') {
           if (response?.data?.data?.user.is_admin) {
             if (router.asPath.includes('me=true')) {
@@ -377,6 +381,10 @@ const AuthForm: React.FC<Props> = (props) => {
         dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
       }
       const { err: error, res: response } = await getMyProfileDetail()
+      if (response?.data?.data?.user?.is_admin) {
+        window.location.href = '/admin/dashboard'
+        return
+      }
 
       if (router.pathname === '/') {
         if (response?.data?.data?.user.is_admin) {
@@ -482,20 +490,11 @@ const AuthForm: React.FC<Props> = (props) => {
         }
 
         const { err: error, res: response } = await getMyProfileDetail()
-        if (response?.data?.data?.user.is_admin) {
-          // if (router.asPath.includes('me=true')) {
-          //   router.push(`/me`)
-          // } else if (router.asPath.includes('showGeneral=true')) {
-          //   router.push(`/me/general`)
-          // } else if (router.asPath.includes('showHobby=true')) {
-          //   router.push(`/me/hobby`)
-          // } else if (router.asPath.includes('showLocation=true')) {
-          //   router.push(`/me/location`)
-          // } else {
-          //   router.push('/admin')
-          // }
+        if (response?.data?.data?.user?.is_admin) {
+          window.location.href = '/admin/dashboard'
+          return
         }
-        else if (response?.data?.data?.user?.is_onboarded) {
+        if (response?.data?.data?.user?.is_onboarded) {
           // if (router.asPath.includes('me=true')) {
           //   router.push(`/me`)
           // } else if (router.asPath.includes('showGeneral=true')) {

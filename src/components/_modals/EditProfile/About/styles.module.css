@@ -9,7 +9,8 @@
   /* x + 9  = x  */
   display: flex;
   flex-direction: column;
-  width: 671px !important;
+  width: calc(728px - 48px) !important;
+  transform:translateX(calc(-60px));
 }
 .modal-wrapper .footer {
 
@@ -182,6 +183,7 @@
     margin: -5px 0 2rem 0;
     padding: 5px 0 0 0;
     height: 90%;
+    transform:none;
   }
   .modal-wrapper .header{
     padding: var(--spacing-16);

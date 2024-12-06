@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
 import EditIcon from '@/assets/svg/edit-icon.svg'
 import { openModal } from '@/redux/slices/modal'
-import { getAllPosts } from '@/services/post.service'
+import { getAllHobbyPosts } from '@/services/post.service'
 import { GetServerSideProps } from 'next'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import post, {
@@ -58,6 +58,7 @@ import {
   searchUsersAdvanced,
   TrendingHobbiesByUser,
 } from '@/services/user.service'
+import AddHobbyImg from '@/assets/image/AddHobbyImg.png'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -114,7 +115,6 @@ const CommunityLayout: React.FC<Props> = ({
     (state: RootState) => state.user,
   )
 
-
   const { allPosts, filters, post_pagination } = useSelector(
     (state: RootState) => state.post,
   )
@@ -127,13 +127,13 @@ const CommunityLayout: React.FC<Props> = ({
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
   const [selectedHobby, setSelectedHobby] = useState(
-    filters.hobby ||'All Hobbies',
+    user?.preferences?.community_view?.preferred_hobby?.hobby?._id,
   )
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(
-    filters.genre,
+    user?.preferences?.community_view?.preferred_hobby?.genre?._id,
   )
-  const [selectedLocation, setSelectedLocation] = useState(
-    filters.location || 'All Locations',
+  const [selectedLocation, setSelectedLocation] = useState<string>(
+    user?.preferences?.community_view?.preferred_location?.city?.split(' ')[0],
   )
 
   const [snackbar, setSnackbar] = useState({
@@ -177,6 +177,8 @@ const CommunityLayout: React.FC<Props> = ({
   const { refreshNum } = useSelector((state: RootState) => state.post)
   const router = useRouter()
 
+  const [seeMoreOpenedFirstTime, setSeeMoreOpenedFirstTime] =
+    useState<boolean>(false)
   const toggleSeeMore = () => {
     setSeeMoreHobby(!seeMoreHobby)
     dispatch(setFilters({ seeMoreHobbies: !seeMoreHobby }))
@@ -281,7 +283,7 @@ const CommunityLayout: React.FC<Props> = ({
   }
   useEffect(() => {
     scrollToTop()
-  }, [selectedHobby])
+  }, [selectedHobby, selectedGenre])
 
   const fetchPosts = async (page = 1) => {
     if (showPageLoader) {
@@ -302,11 +304,7 @@ const CommunityLayout: React.FC<Props> = ({
     if (activeTab === 'links') {
       params.append('has_link', 'true')
     }
-    if (
-      selectedGenre &&
-      selectedGenre !== 'undefined' &&
-      selectedGenre !== ''
-    ) {
+    if (selectedGenre && selectedGenre !== undefined && selectedGenre !== '') {
       params.append('_genre', selectedGenre)
     }
     if (selectedHobby === 'My Hobbies') {
@@ -323,6 +321,10 @@ const CommunityLayout: React.FC<Props> = ({
       selectedHobby !== 'My Hobbies'
     ) {
       params.append('_hobby', selectedHobby)
+      params.append('hobbyId', selectedHobby)
+      if (selectedGenre) {
+        params.append('genreId', selectedGenre)
+      }
     } else {
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item?.hobby?._id)
@@ -363,8 +365,7 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
     if (page === 1) dispatch(updateLoading(true))
-
-    const { err, res } = await getAllPosts(params.toString())
+    const { err, res } = await getAllHobbyPosts(params.toString())
     if (err) return console.log(err)
     if (res?.data?.success) {
       let posts = res.data.data.posts.map((post: any) => {
@@ -391,7 +392,11 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    if (post_pagination !== 1) fetchPosts(post_pagination)
+    if (post_pagination !== 1) {
+      console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#2')
+
+      fetchPosts(post_pagination)
+    }
   }, [post_pagination, router.asPath])
 
   const fetchHobbyMembers = async (hobbies?: HobbyEntry[]) => {
@@ -505,51 +510,83 @@ const CommunityLayout: React.FC<Props> = ({
     fetchWhatsNew()
   }, [])
 
-
   useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log('started fetch');
-      if (user && user.preferences) {
-        if (!user.preferences.community_view.all_hobbies) {
-          console.log(user.preferences.community_view.preferred_hobby, 100);
-          setSelectedHobby(user.preferences.community_view.preferred_hobby.hobby._id);
-  
-          if (user.preferences.community_view.preferred_hobby.genre) {
-            setSelectedGenre(user.preferences.community_view.preferred_hobby.genre);
-          }
+    if (!user) return
+    if (user && user.preferences) {
+      if (!user.preferences.community_view?.preferred_hobby?.hobby) {
+        setSelectedHobby('All Hobbies')
+      } else if (!user.preferences.community_view.all_hobbies) {
+        setSelectedHobby(
+          user.preferences.community_view.preferred_hobby.hobby._id,
+        )
+
+        if (user._hobbies?.length > 0) {
+          const preferredHobbyId =
+            user?.preferences?.community_view?.preferred_hobby?.hobby?._id
+          const preferredGenreId =
+            user?.preferences?.community_view?.preferred_hobby?.genre?._id
+
+          user._hobbies?.forEach((hobb: any, index: number) => {
+            if (preferredGenreId && preferredHobbyId) {
+              if (
+                hobb?.hobby?._id === preferredHobbyId &&
+                hobb?.genre?._id === preferredGenreId &&
+                index > 2
+              ) {
+                console.log('preferredGenreId is called')
+                dispatch(setFilters({ seeMoreHobbies: true }))
+              }
+            } else if (preferredHobbyId) {
+              if (hobb?.genre?._id) {
+              } else if (hobb?.hobby?._id === preferredHobbyId && index > 2) {
+                console.log('preferredHobbyId is called')
+                dispatch(setFilters({ seeMoreHobbies: true }))
+              }
+            }
+          })
         }
-  
-        if (!user.preferences.community_view.all_locations) {
-          console.log(user.preferences.community_view.preferred_location, 100);
-          setSelectedLocation(user.preferences.community_view.preferred_location.city.split(' ')[0]);
+        if (user.preferences.community_view.preferred_hobby.genre) {
+          setSelectedGenre(
+            user.preferences.community_view.preferred_hobby.genre._id,
+          )
         }
       }
-    }, 500);
-  
-    return () => clearTimeout(timer);
-  }, [user]);
+
+      if (!user.preferences.community_view.all_locations) {
+        console.log(
+          '###########################2',
+          user.preferences.community_view.preferred_location.city.split(' ')[0],
+        )
+
+        setSelectedLocation(
+          user.preferences.community_view.preferred_location.city.split(' ')[0],
+        )
+      }
+    }
+  }, [user])
 
   useEffect(() => {
     dispatch(updateListingModalData(activeProfile.data))
   }, [activeProfile.type])
 
   useEffect(() => {
-    console.log(selectedHobby,1000);
-    console.log(selectedLocation,1000);
-    console.log(user?.preferences?.community_view?.preferred_location?.city,100000);
-    
-    
-    
+    if (!user?.preferences?.community_view) return
     if (
       activeProfile.data !== null &&
       (activeTab === 'links' || activeTab === 'posts')
     ) {
       if (selectedLocation !== '') {
-        console.warn('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT', activeProfile.data)
+        console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT', activeProfile.data)
         fetchPosts()
       }
     }
-  }, [selectedHobby, selectedLocation, activeProfile?.type, refreshNum])
+  }, [
+    selectedHobby,
+    selectedGenre,
+    selectedLocation,
+    activeProfile?.type,
+    refreshNum,
+  ])
 
   useEffect(() => {
     if (selectedHobby !== '' && selectedLocation !== '') {
@@ -576,9 +613,26 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
-    setSelectedHobby(!filters.hobby ? 'All Hobbies' : filters.hobby)
-    setSelectedLocation(filters.location ?? '')
+    console.log('filters.genre', filters.genre)
+    if (filters.genre) {
+      if (filters.genre === 'No genre') {
+        setSelectedGenre(undefined)
+        // dispatch(
+        //   setFilters({
+        //     genre: '',
+        //   }),
+        // )
+      } else {
+        setSelectedGenre(filters.genre ? filters.genre : undefined)
+      }
+    }
+
+    if (filters.hobby) {
+      setSelectedHobby(filters.hobby)
+    }
+    if (filters.location) {
+      setSelectedLocation(filters.location ?? '')
+    }
   }, [filters.genre, filters.hobby, filters.location])
 
   useEffect(() => {
@@ -636,10 +690,29 @@ const CommunityLayout: React.FC<Props> = ({
           if (filters.location === null) {
             dispatch(
               setFilters({
-                location: 'All Locations',
+                location:
+                  user?.preferences?.community_view?.preferred_location?.city?.split(
+                    ' ',
+                  )[0]
+                    ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                        ' ',
+                      )[0]
+                    : 'All Locations',
               }),
             )
-            setSelectedLocation('All Locations')
+            console.log('###########################4', 'All Locations')
+
+            setSelectedLocation(
+              user?.preferences?.community_view?.preferred_location?.city?.split(
+                ' ',
+              )[0]
+                ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                    ' ',
+                  )[0]
+                : 'All Locations',
+            )
+            console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#5')
+            fetchPosts(1)
           }
           setVisibilityData(visibilityArr)
         }
@@ -688,13 +761,36 @@ const CommunityLayout: React.FC<Props> = ({
       }
       setVisibilityData(visibilityArr)
 
-      if (filters.location === null) {
+      if (
+        filters.location === null &&
+        user?.preferences?.community_view?.preferred_location?.city?.split(
+          ' ',
+        )[0]
+      ) {
         dispatch(
           setFilters({
-            location: 'All Locations',
+            location:
+              user?.preferences?.community_view?.preferred_location?.city?.split(
+                ' ',
+              )[0]
+                ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                    ' ',
+                  )[0]
+                : 'All Locations',
           }),
         )
-        setSelectedLocation('All Locations')
+        console.log('###########################5', 'All Locations')
+
+        setSelectedLocation(
+          user?.preferences?.community_view?.preferred_location?.city?.split(
+            ' ',
+          )[0]
+            ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                ' ',
+              )[0]
+            : 'All Locations',
+        )
+        fetchPosts()
       }
     }
   }, [activeProfile])
@@ -704,12 +800,16 @@ const CommunityLayout: React.FC<Props> = ({
       dispatch(openModal({ type: 'auth', closable: true }))
       return
     }
+    console.log('Location-------->', selectedLocation)
+    console.log('selectedLocation === val ------->', selectedLocation === val)
+    console.log('val----->', val)
     dispatch(
       setFilters({
         location: selectedLocation === val ? 'All Locations' : val,
       }),
     )
-    setSelectedLocation((prev) => {
+    console.log('###########################6', val)
+    setSelectedLocation((prev: any) => {
       if (prev === val) {
         return 'All Locations'
       } else {
@@ -912,6 +1012,16 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }, [email, showModal])
 
+  const handleAddTrendingHobby = (hobby: any) => {
+    // dispatch(
+    //   openModal({
+    //     type: 'add-hobby',
+    //     closable: true,
+    //     propData: { defaultValue: hobby },  // need to add propData
+    //   }),
+    // )
+  }
+
   return (
     <>
       <PageGridLayout
@@ -962,7 +1072,7 @@ const CommunityLayout: React.FC<Props> = ({
               <section>
                 <ul>
                   <li
-                    onClick={() => handleHobbyClick('All Hobbies', null)}
+                    onClick={() => handleHobbyClick('All Hobbies', undefined)}
                     className={
                       selectedHobby === 'All Hobbies' ? styles.selectedItem : ''
                     }
@@ -970,9 +1080,10 @@ const CommunityLayout: React.FC<Props> = ({
                     All Hobbies
                   </li>
                   <li
-                    onClick={() => handleHobbyClick('My Hobbies', null)}
+                    onClick={() => handleHobbyClick('My Hobbies', undefined)}
                     className={
-                      selectedHobby === 'My Hobbies' && selectedGenre === null
+                      selectedHobby === 'My Hobbies' &&
+                      selectedGenre === undefined
                         ? styles.selectedItem
                         : ''
                     }
@@ -1389,7 +1500,7 @@ const CommunityLayout: React.FC<Props> = ({
                 <input
                   autoComplete="new"
                   value={email}
-                  placeholder="Email"
+                  placeholder="Email or @ mention "
                   name="society"
                   onChange={handleInputChange}
                   type="email"
@@ -1595,6 +1706,14 @@ const CommunityLayout: React.FC<Props> = ({
                             )}
                             <span>{`${hobby.display}`}</span>
                           </Link>
+                          <img
+                            src={AddHobbyImg.src}
+                            height={20}
+                            width={20}
+                            alt="Add"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => handleAddTrendingHobby(hobby)}
+                          />
                         </li>
                       )
                     })}

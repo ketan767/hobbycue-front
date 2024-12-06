@@ -4,6 +4,15 @@
   text-overflow: ellipsis; /* Displays ellipsis (...) for overflowing text */
 }
 
+.truncateTwoLines {
+  display: -webkit-box;          /* Required for multiline truncation */
+  -webkit-box-orient: vertical; /* Specifies the box's orientation */
+  overflow: hidden;             /* Hides any overflowing text */
+  text-overflow: ellipsis;      /* Adds ellipsis (...) at the end of the visible text */
+  line-clamp: 2;                /* Limits the text to 2 lines */
+  -webkit-line-clamp: 2;        /* Required for multiline truncation */
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -310,17 +319,20 @@ select:-webkit-autofill {
 .blog-quill .ql-container {
   max-width: 100% !important;
   min-height: 100vh;
-  border-radius: 0 0 8px 8px !important;
+  border-radius: 0 !important;
+  border-inline: 0;
   border-bottom: 1px solid #ccc !important;
 }
 
 .blog-quill .ql-editor {
   min-height: inherit !important;
-  padding-inline: 15px;
+  padding-inline: 24px;
 }
 
 .blog-quill .ql-toolbar {
   border-radius: 8px 8px 0 0 !important;
+  border: 0;
+  border-bottom: 1px solid #ccc;
 }
 
 .ck.ck-content.ck-editor__editable ul,
@@ -634,11 +646,15 @@ select:-webkit-autofill {
   .margin-bottom-65vh {
     margin-bottom: 65vh;
   }
+  .blog-quill .ql-editor {
+    padding-inline: 16px !important;
+  }
   .ql-toolbar.ql-snow + .ql-container.ql-snow {
     border: none !important;
+    border-bottom: 1px solid #ccc !important;
   }
   .ql-toolbar.ql-snow {
-    border-radius: 0;
+    border-radius: 0 !important;
     position: relative;
     overflow: hidden;
   }

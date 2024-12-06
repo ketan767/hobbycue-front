@@ -200,6 +200,10 @@
   color: #333;
   font-weight: 500;
   font-family: 'poppins';
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 550px;
 }
 
 .userTagline {
@@ -207,9 +211,10 @@
   font-size: 14px;
   color: #666;
   margin: 5px 0;
-  /* white-space: nowrap; */
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
+  max-width: 550px;
 }
 
 .userLocation {
@@ -269,7 +274,7 @@
   font-style: normal;
   font-weight: 600;
   line-height: 26px;
-  border-bottom: 1px solid var(--grey-light, #ced4da);
+  /* border-bottom: 1px solid var(--grey-light, #ced4da); */
 }
 
 .explore-sidebar button {
@@ -831,7 +836,7 @@
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
-    background-color: #F8F9FA;
+    background-color: #f8f9fa;
   }
 
   .peopleItemsContainer {
@@ -853,9 +858,19 @@
   }
   .userTagline {
     font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100vw - 9rem);
   }
   .userLocation {
     font-size: 12px;
+  }
+  .userName {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100vw - 9rem);
   }
   .hobbydescription {
     white-space: nowrap;

@@ -5,6 +5,8 @@ import userReducer from './slices/user'
 import siteReducer from './slices/site'
 import searchReducer from './slices/search'
 import exploreReducer from './slices/explore'
+import confirmationReducer from './slices/confirmationData'
+import blogReducer from './slices/blog'
 
 const store = configureStore({
   reducer: {
@@ -14,6 +16,8 @@ const store = configureStore({
     site: siteReducer,
     search: searchReducer,
     explore: exploreReducer,
+    confirmation: confirmationReducer,
+    blog: blogReducer,
   },
 })
 

@@ -11,6 +11,7 @@ export interface User {
   tagline: string
   primary_address: { city: string }
   profile_url: string
+  _hobbies: any[]
 }
 
 export interface Page {
@@ -24,6 +25,7 @@ export interface Page {
   page_type: []
   event_date_time: any
   event_weekdays: any
+  product_variant: any
 }
 
 export interface hobbies {

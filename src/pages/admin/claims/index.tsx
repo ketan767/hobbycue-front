@@ -31,6 +31,7 @@ import selectIcon from '@/assets/svg/select_icon.svg'
 import InProgressIcon from '@/assets/svg/In_progress_icon.svg'
 import AcceptedIcon from '@/assets/svg/checked_icon.svg'
 import RejectedIcon from '@/assets/svg/cancel_icon.svg'
+import { setShowPageLoader } from '@/redux/slices/site'
 type SearchInput = {
   search: InputData<string>
 }
@@ -72,6 +73,7 @@ const ClaimsPage: React.FC = () => {
 
   const dispatch = useDispatch()
   const handleSearch = async (event: any) => {
+    dispatch(setShowPageLoader(true))
     const searchValue = data.search.value.trim()
     event.preventDefault()
     let searchCriteria = {
@@ -79,9 +81,12 @@ const ClaimsPage: React.FC = () => {
     }
 
     const { res, err } = await getClaimRequests(searchCriteria)
+
     if (err) {
+      dispatch(setShowPageLoader(false))
       console.log('An error', err)
     } else {
+      dispatch(setShowPageLoader(false))
       setSearchResults(res.data)
       console.log('res', res)
     }

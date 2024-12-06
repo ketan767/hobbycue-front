@@ -357,6 +357,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
               className={`${styles['input-box']} ${
                 errors.confirmPassword ? styles['input-error'] : ''
               }`}
+              style={{ marginBottom: '0' }}
             >
               <input
                 autoComplete="new"

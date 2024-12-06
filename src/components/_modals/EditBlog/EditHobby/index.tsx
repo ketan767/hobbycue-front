@@ -36,6 +36,7 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import AddGenre from '../../AddGenre/AddGenreModal'
 import { addHobby } from '@/services/blog.services'
 import axiosInstance from '@/services/_axios'
+import { setBlog, setRefetch } from '@/redux/slices/blog'
 
 type Props = {
   onComplete?: () => void
@@ -43,7 +44,6 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClosee?: any
-  handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
   showAddGenreModal?: boolean
@@ -61,8 +61,9 @@ type Props = {
       genre: any
     }
   }
-  data: any
-  refetch: any
+  // refetch: any
+  setEditHobby: React.Dispatch<React.SetStateAction<boolean>>
+  handleClose: () => void
 }
 
 type ProfileHobbyData = {
@@ -90,7 +91,6 @@ const EditBlogHobbyModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClosee,
-  handleClose,
   onStatusChange,
   showAddGenreModal,
   showAddHobbyModal,
@@ -98,9 +98,11 @@ const EditBlogHobbyModal: React.FC<Props> = ({
   setShowAddHobbyModal,
   CheckIsOnboarded,
   propData,
-  data: blog,
-  refetch,
+  // refetch,
+  handleClose,
+  setEditHobby,
 }) => {
+  const { blog, refetch } = useSelector((state: RootState) => state.blog)
   const dispatch = useDispatch()
   const selectedHobbyToAdd = propData && propData?.selectedHobbyToAdd
   const [showModal, setShowModal] = useState(false)
@@ -397,98 +399,104 @@ const EditBlogHobbyModal: React.FC<Props> = ({
   // console.log(blog)
 
   const handleAddHobby = async () => {
-    await handleGenreSelection()
-    setHobbyError(false)
-    setErrorOrmsg(null)
-    setShowGenreDowpdown(false)
+    try {
+      await handleGenreSelection()
+      setHobbyError(false)
+      setErrorOrmsg(null)
+      setShowGenreDowpdown(false)
 
-    let selectedHobby = null
-    let selectedGenre = null
+      let selectedHobby = null
+      let selectedGenre = null
 
-    // Handle hobby input
-    if (!data.hobby) {
-      const matchedHobby = hobbyDropdownList.find(
-        (hobby) =>
-          hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
-      )
+      // Handle hobby input
+      if (!data.hobby) {
+        const matchedHobby = hobbyDropdownList.find(
+          (hobby) =>
+            hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
+        )
 
-      if (!hobbyInputValue.trim()) {
-        setErrorOrmsg('Please enter a hobby')
-        setHobbyError(true)
-        searchref.current?.focus()
-        return
-      }
+        if (!hobbyInputValue.trim()) {
+          setErrorOrmsg('Please enter a hobby')
+          setHobbyError(true)
+          searchref.current?.focus()
+          return
+        }
 
-      if (matchedHobby) {
-        selectedHobby = matchedHobby
-        setErrorOrmsg('hobby added Successfully!')
+        if (matchedHobby) {
+          selectedHobby = matchedHobby
+          setErrorOrmsg('hobby added Successfully!')
+        } else {
+          setShowAddHobbyModal(true)
+          setIsChanged(true)
+          return
+        }
       } else {
-        setShowAddHobbyModal(true)
-        setIsChanged(true)
-        return
+        selectedHobby = data.hobby
       }
-    } else {
-      selectedHobby = data.hobby
-    }
 
-    // Handle genre input
-    if (!data.genre) {
-      const matchedGenre = genreDropdownList.find(
-        (genre) =>
-          genre.display.toLowerCase() === genreInputValue.toLowerCase(),
-      )
+      // Handle genre input
+      if (!data.genre) {
+        const matchedGenre = genreDropdownList.find(
+          (genre) =>
+            genre.display.toLowerCase() === genreInputValue.toLowerCase(),
+        )
 
-      if (selectedGenre !== null && selectedGenre !== matchedGenre) {
-        setErrorOrmsg('Typed Genre not found!')
-        setHobbyError(true)
-        return
+        if (selectedGenre !== null && selectedGenre !== matchedGenre) {
+          setErrorOrmsg('Typed Genre not found!')
+          setHobbyError(true)
+          return
+        }
+        if (selectedGenre !== null && !matchedGenre) {
+          setErrorOrmsg("This hobby doesn't contain this genre")
+
+          return
+        }
       }
-      if (selectedGenre !== null && !matchedGenre) {
-        setErrorOrmsg("This hobby doesn't contain this genre")
-
-        return
-      }
-    }
-    if (genreInputValue.length > 0) {
-      const matchedGenre = genreDropdownList.find(
-        (genre) =>
-          genre.display.toLowerCase() === genreInputValue.toLowerCase(),
-      )
-      if (!matchedGenre) {
-        setErrorOrmsg('it is not in list')
-        setIsChanged(false)
-        return
+      if (genreInputValue.length > 0) {
+        const matchedGenre = genreDropdownList.find(
+          (genre) =>
+            genre.display.toLowerCase() === genreInputValue.toLowerCase(),
+        )
+        if (!matchedGenre) {
+          setErrorOrmsg('it is not in list')
+          setIsChanged(false)
+          return
+        } else {
+          selectedGenre = data.genre
+        }
       } else {
         selectedGenre = data.genre
       }
-    } else {
-      selectedGenre = data.genre
-    }
 
-    setAddHobbyBtnLoading(true)
+      setAddHobbyBtnLoading(true)
 
-    let jsonData = {
-      hobby: selectedHobby?._id,
-      genre: selectedGenre?._id,
-      level: data.level,
+      let jsonData = {
+        hobby: selectedHobby?._id,
+        genre: selectedGenre?._id,
+        level: data.level,
+      }
+      console.log('Asifs blog', { blog })
+      const sameAsPrevious = blog?._hobbies?.find(
+        (obj: any) =>
+          obj.hobby?._id === jsonData.hobby &&
+          jsonData.genre === obj.genre?._id,
+      )
+      if (sameAsPrevious) {
+        setHobbyError(true)
+        setErrorOrmsg('Hobby already exists in your list')
+        setAddHobbyBtnLoading(false)
+        return
+      }
+      const result = await addHobby(blog?._id, jsonData)
+      dispatch(setRefetch(refetch + 1))
+      console.log('API Response:', result)
+    } catch (error) {
+      console.log('Error in handleAddHobby(): ', error)
     }
-    console.log({ userHobbies })
-    const sameAsPrevious = userHobbies?.find(
-      (obj: any) =>
-        obj.hobby?._id === jsonData.hobby && jsonData.genre === obj.genre?._id,
-    )
-    if (sameAsPrevious) {
-      setHobbyError(true)
-      setErrorOrmsg('Hobby already exists in your list')
-      setAddHobbyBtnLoading(false)
-      return
-    }
-    const result = await addHobby(blog?.blog_url?._id, jsonData)
-    console.log('API Response:', result)
     setHobbyInputValue('')
     setGenreInputValue('')
     setAddHobbyBtnLoading(false)
-    refetch()
+    // refetch()
     setData({ hobby: null, genre: null, level: 1 })
     setHobbyDropdownList([])
     setGenreDropdownList([])
@@ -700,7 +708,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
       console.error('Error deleting hobby:', data.error)
       return null
     }
-    refetch()
+    dispatch(setRefetch(refetch + 1))
     console.log('Hobby deleted successfully:', data)
     return data
   }
@@ -1064,13 +1072,16 @@ const EditBlogHobbyModal: React.FC<Props> = ({
   return (
     <>
       <div className={styles['modal-wrapper']}>
-        <CloseIcon
+        {/* <CloseIcon
           className={styles['modal-close-icon']}
           onClick={handleClose}
-        />
+        /> */}
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Hobbies and Interests'}</h4>
+          <h4 className={styles['heading']}>{blog?.title}</h4>
+          <h4 className={`${styles['heading']} ${styles['hobbiesHeading']}`}>
+            Hobbies
+          </h4>
         </header>
 
         <hr className={styles['modal-hr']} />
@@ -1088,7 +1099,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
                     </tr>
                   </thead>
                   <tbody style={{ display: 'inline-table' }}>
-                    {blog?.blog_url?._hobbies?.map((hobby: any) => {
+                    {blog?._hobbies?.map((hobby: any) => {
                       return (
                         <tr key={hobby._id}>
                           <td>
@@ -1156,17 +1167,11 @@ const EditBlogHobbyModal: React.FC<Props> = ({
                               fill="none"
                               className={styles['delete-hobby-btn']}
                               onClick={() =>
-                                handleDeleteHobby(
-                                  blog?.blog_url?._id,
-                                  hobby._id,
-                                )
+                                handleDeleteHobby(blog?._id, hobby._id)
                               }
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
-                                  handleDeleteHobby(
-                                    blog?.blog_url?._id,
-                                    hobby._id,
-                                  )
+                                  handleDeleteHobby(blog?._id, hobby._id)
                                 }
                               }}
                             >
@@ -1407,7 +1412,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
           </>
         </section>
 
-        <footer className={styles['footer']}>
+        {/* <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
             <>
               <button
@@ -1416,7 +1421,6 @@ const EditBlogHobbyModal: React.FC<Props> = ({
               >
                 Back
               </button>
-              {/* SVG Button for Mobile */}
               <div onClick={onBackBtnClick ? onBackBtnClick : handleClose}>
                 <Image
                   src={BackIcon}
@@ -1442,7 +1446,6 @@ const EditBlogHobbyModal: React.FC<Props> = ({
               'Save'
             )}
           </button>
-          {/* SVG Button for Mobile */}
           {onComplete ? (
             <div onClick={handleSubmit}>
               <Image
@@ -1461,7 +1464,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
               Save
             </button>
           )}
-        </footer>
+        </footer> */}
       </div>
     </>
   )

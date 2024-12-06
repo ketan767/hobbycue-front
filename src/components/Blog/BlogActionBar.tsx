@@ -53,6 +53,7 @@ const BlogActionBar: React.FC<Props> = ({
   const dispatch = useDispatch()
   const router = useRouter()
   const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
+  const { preview } = useSelector((state: RootState) => state.blog)
 
   const showFeatUnderDev = () => {
     setSnackbar({
@@ -176,11 +177,21 @@ const BlogActionBar: React.FC<Props> = ({
 
   const isDraft = data?.blog_url?.status === 'Draft'
 
+  const btnDisabled = (btn: string) => {
+    // 2 special cases
+    if (preview) return true
+    if (data?.blog_url?.status === 'Published') return false
+    // For Unpublished status
+    if (btn === 'edit') return isEditing
+    if (['delete', 'support', 'bookmark'].includes(btn)) return false // never disabled
+    return true // for upvote, downvote, share in Unpublihed status
+  }
+
   return (
     <div className={styles.actions} onClick={(e) => e.stopPropagation()}>
       <CustomizedTooltips title="UpVote">
         <button
-          disabled={isEditing || isDraft}
+          disabled={btnDisabled('upvote')}
           onClick={() => handleActionsWithAuth('upvote')}
         >
           {btnLoading ? (
@@ -193,7 +204,7 @@ const BlogActionBar: React.FC<Props> = ({
       <CustomizedTooltips title="Bookmark">
         <button
           onClick={() => handleActionsWithAuth('bookmark')}
-          disabled={isEditing}
+          disabled={btnDisabled('bookmark')}
         >
           <BookmarkIcon />
         </button>
@@ -201,30 +212,31 @@ const BlogActionBar: React.FC<Props> = ({
       <CustomizedTooltips title="Share">
         <button
           onClick={() => handleActionsWithoutAuth('share')}
-          disabled={isEditing || isDraft}
+          disabled={btnDisabled('share')}
         >
           <ShareIcon />
         </button>
       </CustomizedTooltips>
-      <div style={{ position: 'relative' }}>
+      <div className={styles.viewMenuParent}>
         <CustomizedTooltips title="Click to view options">
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className={styles.btn}
-            disabled={isEditing}
+            className={`${styles.btn} ${showMenu ? styles.active : ''}`}
+            // disabled={isEditing}
           >
             <MenuIcon />
           </button>
         </CustomizedTooltips>
         {showMenu && (
           <div className={`${styles.menu}`}>
-            {isAuthor ? (
+            {isAuthor || user.is_admin ? (
               <>
                 <button
                   onClick={() => {
                     setIsEditing(true)
                     setShowMenu(false)
                   }}
+                  disabled={btnDisabled('edit')}
                 >
                   Edit
                 </button>
@@ -234,30 +246,50 @@ const BlogActionBar: React.FC<Props> = ({
                       openModal({ type: 'SupportUserModal', closable: true }),
                     )
                   }
+                  disabled={btnDisabled('support')}
                 >
                   Support
                 </button>
-                <button onClick={() => handleActionsWithAuth('delete')}>
+                <button
+                  onClick={() => handleActionsWithAuth('delete')}
+                  disabled={btnDisabled('delete')}
+                >
                   Delete
                 </button>
               </>
             ) : (
               <>
-                <button onClick={() => handleActionsWithAuth('repost')}>
+                <button
+                  onClick={() => handleActionsWithAuth('repost')}
+                  disabled={btnDisabled('repost')}
+                >
                   <RepostIconBlog /> Repost
                 </button>
                 {!isMob && (
-                  <button onClick={() => handleActionsWithoutAuth('comment')}>
+                  <button
+                    onClick={() => handleActionsWithoutAuth('comment')}
+                    disabled={btnDisabled('comment')}
+                  >
                     <CommentIcon />
                     Comment
                   </button>
                 )}
-                <button onClick={() => handleActionsWithAuth('report')}>
+                <button
+                  onClick={() => handleActionsWithAuth('report')}
+                  disabled={btnDisabled('report')}
+                >
                   <ReportIcon /> Report
                 </button>
-                <button onClick={() => handleActionsWithAuth('downvote')}>
+                <button
+                  onClick={() => handleActionsWithAuth('downvote')}
+                  disabled={btnDisabled('downvote')}
+                >
                   {btnLoading ? (
-                    <CircularProgress color="inherit" size={'24px'} />
+                    <CircularProgress
+                      color="inherit"
+                      size={'24px'}
+                      style={{ margin: 'auto' }}
+                    />
                   ) : (
                     <>
                       <DownvoteIcon fill={vote.down} /> Downvote
