@@ -263,9 +263,10 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                       value={
                         user?.preferences?.community_view?.preferred_hobby
                           ?.hobby?.display +
-                          ' - ' +
-                          user?.preferences?.community_view?.preferred_hobby
-                            ?.genre?.display || Hobbyoptions[0]
+                        (user?.preferences?.community_view?.preferred_hobby
+                          ?.genre?.display
+                          ? ` - ${user?.preferences?.community_view?.preferred_hobby?.genre?.display}`
+                          : '')
                       }
                     />
                     <p>at</p>
@@ -303,9 +304,10 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                       value={
                         user?.preferences?.create_post_pref?.preferred_hobby
                           ?.hobby?.display +
-                          ' - ' +
-                          user?.preferences?.create_post_pref?.preferred_hobby
-                            ?.genre?.display || Hobbyoptions[0]
+                        (user?.preferences?.create_post_pref?.preferred_hobby
+                          ?.genre?.display
+                          ? ` - ${user?.preferences?.create_post_pref?.preferred_hobby?.genre?.display}`
+                          : '')
                       }
                     />
                     <p>at</p>
@@ -334,7 +336,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                   </p>
                   <div>
                     <CustomSelect
-                      disabled={true}
+                      // disabled={true}
                       options={options}
                       onChange={(item) =>
                         handleVisibilityChange('location_visibility', item)
@@ -353,7 +355,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                   </p>
                   <div>
                     <CustomSelect
-                      disabled={true}
+                      // disabled={true}
                       options={viewOptions}
                       onChange={(item) =>
                         handleVisibilityChange('email_visibility', item)
@@ -372,7 +374,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                   </p>
                   <div>
                     <CustomSelect
-                      disabled={true}
+                      // disabled={true}
                       options={viewOptions}
                       onChange={(item) =>
                         handleVisibilityChange('phone_visibility', item)
