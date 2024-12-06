@@ -5,7 +5,12 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import store, { RootState } from '@/redux/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { checkIfUrlExists, isEmptyField, isVideoLink, isInstagramReelLink } from '@/utils'
+import {
+  checkIfUrlExists,
+  isEmptyField,
+  isVideoLink,
+  isInstagramReelLink,
+} from '@/utils'
 import { getAllHobbies } from '@/services/hobby.service'
 import {
   createListingPost,
@@ -108,7 +113,10 @@ export const CreatePost: React.FC<Props> = ({
     genre: null,
     content: propData?.defaultValue ?? '',
     contentToDisplay: '',
-    visibility: 'All Locations',
+    visibility:
+      user?.preferences?.create_post_pref?.preferred_location?.city?.split(
+        ' ',
+      )[0],
     media: [],
     video_url: '',
   })
@@ -178,6 +186,7 @@ export const CreatePost: React.FC<Props> = ({
       setData((prev) => ({ ...prev, content: propData.content }))
     }
     if (propData && propData.visibility) {
+      console.log('visibility changed...', propData.visibility)
       setData((prev) => ({ ...prev, visibility: propData.visibility }))
     }
     if (propData && propData?.media?.length !== 0) {
@@ -233,13 +242,11 @@ export const CreatePost: React.FC<Props> = ({
               _id: selectedHobby.genreId,
               display: selectedHobby.genreDisplay,
             },
-            visibility: filters.location ?? '',
           }
         } else {
           if (hobbiesDropDownArr && hobbiesDropDownArr?.length > 0) {
             return {
               ...prev,
-              visibility: filters.location ?? 'All Locations',
               hobby: {
                 _id: hobbiesDropDownArr[0]?.hobbyId,
                 display: hobbiesDropDownArr[0]?.hobbyDisplay,
@@ -252,7 +259,7 @@ export const CreatePost: React.FC<Props> = ({
                 : null,
             }
           } else {
-            return { ...prev, visibility: filters.location ?? 'All Locations' }
+            return { ...prev }
           }
         }
       })
@@ -297,6 +304,7 @@ export const CreatePost: React.FC<Props> = ({
       }
       setData((prev) => {
         if (selectedHobby) {
+
           return {
             ...prev,
             hobby: {
@@ -307,13 +315,11 @@ export const CreatePost: React.FC<Props> = ({
               _id: selectedHobby.genreId,
               display: selectedHobby.genreDisplay,
             },
-            visibility: filters.location ?? '',
           }
         } else {
           if (hobbiesDropDownArr && hobbiesDropDownArr?.length > 0) {
             return {
               ...prev,
-              visibility: filters.location ?? 'All Locations',
               hobby: {
                 _id: hobbiesDropDownArr[0]?.hobbyId,
                 display: hobbiesDropDownArr[0]?.hobbyDisplay,
@@ -326,7 +332,7 @@ export const CreatePost: React.FC<Props> = ({
                 : null,
             }
           } else {
-            return { ...prev, visibility: filters.location ?? 'All Locations' }
+            return { ...prev}
           }
         }
       })
@@ -384,7 +390,9 @@ export const CreatePost: React.FC<Props> = ({
   >([])
   const [visibilityData, setVisibilityData] = useState(['public'])
 
-  useEffect(() => {console.log("metaData",metaData)}, [metaData])
+  useEffect(() => {
+    console.log('metaData', metaData)
+  }, [metaData])
 
   useEffect(() => {
     const isUrl = checkIfUrlExists(data.content.replace(/<img .*?>/g, ''))
@@ -817,6 +825,15 @@ export const CreatePost: React.FC<Props> = ({
             ?.genre?._id
         : undefined
 
+      const preferredLocation =
+        user?.preferences?.create_post_pref?.preferred_location?.city?.split(
+          ' ',
+        )[0]
+          ? user?.preferences?.create_post_pref?.preferred_location?.city?.split(
+              ' ',
+            )[0]
+          : 'All Locations'
+
       setSelectedHobbies([
         {
           hobby: firstHobby,
@@ -825,6 +842,8 @@ export const CreatePost: React.FC<Props> = ({
           genreId: firstGenreId,
         },
       ])
+
+      setData((prev) => ({ ...prev, visibility: preferredLocation }))
     }
 
     // console.log(
@@ -885,9 +904,9 @@ export const CreatePost: React.FC<Props> = ({
   }
 
   const getInstagramPostId = (url: any) => {
-    const match = url.match(/instagram\.com\/(?:reel|p)\/([^/]+)/);
-    return match ? match[1] : null;
-  };
+    const match = url.match(/instagram\.com\/(?:reel|p)\/([^/]+)/)
+    return match ? match[1] : null
+  }
 
   return (
     <>
@@ -1270,13 +1289,30 @@ export const CreatePost: React.FC<Props> = ({
                         controls={true}
                       />
                     </div>
-                  ) : ( isInstagramReelLink(url) ? (
-                      <div onClick={()=>window.open(url,"_blank")}  style={{background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"8px", cursor:"pointer"}}>
-                      <div style={{width:"230.63px", height:"410px", display:"flex", alignItems:"center"}}>
-                      <img
-                        style={{cursor:"pointer", maxHeight:"410px"}}
-                        onClick={()=>window.open(url, '_blank')}
-                        width="230.63px"
+                  ) : isInstagramReelLink(url) ? (
+                    <div
+                      onClick={() => window.open(url, '_blank')}
+                      style={{
+                        background: '#fff',
+                        display: 'flex',
+                        justifyContent: 'between',
+                        alignItems: 'center',
+                        gap: '8px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '230.63px',
+                          height: '410px',
+                          display: 'flex',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <img
+                          style={{ cursor: 'pointer', maxHeight: '410px' }}
+                          onClick={() => window.open(url, '_blank')}
+                          width="230.63px"
                           src={
                             (typeof metaData?.image === 'string' &&
                               metaData.image) ||
@@ -1287,17 +1323,24 @@ export const CreatePost: React.FC<Props> = ({
                           alt=""
                         />
                       </div>
-                        <div style={{display:"flex", flexDirection:"column", gap:"16px", fontSize:"15px", justifyContent:"start", height:"100%"}} >
-                          <p style={{fontWeight:"500"}}>
-                            {metaData?.title}
-                          </p>
-                          <p style={{color:"#333"}}>
-                            {metaData?.description?.split(':')[0]}
-                          </p>
-                        </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '16px',
+                          fontSize: '15px',
+                          justifyContent: 'start',
+                          height: '100%',
+                        }}
+                      >
+                        <p style={{ fontWeight: '500' }}>{metaData?.title}</p>
+                        <p style={{ color: '#333' }}>
+                          {metaData?.description?.split(':')[0]}
+                        </p>
+                      </div>
                     </div>
-                      ) : (
-                        <div className={styles['show-metadata']}>
+                  ) : (
+                    <div className={styles['show-metadata']}>
                       <svg
                         className={styles['metadata-close-icon']}
                         onClick={() => {
@@ -1368,7 +1411,6 @@ export const CreatePost: React.FC<Props> = ({
                         </p>
                       )}
                     </div>
-                      )
                   )}
                 </>
               )}
