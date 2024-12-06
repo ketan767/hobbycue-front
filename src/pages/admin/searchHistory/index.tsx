@@ -25,6 +25,7 @@ import GoogleIcon from '@/assets/svg/google-icon.svg'
 import MailIcon from '@/assets/svg/mail.svg'
 import FacebookIcon from '@/assets/svg/mobile-social/facebook.svg'
 import StatusDropdown from '@/components/_formElements/StatusDropdown'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 type SearchInput = {
   search: InputData<string>
@@ -56,8 +57,9 @@ const searchHistory: React.FC = () => {
     display: false,
     message: '',
   })
-
+  const dispatch = useDispatch()
   const handleSearch = async (event: any) => {
+    dispatch(setShowPageLoader(true))
     const searchValue = data.search.value.trim()
     event.preventDefault()
     let searchCriteria = {
@@ -67,9 +69,10 @@ const searchHistory: React.FC = () => {
     const { res, err } = await searchUsers(searchCriteria)
     if (err) {
       console.log('An error', err)
+      dispatch(setShowPageLoader(false))
     } else {
       setSearchResults(res.data)
-      console.log('res', res)
+      dispatch(setShowPageLoader(false))
     }
   }
 

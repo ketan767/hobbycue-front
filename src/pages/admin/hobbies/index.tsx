@@ -32,6 +32,7 @@ import AdminActionModal from '@/components/_modals/AdminModals/ActionModal'
 import { Fade, Modal } from '@mui/material'
 import { log } from 'console'
 import { formatDate } from '@/utils/Date'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 type SearchInput = {
   search: InputData<string>
@@ -43,7 +44,7 @@ const HobbiesRequest: React.FC = () => {
     search: { value: '', error: null },
   })
   const [email, setEmail] = useState('')
-  const [notes, setNotes] = useState<{ [key: string]: string }>({});
+  const [notes, setNotes] = useState<{ [key: string]: string }>({})
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const [showAdminActionModal, setShowAdminActionModal] = useState(false)
@@ -202,14 +203,17 @@ const HobbiesRequest: React.FC = () => {
     }
   }
   const FetchHobbyReq = async () => {
+    dispatch(setShowPageLoader(true))
     const { res, err } = await getHobbyRequests(
       `limit=${pagelimit}&sort=-createdAt&page=${page}&populate=user_id,listing_id`,
     )
     if (err) {
       console.log('An error', err)
+      dispatch(setShowPageLoader(false))
     } else {
       console.log('FetchHobbyReq', res.data)
       setSearchResults(res.data.data.hobbyreq)
+      dispatch(setShowPageLoader(false))
     }
   }
   useEffect(() => {
@@ -221,14 +225,14 @@ const HobbiesRequest: React.FC = () => {
   }, [data.search.value, page])
 
   useEffect(() => {
-    const initialNotes: { [key: string]: string } = {};
+    const initialNotes: { [key: string]: string } = {}
     searchResults.forEach((hobbyreq) => {
       if (hobbyreq?._id) {
-        initialNotes[hobbyreq._id] = hobbyreq.admin_notes || "";
+        initialNotes[hobbyreq._id] = hobbyreq.admin_notes || ''
       }
-    });
-    setNotes(initialNotes);
-  }, [searchResults,page]);
+    })
+    setNotes(initialNotes)
+  }, [searchResults, page])
 
   const getUserName = async (_id: any) => {
     const { res, err } = await getAllUserDetail(`_id=${_id}`)
@@ -275,15 +279,13 @@ const HobbiesRequest: React.FC = () => {
     }
   }
 
-
-
   // Function to handle note updates
   const handleNoteChange = (Id: string, value: string) => {
     setNotes((prevNotes) => ({
       ...prevNotes,
-      [Id]: value, 
-    }));
-  };
+      [Id]: value,
+    }))
+  }
 
   // Function to handle submit logic
   const handleNoteSubmit = async (hobbyreq: any, note: string) => {
@@ -294,17 +296,15 @@ const HobbiesRequest: React.FC = () => {
         hobby: hobbyreq?.hobby,
         description: note,
         status: hobbyreq?.status,
-      });
+      })
 
-      if (err) throw new Error("Update failed");
-      window.location.reload();
-      console.log("Update successful", res);
+      if (err) throw new Error('Update failed')
+      window.location.reload()
+      console.log('Update successful', res)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
-
-
+  }
 
   const handleSubmit = async () => {
     let jsondata = {
@@ -332,7 +332,7 @@ const HobbiesRequest: React.FC = () => {
       status: newStatus?.status,
     })
     console.log('status changed')
-    await handleSubmit();
+    await handleSubmit()
   }
 
   const handleAction = async (hobbyreq: any) => {
@@ -343,9 +343,9 @@ const HobbiesRequest: React.FC = () => {
       description: hobbyreq?.description,
       status: hobbyreq?.status,
     })
-    console.log('Hobby data received');
+    console.log('Hobby data received')
 
-    console.log(hobbyData, 10000);
+    console.log(hobbyData, 10000)
 
     //setShowAdminActionModal(true)
   }
@@ -408,32 +408,34 @@ const HobbiesRequest: React.FC = () => {
                   <th style={{ width: '8%' }}>Level</th>
 
                   <th style={{ width: '12.163%' }}>Requested By</th>
-                  <th style={{ width: '12.163%' }}>On  ▼</th>
+                  <th style={{ width: '12.163%' }}>On ▼</th>
                   <th
                     style={{
                       width: '20%',
                       paddingRight: '16px',
-                      
                     }}
                   >
                     Matching or Similar
                   </th>
-                  
-                  <th style={{ width: '30.672%', paddingRight: '160px'}}>
+
+                  <th style={{ width: '30.672%', paddingRight: '160px' }}>
                     Admin Notes
                   </th>
-                  <th style={{ width: '9.252%', paddingRight: '32px'}}>
+                  <th style={{ width: '9.252%', paddingRight: '32px' }}>
                     Status
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {searchResults?.map((hobbyreq, index) => (
-                  <tr key={index} >
+                  <tr key={index}>
                     <td>
                       <div className={styles.resultItem}>
                         <div className={styles.detailsContainer}>
-                          <Link className={styles.userName} href={`/hobby/${hobbyreq?.hobby}`}>
+                          <Link
+                            className={styles.userName}
+                            href={`/hobby/${hobbyreq?.hobby}`}
+                          >
                             {hobbyreq?.hobby}
                           </Link>
                         </div>
@@ -448,8 +450,9 @@ const HobbiesRequest: React.FC = () => {
                         href={
                           hobbyreq.user_type == 'user'
                             ? `/profile/${hobbyreq.user_id?.profile_url}`
-                            : `/${pageType(hobbyreq?.listing_id?.type)}/${hobbyreq.listing_id?.page_url
-                            }`
+                            : `/${pageType(hobbyreq?.listing_id?.type)}/${
+                                hobbyreq.listing_id?.page_url
+                              }`
                         }
                       >
                         {hobbyreq.user_type == 'user'
@@ -461,44 +464,43 @@ const HobbiesRequest: React.FC = () => {
                       <div>{formatDate(hobbyreq?.createdAt)}</div>
                     </td>
                     <td className={styles.lastLoggedIn}>{hobbyreq?.similar}</td>
-                    
+
                     <td className={styles.pagesLength}>
                       <input
                         className={styles.notesInput}
                         type="text"
-                        value={notes[hobbyreq?._id || ""] || ""}
+                        value={notes[hobbyreq?._id || ''] || ''}
                         onChange={(e) =>
-                          handleNoteChange(hobbyreq?._id || "", e.target.value)
+                          handleNoteChange(hobbyreq?._id || '', e.target.value)
                         }
                         onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            handleNoteSubmit(hobbyreq, notes[hobbyreq?._id || ""] || "");
+                          if (e.key === 'Enter') {
+                            handleNoteSubmit(
+                              hobbyreq,
+                              notes[hobbyreq?._id || ''] || '',
+                            )
                           }
                         }}
                       />
                     </td>
                     <td>
-                      <div
-                        
-                        className={styles.actions}
-                      >
-                          <StatusDropdown
-                            status={hobbyreq?.status}
-                            onStatusChange={async (newStatus) => {
-                              console.log(newStatus, hobbyreq, 100);
-                              const { err, res } = await UpdateHobbyreq({
-                                user_id: hobbyreq?.user_id?._id,
-                                listing_id: hobbyreq?.listing_id?._id,
-                                hobby: hobbyreq?.hobby,
-                                description: hobbyreq?.description,
-                                status: newStatus?.status,
-                              })
-                              if (err) {
-                                throw new Error()
-                              }
-                            }}
-                          />
-                        
+                      <div className={styles.actions}>
+                        <StatusDropdown
+                          status={hobbyreq?.status}
+                          onStatusChange={async (newStatus) => {
+                            console.log(newStatus, hobbyreq, 100)
+                            const { err, res } = await UpdateHobbyreq({
+                              user_id: hobbyreq?.user_id?._id,
+                              listing_id: hobbyreq?.listing_id?._id,
+                              hobby: hobbyreq?.hobby,
+                              description: hobbyreq?.description,
+                              status: newStatus?.status,
+                            })
+                            if (err) {
+                              throw new Error()
+                            }
+                          }}
+                        />
                       </div>
                     </td>
                   </tr>
@@ -509,12 +511,22 @@ const HobbiesRequest: React.FC = () => {
           <div className={styles.pagination}>
             {/* Previous Page Button */}
             {page > 1 ? (
-              <button className={styles.PaginationButton} onClick={goToPreviousPage}>Previous</button>
+              <button
+                className={styles.PaginationButton}
+                onClick={goToPreviousPage}
+              >
+                Previous
+              </button>
             ) : (
               ''
             )}
             {searchResults.length === pagelimit ? (
-              <button className={styles.PaginationButton} onClick={goToNextPage}>Next</button>
+              <button
+                className={styles.PaginationButton}
+                onClick={goToNextPage}
+              >
+                Next
+              </button>
             ) : (
               ''
             )}
