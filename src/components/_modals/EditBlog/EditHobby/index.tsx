@@ -36,6 +36,7 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import AddGenre from '../../AddGenre/AddGenreModal'
 import { addHobby } from '@/services/blog.services'
 import axiosInstance from '@/services/_axios'
+import { setBlog, setRefetch } from '@/redux/slices/blog'
 
 type Props = {
   onComplete?: () => void
@@ -43,7 +44,6 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClosee?: any
-  handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
   showAddGenreModal?: boolean
@@ -61,9 +61,9 @@ type Props = {
       genre: any
     }
   }
-  blog: any
-  setBlog: React.Dispatch<any>
   // refetch: any
+  setEditHobby: React.Dispatch<React.SetStateAction<boolean>>
+  handleClose: () => void
 }
 
 type ProfileHobbyData = {
@@ -91,7 +91,6 @@ const EditBlogHobbyModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClosee,
-  handleClose,
   onStatusChange,
   showAddGenreModal,
   showAddHobbyModal,
@@ -99,10 +98,11 @@ const EditBlogHobbyModal: React.FC<Props> = ({
   setShowAddHobbyModal,
   CheckIsOnboarded,
   propData,
-  blog,
-  setBlog,
   // refetch,
+  handleClose,
+  setEditHobby,
 }) => {
+  const { blog, refetch } = useSelector((state: RootState) => state.blog)
   const dispatch = useDispatch()
   const selectedHobbyToAdd = propData && propData?.selectedHobbyToAdd
   const [showModal, setShowModal] = useState(false)
@@ -488,7 +488,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
         return
       }
       const result = await addHobby(blog?._id, jsonData)
-      setBlog(result?.data)
+      dispatch(setRefetch(refetch + 1))
       console.log('API Response:', result)
     } catch (error) {
       console.log('Error in handleAddHobby(): ', error)
@@ -708,7 +708,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
       console.error('Error deleting hobby:', data.error)
       return null
     }
-    // refetch()
+    dispatch(setRefetch(refetch + 1))
     console.log('Hobby deleted successfully:', data)
     return data
   }
@@ -1072,13 +1072,16 @@ const EditBlogHobbyModal: React.FC<Props> = ({
   return (
     <>
       <div className={styles['modal-wrapper']}>
-        <CloseIcon
+        {/* <CloseIcon
           className={styles['modal-close-icon']}
           onClick={handleClose}
-        />
+        /> */}
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Hobbies and Interests'}</h4>
+          <h4 className={styles['heading']}>{blog?.title}</h4>
+          <h4 className={`${styles['heading']} ${styles['hobbiesHeading']}`}>
+            Hobbies
+          </h4>
         </header>
 
         <hr className={styles['modal-hr']} />
@@ -1409,7 +1412,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
           </>
         </section>
 
-        <footer className={styles['footer']}>
+        {/* <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
             <>
               <button
@@ -1418,7 +1421,6 @@ const EditBlogHobbyModal: React.FC<Props> = ({
               >
                 Back
               </button>
-              {/* SVG Button for Mobile */}
               <div onClick={onBackBtnClick ? onBackBtnClick : handleClose}>
                 <Image
                   src={BackIcon}
@@ -1444,7 +1446,6 @@ const EditBlogHobbyModal: React.FC<Props> = ({
               'Save'
             )}
           </button>
-          {/* SVG Button for Mobile */}
           {onComplete ? (
             <div onClick={handleSubmit}>
               <Image
@@ -1463,7 +1464,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
               Save
             </button>
           )}
-        </footer>
+        </footer> */}
       </div>
     </>
   )

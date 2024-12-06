@@ -213,6 +213,10 @@
 }
 .modal-wrapper .footer {
   display: flex;
+  padding-top: 8px;
+}
+.body {
+  padding-top: 0 !important;
 }
 .modal-hr{
   display: none;

@@ -257,15 +257,17 @@
     width: 91%;
     margin: auto;
     border-radius: 8px;
+    overflow: hidden;
   }
   .modal-wrapper .body {
     padding-left: 20px;
     padding-right: 20px;
+    padding-bottom: 8px !important;
   }
 
   .modal-wrapper .footer {
     background: var(--Base-White, #fff);
-    box-shadow: 0px -1px 12px 0px rgba(0, 0, 0, 0.06);
+    /* box-shadow: 0px -1px 12px 0px rgba(0, 0, 0, 0.06); */
     padding: var(--spacing-16) var(--spacing-16);
     margin-top: auto;
     display: flex;

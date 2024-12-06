@@ -23,6 +23,7 @@
 .page-img {
   border: 1px solid rgba(var(--primary-100-rgb));
   border-radius: 4px !important;
+  object-fit: contain;
 }
 .page-img-comments {
   width: 34px !important;
@@ -407,6 +408,7 @@
 .profile-img {
   border-radius: 100%;
   border: 1px solid rgba(var(--primary-100-rgb));
+  object-fit: contain;
 }
 
 

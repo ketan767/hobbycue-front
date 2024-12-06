@@ -291,7 +291,7 @@ export const convertDateToString = (date: string): string => {
 export const calculateReadingTime = (content: string) => {
   const wordsPerMinute = 200; 
   const wordCount = content.split(' ').length;
-  const minutes = Math.round(wordCount / wordsPerMinute);
+  const minutes = Math.ceil(wordCount / wordsPerMinute);
   return minutes;
 };
 
