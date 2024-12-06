@@ -1,25 +1,22 @@
-// pages/admin/users/[profile_url].tsx
-
 import { FormEvent, useEffect, useState } from 'react'
 import { getAllUserDetail } from '@/services/user.service'
 import styles from './UserEditModal.module.css'
-import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
+
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { updateUserByAdmin } from '@/services/admin.service'
-import { getAllHobbies } from '@/services/hobby.service'
+
 import CloseIcon from '@/assets/icons/CloseIcon'
 
-type DropdownListItem = {
-  _id: string
-  display: string
-  sub_category?: string
-  genre?: any
-}
 interface UserEditProps {
   id: string
-  setIsEditModalOpen: any
+  setIsEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+  fetchUsers: () => void
 }
-const EditUser: React.FC<UserEditProps> = ({ id, setIsEditModalOpen }) => {
+const EditUser: React.FC<UserEditProps> = ({
+  id,
+  setIsEditModalOpen,
+  fetchUsers,
+}) => {
   const profile_url = id
   const [user, setUser] = useState<any>(null)
   const [snackbar, setSnackbar] = useState({
@@ -27,28 +24,15 @@ const EditUser: React.FC<UserEditProps> = ({ id, setIsEditModalOpen }) => {
     display: false,
     message: '',
   })
-  const [hobbies, setHobbies] = useState<DropdownListItem[]>([])
-  const [genres, setGenres] = useState<DropdownListItem[]>([])
-
+  const fetchUserData = async () => {
+    const { err, res } = await getAllUserDetail(
+      `profile_url=${profile_url}&populate=_hobbies,_addresses,primary_address,_listings,_listings,_listings,sessions`,
+    )
+    setUser(res?.data.data?.users[0])
+    console.log(res?.data.data?.users)
+  }
   useEffect(() => {
-    const fetchUserData = async () => {
-      const { err, res } = await getAllUserDetail(
-        `profile_url=${profile_url}&populate=_hobbies,_addresses,primary_address,_listings,_listings,_listings,sessions`,
-      )
-      setUser(res?.data.data?.users[0])
-      console.log(res?.data.data?.users)
-    }
-
-    if (profile_url) {
-      fetchUserData()
-      getAllHobbies(
-        `fields=display,genre&level=3&level=2&level=1&level=0&show=true`,
-      )
-        .then((res) => {
-          setHobbies(res.res.data.hobbies)
-        })
-        .catch((err) => console.log({ err }))
-    }
+    fetchUserData()
   }, [profile_url])
 
   const updateUserFunc = async (e: FormEvent) => {
@@ -56,27 +40,30 @@ const EditUser: React.FC<UserEditProps> = ({ id, setIsEditModalOpen }) => {
 
     console.log(user)
 
-    // const { err, res } = await updateUserByAdmin(user._id, user)
-    // if (err) {
-    //   setSnackbar({
-    //     type: 'warning',
-    //     display: true,
-    //     message: 'Some error occured',
-    //   })
-    // } else if (res) {
-    //   setSnackbar({
-    //     type: 'success',
-    //     display: true,
-    //     message: 'User updated successfully',
-    //   })
-    //   setIsEditModalOpen(false)
-    // } else {
-    //   setSnackbar({
-    //     type: 'warning',
-    //     display: true,
-    //     message: 'Some error occured',
-    //   })
-    // }
+    const { err, res } = await updateUserByAdmin(user._id, user)
+    if (err) {
+      setSnackbar({
+        type: 'warning',
+        display: true,
+        message: 'Some error occured',
+      })
+    } else if (res) {
+      console.log(res)
+      fetchUserData()
+      fetchUsers()
+      setSnackbar({
+        type: 'success',
+        display: true,
+        message: 'User updated successfully',
+      })
+      setIsEditModalOpen(false)
+    } else {
+      setSnackbar({
+        type: 'warning',
+        display: true,
+        message: 'Some error occured',
+      })
+    }
   }
 
   if (!profile_url || !user) {
@@ -214,8 +201,8 @@ const EditUser: React.FC<UserEditProps> = ({ id, setIsEditModalOpen }) => {
                 <input
                   className={styles.phoneInput}
                   type="text"
-                  // maxLength={10}
-                  // minLength={10}
+                  maxLength={10}
+                  minLength={10}
                   autoComplete="new"
                   value={user?.phone.number}
                   onChange={(e) =>
@@ -255,9 +242,8 @@ const EditUser: React.FC<UserEditProps> = ({ id, setIsEditModalOpen }) => {
                 <input
                   type="text"
                   className={styles.phoneInput}
-                  // minLength={10}
-                  // maxLength={10}
-
+                  minLength={10}
+                  maxLength={10}
                   autoComplete="new"
                   value={user?.whatsapp_number.number}
                   onChange={(e) =>

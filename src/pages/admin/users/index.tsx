@@ -659,7 +659,11 @@ const AdminDashboard: React.FC = () => {
             isOpen={isEditModalOpen}
             onClose={() => setIsEditModalOpen(false)}
           >
-            <EditUser id={userId} setIsEditModalOpen={setIsEditModalOpen} />
+            <EditUser
+              id={userId}
+              setIsEditModalOpen={setIsEditModalOpen}
+              fetchUsers={fetchUsers}
+            />
           </ModalWrapper>
         </div>
       </AdminLayout>
