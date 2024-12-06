@@ -23,6 +23,7 @@ import {
   getSupports,
 } from '@/services/admin.service'
 import StatusDropdown from '@/components/_formElements/StatusDropdown'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 type UserProps = {
   _id: string
@@ -195,13 +196,18 @@ const AdminContactUs: React.FC = () => {
       setPageNumber(pages)
     }
   }
+
+  const dispatch = useDispatch()
   const fetchContactUs = async () => {
+    dispatch(setShowPageLoader(true))
     const { res, err } = await getContactUs(``)
     if (err) {
       console.log('An error', err)
+      dispatch(setShowPageLoader(false))
     } else {
       console.log('fetchUsers', res.data)
       setSearchResults(res.data.data.contacts)
+      dispatch(setShowPageLoader(false))
     }
   }
   useEffect(() => {
