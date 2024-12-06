@@ -83,6 +83,7 @@ import {
   setPageType,
   setSearching,
 } from '@/redux/slices/explore'
+import { setFilters } from '@/redux/slices/post'
 
 type Props = {}
 
@@ -759,7 +760,29 @@ export const Navbar: React.FC<Props> = ({}) => {
                   e.stopPropagation()
                   e.preventDefault()
                   if (isLoggedIn) {
-                    window.location.href = '/community'
+                    // window.location.href = '/community'
+                    router.push('/community')
+                    const preferredHobbyId =
+                      user?.preferences?.community_view?.preferred_hobby?.hobby
+                        ?._id
+                    const preferredGenreId =
+                      user?.preferences?.community_view?.preferred_hobby?.genre
+                        ?._id
+                    const preferredLocation =
+                      user?.preferences?.community_view?.preferred_location?.city?.split(
+                        ' ',
+                      )[0]
+                    dispatch(
+                      setFilters({
+                        hobby: preferredHobbyId
+                          ? preferredHobbyId
+                          : 'All Hobbies',
+                        genre: preferredGenreId ? preferredGenreId : '',
+                        location: preferredLocation
+                          ? preferredLocation
+                          : 'All Locations',
+                      }),
+                    )
                   } else {
                     router.push('/')
                   }
@@ -906,8 +929,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                 }}
               />
             </section>
-
-            {isLoggedIn && !user?.is_admin && (
+            {isLoggedIn && user?.is_admin && (
               <div
                 className={styles['toggle-button']}
                 onClick={() => router.push('/admin/dashboard')}
