@@ -1043,16 +1043,6 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }, [email, showModal])
 
-  const handleAddTrendingHobby = (hobby: any) => {
-    // dispatch(
-    //   openModal({
-    //     type: 'add-hobby',
-    //     closable: true,
-    //     propData: { defaultValue: hobby },  // need to add propData
-    //   }),
-    // )
-  }
-
   return (
     <>
       <PageGridLayout
