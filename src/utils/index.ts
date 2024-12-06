@@ -80,8 +80,8 @@ export const dateFormatShort = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
 })
 export const dateFormatwithYear = new Intl.DateTimeFormat('en-GB', {
-  month: 'long',
-  day: 'numeric',
+  month: 'short',
+  day: '2-digit',
   year: 'numeric'
 })
 
