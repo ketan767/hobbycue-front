@@ -29,6 +29,7 @@ import ToggleButton from '@/components/_buttons/ToggleButton'
 import ModalWrapper from '@/components/Modal'
 import UserFilter from '@/components/AdminPage/Modal/UserFilterModal/UserFilter'
 import EditUser from '@/components/AdminPage/Modal/UserEditModal/UserEditModal'
+import { setShowPageLoader } from '@/redux/slices/site'
 interface ModalProps {
   isModalOpen: boolean
   setIsModalOpen: (value: boolean) => void
@@ -210,16 +211,21 @@ const AdminDashboard: React.FC = () => {
       setPageNumber(res?.data?.length > 0 ? res?.data?.length : 0)
     }
   }
+
+  const dispatch = useDispatch()
   const fetchUsers = async () => {
+    dispatch(setShowPageLoader(true))
     setPageNumber(0)
     const { res, err } = await getAllUserDetail(
       `limit=${pagelimit}&sort=-last_login&page=${page}&populate=sessions`,
     )
     if (err) {
       console.log('An error', err)
+      dispatch(setShowPageLoader(false))
     } else {
       // console.log('fetchUsers', res.data)
       setSearchResults(res.data.data.users)
+      dispatch(setShowPageLoader(false))
     }
   }
   useEffect(() => {

@@ -181,6 +181,15 @@ export const useGetBlogById = (query: string) => {
   })
 }
 
+export const getBlogById = async (id: string) => {
+  try {
+    const res = await axiosInstance.get(`/blogs/${id}`)
+    return { res, err: null }
+  } catch (err) {
+    return { res: null, err }
+  }
+}
+
 // Example: const axiosInstance = axios.create({ baseURL: 'http://localhost:5000/api' });
 
 export async function addHobby(blogId: string, hobbyData: any) {
@@ -210,5 +219,52 @@ export async function addHobby(blogId: string, hobbyData: any) {
     } else {
       throw error
     }
+  }
+}
+
+export const upvoteBlogComment = async (commentId: string, userId: string) => {
+  try {
+    const body = { userId }
+
+    const token = localStorage.getItem(`token`)
+    const headers = { Authorization: `Bearer ${token}` }
+
+    const res = await axiosInstance.patch(
+      `/blogs/comment/${commentId}/upvote`,
+      body,
+      {
+        headers,
+      },
+    )
+
+    return { res, err: null }
+  } catch (err) {
+    console.log(`Error in upvoteBlog(): `, err)
+    return { res: null, err }
+  }
+}
+
+export const downvoteBlogComment = async (
+  commentId: string,
+  userId: string,
+) => {
+  try {
+    const body = { userId }
+
+    const token = localStorage.getItem(`token`)
+    const headers = { Authorization: `Bearer ${token}` }
+
+    const res = await axiosInstance.patch(
+      `/blogs/comment/${commentId}/downvote`,
+      body,
+      {
+        headers,
+      },
+    )
+
+    return { res, err: null }
+  } catch (err) {
+    console.log(`Error in upvoteBlog(): `, err)
+    return { res: null, err }
   }
 }

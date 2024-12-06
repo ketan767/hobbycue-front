@@ -1012,6 +1012,16 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }, [email, showModal])
 
+  const handleAddTrendingHobby = (hobby: any) => {
+    // dispatch(
+    //   openModal({
+    //     type: 'add-hobby',
+    //     closable: true,
+    //     propData: { defaultValue: hobby },  // need to add propData
+    //   }),
+    // )
+  }
+
   return (
     <>
       <PageGridLayout
@@ -1696,14 +1706,14 @@ const CommunityLayout: React.FC<Props> = ({
                             )}
                             <span>{`${hobby.display}`}</span>
                           </Link>
-                          {/* <img
+                          <img
                             src={AddHobbyImg.src}
                             height={20}
                             width={20}
                             alt="Add"
                             style={{ cursor: 'pointer' }}
                             onClick={() => handleAddTrendingHobby(hobby)}
-                          /> */}
+                          />
                         </li>
                       )
                     })}

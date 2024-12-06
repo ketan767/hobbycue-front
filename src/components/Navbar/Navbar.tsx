@@ -746,6 +746,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   return (
     <>
       <header
+        style={viewAs === 'print' ? { height: '0' } : {}}
         className={`${styles['navbar-wrappper']} ${
           hasShadow && viewAs !== 'print' ? `${styles['showShadow']}` : ''
         }`}
@@ -928,7 +929,6 @@ export const Navbar: React.FC<Props> = ({}) => {
                 }}
               />
             </section>
-
             {isLoggedIn && user?.is_admin && (
               <div
                 className={styles['toggle-button']}
@@ -1408,7 +1408,16 @@ export const Navbar: React.FC<Props> = ({}) => {
                                   className={`${styles['img']} default-user-icon`}
                                 ></div>
                               )}
-                              <h4>{user.full_name}</h4>
+                              <h4
+                                style={{
+                                  width: '130px',
+                                  whiteSpace: 'nowrap',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                }}
+                              >
+                                {user.full_name}
+                              </h4>
                             </div>
                             <button className={styles['view-profile-btn']}>
                               View Profile

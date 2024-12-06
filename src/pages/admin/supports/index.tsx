@@ -19,6 +19,7 @@ import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { deleteUserByAdmin, getSupports } from '@/services/admin.service'
 import StatusDropdown from '@/components/_formElements/StatusDropdown'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 type UserProps = {
   _id: string
@@ -194,13 +195,18 @@ const AdminSupport: React.FC = () => {
       setPageNumber(pages)
     }
   }
+
+  const dispatch = useDispatch()
   const fetchSupports = async () => {
+    dispatch(setShowPageLoader(true))
     const { res, err } = await getSupports(``)
     if (err) {
       console.log('An error', err)
+      dispatch(setShowPageLoader(false))
     } else {
       console.log('fetchUsers', res.data)
       setSearchResults(res.data.data.supports)
+      dispatch(setShowPageLoader(false))
     }
   }
   useEffect(() => {

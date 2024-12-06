@@ -179,6 +179,7 @@
   .modal-wrapper .body {
     padding-left: 20px;
     padding-right: 20px;
+    padding-bottom: 8px !important;
   }
 
   .modal-wrapper .footer {
@@ -196,6 +197,9 @@
   }
   .modal-hr{
     display: none;
+  }
+  .label {
+    margin-bottom: 36px;
   }
 }
 .modal-wrapper .footer {
