@@ -101,6 +101,7 @@ type User = {
   _hobbies: any[]
 }
 type PeopleData = {
+  _hobbies: any
   profile_image: string
   title: string
   tagline: string
@@ -127,6 +128,7 @@ type EventData = {
   event_weekdays: any
 }
 type ProductData = {
+  _hobbies: any
   product_variant: any
   profile_image: string
   title: string
@@ -471,8 +473,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHideProduct(false)
       setHideBlogs(false)
       setHidePosts(false)
-      setHideClasses(true)
-      setHideRentals(true)
+      setHideClasses(false)
+      setHideRentals(false)
     } else if (showAllUsers === true) {
       setHideHobbies(true)
       setHidePeople(true)
@@ -1962,7 +1964,43 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{page?.title}</div>
                         <div className={styles.userTagline}>
-                          {page?.tagline || '\u00a0'}
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._hobbies[0]?.hobby?.display
+                                    ? page?._hobbies[0]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[0]?.genre?.display
+                                    ? ' - ' + page?._hobbies[0]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[1]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[1]?.hobby?.display
+                                    ? page?._hobbies[1]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[1]?.genre?.display
+                                    ? ' - ' + page?._hobbies[1]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[2]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[2]?.hobby?.display
+                                    ? page?._hobbies[2]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[2]?.genre?.display
+                                    ? ' - ' + page?._hobbies[2]?.genre?.display
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className={styles.userLocation}>
                           {page.page_type.map((item, idx) => {
@@ -2195,7 +2233,50 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userDetails}>
                           <div className={styles.userName}>{page?.title}</div>
                           <div className={styles.userTagline}>
-                            {page?.tagline || '\u00a0'}
+                            {page?.tagline ? (
+                              page?.tagline
+                            ) : (
+                              <>
+                                <span>
+                                  {`${
+                                    page?._hobbies[0]?.hobby?.display
+                                      ? page?._hobbies[0]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[0]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[0]?.genre?.display
+                                      : ''
+                                  }`}
+                                  {page?._hobbies[1]?.hobby?.display
+                                    ? ', '
+                                    : ''}
+                                  {`${
+                                    page?._hobbies[1]?.hobby?.display
+                                      ? page?._hobbies[1]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[1]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[1]?.genre?.display
+                                      : ''
+                                  }`}
+                                  {page?._hobbies[2]?.hobby?.display
+                                    ? ', '
+                                    : ''}
+                                  {`${
+                                    page?._hobbies[2]?.hobby?.display
+                                      ? page?._hobbies[2]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[2]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[2]?.genre?.display
+                                      : ''
+                                  }`}
+                                </span>
+                              </>
+                            )}
                           </div>
                           <div
                             className={`${styles.userLocation} ${inter.className}`}
