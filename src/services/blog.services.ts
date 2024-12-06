@@ -181,6 +181,15 @@ export const useGetBlogById = (query: string) => {
   })
 }
 
+export const getBlogById = async (id: string) => {
+  try {
+    const res = await axiosInstance.get(`/blogs/${id}`)
+    return { res, err: null }
+  } catch (err) {
+    return { res: null, err }
+  }
+}
+
 // Example: const axiosInstance = axios.create({ baseURL: 'http://localhost:5000/api' });
 
 export async function addHobby(blogId: string, hobbyData: any) {

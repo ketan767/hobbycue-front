@@ -589,7 +589,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   useEffect(() => {
     setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
-    if(filters.hobby) setSelectedHobby(filters.hobby)
+    if (filters.hobby) setSelectedHobby(filters.hobby)
     setSelectedLocation(filters.location ?? '')
   }, [filters.genre, filters.hobby, filters.location])
 
@@ -923,6 +923,16 @@ const CommunityLayout: React.FC<Props> = ({
       fetchUsers(query || '') // Fetch all users if query is empty
     }
   }, [email, showModal])
+
+  const handleAddTrendingHobby = (hobby: any) => {
+    // dispatch(
+    //   openModal({
+    //     type: 'add-hobby',
+    //     closable: true,
+    //     propData: { defaultValue: hobby },  // need to add propData
+    //   }),
+    // )
+  }
 
   return (
     <>
@@ -1607,14 +1617,14 @@ const CommunityLayout: React.FC<Props> = ({
                             )}
                             <span>{`${hobby.display}`}</span>
                           </Link>
-                          {/* <img
+                          <img
                             src={AddHobbyImg.src}
                             height={20}
                             width={20}
                             alt="Add"
                             style={{ cursor: 'pointer' }}
                             onClick={() => handleAddTrendingHobby(hobby)}
-                          /> */}
+                          />
                         </li>
                       )
                     })}
