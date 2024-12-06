@@ -304,11 +304,7 @@ const CommunityLayout: React.FC<Props> = ({
     if (activeTab === 'links') {
       params.append('has_link', 'true')
     }
-    if (
-      selectedGenre &&
-      selectedGenre !== 'undefined' &&
-      selectedGenre !== ''
-    ) {
+    if (selectedGenre && selectedGenre !== undefined && selectedGenre !== '') {
       params.append('_genre', selectedGenre)
     }
     if (selectedHobby === 'My Hobbies') {
@@ -525,20 +521,30 @@ const CommunityLayout: React.FC<Props> = ({
         )
 
         if (user._hobbies?.length > 0) {
-          if (!seeMoreOpenedFirstTime) {
-            user._hobbies?.map((hobb: any, index: number) => {
+          const preferredHobbyId =
+            user?.preferences?.community_view?.preferred_hobby?.hobby?._id
+          const preferredGenreId =
+            user?.preferences?.community_view?.preferred_hobby?.genre?._id
+
+          user._hobbies?.forEach((hobb: any, index: number) => {
+            if (preferredGenreId && preferredHobbyId) {
               if (
-                hobb?.hobby?._id ===
-                  user.preferences.community_view.preferred_hobby.hobby._id &&
+                hobb?.hobby?._id === preferredHobbyId &&
+                hobb?.genre?._id === preferredGenreId &&
                 index > 2
               ) {
-                toggleSeeMore()
-                setSeeMoreOpenedFirstTime(true)
+                console.log('preferredGenreId is called')
+                dispatch(setFilters({ seeMoreHobbies: true }))
               }
-            })
-          }
+            } else if (preferredHobbyId) {
+              if (hobb?.genre?._id) {
+              } else if (hobb?.hobby?._id === preferredHobbyId && index > 2) {
+                console.log('preferredHobbyId is called')
+                dispatch(setFilters({ seeMoreHobbies: true }))
+              }
+            }
+          })
         }
-
         if (user.preferences.community_view.preferred_hobby.genre) {
           setSelectedGenre(
             user.preferences.community_view.preferred_hobby.genre._id,
@@ -607,12 +613,24 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    if (filters.genre)
-      setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
-    if (filters.hobby) setSelectedHobby(filters.hobby)
-    if (filters.location) {
-      console.log('###########################3', filters.location)
+    console.log('filters.genre', filters.genre)
+    if (filters.genre) {
+      if (filters.genre === 'No genre') {
+        setSelectedGenre(undefined)
+        // dispatch(
+        //   setFilters({
+        //     genre: '',
+        //   }),
+        // )
+      } else {
+        setSelectedGenre(filters.genre ? filters.genre : undefined)
+      }
+    }
 
+    if (filters.hobby) {
+      setSelectedHobby(filters.hobby)
+    }
+    if (filters.location) {
       setSelectedLocation(filters.location ?? '')
     }
   }, [filters.genre, filters.hobby, filters.location])
@@ -1054,7 +1072,7 @@ const CommunityLayout: React.FC<Props> = ({
               <section>
                 <ul>
                   <li
-                    onClick={() => handleHobbyClick('All Hobbies', null)}
+                    onClick={() => handleHobbyClick('All Hobbies', undefined)}
                     className={
                       selectedHobby === 'All Hobbies' ? styles.selectedItem : ''
                     }
@@ -1062,9 +1080,10 @@ const CommunityLayout: React.FC<Props> = ({
                     All Hobbies
                   </li>
                   <li
-                    onClick={() => handleHobbyClick('My Hobbies', null)}
+                    onClick={() => handleHobbyClick('My Hobbies', undefined)}
                     className={
-                      selectedHobby === 'My Hobbies' && selectedGenre === null
+                      selectedHobby === 'My Hobbies' &&
+                      selectedGenre === undefined
                         ? styles.selectedItem
                         : ''
                     }
