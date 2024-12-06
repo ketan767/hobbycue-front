@@ -293,11 +293,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
                 <div>
                   <h4 className={styles['keyword-text']}>Keywords :</h4>
                   <ul className={`${styles['keyword-list']}`}>
-                    {data?.keywords?.map((item: any, idx: number) => (
-                      <li key={idx}>
-                        {item} {idx + 1 === data?.keywords.length ? '' : ','}{' '}
-                      </li>
-                    ))}
+                    <li>{data?.keywords.join(', ')}</li>
                   </ul>
                 </div>
                 <div>

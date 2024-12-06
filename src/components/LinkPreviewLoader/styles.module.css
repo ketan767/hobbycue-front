@@ -2,8 +2,8 @@
   background: #ffffff;
   /* Grey/Lighter */
 
-  border: 1px solid #ebedf0;
-  border-radius: var(--spacing-8);
+  /* border: 1px solid #ebedf0; */
+  /* border-radius: var(--spacing-8); */
   max-width: 726px;
   
   padding: 9px var(--spacing-16);
@@ -19,9 +19,6 @@
   .wrapper{
     background: #ffffff;
   /* Grey/Lighter */
-
-  border: 1px solid #ebedf0;
-  border-radius: var(--spacing-8);
   max-width: 1017px;
   padding: var(--spacing-16);
   }

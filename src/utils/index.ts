@@ -253,6 +253,15 @@ export const isInstagramReelLink = (url: string): boolean => {
   return patterns.some((regex) => regex.test(url));
 };
 
+export const isHobbycuePageLink = (url: string): boolean => {
+  const patterns = [
+    /^https:\/\/test\.hobbycue\.com\/program\/.+$/, 
+  ];
+
+  return patterns.some((regex) => regex.test(url));
+};
+
+
 
 
 
