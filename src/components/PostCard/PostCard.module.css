@@ -145,6 +145,7 @@
   min-width: var(--spacing-32);
   min-height: var(--spacing-32);
   border: 1px solid #8064a2;
+  object-fit: contain;
 }
 
 .page-img-comments {
