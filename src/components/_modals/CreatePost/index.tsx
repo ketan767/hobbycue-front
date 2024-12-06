@@ -643,7 +643,49 @@ export const CreatePost: React.FC<Props> = ({
           updateActiveProfile({ type: data.type, data: data.data }),
         )
         store.dispatch(closeModal())
-        window.location.reload()
+        // window.location.reload()
+        let seeMore = false
+        const selectedHobby = allHobbyIds[0]
+        const selectedGenre = allGenreIds[0]
+        user._hobbies?.forEach((hobb: any, index: number) => {
+          if (selectedGenre && selectedHobby) {
+            if (
+              hobb?.genre?._id === selectedGenre &&
+              hobb?.hobby?._id === selectedHobby &&
+              index > 2
+            ) {
+              seeMore = true
+            }
+          } else if (selectedHobby) {
+            if (hobb?.genre?._id) {
+            } else if (hobb?.hobby?._id === selectedHobby && index > 2) {
+              seeMore = true
+            }
+          }
+        })
+
+        if (allGenreIds[0]) {
+          console.log('genres')
+          dispatch(
+            setFilters({
+              hobby: allHobbyIds[0],
+              location: data.visibility,
+              genre: allGenreIds[0],
+              seeMoreHobbies: seeMore,
+            }),
+          )
+        } else {
+          console.log('hobby')
+
+          dispatch(
+            setFilters({
+              hobby: allHobbyIds[0],
+              location: data.visibility,
+              genre: 'No genre',
+              seeMoreHobbies: seeMore,
+            }),
+          )
+        }
         store.dispatch(increaseRefreshNum())
         router.push('/community')
       }
@@ -663,6 +705,48 @@ export const CreatePost: React.FC<Props> = ({
       store.dispatch(updateActiveProfile({ type: data.type, data: data.data }))
       store.dispatch(closeModal())
       // window.location.reload()
+      let seeMore = false
+      const selectedHobby = allHobbyIds[0]
+      const selectedGenre = allGenreIds[0]
+      user._hobbies?.forEach((hobb: any, index: number) => {
+        if (selectedGenre && selectedHobby) {
+          if (
+            hobb?.genre?._id === selectedGenre &&
+            hobb?.hobby?._id === selectedHobby &&
+            index > 2
+          ) {
+            seeMore = true
+          }
+        } else if (selectedHobby) {
+          if (hobb?.genre?._id) {
+          } else if (hobb?.hobby?._id === selectedHobby && index > 2) {
+            seeMore = true
+          }
+        }
+      })
+
+      if (allGenreIds[0]) {
+        console.log('genres')
+        dispatch(
+          setFilters({
+            hobby: allHobbyIds[0],
+            location: data.visibility,
+            genre: allGenreIds[0],
+            seeMoreHobbies: seeMore,
+          }),
+        )
+      } else {
+        console.log('hobby')
+
+        dispatch(
+          setFilters({
+            hobby: allHobbyIds[0],
+            location: data.visibility,
+            genre: 'No genre',
+            seeMoreHobbies: seeMore,
+          }),
+        )
+      }
       store.dispatch(increaseRefreshNum())
       router.push('/community')
     }
@@ -715,19 +799,19 @@ export const CreatePost: React.FC<Props> = ({
       setSelectedHobbies(existingHobbies)
     } else {
       const firstHobby =
-        activeProfile?.data?.preferences?.community_view?.preferred_hobby?.hobby
-          ?.display
+        activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
+          ?.hobby?.display
       const firstGenre =
-        activeProfile?.data?.preferences?.community_view?.preferred_hobby?.genre
-          ?.display
-      const firstHobbyId = activeProfile?.data?.preferences?.community_view
+        activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
+          ?.genre?.display
+      const firstHobbyId = activeProfile?.data?.preferences?.create_post_pref
         ?.preferred_hobby?.hobby?._id
-        ? activeProfile?.data?.preferences?.community_view?.preferred_hobby
+        ? activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
             ?.hobby?._id
         : undefined
-      const firstGenreId = activeProfile?.data?.preferences?.community_view
+      const firstGenreId = activeProfile?.data?.preferences?.create_post_pref
         ?.preferred_hobby?.genre?._id
-        ? activeProfile?.data?.preferences?.community_view?.preferred_hobby
+        ? activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
             ?.genre?._id
         : undefined
 
