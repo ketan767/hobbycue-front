@@ -211,7 +211,7 @@ const PostCommentVotes: React.FC<Props> = ({
               />
             </svg>
           </CustomizedTooltips>
-          <p className={styles['count']}>{comment?.up_votes?.count}</p>
+          <p className={styles['count']}>{comment?.up_votes?.count > 0 ? comment?.up_votes?.count : '' }</p>
         </div>
         <span className={styles['divider']}></span>
         <CustomizedTooltips title="DownVote">

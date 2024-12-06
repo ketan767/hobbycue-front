@@ -25,6 +25,7 @@ export interface Page {
   page_type: []
   event_date_time: any
   event_weekdays: any
+  product_variant: any
 }
 
 export interface hobbies {

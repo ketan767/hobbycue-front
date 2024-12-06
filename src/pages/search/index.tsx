@@ -85,6 +85,7 @@ import Program from '../../assets/svg/Search/Program.svg'
 import Product from '../../assets/svg/Search/Product.svg'
 import Blogs from '../../assets/svg/Search/blogs.svg'
 import { searchPosts } from '@/services/post.service'
+import { Inter } from 'next/font/google'
 
 type Props = {
   data?: any
@@ -126,6 +127,7 @@ type EventData = {
   event_weekdays: any
 }
 type ProductData = {
+  product_variant: any
   profile_image: string
   title: string
   tagline: string
@@ -188,6 +190,11 @@ type PropsExploreMoreBtn = {
   text: string
   icon?: React.ReactNode
 }
+
+const inter = Inter({
+  subsets: ['latin'], // Choose subsets like 'latin' or others as per your needs
+  weight: ['400', '500', '600', '700'], // Select the weights you want to use (optional)
+})
 
 const ExploreSidebarBtn: React.FC<PropsExploreSidebarBtn> = ({
   href,
@@ -2092,7 +2099,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {page?.tagline || '\u00a0'}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type +
+                          {page?.page_type?.map((pt: string, index: number) => {
+                            return `${index > 0 ? ' ' : ''}${pt}`
+                          }) +
                             (page._address?.city
                               ? ` | ${page._address?.city}`
                               : '') || '\u00a0'}
@@ -2184,11 +2193,17 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           <div className={styles.userTagline}>
                             {page?.tagline || '\u00a0'}
                           </div>
-                          <div className={styles.userLocation}>
-                            {page.page_type +
-                              (page._address?.city
-                                ? ` | ${page._address?.city}`
-                                : '') || '\u00a0'}
+                          <div
+                            className={`${styles.userLocation} ${inter.className}`}
+                          >
+                            {page?.page_type?.map(
+                              (pt: string, index: number) => {
+                                return `${index > 0 ? ' ' : ''}${pt}`
+                              },
+                            ) +
+                              (page?.product_variant?.variations[0]?.value
+                                ? ` | ₹${page?.product_variant?.variations[0]?.value}`
+                                : ` | ₹0`) || '\u00a0'}
                           </div>
                         </div>
                       </div>
