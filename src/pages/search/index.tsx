@@ -113,7 +113,11 @@ type PlaceData = {
   profile_image: string
   title: string
   tagline: string
-  _address: { city: string }
+  _address: {
+    society: string
+    city: string
+    locality: string
+  }
   page_url: string
   page_type: []
 }
@@ -121,7 +125,7 @@ type EventData = {
   profile_image: string
   title: string
   tagline: string
-  _address: { city: string }
+  _address: { society: string; city: string; locality: string }
   page_url: string
   page_type: []
   event_date_time: any
@@ -2072,10 +2076,36 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{page?.title}</div>
                         <div className={styles.userTagline}>
-                          {page?.tagline || '\u00a0'}
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._address?.society
+                                    ? page?._address?.society
+                                    : ''
+                                }`}
+                                {page?._address?.locality ? ', ' : ''}
+                                {`${
+                                  page?._address?.locality
+                                    ? page?._address?.locality
+                                    : ''
+                                }`}
+                                {page?._address?.city ? ', ' : ''}
+                                {`${
+                                  page?._address?.city
+                                    ? page?._address?.city
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type +
+                          {page?.page_type?.map((pt: string, index: number) => {
+                            return `${index > 0 ? ' ' : ''}${pt}`
+                          }) +
                             (page._address?.city
                               ? ` | ${page._address?.city}`
                               : '') || '\u00a0'}
@@ -2138,15 +2168,44 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{page?.title}</div>
                         <div className={styles.userTagline}>
-                          {page?.tagline || '\u00a0'}
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._address?.society
+                                    ? page?._address?.society
+                                    : ''
+                                }`}
+                                {page?._address?.locality ? ', ' : ''}
+                                {`${
+                                  page?._address?.locality
+                                    ? page?._address?.locality
+                                    : ''
+                                }`}
+                                {page?._address?.city ? ', ' : ''}
+                                {`${
+                                  page?._address?.city
+                                    ? page?._address?.city
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                         </div>
-                        <div className={styles.userLocation}>
+                         <div className={styles.blogAuthor}>
+                          <div className={styles.address}>
                           {page?.page_type?.map((pt: string, index: number) => {
                             return `${index > 0 ? ' ' : ''}${pt}`
                           }) +
                             (page._address?.city
                               ? ` | ${page._address?.city}`
                               : '') || '\u00a0'}
+
+                                         </div>
+
+                              <div>
                           {page?.event_date_time &&
                             page?.event_date_time.length !== 0 && (
                               <>
@@ -2171,6 +2230,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                                 )}
                               </>
                             )}
+                        </div>
                         </div>
                       </div>
                     </div>
@@ -2350,13 +2410,44 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userDetails}>
                           <div className={styles.userName}>{page?.title}</div>
                           <div className={styles.userTagline}>
-                            {page?.tagline || '\u00a0'}
+                            {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._address?.society
+                                    ? page?._address?.society
+                                    : ''
+                                }`}
+                                {page?._address?.locality ? ', ' : ''}
+                                {`${
+                                  page?._address?.locality
+                                    ? page?._address?.locality
+                                    : ''
+                                }`}
+                                {page?._address?.city ? ', ' : ''}
+                                {`${
+                                  page?._address?.city
+                                    ? page?._address?.city
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                           </div>
-                          <div className={styles.userLocation}>
-                            {page.page_type +
+                        <div className={styles.blogAuthor}>
+                          <div className={styles.address}>
+
+                            {page?.page_type?.map((pt: string, index: number) => {
+                            return `${index > 0 ? ' ' : ''}${pt}`
+                          }) +
                               (page._address?.city
                                 ? ` | ${page._address?.city}`
                                 : '') || '\u00a0'}
+                            </div>
+
+                              <div>
                             {page?.event_date_time &&
                               page?.event_date_time.length !== 0 && (
                                 <>
@@ -2383,6 +2474,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                                   )}
                                 </>
                               )}
+                          </div>
                           </div>
                         </div>
                       </div>
@@ -2439,10 +2531,57 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userDetails}>
                           <div className={styles.userName}>{page?.title}</div>
                           <div className={styles.userTagline}>
-                            {page?.tagline || '\u00a0'}
+                            {page?.tagline ? (
+                              page?.tagline
+                            ) : (
+                              <>
+                                <span>
+                                  {`${
+                                    page?._hobbies[0]?.hobby?.display
+                                      ? page?._hobbies[0]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[0]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[0]?.genre?.display
+                                      : ''
+                                  }`}
+                                  {page?._hobbies[1]?.hobby?.display
+                                    ? ', '
+                                    : ''}
+                                  {`${
+                                    page?._hobbies[1]?.hobby?.display
+                                      ? page?._hobbies[1]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[1]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[1]?.genre?.display
+                                      : ''
+                                  }`}
+                                  {page?._hobbies[2]?.hobby?.display
+                                    ? ', '
+                                    : ''}
+                                  {`${
+                                    page?._hobbies[2]?.hobby?.display
+                                      ? page?._hobbies[2]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[2]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[2]?.genre?.display
+                                      : ''
+                                  }`}
+                                </span>
+                              </>
+                            )}
                           </div>
                           <div className={styles.userLocation}>
-                            {page.page_type +
+                            {page?.page_type?.map(
+                              (pt: string, index: number) => {
+                                return `${index > 0 ? ' ' : ''}${pt}`
+                              },
+                            ) +
                               (page._address?.city
                                 ? ` | ${page._address?.city}`
                                 : '') || '\u00a0'}

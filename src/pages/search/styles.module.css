@@ -251,6 +251,14 @@
   max-width: 30.5vw;
   margin-right: 5px;
 }
+.address {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  text-wrap: nowrap;
+  max-width: 20vw;
+  margin-right: 5px;
+}
 
 .hobbydescription {
   font-size: 14px;
