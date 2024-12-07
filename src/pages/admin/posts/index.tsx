@@ -53,7 +53,7 @@ type SearchInput = {
 //   return `${day} ${month} ${year} at ${formattedHours}:${formattedMinutes} ${ampm}`
 // }
 
-const CustomBackdrop: React.FC = () => {
+export const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
 }
 const AdminDashboard: React.FC = () => {
