@@ -155,7 +155,6 @@ const Footer: React.FC = () => {
         { title: 'Blog Posts', link: '/blog' },
         {
           title: 'Shop / Store',
-          // link: '/explore/products',
           link: '/explore/products?page-type=Product',
         },
         {
