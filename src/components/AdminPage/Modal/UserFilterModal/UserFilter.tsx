@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import Image from 'next/image'
 import ToggleButton from '@/components/_buttons/ToggleButton'
 import styles from './UserFilter.module.css'
@@ -7,6 +7,7 @@ import GoogleIcon from '@/assets/svg/admin_google.svg'
 import MailIcon from '@/assets/svg/admin_email.svg'
 import FacebookIcon from '@/assets/svg/admin_facebook.svg'
 import { ModalState } from '@/pages/admin/users'
+import MyDatePicker from '../../Users/DiplayState/DatePicker/DatePicker'
 
 interface UserFilterProps {
   modalState: ModalState
@@ -15,7 +16,7 @@ interface UserFilterProps {
   setApplyFilter?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const formatDate = (date: string): string => {
+export const formatDate = (date: string | Date): string => {
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'short',
@@ -32,19 +33,17 @@ const UserFilter: React.FC<UserFilterProps> = ({
 }) => {
   const startDateRef = useRef<HTMLInputElement>(null)
   const endDateRef = useRef<HTMLInputElement>(null)
-
+  const [showStartDateCalender, setShowStartDateCalender] = useState(false)
+  const [showEndDateCalender, setShowEndDateCalender] = useState(false)
   const handleOnboardedChange = (value: string) => {
     setModalState?.((prev) => ({ ...prev, onboarded: value }))
   }
 
-  const handleDateChange = (field: 'start' | 'end') => {
-    const ref = field === 'start' ? startDateRef.current : endDateRef.current
-    if (ref) {
-      setModalState?.((prev) => ({
-        ...prev,
-        joined: { ...prev.joined, [field]: ref.value },
-      }))
-    }
+  const handleDateChange = (field: 'start' | 'end', value: Date) => {
+    setModalState?.((prev) => ({
+      ...prev,
+      joined: { ...prev.joined, [field]: value },
+    }))
   }
 
   const handleLoginModeChange = (mode: string) => {
@@ -72,14 +71,29 @@ const UserFilter: React.FC<UserFilterProps> = ({
     setApplyFilter?.(true)
     setIsModalOpen?.(false)
   }
-
+  const handleClear = () => {
+    setModalState?.({
+      onboarded: '',
+      joined: { start: '', end: '' },
+      loginModes: [],
+      pageCount: { min: '', max: '' },
+      status: '',
+    })
+    setIsModalOpen?.(false)
+  }
+  console.log(modalState)
   return (
     <main className={styles.modal}>
       <div className={styles.modalHeader}>
         <h2 className={styles.modalTitle}>Filter</h2>
-        <button className={styles.applyButton} onClick={handleApply}>
-          Apply
-        </button>
+        <div className={styles.wrapper}>
+          <button className={styles.clearButton} onClick={handleClear}>
+            Clear
+          </button>
+          <button className={styles.applyButton} onClick={handleApply}>
+            Apply
+          </button>
+        </div>
       </div>
       <div className={styles.modalBody}>
         {/* Onboarded */}
@@ -114,33 +128,36 @@ const UserFilter: React.FC<UserFilterProps> = ({
           <p className={styles.dateRange}>
             <button
               className={styles.dateButton}
-              onClick={() => startDateRef.current?.showPicker()}
+              onClick={() => setShowStartDateCalender((pre) => !pre)}
             >
               {modalState.joined.start
                 ? formatDate(modalState.joined.start)
-                : 'Start Date'}
+                : 'start'}
             </button>
-            <input
-              type="date"
-              ref={startDateRef}
-              className={styles.hiddenDateInput}
-              onChange={() => handleDateChange('start')}
-            />
+
+            {showStartDateCalender && (
+              <MyDatePicker
+                updateState={() => setShowStartDateCalender(false)}
+                handleDatePick={(date) => handleDateChange('start', date)}
+              />
+            )}
+
             <span>-</span>
             <button
               className={styles.dateButton}
-              onClick={() => endDateRef.current?.showPicker()}
+              onClick={() => setShowEndDateCalender((pre) => !pre)}
             >
               {modalState.joined.end
                 ? formatDate(modalState.joined.end)
-                : 'End Date'}
+                : 'end'}
             </button>
-            <input
-              type="date"
-              ref={endDateRef}
-              className={styles.hiddenDateInput}
-              onChange={() => handleDateChange('end')}
-            />
+
+            {showEndDateCalender && (
+              <MyDatePicker
+                updateState={() => setShowEndDateCalender(false)}
+                handleDatePick={(date) => handleDateChange('end', date)}
+              />
+            )}
           </p>
         </div>
 

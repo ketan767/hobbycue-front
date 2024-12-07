@@ -1,36 +1,32 @@
 .mainContainer {
-  max-width: 600px;
+  max-width: 719px;
   width: 100%;
+  background-color: white;
 }
 
-.back {
-  display: flex;
-  justify-content: end;
-}
-.back button {
-  border: none;
-  outline: none;
-  background: none;
-  margin: 20px 10px;
-  font-size: 20px;
-  cursor: pointer;
-}
 .mainWrapper {
-  max-width: 400px;
   width: 100%;
-  height: 60vh;
+
   margin: 0 auto;
   border-radius: 8px;
-  overflow-y: auto;
-  overflow-x: hidden;
+
   padding: 2px;
 }
-
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 5px;
+}
 .title {
-  font-size: 1.8rem;
-  color: #333;
-  margin-bottom: 1.5rem;
+  color: black;
+  font-family: Poppins;
+  font-size: 18px;
   font-weight: 600;
+  line-height: 26px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
 }
 
 .inputbox {
@@ -39,21 +35,50 @@
 
 .inputbox label,
 .inputPhoneBox label {
-  display: block;
-  font-size: 1rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #6d747a;
 }
 
 .inputbox input,
 .inputbox select,
 .inputbox textarea {
   width: 100%;
-  padding: 0.8rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
+  height: 40px;
+  padding: 12px;
+  gap: 0px;
+  border-radius: 8px;
+  font-family: Poppins;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  border: 1px solid #ebedf0;
   border-radius: 4px;
-  outline: none;
+}
+.inputbox input:focus-visible,
+.inputbox textarea :focus-visible,
+.inputbox select:focus-visible {
+  outline: 1px solid #8064a2;
+}
+.inputbox input::placeholder,
+.inputbox select::placeholder,
+.inputbox textarea ::placeholder {
+  font-family: Poppins;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #939ca3;
 }
 
 .inputbox textarea {
@@ -68,19 +93,22 @@
 }
 
 .saveButton {
-  display: inline-block;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  background-color: #007bff;
-  color: #fff;
+  width: 99px;
+  height: 40px;
+  padding: 12px 33.5px 12px 33.5px;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 1rem;
-}
+  outline: none;
+  border-radius: 8px;
+  background: #0096c8;
+  color: #ffffff;
 
-.saveButton:hover {
-  background-color: #0056b3;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
 }
 
 .loading {
@@ -102,15 +130,27 @@
   display: flex;
   width: 100%;
 }
+
 .phoneInput {
   flex-grow: 1;
   width: 100%;
   height: 100%;
   padding: 0.8rem;
   font-size: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid #ebedf0;
   border-radius: 4px;
   outline: none;
+
+  font-family: Poppins;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+}
+.phoneInput:focus-visible {
+  outline: 1px solid #8064a2;
 }
 .prefix {
   max-width: 60px;
@@ -118,9 +158,21 @@
   height: 100%;
   padding: 0.8rem 0;
   font-size: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid #ebedf0;
   border-radius: 4px;
   outline: none;
+  color: #939ca3;
+  font-family: Poppins;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+}
+.prefix:focus-visible {
+  outline: 1px solid #8064a2;
+  margin-right: 1px;
 }
 .longInputContainer {
   display: flex;
@@ -129,18 +181,30 @@
 }
 
 .longInputContainer label {
+  font-family: Poppins;
   font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 8px;
-  color: #333;
+  font-weight: 500;
+  line-height: 22px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #6d747a;
 }
 
 .longInputContainer input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  outline: none;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ebedf0;
+  font-family: Poppins;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+}
+.longInputContainer input:focus-visible {
+  outline: 1px solid #8064a2;
 }
 
 .twoColumnGrid {
@@ -154,12 +218,19 @@
   display: flex;
   flex-direction: column;
 }
+.Addressinputbox:focus-visible {
+  outline: 1px solid #8064a2;
+}
 
 .Addressinputbox label {
+  font-family: Poppins;
   font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 8px;
-  color: #333;
+  font-weight: 500;
+  line-height: 22px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #6d747a;
 }
 
 .Addressinputbox input {
@@ -167,22 +238,66 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ebedf0;
+  font-family: Poppins;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
 }
-
+.Addressinputbox input:focus-visible {
+  outline: 1px solid #8064a2;
+}
 @media (max-width: 768px) {
   .twoColumnGrid {
     grid-template-columns: 1fr;
   }
 }
 
+.completeAction {
+  margin-top: 10px;
+  color: black;
+  font-family: Poppins;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 26px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+}
+
 .h2 {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 16px;
-  color: #444;
+  color: black;
+  font-family: Poppins;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 26px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
 }
 
 .lastLogin h3 {
+  color: black;
+  font-family: Poppins;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 26px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+}
+.lastLogin span {
+  font-family: Poppins;
+  font-size: 14px;
   font-weight: 500;
-  font-size: 20px;
+  line-height: 22px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #6d747a;
 }

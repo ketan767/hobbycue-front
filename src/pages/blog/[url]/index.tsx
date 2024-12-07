@@ -272,9 +272,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     }
   }, [user, isLoggedIn, isUserDataLoaded])
 
-  /**
-   * Set upvote, downvote state initially from the DB
-   */
+  /** Set upvote, downvote state initially from the DB */
   useEffect(() => {
     const initialUpvote = data?.blog_url?.up_votes?._users?.some(
       (id: any) => id === user._id,
