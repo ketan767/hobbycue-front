@@ -55,6 +55,8 @@ const NoResult = () => {
     products: 'Products',
     blogs: 'Blogs',
     posts: 'Posts',
+    classes: 'Classes',
+    rentals: 'Rentals',
   }
   const isMob = isMobile()
   const { query } = router
