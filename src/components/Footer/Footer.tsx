@@ -34,6 +34,7 @@ import { openModal } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
 import { validateEmail } from '@/utils'
 import { showProfileError } from '@/redux/slices/user'
+import { setPageType } from '@/redux/slices/explore'
 
 const icons = [
   {
@@ -154,7 +155,8 @@ const Footer: React.FC = () => {
         { title: 'Blog Posts', link: '/blog' },
         {
           title: 'Shop / Store',
-          link: '/explore/products',
+          // link: '/explore/products',
+          link: '/explore/products?page-type=Product',
         },
         {
           title: 'Community',
@@ -252,6 +254,12 @@ const Footer: React.FC = () => {
                             if (value.func) {
                               e.preventDefault()
                               value.func()
+                            }
+                            if (
+                              value?.link ===
+                              '/explore/products?page-type=Product'
+                            ) {
+                              dispatch(setPageType('Product'))
                             }
                           }}
                           href={value.link}
