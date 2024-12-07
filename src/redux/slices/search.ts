@@ -20,7 +20,7 @@ export interface Page {
   profile_image: string
   title: string
   tagline: string
-  _address: { city: string }
+  _address: { society: string; city: string; locality: string }
   page_url: string
   page_type: []
   event_date_time: any
