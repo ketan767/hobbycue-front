@@ -80,8 +80,8 @@ export const dateFormatShort = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
 })
 export const dateFormatwithYear = new Intl.DateTimeFormat('en-GB', {
-  month: 'long',
-  day: 'numeric',
+  month: 'short',
+  day: '2-digit',
   year: 'numeric'
 })
 
@@ -253,6 +253,15 @@ export const isInstagramReelLink = (url: string): boolean => {
   return patterns.some((regex) => regex.test(url));
 };
 
+export const isHobbycuePageLink = (url: string): boolean => {
+  const patterns = [
+    /^https:\/\/test\.hobbycue\.com\/program\/.+$/, 
+  ];
+
+  return patterns.some((regex) => regex.test(url));
+};
+
+
 
 
 
@@ -282,7 +291,7 @@ export const convertDateToString = (date: string): string => {
 export const calculateReadingTime = (content: string) => {
   const wordsPerMinute = 200; 
   const wordCount = content.split(' ').length;
-  const minutes = Math.round(wordCount / wordsPerMinute);
+  const minutes = Math.ceil(wordCount / wordsPerMinute);
   return minutes;
 };
 

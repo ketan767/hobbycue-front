@@ -6,7 +6,12 @@ import {
 } from '@/services/blog.services'
 import styles from './../styles.module.css'
 import BlogComments from './Comments'
-import { dateFormat, dateFormatwithYear, isMobile } from '@/utils'
+import {
+  calculateReadingTime,
+  dateFormat,
+  dateFormatwithYear,
+  isMobile,
+} from '@/utils'
 import Image from 'next/image'
 import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
 import Link from 'next/link'
@@ -35,6 +40,7 @@ import { CircularProgress } from '@mui/material'
 import ModalWrapper from '@/components/Modal'
 import EditBlog from '@/components/_modals/EditBlog/EditBlog'
 import { Blog } from '@/types/blog'
+import { setBlog, setPreview } from '@/redux/slices/blog'
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
@@ -66,7 +72,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   const [isEditing, setIsEditing] = useState(false) // to check if the author is shown the editable interface
 
   const [hasChanged, setHasChanged] = useState(false)
-  const [blog, setBlog] = useState(data?.blog_url || {})
+  // const [blog, setBlog] = useState(data?.blog_url || {})
 
   const titleRef = useRef<HTMLTextAreaElement | null>(null)
   const taglineRef = useRef<HTMLTextAreaElement | null>(null)
@@ -88,17 +94,38 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   const { user, isLoggedIn, isUserDataLoaded } = useSelector(
     (state: RootState) => state.user,
   )
+  const { blog, refetch } = useSelector((state: RootState) => state.blog)
+
+  const fetchBlog = async () => {
+    const { err, res } = await getAllBlogs(
+      `url=${blog?.url}&populate=author,_hobbies`,
+    )
+    if (err) console.log('Error while fetching blog: ', err)
+    dispatch(setBlog(res?.data?.data?.blog?.[0]))
+  }
+
+  useEffect(() => {
+    dispatch(setBlog(data?.blog_url))
+  }, [data])
+
+  useEffect(() => {
+    if (refetch > 0) {
+      fetchBlog()
+    }
+  }, [refetch])
 
   const handleChange = (e: any, type: string) => {
     const { value } = e.target
     switch (type) {
       case 'title':
         if (value?.length > 100) return
-        setBlog((prev: any) => ({ ...prev, title: value }))
+        // setBlog((prev: any) => ({ ...prev, title: value }))
+        dispatch(setBlog({ ...blog, title: value }))
         break
       case 'tagline':
         if (value?.length > 100) return
-        setBlog((prev: any) => ({ ...prev, tagline: value }))
+        // setBlog((prev: any) => ({ ...prev, tagline: value }))
+        dispatch(setBlog({ ...blog, tagline: value }))
         break
       default:
         break
@@ -182,14 +209,11 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     const { err, res } = await uploadBlogImage(formData, data.blog_url._id)
     if (err) return console.log('Error in uploadImageToServer(): ', err)
     if (res?.data.success) {
-      setBlog({ ...blog, cover_pic: res?.data?.data.cover_pic })
+      // setBlog({ ...blog, cover_pic: res?.data?.data.cover_pic })
+      dispatch(setBlog({ ...blog, cover_pic: res?.data?.data.cover_pic }))
       dispatch(closeModal())
     }
   }
-
-  useEffect(() => {
-    setBlog(data.blog_url || {})
-  }, [data])
 
   useEffect(() => {
     if (blog?.content !== data?.blog_url?.content) {
@@ -261,6 +285,17 @@ const BlogPage: React.FC<Props> = ({ data }) => {
 
   const isMobileScreen = isMobile()
 
+  useEffect(() => {
+    const { preview: previewQuery } = router.query
+    if (previewQuery) {
+      dispatch(setPreview(true))
+      setIsEditing(false)
+      setIsAuthor(false)
+    } else {
+      dispatch(setPreview(false))
+    }
+  })
+
   return (
     <>
       <Head>
@@ -289,7 +324,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                         openModal({
                           type: 'blogPublish',
                           closable: true,
-                          propData: { blog, setIsEditing, setBlog },
+                          propData: { blog, setIsEditing },
                         }),
                       )
                     }
@@ -437,6 +472,8 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                         new Date(data?.blog_url?.createdAt),
                       )}
                     </p>
+                    &#183;
+                    <p>{calculateReadingTime(blog?.content)} min read</p>
                     {!isMobileScreen && (
                       <>
                         &#183;
@@ -517,16 +554,18 @@ const BlogPage: React.FC<Props> = ({ data }) => {
           {/* Content */}
           <div className={styles.blogContainerParent}>
             <BlogContainer className={styles.blogWrapper}>
+              {/* <div className={styles.blogWrapper}> */}
               {isEditing ? (
                 <div className={styles.blogEditor}>
                   <ReactQuill
                     theme="snow"
                     value={blog.content}
                     onChange={(updatedValue) => {
-                      setBlog((prev: any) => ({
-                        ...prev,
-                        content: updatedValue,
-                      }))
+                      // setBlog((prev: any) => ({
+                      //   ...prev,
+                      //   content: updatedValue,
+                      // }))
+                      dispatch(setBlog({ ...blog, content: updatedValue }))
                     }}
                     // onBlur={() => handleEditBlog('content')}
                     className={`${styles.quill} ${styles['ql-editor']} blog-quill`}
@@ -668,6 +707,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   </div>
                 </div>
               </div>
+              {/* </div> */}
             </BlogContainer>
           </div>
           <CustomSnackbar
