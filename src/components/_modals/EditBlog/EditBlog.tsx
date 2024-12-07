@@ -15,11 +15,11 @@ import BlogCard from '@/components/BlogCard/BlogCard'
 import { RootState } from '@/redux/store'
 import Link from 'next/link'
 
-interface Props {
-  propData: any
-  // setIsModalOpen: any
-  // data: any
-}
+// interface Props {
+//   propData: any
+//   // setIsModalOpen: any
+//   // data: any
+// }
 
 const penIcon = (
   <svg
@@ -76,10 +76,7 @@ function formatDate(isoDate: any) {
 
   return `${day} ${month} ${year}`
 }
-const EditBlog: React.FC<Props> = ({
-  // setIsModalOpen
-  propData,
-}) => {
+const EditBlog: React.FC = () => {
   const router = useRouter()
 
   // const {
@@ -95,7 +92,6 @@ const EditBlog: React.FC<Props> = ({
 
   // const blog = data?.blog_url || {}
   const { blog } = useSelector((state: RootState) => state.blog)
-  const { setIsEditing } = propData
   const author = blog?.author
   const [editHobby, setEditHobby] = useState(false)
   const [urlText, setUrlText] = useState('')
@@ -219,17 +215,14 @@ const EditBlog: React.FC<Props> = ({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        if (editHobby) {
-          setEditHobby(false)
-          e.stopPropagation()
-          return
-        }
+      if (e.key === 'Escape' && editHobby) {
+        setEditHobby(false)
+        e.stopPropagation()
       }
     }
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [])
+    document.body.addEventListener('keydown', handleKeyDown)
+    return () => document.body.removeEventListener('keydown', handleKeyDown)
+  }, [editHobby])
 
   return (
     <>
