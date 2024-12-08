@@ -129,6 +129,10 @@ const PostCard: React.FC<Props> = (props) => {
   }
 
   useEffect(() => {
+    async function fetch() {
+      await fetchComments()
+    }
+    fetch()
     if (router.query['comments'] === 'show') {
       setShowComments(true)
     }
@@ -208,6 +212,8 @@ const PostCard: React.FC<Props> = (props) => {
       fetchCommentsInUseeffect()
     }
   }, [])
+
+  useEffect(() => { console.log({comments}) }, [comments])
 
   const handleDeletePost = async (postid: any) => {
     const { err, res } = await deletePost(postid)
@@ -649,10 +655,10 @@ const PostCard: React.FC<Props> = (props) => {
                         </div>
                       ) : (
                         isInstagramReelLink(url) ? (
-                          <div onClick={()=>window.open(url,"_blank")}  style={{background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"8px", cursor:"pointer", padding:"0 8px"}}>
-                          <div style={{width:"230.63px", maxHeight:"410px"}}>
+                          <div onClick={()=>window.open(url,"_blank")}  style={{background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"16px", cursor:"pointer", padding:"0 16px"}}>
+                          <div style={{width:"230.63px", maxHeight:"376.31px"}}>
                       <img
-                        style={{cursor:"pointer", maxHeight:"410px"}}
+                        style={{cursor:"pointer", maxHeight:"376.31px"}}
                         onClick={()=>window.open(url, '_blank')}
                         width="230.63px"
                           src={
@@ -665,7 +671,7 @@ const PostCard: React.FC<Props> = (props) => {
                           alt=""
                         />
                       </div>
-                            <div style={{display:"flex", flexDirection:"column", gap:"16px", fontSize:"15px", justifyContent:"start", height:"410px"}} >
+                            <div style={{display:"flex", flexDirection:"column", gap:"16px", fontSize:"15px", justifyContent:"start", height:"376.31px"}} >
                               <p style={{fontWeight:"500"}}>
                                 {metaData?.title}
                               </p>
@@ -815,6 +821,7 @@ const PostCard: React.FC<Props> = (props) => {
                   />
                   {props?.currentSection === 'links' && (
                     <div className={styles['comment-and-count']}>
+                      <CustomizedTooltips title="Comments">
                       <svg
                         onClick={() => {
                           dispatch(
@@ -840,7 +847,8 @@ const PostCard: React.FC<Props> = (props) => {
                           </clipPath>
                         </defs>
                       </svg>
-                      <p style={{width:"28px", textAlign:"center"}} className={styles['comments-count']}>
+                      </CustomizedTooltips>
+                      <p style={{width:"28px", textAlign:"center", transform:"translateX(-2px)"}} className={styles['comments-count']}>
                         {comments.length > 0 ? comments.length : ''}
                       </p>
                     </div>

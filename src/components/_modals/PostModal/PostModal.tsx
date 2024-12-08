@@ -8,6 +8,7 @@ import {
   checkIfUrlExists,
   dateFormat,
   isEmptyField,
+  isInstagramReelLink,
   isVideoLink,
   pageType,
 } from '@/utils'
@@ -453,7 +454,36 @@ export const PostModal: React.FC<Props> = ({
                           controls={true}
                         />
                       </div>
-                    ) : (
+                    ) : 
+                    isInstagramReelLink(url) ? (
+                      <div onClick={()=>window.open(url,"_blank")} 
+                      style={isMobile ? {background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"16px", cursor:"pointer", padding:"0"} :{background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"16px", cursor:"pointer", padding:"0 16px"}}>
+                          <div style={{width:"230.63px", maxHeight:"376.31px"}}>
+                      <img
+                        style={{cursor:"pointer", maxHeight:"376.31px"}}
+                        onClick={()=>window.open(url, '_blank')}
+                        width="230.63px"
+                          src={
+                            (typeof metaData?.image === 'string' &&
+                              metaData.image) ||
+                            (typeof metaData?.icon === 'string' &&
+                              metaData.icon) ||
+                            defaultImg
+                          }
+                          alt=""
+                        />
+                      </div>
+                            <div style={{display:"flex", flexDirection:"column", gap:"16px", fontSize:"15px", justifyContent:"start", height:"376.31px"}} >
+                              <p style={{fontWeight:"500"}}>
+                                {metaData?.title}
+                              </p>
+                              <p style={{color:"#333"}}>
+                                {metaData?.description?.split(':')[0]}
+                              </p>
+                            </div>
+                        </div>
+                      ) :
+                    (
                       <>
                         <div className={styles['posts-meta-data-container']}>
                           <a

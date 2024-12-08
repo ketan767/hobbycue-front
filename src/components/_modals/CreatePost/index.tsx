@@ -1187,10 +1187,11 @@ export const CreatePost: React.FC<Props> = ({
                       />
                     </div>
                   ) : ( isInstagramReelLink(url) ? (
-                      <div onClick={()=>window.open(url,"_blank")}  style={{background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"8px", cursor:"pointer"}}>
-                      <div style={{width:"230.63px", height:"410px", display:"flex", alignItems:"center"}}>
+                      <div onClick={()=>window.open(url,"_blank")}  
+                      style={{background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"16px", cursor:"pointer", maxWidth:"637.4"}}>
+                      <div style={{width:"230.63px", height:"376.31px", display:"flex", alignItems:"center"}}>
                       <img
-                        style={{cursor:"pointer", maxHeight:"410px"}}
+                        style={{cursor:"pointer", maxHeight:"376.31px"}}
                         onClick={()=>window.open(url, '_blank')}
                         width="230.63px"
                           src={

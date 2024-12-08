@@ -125,6 +125,35 @@ const CustomEditor: React.FC<Props> = ({
 
   return (
     <>
+    <style>{`
+          .ql-editor.ql-indent-1{
+            padding-left:4px;
+          }
+          .ql-editor ul, 
+          .ql-editor ol {
+            font-family:'Poppins';
+            padding-left: 4px; 
+            font-size:14px;
+            text-align:left; 
+          }
+
+          .ql-editor a {
+            font-family:'Poppins';
+            color: rgb(128, 100, 162);  
+            text-decoration: none !important;
+            font-size:14px;
+            text-align:left;
+          }
+          .ql-editor p {
+            font-family:'Poppins';
+            font-size:14px;
+            text-align:left;
+          }
+          .ql-editor {
+            scrollbar-width: thin;
+            scrollbar-color: #777 #f1f1f1;
+          }
+      `}</style>
       <ReactQuill
         theme="snow"
         ref={editorRef}
@@ -144,6 +173,7 @@ const CustomEditor: React.FC<Props> = ({
         className={`${styles.quill} ${error ? styles['quill-error'] : ''} ${
           hasLink ? styles['quill-has-link'] : ''
         }`}
+        style={{maxHeight: '100%'}}
         placeholder="Start something interesting..."
         modules={{
           toolbar: {
@@ -188,32 +218,7 @@ const CustomEditor: React.FC<Props> = ({
       />
 
       {error && <p className={styles['error-text']}>{error}</p>}
-      <style>{`
-          .ql-editor.ql-indent-1{
-            padding-left:4px;
-          }
-          .ql-editor ul, 
-          .ql-editor ol {
-            font-family:'Poppins';
-            padding-left: 4px; 
-            font-size:14px;
-            text-align:left; 
-          }
-
-          .ql-editor a {
-            font-family:'Poppins';
-            color: rgb(128, 100, 162);  
-            text-decoration: none !important;
-            font-size:14px;
-            text-align:left;
-          }
-          .ql-editor p {
-            font-family:'Poppins';
-            font-size:14px;
-            text-align:left;
-          }
-          
-      `}</style>
+      
     </>
   )
 }
