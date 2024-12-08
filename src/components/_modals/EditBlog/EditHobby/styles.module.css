@@ -1,11 +1,27 @@
 .modal-wrapper {
   background-color: white;
   border-radius: var(--spacing-8);
-  max-width: 50rem;
-  width: 38rem;
+  width: 100% !important;
+  height: 100% !important;
   display: flex;
   flex-direction: column;
 }
+
+.header {
+  padding-top: 25px;
+ }
+
+ .heading {
+  margin-bottom: 17px;
+ }
+
+ .hobbiesHeading {
+  padding-block: 16px;
+ }
+
+ .body {
+  padding-top: 19px;
+ }
 
 .add-btn {
   width: 20px;
@@ -34,10 +50,12 @@
   border-radius: 100%;
 }
 
-.modal-wrapper .body {
+/* .modal-wrapper .body {
   overflow-y: auto;
   height: calc(100vh - 6rem);
-}
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+} */
 
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
@@ -51,10 +69,10 @@
     flex: 1;
   } */
 }
-.modal-wrapper .header,
+/* .modal-wrapper .header,
 .modal-wrapper .body {
   padding: var(--spacing-16) var(--spacing-24);
-}
+} */
 .modal-wrapper .body {
   padding-bottom: 0;
 }
@@ -433,7 +451,7 @@
   padding-left: 6px;
   min-height: 1rem;
 }
-.bold{
+.bold {
   font-weight: 600;
 }
 .select-level-main {

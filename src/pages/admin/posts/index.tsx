@@ -17,6 +17,7 @@ import { Fade, Modal } from '@mui/material'
 import EditPostModal from '@/components/_modals/AdminModals/EditpostsModal'
 import { formatDate } from '@/utils/Date'
 import { log } from 'console'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 type PostProps = any
 type SearchInput = {
@@ -52,7 +53,7 @@ type SearchInput = {
 //   return `${day} ${month} ${year} at ${formattedHours}:${formattedMinutes} ${ampm}`
 // }
 
-const CustomBackdrop: React.FC = () => {
+export const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
 }
 const AdminDashboard: React.FC = () => {
@@ -77,16 +78,19 @@ const AdminDashboard: React.FC = () => {
     display: false,
     message: '',
   })
-
+  const dispatch = useDispatch()
   const fetchPosts = async () => {
+    dispatch(setShowPageLoader(true))
     const { res, err } = await getAllPostsWithComments(
       `populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3&limit=${pagelimit}&sort=-createdAt&page=${page}`,
     )
     if (err) {
       console.log('An error', err)
+      dispatch(setShowPageLoader(false))
     } else {
       setSearchResults(res.data?.data?.posts)
       console.log('res', res.data?.data?.posts)
+      dispatch(setShowPageLoader(false))
     }
   }
 
@@ -352,7 +356,10 @@ const AdminDashboard: React.FC = () => {
                   <tr key={index}>
                     <td>
                       <div className={styles.resultItem}>
-                        <Link href={`/profile/${post?._author?.profile_url}`} className={styles.avatarContainer}>
+                        <Link
+                          href={`/profile/${post?._author?.profile_url}`}
+                          className={styles.avatarContainer}
+                        >
                           {post.profile_image ? (
                             <img
                               src={post?._author?.profile_image}
@@ -372,7 +379,10 @@ const AdminDashboard: React.FC = () => {
                           )}
                         </Link>
                         <div className={styles.detailsContainer}>
-                          <Link href={`/profile/${post?._author?.profile_url}`} className={styles.userName}>
+                          <Link
+                            href={`/profile/${post?._author?.profile_url}`}
+                            className={styles.userName}
+                          >
                             {post?._author?.full_name ||
                               post?._author?.title ||
                               ''}

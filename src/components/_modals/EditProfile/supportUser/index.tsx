@@ -77,6 +77,7 @@ const SupportUserModal: React.FC<Props> = ({
   const [backDisabled, SetBackDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
   const [isError, setIsError] = useState(false)
   const [snackbar, setSnackbar] = useState({
     type: 'success',
@@ -268,7 +269,7 @@ const SupportUserModal: React.FC<Props> = ({
       <div
         className={`${styles['modal-wrapper']} ${
           confirmationModal ? styles['ins-active'] : ''
-        }  `}
+        }  ${isKeyboardOpen ? styles['keyboard-open'] : ``} `}
       >
         {/* Modal Header */}
         <header className={styles['header']}>
@@ -286,13 +287,17 @@ const SupportUserModal: React.FC<Props> = ({
               }`}
             >
               <textarea
-                className={styles['long-input-box']}
+                className={`${styles['long-input-box']} ${
+                  isKeyboardOpen ? styles['short-input-box'] : ``
+                }`}
                 required
                 placeholder="Explain your need for help."
                 name="message"
                 onChange={handleInputChange}
                 value={data.description}
                 ref={textareaRef}
+                onFocus={() => setIsKeyboardOpen(true)}
+                onBlur={() => setIsKeyboardOpen(false)}
               />
             </div>
             {inputErrs.error ? (

@@ -19,6 +19,7 @@ import { deleteListingByAdmin } from '@/services/admin.service'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { formatDateTime, pageType } from '@/utils'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 type PagesProps = {
   _id: string
@@ -94,14 +95,17 @@ const AdminPages: React.FC = () => {
   }
 
   const fetchPages = async () => {
+    dispatch(setShowPageLoader(true))
     const { res, err } = await getListingPages(
       `limit=${pagelimit}&sort=-createdAt&page=${page}&populate=admin`,
     )
     if (err) {
       console.log('An error', err)
+      dispatch(setShowPageLoader(false))
     } else {
       console.log('fetchPages', res?.data)
       setSearchResults(res?.data?.data?.listings)
+      dispatch(setShowPageLoader(false))
     }
   }
 

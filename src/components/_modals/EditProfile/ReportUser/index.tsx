@@ -72,6 +72,7 @@ const UserReport: React.FC<Props> = ({
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [isError, setIsError] = useState(false)
@@ -260,7 +261,7 @@ const UserReport: React.FC<Props> = ({
       <div
         className={`${styles['modal-wrapper']} ${
           confirmationModal ? styles['ins-active'] : ''
-        }  `}
+        } ${isKeyboardOpen ? styles['keyboard-open'] : ``} `}
       >
         {/* Modal Header */}
         <header className={styles['header']}>
@@ -285,13 +286,17 @@ const UserReport: React.FC<Props> = ({
               }`}
             >
               <textarea
-                className={styles['long-input-box']}
+                className={`${styles['long-input-box']} ${
+                  isKeyboardOpen ? styles['short-input-box'] : ``
+                }`}
                 required
                 placeholder="Report the issue to the admin for their action."
                 name="message"
                 onChange={handleInputChange}
                 value={data.description}
                 ref={textAreaRef}
+                onFocus={() => setIsKeyboardOpen(true)}
+                onBlur={() => setIsKeyboardOpen(false)}
               />
             </div>
             {inputErrs.error ? (

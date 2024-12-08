@@ -86,6 +86,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  position: relative;
 }
 
 /* Search form styles */
@@ -165,6 +166,7 @@
 
 .resultsTable {
   width: 100%;
+  min-height: 300px;
   border-collapse: collapse;
   border-radius: 8px;
 }
@@ -181,7 +183,6 @@
 }
 .resultsTable th,
 .resultsTable td {
-  padding: 8px 12px; /* Consistent padding */
   text-align: left; /* Default alignment for text */
   vertical-align: middle; /* Aligns content vertically */
   box-sizing: border-box; /* Ensures width includes padding and border */
@@ -200,12 +201,6 @@
   line-height: 20px;
   /* 142.857% */
 }
-
-/* .resultsTable td {
-  padding: 12px;
-  border: 1px solid #ddd;
-  text-align: left;
-} */
 
 .resultsTable th {
   padding: 12px 8px 12px 24px;
@@ -239,6 +234,10 @@
 
 .resultsTable tbody tr td {
   padding: 0 8px 0 8px;
+}
+.resultsTable tbody tr {
+  padding: 0 8px 0 8px;
+  min-height: 48px;
 }
 
 /* Avatar styles */
@@ -323,7 +322,7 @@
 
 .actions {
   display: flex;
-  padding: 24px 5px;
+  padding: 10px 5px;
   justify-content: center;
   align-items: center;
   gap: 16px;

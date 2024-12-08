@@ -73,9 +73,12 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
     'All locations',
   ])
   const [Hobbyoptions, setHobbyOptions] = useState<string | any>([])
-
+  const [HobbyoptionsCommunity, setHobbyoptionsCommunity] = useState<
+    string | any
+  >(['All Hobbies', 'My Hobbies'])
+  const [hobbiesAdded, setHobbiesAdded] = useState<boolean>(false)
   useEffect(() => {
-    if (user._addresses) {
+    if (user._addresses && !hobbiesAdded) {
       const LocationOptions = [
         'All locations',
         ...user._addresses.map((address: any) => `${address.city}`),
@@ -89,9 +92,20 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
           return genreName ? `${hobbyName} - ${genreName}` : hobbyName
         }),
       ]
+      const HobbyoptionsComm = [
+        ...HobbyoptionsCommunity,
+        ...user._hobbies.map((item: any) => {
+          const hobbyName = item.hobby.display
+          const genreName = item.genre?.display || ''
+
+          return genreName ? `${hobbyName} - ${genreName}` : hobbyName
+        }),
+      ]
 
       setHobbyOptions(Hobbyoptions)
+      setHobbyoptionsCommunity(HobbyoptionsComm)
       setLocationOptions(LocationOptions)
+      setHobbiesAdded(true)
     }
   }, [user])
 
@@ -158,7 +172,11 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
   ) => {
     let updatedPreferences = { ...preferences }
 
-    if (subKey === 'preferred_hobby' && value !== 'All hobbies') {
+    if (
+      subKey === 'preferred_hobby' &&
+      value !== 'All Hobbies' &&
+      value !== 'My Hobbies'
+    ) {
       const [hobbyName, genreName] = (value as string).split(' - ')
 
       const selectedHobby = user._hobbies.find((hobby: any) => {
@@ -252,7 +270,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                   <div className={styles['selectContainer']}>
                     <CustomSelect
                       // disabled={true}
-                      options={Hobbyoptions}
+                      options={HobbyoptionsCommunity}
                       onChange={(item) =>
                         handleSelectChange(
                           'community_view',
@@ -261,11 +279,16 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                         )
                       }
                       value={
-                        user?.preferences?.community_view?.preferred_hobby
-                          ?.hobby?.display +
-                          ' - ' +
-                          user?.preferences?.community_view?.preferred_hobby
-                            ?.genre?.display || Hobbyoptions[0]
+                        user?.preferences?.community_view?.my_hobbies
+                          ? 'My Hobbies'
+                          : user?.preferences?.community_view?.preferred_hobby
+                              ?.hobby?.display &&
+                            user?.preferences?.community_view?.preferred_hobby
+                              ?.hobby?.display +
+                              (user?.preferences?.community_view
+                                ?.preferred_hobby?.genre?.display
+                                ? ` - ${user?.preferences?.community_view?.preferred_hobby?.genre?.display}`
+                                : '')
                       }
                     />
                     <p>at</p>
@@ -303,9 +326,10 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                       value={
                         user?.preferences?.create_post_pref?.preferred_hobby
                           ?.hobby?.display +
-                          ' - ' +
-                          user?.preferences?.create_post_pref?.preferred_hobby
-                            ?.genre?.display || Hobbyoptions[0]
+                        (user?.preferences?.create_post_pref?.preferred_hobby
+                          ?.genre?.display
+                          ? ` - ${user?.preferences?.create_post_pref?.preferred_hobby?.genre?.display}`
+                          : '')
                       }
                     />
                     <p>at</p>
@@ -334,7 +358,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                   </p>
                   <div>
                     <CustomSelect
-                      disabled={true}
+                      // disabled={true}
                       options={options}
                       onChange={(item) =>
                         handleVisibilityChange('location_visibility', item)
@@ -353,7 +377,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                   </p>
                   <div>
                     <CustomSelect
-                      disabled={true}
+                      // disabled={true}
                       options={viewOptions}
                       onChange={(item) =>
                         handleVisibilityChange('email_visibility', item)
@@ -372,7 +396,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                   </p>
                   <div>
                     <CustomSelect
-                      disabled={true}
+                      // disabled={true}
                       options={viewOptions}
                       onChange={(item) =>
                         handleVisibilityChange('phone_visibility', item)
