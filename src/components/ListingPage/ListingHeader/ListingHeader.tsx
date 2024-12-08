@@ -1182,16 +1182,12 @@ const ListingHeader: React.FC<Props> = ({
                             ))
                           : ''}
                       </div>
-                      {(data.event_weekdays &&
+                      {((data.event_weekdays &&
                         data.event_weekdays.length > 0) ||
                         (data.event_date_time &&
-                          data?.event_date_time?.length > 0 && (
-                            <Image
-                              className={styles['im']}
-                              src={Time}
-                              alt="Time"
-                            />
-                          ))}
+                          data?.event_date_time?.length > 0)) && (
+                        <Image className={styles['im']} src={Time} alt="Time" />
+                      )}
                       <div className={styles['flex-col-4']}>
                         {data.event_weekdays && data?.event_weekdays?.length > 0
                           ? (showDays
