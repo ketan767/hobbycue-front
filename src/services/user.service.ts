@@ -245,9 +245,10 @@ export const searchUsers = async (searchCriteria: any) => {
         queryParams.append(key, searchCriteria[key])
       }
     }
-    const response = await axiosInstance.get(
-      `/user/user-search-advanced?${queryParams.toString()}`,
-    )
+
+    let url = `/user/user-search-advanced?${queryParams.toString()}`
+    console.log(url)
+    const response = await axiosInstance.get(url)
     return { res: response.data, err: null }
   } catch (error) {
     console.error('Error searching for users:', error)

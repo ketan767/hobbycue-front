@@ -23,15 +23,13 @@ import {
   getHobbyRequests,
 } from '@/services/admin.service'
 import { formatDateTime, pageType } from '@/utils'
-import StatusDropdown from '@/components/_formElements/StatusDropdown'
-import selectIcon from '@/assets/svg/select_icon.svg'
-import InProgressIcon from '@/assets/svg/In_progress_icon.svg'
-import AcceptedIcon from '@/assets/svg/checked_icon.svg'
-import RejectedIcon from '@/assets/svg/cancel_icon.svg'
+
 import AdminActionModal from '@/components/_modals/AdminModals/ActionModal'
 import { Fade, Modal } from '@mui/material'
 import { log } from 'console'
 import { formatDate } from '@/utils/Date'
+import StatusDropdown from '@/components/_formElements/AdminStatusDropdown'
+import PreLoader from '@/components/PreLoader'
 import { setShowPageLoader } from '@/redux/slices/site'
 
 type SearchInput = {
@@ -39,7 +37,8 @@ type SearchInput = {
 }
 
 const HobbiesRequest: React.FC = () => {
-  const router = useRouter()
+  const router = useRouter();
+  const [showPreLoader, setShowPreLoader] = useState(true);
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
@@ -217,11 +216,13 @@ const HobbiesRequest: React.FC = () => {
     }
   }
   useEffect(() => {
+    setShowPreLoader(true)
     if (data.search.value) {
       fetchSearchResults()
     } else if (page) {
       FetchHobbyReq()
     }
+    setShowPreLoader(false)
   }, [data.search.value, page])
 
   useEffect(() => {
@@ -289,6 +290,14 @@ const HobbiesRequest: React.FC = () => {
 
   // Function to handle submit logic
   const handleNoteSubmit = async (hobbyreq: any, note: string) => {
+    console.log({
+      user_id: hobbyreq?.user_id?._id,
+      //listing_id: hobbyreq?.listing_id?._id,
+      hobby: hobbyreq?.hobby,
+      description: note,
+      status: hobbyreq?.status,
+    });
+    
     try {
       const { err, res } = await UpdateHobbyreq({
         user_id: hobbyreq?.user_id?._id,
@@ -354,8 +363,11 @@ const HobbiesRequest: React.FC = () => {
     return <div className={styles['custom-backdrop']}></div>
   }
 
+
+
   return (
     <>
+    {showPreLoader && <PreLoader />}
       {showAdminActionModal && (
         <Modal
           open
@@ -484,23 +496,29 @@ const HobbiesRequest: React.FC = () => {
                       />
                     </td>
                     <td>
-                      <div className={styles.actions}>
-                        <StatusDropdown
-                          status={hobbyreq?.status}
-                          onStatusChange={async (newStatus) => {
-                            console.log(newStatus, hobbyreq, 100)
-                            const { err, res } = await UpdateHobbyreq({
-                              user_id: hobbyreq?.user_id?._id,
-                              listing_id: hobbyreq?.listing_id?._id,
-                              hobby: hobbyreq?.hobby,
-                              description: hobbyreq?.description,
-                              status: newStatus?.status,
-                            })
-                            if (err) {
-                              throw new Error()
-                            }
-                          }}
-                        />
+                      <div
+                        
+                        className={styles.actions}
+                      >
+                        {pencilSvg}
+                          <StatusDropdown
+                            status={hobbyreq?.status}
+                            onStatusChange={async (newStatus) => {
+                              console.log(newStatus, hobbyreq, 100);
+                              const { err, res } = await UpdateHobbyreq({
+                                user_id: hobbyreq?.user_id?._id,
+                                listing_id: hobbyreq?.listing_id?._id,
+                                hobby: hobbyreq?.hobby,
+                                description: hobbyreq?.description,
+                                status: newStatus?.status,
+                              })
+                              if (err) {
+                                console.log(err);
+                                
+                              }
+                            }}
+                          />
+                        
                       </div>
                     </td>
                   </tr>
@@ -511,12 +529,7 @@ const HobbiesRequest: React.FC = () => {
           <div className={styles.pagination}>
             {/* Previous Page Button */}
             {page > 1 ? (
-              <button
-                className={styles.PaginationButton}
-                onClick={goToPreviousPage}
-              >
-                Previous
-              </button>
+              <button className={styles.PaginationButton} onClick={goToPreviousPage}>Prev</button>
             ) : (
               ''
             )}

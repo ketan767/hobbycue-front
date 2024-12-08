@@ -302,6 +302,7 @@ const SearchPageFilter = () => {
           <div
             className={getFilterItemClass('classes')}
             onClick={() => {
+              dispatch(setCategory('Classes'))
               handleFilterClick('classes')
             }}
           >
@@ -311,6 +312,7 @@ const SearchPageFilter = () => {
           <div
             className={getFilterItemClass('rentals')}
             onClick={() => {
+              dispatch(setCategory('Item Rental'))
               handleFilterClick('rentals')
             }}
           >

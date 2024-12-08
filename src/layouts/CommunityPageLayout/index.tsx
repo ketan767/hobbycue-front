@@ -513,7 +513,9 @@ const CommunityLayout: React.FC<Props> = ({
   useEffect(() => {
     if (!user) return
     if (user && user.preferences) {
-      if (!user.preferences.community_view?.preferred_hobby?.hobby) {
+      if (user.preferences.community_view?.my_hobbies) {
+        setSelectedHobby('My Hobbies')
+      } else if (!user.preferences.community_view?.preferred_hobby?.hobby) {
         setSelectedHobby('All Hobbies')
       } else if (!user.preferences.community_view.all_hobbies) {
         setSelectedHobby(

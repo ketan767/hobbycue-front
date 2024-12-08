@@ -101,6 +101,7 @@ type User = {
   _hobbies: any[]
 }
 type PeopleData = {
+  _hobbies: any
   profile_image: string
   title: string
   tagline: string
@@ -112,7 +113,11 @@ type PlaceData = {
   profile_image: string
   title: string
   tagline: string
-  _address: { city: string }
+  _address: {
+    society: string
+    city: string
+    locality: string
+  }
   page_url: string
   page_type: []
 }
@@ -120,13 +125,14 @@ type EventData = {
   profile_image: string
   title: string
   tagline: string
-  _address: { city: string }
+  _address: { society: string; city: string; locality: string }
   page_url: string
   page_type: []
   event_date_time: any
   event_weekdays: any
 }
 type ProductData = {
+  _hobbies: any
   product_variant: any
   profile_image: string
   title: string
@@ -471,8 +477,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHideProduct(false)
       setHideBlogs(false)
       setHidePosts(false)
-      setHideClasses(true)
-      setHideRentals(true)
+      setHideClasses(false)
+      setHideRentals(false)
     } else if (showAllUsers === true) {
       setHideHobbies(true)
       setHidePeople(true)
@@ -1261,6 +1267,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       ProductResults.length === 0 &&
       PostsResults.length === 0 &&
       BlogsResults.length === 0 &&
+      ClassesResults.length === 0 &&
+      RentalResults.length === 0 &&
       showAll) ||
     (searchResults.length === 0 && showAllUsers) ||
     (hobbyResults.length === 0 && showAllhobbies) ||
@@ -1269,6 +1277,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
     (EventResults.length === 0 && showAllEvent) ||
     (ProductResults.length === 0 && showAllProducts) ||
     (PostsResults.length === 0 && showAllPosts) ||
+    (ClassesResults.length === 0 && showAllClasses) ||
+    (RentalResults.length === 0 && showAllRentals) ||
     (BlogsResults.length === 0 && showAllBlogs && searchLoading === false)
 
   const isMobile = useMediaQuery('(max-width:1100px)')
@@ -1958,7 +1968,43 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{page?.title}</div>
                         <div className={styles.userTagline}>
-                          {page?.tagline || '\u00a0'}
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._hobbies[0]?.hobby?.display
+                                    ? page?._hobbies[0]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[0]?.genre?.display
+                                    ? ' - ' + page?._hobbies[0]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[1]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[1]?.hobby?.display
+                                    ? page?._hobbies[1]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[1]?.genre?.display
+                                    ? ' - ' + page?._hobbies[1]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[2]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[2]?.hobby?.display
+                                    ? page?._hobbies[2]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[2]?.genre?.display
+                                    ? ' - ' + page?._hobbies[2]?.genre?.display
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className={styles.userLocation}>
                           {page.page_type.map((item, idx) => {
@@ -2030,10 +2076,36 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{page?.title}</div>
                         <div className={styles.userTagline}>
-                          {page?.tagline || '\u00a0'}
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._address?.society
+                                    ? page?._address?.society
+                                    : ''
+                                }`}
+                                {page?._address?.locality ? ', ' : ''}
+                                {`${
+                                  page?._address?.locality
+                                    ? page?._address?.locality
+                                    : ''
+                                }`}
+                                {page?._address?.city ? ', ' : ''}
+                                {`${
+                                  page?._address?.city
+                                    ? page?._address?.city
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type +
+                          {page?.page_type?.map((pt: string, index: number) => {
+                            return `${index > 0 ? ' ' : ''}${pt}`
+                          }) +
                             (page._address?.city
                               ? ` | ${page._address?.city}`
                               : '') || '\u00a0'}
@@ -2096,15 +2168,44 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{page?.title}</div>
                         <div className={styles.userTagline}>
-                          {page?.tagline || '\u00a0'}
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._address?.society
+                                    ? page?._address?.society
+                                    : ''
+                                }`}
+                                {page?._address?.locality ? ', ' : ''}
+                                {`${
+                                  page?._address?.locality
+                                    ? page?._address?.locality
+                                    : ''
+                                }`}
+                                {page?._address?.city ? ', ' : ''}
+                                {`${
+                                  page?._address?.city
+                                    ? page?._address?.city
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                         </div>
-                        <div className={styles.userLocation}>
+                         <div className={styles.blogAuthor}>
+                          <div className={styles.address}>
                           {page?.page_type?.map((pt: string, index: number) => {
                             return `${index > 0 ? ' ' : ''}${pt}`
                           }) +
                             (page._address?.city
                               ? ` | ${page._address?.city}`
                               : '') || '\u00a0'}
+
+                                         </div>
+
+                              <div>
                           {page?.event_date_time &&
                             page?.event_date_time.length !== 0 && (
                               <>
@@ -2129,6 +2230,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                                 )}
                               </>
                             )}
+                        </div>
                         </div>
                       </div>
                     </div>
@@ -2191,7 +2293,50 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userDetails}>
                           <div className={styles.userName}>{page?.title}</div>
                           <div className={styles.userTagline}>
-                            {page?.tagline || '\u00a0'}
+                            {page?.tagline ? (
+                              page?.tagline
+                            ) : (
+                              <>
+                                <span>
+                                  {`${
+                                    page?._hobbies[0]?.hobby?.display
+                                      ? page?._hobbies[0]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[0]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[0]?.genre?.display
+                                      : ''
+                                  }`}
+                                  {page?._hobbies[1]?.hobby?.display
+                                    ? ', '
+                                    : ''}
+                                  {`${
+                                    page?._hobbies[1]?.hobby?.display
+                                      ? page?._hobbies[1]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[1]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[1]?.genre?.display
+                                      : ''
+                                  }`}
+                                  {page?._hobbies[2]?.hobby?.display
+                                    ? ', '
+                                    : ''}
+                                  {`${
+                                    page?._hobbies[2]?.hobby?.display
+                                      ? page?._hobbies[2]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[2]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[2]?.genre?.display
+                                      : ''
+                                  }`}
+                                </span>
+                              </>
+                            )}
                           </div>
                           <div
                             className={`${styles.userLocation} ${inter.className}`}
@@ -2265,13 +2410,44 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userDetails}>
                           <div className={styles.userName}>{page?.title}</div>
                           <div className={styles.userTagline}>
-                            {page?.tagline || '\u00a0'}
+                            {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._address?.society
+                                    ? page?._address?.society
+                                    : ''
+                                }`}
+                                {page?._address?.locality ? ', ' : ''}
+                                {`${
+                                  page?._address?.locality
+                                    ? page?._address?.locality
+                                    : ''
+                                }`}
+                                {page?._address?.city ? ', ' : ''}
+                                {`${
+                                  page?._address?.city
+                                    ? page?._address?.city
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                           </div>
-                          <div className={styles.userLocation}>
-                            {page.page_type +
+                        <div className={styles.blogAuthor}>
+                          <div className={styles.address}>
+
+                            {page?.page_type?.map((pt: string, index: number) => {
+                            return `${index > 0 ? ' ' : ''}${pt}`
+                          }) +
                               (page._address?.city
                                 ? ` | ${page._address?.city}`
                                 : '') || '\u00a0'}
+                            </div>
+
+                              <div>
                             {page?.event_date_time &&
                               page?.event_date_time.length !== 0 && (
                                 <>
@@ -2298,6 +2474,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                                   )}
                                 </>
                               )}
+                          </div>
                           </div>
                         </div>
                       </div>
@@ -2354,10 +2531,57 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userDetails}>
                           <div className={styles.userName}>{page?.title}</div>
                           <div className={styles.userTagline}>
-                            {page?.tagline || '\u00a0'}
+                            {page?.tagline ? (
+                              page?.tagline
+                            ) : (
+                              <>
+                                <span>
+                                  {`${
+                                    page?._hobbies[0]?.hobby?.display
+                                      ? page?._hobbies[0]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[0]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[0]?.genre?.display
+                                      : ''
+                                  }`}
+                                  {page?._hobbies[1]?.hobby?.display
+                                    ? ', '
+                                    : ''}
+                                  {`${
+                                    page?._hobbies[1]?.hobby?.display
+                                      ? page?._hobbies[1]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[1]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[1]?.genre?.display
+                                      : ''
+                                  }`}
+                                  {page?._hobbies[2]?.hobby?.display
+                                    ? ', '
+                                    : ''}
+                                  {`${
+                                    page?._hobbies[2]?.hobby?.display
+                                      ? page?._hobbies[2]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[2]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[2]?.genre?.display
+                                      : ''
+                                  }`}
+                                </span>
+                              </>
+                            )}
                           </div>
                           <div className={styles.userLocation}>
-                            {page.page_type +
+                            {page?.page_type?.map(
+                              (pt: string, index: number) => {
+                                return `${index > 0 ? ' ' : ''}${pt}`
+                              },
+                            ) +
                               (page._address?.city
                                 ? ` | ${page._address?.city}`
                                 : '') || '\u00a0'}
@@ -2542,11 +2766,15 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userTagline}>
                           {page?.tagline || '\u00a0'}
                         </div>
-                        <div className={styles.userLocation}>
-                          {page?.author?.full_name}{' '}
-                          {page.createdAt
-                            ? ' | ' + formatDateTimeThree(page.createdAt)
-                            : ''}
+                        <div className={styles.blogAuthor}>
+                          <div className={styles.full_name}>
+                            {page?.author?.full_name}{' '}
+                          </div>
+                          <div>
+                            {page.createdAt
+                              ? ' | ' + formatDateTimeThree(page.createdAt)
+                              : ''}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2896,6 +3124,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
   const showAllPosts = filter === 'posts'
   const showAllBlogs = filter === 'blogs'
   const showAllHobbies = filter === 'hobby'
+  const showAllClasses = filter === 'classes'
+  const showAllRentals = filter === 'rentals'
 
   const noResultsFound =
     (userSearchResults.length === 0 &&
@@ -2906,6 +3136,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
       ProductSearch.length === 0 &&
       PostsSearch.length === 0 &&
       BlogsSearch.length === 0 &&
+      ClassesSearch.length === 0 &&
+      RentalSearch.length === 0 &&
       showAll) ||
     (userSearchResults.length === 0 && showAllUsers) ||
     (hobbySearchResults.length === 0 && showAllHobbies) ||
@@ -2914,6 +3146,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
     (EventSearch.length === 0 && showAllEvent) ||
     (ProductSearch.length === 0 && showAllProducts) ||
     (PostsSearch.length === 0 && showAllPosts) ||
+    (ClassesSearch.length === 0 && showAllClasses) ||
+    (RentalSearch.length === 0 && showAllRentals) ||
     (BlogsSearch.length === 0 && showAllBlogs && searchLoading === false)
 
   return (
