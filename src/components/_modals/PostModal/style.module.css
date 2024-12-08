@@ -36,7 +36,7 @@
   .modal-wrapper {
     min-height: calc(100vh - 2rem);
     position: relative;
-    right: 41px;
+    right: 40px;
   }
   
 }
