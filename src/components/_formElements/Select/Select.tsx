@@ -17,6 +17,8 @@ type Props = {
   optionsContainerUnactiveClass?: string
   type?: 'page'
   img?: string
+  openDropdown?: boolean
+  setOpenDropdown?: (val: boolean) => void
 }
 
 const InputSelect: React.FC<Props> = ({
@@ -30,14 +32,22 @@ const InputSelect: React.FC<Props> = ({
   optionsContainerUnactiveClass,
   type,
   img,
+  openDropdown,
+  setOpenDropdown,
 }) => {
   const [active, setactive] = useState(false)
-  const toggle = () => setactive(!active)
+  const toggle = () => {
+    if (openDropdown && setOpenDropdown) {
+      setOpenDropdown(!openDropdown)
+    }
+    setactive(!active)
+  }
   const dropdownRef = useRef(null)
 
   useEffect(() => {
     const closeDropdown = () => {
       setactive(false)
+      if (setOpenDropdown) setOpenDropdown(false)
     }
 
     if (active) {
@@ -51,6 +61,12 @@ const InputSelect: React.FC<Props> = ({
     }
   }, [active])
 
+  useEffect(() => {
+    if (openDropdown) {
+      setactive(true)
+    }
+  }, [openDropdown])
+
   const handleHeaderClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation()
     toggle()
@@ -58,12 +74,23 @@ const InputSelect: React.FC<Props> = ({
 
   const handleChildClick = () => {
     setactive(false)
+    if (openDropdown && setOpenDropdown) {
+      setOpenDropdown(false)
+    }
   }
 
-  const notSelected = value == "All Locations" && value == "Select..." && value == null && value == undefined && value == "All Hobbies"
+  const notSelected =
+    value == 'All Locations' &&
+    value == 'Select...' &&
+    value == null &&
+    value == undefined &&
+    value == 'All Hobbies'
 
   return (
-    <div style={{backgroundColor : `${notSelected && "#8064a2"}`}} className={`${styles.container} ${className ? className : ''}`}>
+    <div
+      style={{ backgroundColor: `${notSelected && '#8064a2'}` }}
+      className={`${styles.container} ${className ? className : ''}`}
+    >
       <header className={styles.header} onClick={handleHeaderClick}>
         {type && type === 'page' ? (
           <div className={styles['page-type']}>
@@ -99,10 +126,10 @@ const InputSelect: React.FC<Props> = ({
       <div
         ref={dropdownRef}
         className={`${styles['options-container']} ${
-          active ? styles['active'] : ''
+          active? styles['active'] : ''
         }
         ${optionsContainerUnactiveClass ?? ''}
-        ${active ? optionsContainerClass ?? '' : ''} 
+        ${active? optionsContainerClass ?? '' : ''} 
         ${className ? className : ''} 
         `}
       >
