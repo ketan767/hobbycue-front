@@ -54,7 +54,9 @@ const People: React.FC<Props> = ({ data: initialData }) => {
       queryString = `type=${encodeURIComponent(type.toString())}&` + queryString
     } else if (category) {
       queryString =
-        `page_type=${encodeURIComponent(category.toString())}&` + queryString
+        `type=1&page_type=${encodeURIComponent(category.toString())}&` + queryString
+    } else {
+      queryString = `type=1&` + queryString
     }
 
     if (keyword) {
@@ -212,8 +214,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     queryString = `type=${encodeURIComponent(type.toString())}&` + queryString
   } else if (query.category) {
     queryString =
-      `page_type=${encodeURIComponent(query.category.toString())}&` +
+      `type=1&page_type=${encodeURIComponent(query.category.toString())}&` +
       queryString
+  } else {
+    queryString = `type=1&` + queryString
   }
   if (query.keyword) {
     queryString =
