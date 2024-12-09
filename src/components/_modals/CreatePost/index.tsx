@@ -121,6 +121,7 @@ export const CreatePost: React.FC<Props> = ({
     video_url: '',
   })
   const [showMetaData, setShowMetaData] = useState(true)
+  const [openDropdown, setOpenDropdown] = useState(false)
   const editBoxRef = useRef<HTMLDivElement | null>(null)
 
   const removeSelectedHobby = (hobbyToRemove: any) => {
@@ -304,7 +305,6 @@ export const CreatePost: React.FC<Props> = ({
       }
       setData((prev) => {
         if (selectedHobby) {
-
           return {
             ...prev,
             hobby: {
@@ -332,7 +332,7 @@ export const CreatePost: React.FC<Props> = ({
                 : null,
             }
           } else {
-            return { ...prev}
+            return { ...prev }
           }
         }
       })
@@ -908,6 +908,12 @@ export const CreatePost: React.FC<Props> = ({
     return match ? match[1] : null
   }
 
+  const handleEmptyHobbyClick = (e: any) => {
+    if (selectedHobbies.length === 0) {
+      setOpenDropdown(!openDropdown)
+    }
+  }
+
   return (
     <>
       <div
@@ -965,7 +971,10 @@ export const CreatePost: React.FC<Props> = ({
                     className={styles['profile-switcher-parent']}
                   />
                 </div>
-                <section className={styles1.z10}>
+                <section
+                  className={styles1.z10}
+                  onClick={handleEmptyHobbyClick}
+                >
                   {selectedHobbies && (
                     <section className={styles1.hobbyInput}>
                       {selectedHobbies?.map((item: any) => {
@@ -1023,6 +1032,8 @@ export const CreatePost: React.FC<Props> = ({
                       styles['optionsContainerUnactiveClass']
                     }
                     className={styles['input-select']}
+                    openDropdown={openDropdown}
+                    setOpenDropdown={setOpenDropdown}
                   >
                     <>
                       {hobbies.length > 0 && (
@@ -1046,20 +1057,9 @@ export const CreatePost: React.FC<Props> = ({
                                   }
                                   options={null}
                                   key={idx}
-                                  // selected={
-                                  //   item.hobby?._id === data.hobby?._id &&
-                                  //   (data.genre
-                                  //     ? item.genre?._id === data.genre?._id
-                                  //     : item.genre
-                                  //     ? false
-                                  //     : true)
-                                  // }
                                   selected={alreadyContains(item)}
                                   item={item}
                                   onChange={(e: any) => {
-                                    // const selected = user._hobbies.find(
-                                    //   (item: any) => item.hobby?._id === val,
-                                    // )
                                     const alreadyContains =
                                       selectedHobbies.some((hobbyData) => {
                                         console.log(
@@ -1097,13 +1097,6 @@ export const CreatePost: React.FC<Props> = ({
                                           }
                                         }
                                       })
-
-                                    // selectedHobbies.forEach((hobb) => {
-                                    //   console.log('Hobby', hobb.hobby)
-                                    //   console.log('hobbyId', hobb.hobbyId)
-                                    //   console.log('genre', hobb.genre)
-                                    //   console.log('genreId', hobb.genreId)
-                                    // })
 
                                     const newHobbyData =
                                       alreadyContains ||
