@@ -30,6 +30,9 @@ import ModalWrapper from '@/components/Modal'
 import UserFilter from '@/components/AdminPage/Modal/UserFilterModal/UserFilter'
 import EditUser from '@/components/AdminPage/Modal/UserEditModal/UserEditModal'
 import { setShowPageLoader } from '@/redux/slices/site'
+import DisplayState from '@/components/AdminPage/Users/DiplayState/DisplayState'
+import { Fade, Modal } from '@mui/material'
+import { CustomBackdrop } from '../posts'
 interface ModalProps {
   isModalOpen: boolean
   setIsModalOpen: (value: boolean) => void
@@ -126,6 +129,7 @@ const formatDate = (date: string): string => {
 }
 const AdminDashboard: React.FC = () => {
   const router = useRouter()
+  const dispatch = useDispatch()
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
@@ -167,10 +171,11 @@ const AdminDashboard: React.FC = () => {
     const searchValue = data.search.value.trim()
     event.preventDefault()
     let searchCriteria = {
-      full_name: searchValue,
+      name: searchValue,
     }
 
     const { res, err } = await searchUsers(searchCriteria)
+
     if (err) {
       console.log('An error', err)
     } else {
@@ -190,12 +195,15 @@ const AdminDashboard: React.FC = () => {
   }
 
   const fetchSearchResults = async () => {
+    console.log('auto search')
+
     const searchValue = data.search.value.trim()
     let searchCriteria = {
-      full_name: searchValue,
+      name: searchValue,
     }
 
     const { res, err } = await searchUsers(searchCriteria)
+
     if (err) {
       console.log('An error', err)
       setPageNumber(0)
@@ -212,7 +220,6 @@ const AdminDashboard: React.FC = () => {
     }
   }
 
-  const dispatch = useDispatch()
   const fetchUsers = async () => {
     dispatch(setShowPageLoader(true))
     setPageNumber(0)
@@ -234,7 +241,7 @@ const AdminDashboard: React.FC = () => {
     } else if (page) {
       fetchUsers()
     }
-  }, [data.search.value, page])
+  }, [data.search.value, page, pagelimit])
   const filterUsers = (users: object[], criteria: ModalState) => {
     const { onboarded, joined, loginModes, pageCount, status } = criteria
 
@@ -325,6 +332,23 @@ const AdminDashboard: React.FC = () => {
       })
     }
   }
+  const hasNonEmptyValues = (state: ModalState) => {
+    return !Object.entries(state).every(
+      ([_, value]) =>
+        !value ||
+        (Array.isArray(value) && value.length === 0) ||
+        (typeof value === 'object' &&
+          Object.values(value).every((v) => v === '')),
+    )
+  }
+
+  useEffect(() => {
+    if (hasNonEmptyValues(modalState)) {
+      setPagelimit(1000)
+    } else {
+      setPagelimit(25)
+    }
+  }, [modalState])
 
   return (
     <>
@@ -345,12 +369,24 @@ const AdminDashboard: React.FC = () => {
                 {searchSvg}
               </button>
             </form>
+            {hasNonEmptyValues(modalState) && (
+              <DisplayState modalState={modalState} />
+            )}
+
             <button
               className={styles.filterBtn}
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => setIsModalOpen(!isModalOpen)}
             >
               {filterSvg}
             </button>
+            {isModalOpen && (
+              <UserFilter
+                modalState={modalState}
+                setModalState={setModalState}
+                setIsModalOpen={setIsModalOpen}
+                setApplyFilter={setApplyFilter}
+              />
+            )}
           </div>
 
           <div className={styles.resultsContainer}>
@@ -607,7 +643,11 @@ const AdminDashboard: React.FC = () => {
                     </tr>
                   ))}
 
-                {filteredUsers?.length === 0 && <p>No result found</p>}
+                {filteredUsers?.length === 0 && (
+                  <p style={{ display: 'inline', margin: 'auto' }}>
+                    Loading...
+                  </p>
+                )}
               </tbody>
             </table>
           </div>
@@ -636,22 +676,35 @@ const AdminDashboard: React.FC = () => {
 
         <div>
           <ModalWrapper
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-          >
-            <UserFilter
-              modalState={modalState}
-              setModalState={setModalState}
-              setIsModalOpen={setIsModalOpen}
-              setApplyFilter={setApplyFilter}
-            />
-          </ModalWrapper>
-          <ModalWrapper
             isOpen={isEditModalOpen}
             onClose={() => setIsEditModalOpen(false)}
           >
-            <EditUser id={userId} setIsEditModalOpen={setIsEditModalOpen} />
+            <EditUser
+              id={userId}
+              setIsEditModalOpen={setIsEditModalOpen}
+              fetchUsers={fetchUsers}
+            />
           </ModalWrapper>
+          {/* 
+          {isEditModalOpen && (
+            <Modal
+              open
+              onClose={() => {
+                setIsEditModalOpen(false)
+              }}
+              slots={{ backdrop: CustomBackdrop }}
+              disableEscapeKeyDown
+              closeAfterTransition
+            >
+              <Fade>
+                <EditUser
+                  id={userId}
+                  setIsEditModalOpen={setIsEditModalOpen}
+                  fetchUsers={fetchUsers}
+                />
+              </Fade>
+            </Modal>
+          )} */}
         </div>
       </AdminLayout>
       {deleteData.open && (

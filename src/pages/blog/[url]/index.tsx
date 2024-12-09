@@ -40,7 +40,7 @@ import { CircularProgress } from '@mui/material'
 import ModalWrapper from '@/components/Modal'
 import EditBlog from '@/components/_modals/EditBlog/EditBlog'
 import { Blog } from '@/types/blog'
-import { setBlog, setPreview } from '@/redux/slices/blog'
+import { setBlog, setIsEditing, setPreview } from '@/redux/slices/blog'
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
@@ -69,7 +69,7 @@ export const downarrow = (
 const BlogPage: React.FC<Props> = ({ data }) => {
   const [isAuthor, setIsAuthor] = useState(false)
   const [isAuthorizedToView, setIsAuthorizedToView] = useState(false)
-  const [isEditing, setIsEditing] = useState(false) // to check if the author is shown the editable interface
+  // const [isEditing, setIsEditing] = useState(false) // to check if the author is shown the editable interface
 
   const [hasChanged, setHasChanged] = useState(false)
   // const [blog, setBlog] = useState(data?.blog_url || {})
@@ -94,7 +94,9 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   const { user, isLoggedIn, isUserDataLoaded } = useSelector(
     (state: RootState) => state.user,
   )
-  const { blog, refetch } = useSelector((state: RootState) => state.blog)
+  const { blog, refetch, isEditing } = useSelector(
+    (state: RootState) => state.blog,
+  )
 
   const fetchBlog = async () => {
     const { err, res } = await getAllBlogs(
@@ -264,15 +266,13 @@ const BlogPage: React.FC<Props> = ({ data }) => {
           }
         }
         if (isDraft && authorCheck) {
-          setIsEditing(true)
+          dispatch(setIsEditing(true))
         }
       }
     }
   }, [user, isLoggedIn, isUserDataLoaded])
 
-  /**
-   * Set upvote, downvote state initially from the DB
-   */
+  /** Set upvote, downvote state initially from the DB */
   useEffect(() => {
     const initialUpvote = data?.blog_url?.up_votes?._users?.some(
       (id: any) => id === user._id,
@@ -291,7 +291,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     const { preview: previewQuery } = router.query
     if (previewQuery) {
       dispatch(setPreview(true))
-      setIsEditing(false)
+      dispatch(setIsEditing(false))
       setIsAuthor(false)
     } else {
       dispatch(setPreview(false))
@@ -326,7 +326,6 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                         openModal({
                           type: 'blogPublish',
                           closable: true,
-                          propData: { blog, setIsEditing },
                         }),
                       )
                     }
@@ -475,7 +474,10 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                       )}
                     </p>
                     &#183;
-                    <p>{calculateReadingTime(blog?.content)} min read</p>
+                    <p>
+                      {blog?.content ? calculateReadingTime(blog?.content) : 0}{' '}
+                      min read
+                    </p>
                     {!isMobileScreen && (
                       <>
                         &#183;
@@ -520,8 +522,6 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                     data={data}
                     vote={vote}
                     setVote={setVote}
-                    isEditing={isEditing}
-                    setIsEditing={setIsEditing}
                     isAuthor={isAuthor}
                   />
                 </div>
@@ -535,8 +535,6 @@ const BlogPage: React.FC<Props> = ({ data }) => {
               data={data}
               vote={vote}
               setVote={setVote}
-              isEditing={isEditing}
-              setIsEditing={setIsEditing}
               isAuthor={isAuthor}
             />
           )}
@@ -547,8 +545,6 @@ const BlogPage: React.FC<Props> = ({ data }) => {
               data={data}
               vote={vote}
               setVote={setVote}
-              isEditing={isEditing}
-              setIsEditing={setIsEditing}
               isAuthor={isAuthor}
             />
           )}
@@ -592,7 +588,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   <div className={styles.blogButtons}>
                     <FilledButton
                       className={styles.blogSaveButton}
-                      onClick={() => setIsEditing(false)}
+                      onClick={() => dispatch(setIsEditing(false))}
                     >
                       Cancel
                     </FilledButton>
