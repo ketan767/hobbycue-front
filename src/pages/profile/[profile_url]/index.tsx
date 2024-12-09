@@ -82,7 +82,7 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
   const getPost = async () => {
     setLoadingPosts(true)
     const { err, res } = await getAllPosts(
-      `author_type=User&_author=${data.pageData._id}&populate=_author,_genre,_hobby`,
+      `author_type=User&_author=${data.pageData._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`,
     )
     setLoadingPosts(false)
     if (err) return console.log(err)
@@ -318,6 +318,7 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
       router.replace(`/profile/${user.profile_url}`)
       dispatch(openModal({ type: 'profile-address-edit', closable: true }))
     }
+    localStorage.setItem('meUrl', '')
   }, [router.asPath])
 
   return (
@@ -444,7 +445,7 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
                   }
                   setDisplayData={setDisplayAbout}
                 >
-                  <h4 className={styles['no-margin']}>About</h4> 
+                  <h4 className={styles['no-margin']}>About</h4>
                   {/* About of profile page */}
                   <div className={`ql-snow`}>
                     <div

@@ -11,6 +11,7 @@ export interface User {
   tagline: string
   primary_address: { city: string }
   profile_url: string
+  _hobbies: any[]
 }
 
 export interface Page {
@@ -24,9 +25,10 @@ export interface Page {
   page_type: []
   event_date_time: any
   event_weekdays: any
+  product_variant: any
 }
 
-interface hobbies {
+export interface hobbies {
   _id: string
   add_count: number
   cover_image: string | null
@@ -45,7 +47,7 @@ interface hobbies {
   tags: string[]
 }
 
-interface blogs {
+export interface blogs {
   _id: string
   url: string
   title: string
@@ -55,12 +57,15 @@ interface blogs {
   createdAt: string
 }
 
-interface posts {
+export interface posts {
   _id: string
   _author: any
   author_type: string
   createdAt: any
   _hobby: any
+  _genre: any
+  _allHobbies: any
+  _allGenres: any
   visibility: any
   content: any
 }

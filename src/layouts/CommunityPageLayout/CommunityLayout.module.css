@@ -763,6 +763,15 @@
 }
 
 @media screen and (max-width: 1100px) {
+  .whatsNewImg img {
+    height: 32px;
+    width: 32px;
+  }
+
+  .whatsNewContainer {
+    padding-block: 3px !important;
+  }
+
   .community-left-aside,
   .community-right-aside {
     height: auto;
@@ -783,6 +792,11 @@
   .filter-section {
     display: flex;
     gap: 12px;
+    padding: 8px 16px;
+    margin-block: 0;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.08);
   }
 
   .error-invite {
@@ -820,6 +834,9 @@
     align-items: flex-start;
     margin: 0 -16px; /* Added this to override parent's padding of 16px and adding full length border */
     animation: fadeDown 0.3s ease forwards;
+  }
+  .dropdowns-panel > * {
+    padding: 0 12px;
   }
 
   /* .dropdowns-panel input {
@@ -913,7 +930,7 @@
   }
   .dropdowns-panel .parent-list .options-parent .member-container {
     display: flex;
-    padding: 7px 16px;
+    padding: 7px 16px 0;
     justify-content: space-between;
     align-items: center;
     align-self: stretch;
@@ -1024,7 +1041,7 @@
     transform: translateY(calc(0 * var(--navbar-height-desktop)));
     z-index: 2;
     background-color: white;
-    padding: 8px 16px;
+    padding: 8px 0;
     /* position: relative; */
   }
   .community-header .top-margin-card {
@@ -1035,11 +1052,12 @@
   }
 
   .start-post-btn-container {
-    padding: 6px 0px;
+    padding: 6px 16px;
     border-radius: 0;
   }
   .navigation-links {
-    right: 8px;
+    /* right: 8px; */
+    padding-inline: 16px;
   }
 
   .navigation-links ul li {
@@ -1132,4 +1150,58 @@
   object-fit: contain;
   border-radius: 8px;
   border: 1px solid rgb(var(--primary-50-rgb));
+}
+
+.modal-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.modal-item:hover {
+  background-color: #f0f0f0;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-name {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Parent container relative positioning */
+.invite-wrapper {
+  position: relative;
+}
+
+/* Modal styling */
+.modal-container {
+  
+  position: absolute;
+  top: 94%; /* Position below the input */
+  left: 0;
+  width: 100%; /* Match input width */
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 10; /* Ensure it appears above other content */
+  border-radius: 4px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+/* Modal list items */
+.modal-list li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.modal-list li:hover {
+  background-color: #f0f0f0;
 }

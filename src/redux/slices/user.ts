@@ -2,6 +2,7 @@ import { getMyProfileDetail } from '@/services/user.service'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export interface AuthState {
+  isUserDataLoaded: boolean
   isLoggedIn: Boolean
   isAuthenticated: Boolean
   profileData: any
@@ -12,16 +13,18 @@ export interface AuthState {
     data: any
   }
   addressToEdit: any
-  showProfileError: Boolean,
+  showProfileError: Boolean
   CurrentUrl: String
   linkviaAuth: string
+  redirectPath: string
 }
 
 const initialState: AuthState = {
+  isUserDataLoaded: false,
   isLoggedIn: false,
   isAuthenticated: false,
   user: {},
-  profileData:{},
+  profileData: {},
   listing: [],
   activeProfile: {
     type: 'user',
@@ -30,13 +33,17 @@ const initialState: AuthState = {
   addressToEdit: null,
   showProfileError: false,
   CurrentUrl: '',
-  linkviaAuth:''
+  linkviaAuth: '',
+  redirectPath: '',
 }
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    updateIsUserDataLoaded: (state, action) => {
+      state.isUserDataLoaded = action.payload
+    },
     updateIsAuthenticated: (state, { payload }) => {
       state.isAuthenticated = payload
     },
@@ -68,18 +75,22 @@ const authSlice = createSlice({
       localStorage.setItem('active_profile', JSON.stringify(data))
     },
     showProfileError(state, action: PayloadAction<boolean>) {
-      state.showProfileError = action.payload;
+      state.showProfileError = action.payload
     },
     UpdateCurrentUrl(state, action: PayloadAction<string>) {
-      state.CurrentUrl = action.payload;
+      state.CurrentUrl = action.payload
     },
     SetLinkviaAuth(state, action: PayloadAction<string>) {
-      state.linkviaAuth = action.payload;
+      state.linkviaAuth = action.payload
+    },
+    setRedirectPath(state, action: PayloadAction<string>) {
+      state.redirectPath = action.payload
     },
   },
 })
 
 export const {
+  updateIsUserDataLoaded,
   updateIsAuthenticated,
   updateIsLoggedIn,
   updateUser,
@@ -90,6 +101,7 @@ export const {
   showProfileError,
   UpdateCurrentUrl,
   SetLinkviaAuth,
+  setRedirectPath,
 } = authSlice.actions
 
 export default authSlice.reducer

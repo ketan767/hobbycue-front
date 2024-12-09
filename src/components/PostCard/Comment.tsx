@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './PostCard.module.css'
 import { format, render, cancel, register } from 'timeago.js'
 import CommentCheckWithUrl from './CommentCheckWithUrl'
@@ -7,9 +7,11 @@ import { openModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import DeletePrompt from '../DeletePrompt/DeletePrompt'
-import { deletePostComment } from '@/services/post.service'
+import { deletePostComment, editPostComment } from '@/services/post.service'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import CustomizedTooltips from '../Tooltip/ToolTip'
+import { TextareaAutosize } from '@mui/material'
+import CustomTooltip from '@/components/Tooltip/ToolTip'
 
 interface Props {
   comment: any
@@ -20,6 +22,8 @@ interface Props {
 const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
   const [openAction, setOpenAction] = useState(false)
   const [showDelModal, setShowDelModal] = useState(false)
+  const [editComment, setEditComment] = useState(false)
+  const [editCommentContent, setEditCommentContent] = useState(comment.content)
   const dispatch = useDispatch()
   const { activeProfile, user, isLoggedIn } = useSelector(
     (state: RootState) => state.user,
@@ -43,11 +47,14 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
       document.removeEventListener('click', handleClickOutside)
     }
   }, [])
-
+  
+  
   const postedByMe =
     (comment?.author_type === 'User' &&
       comment?._author?.email === user?.email) ||
     (comment?.author_type === 'Listing' && comment?._author?.admin === user._id)
+
+    const commentUrl = `${window.location.origin}/comment/${comment._id}`
 
   const showFeatUnderDev = () => {
     setSnackbar({
@@ -70,6 +77,45 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
 
     fetchComments()
     setShowDelModal(false)
+  }
+
+  const inputRef: any = useRef<HTMLTextAreaElement>(null)
+
+  const handleInputChange = (e: any) => {
+    setEditCommentContent(e.target.value);
+
+    // Adjust textarea height to fit content
+    const textarea = inputRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto'; // Reset height to calculate the new height
+      textarea.style.height = `${textarea.scrollHeight}px`; // Set to scrollHeight
+    }
+  };
+
+  const [inputFocus, setInputFocus] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const editCommentHandler = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    setEditComment(false);
+
+    if (editCommentContent === comment.content) {
+      return;
+    }
+
+    const { res, err } = await editPostComment(comment._id, editCommentContent);
+    if (err) {
+      console.log('Error in editPostComment', err);
+      setSnackbar({
+        type: 'error',
+        display: true,
+        message: 'Error editing comment.',
+      });
+    }
+
+    fetchComments();
+    setLoading(false);
   }
 
   return (
@@ -117,13 +163,64 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
         </header>
 
         {/* Content */}
-        <CommentCheckWithUrl>
-          {comment.content.split('\n').map((line: any, index: number) => (
-            <div key={index}>{line}</div>
-          ))}
-        </CommentCheckWithUrl>
+        {
+          editComment ? (
+            <div style={{marginTop:"8px"}} className={styles['comment-input-wrapper']}>
+            <form onSubmit={editCommentHandler}>
+              <TextareaAutosize
+                value={editCommentContent}
+                className={styles['input']}
+                placeholder="Write a comment..."
+                onChange={(e: any) => {
+                  setEditCommentContent(e.target.value)
+                  console.log(e.target.value)
+                  // sessionStorage.setItem(
+                  //   'commentDraft',
+                  //   JSON.stringify({ id: data?._id, content: e.target.value }),
+                  // )
+                }}
+                onFocus={() => setInputFocus(true)}
+                onBlur={() => setInputFocus(false)}
+                ref={inputRef}
+                maxRows={5}
+                style={{borderColor: inputFocus ? '#8064A2' : '#E0E0E0', marginLeft:"0"}}
+              />
+              <CustomTooltip title="Save">
+              <button
+                type="submit"
+                className={styles['submit-btn']}
+                disabled={loading}
+                onClick={editCommentHandler}
+              >
+                <svg
+                  className={styles['submit-btn-svg']}
+                  width="14"
+                  height="12"
+                  viewBox="0 0 14 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1.26683 11.6003L12.9002 6.61367C13.4402 6.38034 13.4402 5.62034 12.9002 5.387L1.26683 0.400337C0.826829 0.207003 0.340163 0.53367 0.340163 1.007L0.333496 4.08034C0.333496 4.41367 0.580163 4.70034 0.913496 4.74034L10.3335 6.00034L0.913496 7.25367C0.580163 7.30034 0.333496 7.587 0.333496 7.92034L0.340163 10.9937C0.340163 11.467 0.826829 11.7937 1.26683 11.6003Z"
+                    fill="#8064A2"
+                  />
+                </svg>
+              </button>
+              </CustomTooltip>
+            </form>
+            </div>
+          ) : (
+            <CommentCheckWithUrl>
+              {comment.content.split('\n').map((line: any, index: number) => (
+                <div key={index}>{line}</div>
+              ))}
+            </CommentCheckWithUrl>
+          )
+        }
 
         {/* Footer */}
+        {
+          !editComment && (
         <footer>
           {/* Upvote and Downvote */}
           <PostCommentVotes
@@ -198,23 +295,17 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
             </CustomizedTooltips>
 
             {openAction === true && (
-              <div className={styles.editReportDelete}>
+              <div style={{ marginTop:"12px" }} className={styles.editReportDelete}>
                 {postedByMe && (
                   <>
-                    {/* <button
+                    <button
                       onClick={() => {
-                        dispatch(
-                          openModal({
-                            type: 'update-post',
-                            closable: true,
-                            propData: data,
-                          }),
-                        )
+                        setEditComment(true)
                         setOpenAction(false)
                       }}
                     >
                       Edit
-                    </button> */}
+                    </button>
                     <button
                       onClick={() => {
                         setShowDelModal(true)
@@ -226,12 +317,23 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
                   </>
                 )}
                 {!postedByMe && (
-                  <button onClick={showFeatUnderDev}>Report</button>
+                  <button onClick={() => {
+                    dispatch(
+                      openModal({
+                        type: 'PostReportModal',
+                        closable: true,
+                        propData: { reported_url: commentUrl },
+                      }),
+                    )
+                    setOpenAction(false)
+                  }}>Report</button>
                 )}
               </div>
             )}
           </div>
         </footer>
+          )
+        }
       </section>
       {showDelModal && (
         <DeletePrompt

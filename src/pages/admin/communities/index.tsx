@@ -29,6 +29,7 @@ import GoogleIcon from '@/assets/svg/google-icon.svg'
 import MailIcon from '@/assets/svg/mail.svg'
 import FacebookIcon from '@/assets/svg/mobile-social/facebook.svg'
 import StatusDropdown from '@/components/_formElements/StatusDropdown'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 type SearchInput = {
   search: InputData<string>
@@ -60,8 +61,9 @@ const AdminCommunities: React.FC = () => {
     display: false,
     message: '',
   })
-
+  const dispatch = useDispatch()
   const handleSearch = async (event: any) => {
+    dispatch(setShowPageLoader(true))
     const searchValue = data.search.value.trim()
     event.preventDefault()
     let searchCriteria = {
@@ -71,9 +73,11 @@ const AdminCommunities: React.FC = () => {
     const { res, err } = await searchUsers(searchCriteria)
     if (err) {
       console.log('An error', err)
+      dispatch(setShowPageLoader(false))
     } else {
       setSearchResults(res.data)
       console.log('res', res)
+      dispatch(setShowPageLoader(false))
     }
   }
 
@@ -189,12 +193,15 @@ const AdminCommunities: React.FC = () => {
     }
   }
   const fetchUsers = async () => {
+    dispatch(setShowPageLoader(true))
     const { res, err } = await getCommunities()
     if (err) {
       console.log('An error', err)
+      dispatch(setShowPageLoader(false))
     } else {
       console.log('fetchUsers', res.data)
       setSearchResults(res.data.data)
+      dispatch(setShowPageLoader(false))
     }
   }
   useEffect(() => {
@@ -289,13 +296,16 @@ const AdminCommunities: React.FC = () => {
                     <td>
                       <div className={styles.resultItem}>
                         <div className={styles.detailsContainer}>
-                          <div className={styles.userName}>
+                          <Link
+                            className={styles.userName}
+                            href={`/hobby/${user?.hobby?.slug}`}
+                          >
                             {`${user?.hobby?.display}${
                               user?.genre?.display
                                 ? ' - ' + user?.genre?.display
                                 : ''
                             }`}
-                          </div>
+                          </Link>
                         </div>
                       </div>
                     </td>

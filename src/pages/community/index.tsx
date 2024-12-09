@@ -26,6 +26,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
+  // First time user onboarding modal 07B002-39
   const ShowWelcomeModal = async () => {
     const { err: error, res: response } = await getMyProfileDetail()
     if (
@@ -33,8 +34,9 @@ const CommunityHome: React.FC<Props> = ({}) => {
       response?.data?.data.user.is_onboarded
     ) {
       dispatch(openModal({ type: 'user-onboarding-welcome', closable: false }))
+      document.body.style.overflow = 'hidden';
+      }
     }
-  }
   useEffect(() => {
     const modalShown = localStorage.getItem('modal-shown-after-login')
     if (modalShown !== 'true') {
@@ -67,9 +69,15 @@ const CommunityHome: React.FC<Props> = ({}) => {
         <section style={{padding:`${loading && "0"}`}} className={loading ? "":styles['posts-container']}>
           {loading ? (
             <>
-              <PostCardSkeletonLoading />
-              <PostCardSkeletonLoading />
-              <PostCardSkeletonLoading />
+              <div style={{paddingTop:"12px"}}>
+                <PostCardSkeletonLoading />
+              </div>
+              <div style={{paddingTop:"12px"}}>
+                <PostCardSkeletonLoading />
+              </div>
+              <div style={{paddingTop:"12px"}}>
+                <PostCardSkeletonLoading />
+              </div>
             </>
           ) : allPosts.length > 0 ? (
             allPosts.map((post: any) => {

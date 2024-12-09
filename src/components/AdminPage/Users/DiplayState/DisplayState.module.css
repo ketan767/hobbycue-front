@@ -1,0 +1,43 @@
+.modal {
+  flex-grow: 1;
+  height: 60px;
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  gap: 5px;
+  padding: 0px 10px;
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.stateItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 5px;
+  font-family: Poppins;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #0096c8;
+}
+.divider {
+  color: #6d747a;
+  margin: 0 2px;
+}
+
+.stateItem strong {
+  color: #000000;
+  margin-right: 5px;
+  font-family: Poppins;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  text-transform: capitalize;
+}

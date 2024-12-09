@@ -20,7 +20,11 @@ import addhobby from '@/assets/svg/addhobby.svg'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { showProfileError, updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
-import { SendHobbyRequest, getAllHobbies, getAllHobbiesWithoutPagi } from '@/services/hobby.service'
+import {
+  SendHobbyRequest,
+  getAllHobbies,
+  getAllHobbiesWithoutPagi,
+} from '@/services/hobby.service'
 import { isEmptyField } from '@/utils'
 import { FormControl, MenuItem, Select } from '@mui/material'
 import Image from 'next/image'
@@ -1030,7 +1034,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             if (res?.data.success) {
               setShowAddGenreModal(false)
               setErrorOrmsg(
-                `<strong>${hobbyInputValue}-${genreInputValue}</strong> has been requested. You can add it later if approved.`,
+                `<strong>${hobbyInputValue} - ${genreInputValue}</strong> has been requested. You can add it later if approved.`,
               )
               setHobbyInputValue('')
               setGenreInputValue('')

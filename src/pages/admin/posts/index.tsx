@@ -13,47 +13,57 @@ import { getAllPostsWithComments } from '@/services/post.service'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { deletePostByAdmin } from '@/services/admin.service'
+import { Fade, Modal } from '@mui/material'
+import EditPostModal from '@/components/_modals/AdminModals/EditpostsModal'
+import { formatDate } from '@/utils/Date'
+import { log } from 'console'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 type PostProps = any
 type SearchInput = {
   search: InputData<string>
 }
 
-function formatDate(inputDate: string): string {
-  const months: string[] = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ]
+// function formatDate(inputDate: string): string {
+//   const months: string[] = [
+//     'January',
+//     'February',
+//     'March',
+//     'April',
+//     'May',
+//     'June',
+//     'July',
+//     'August',
+//     'September',
+//     'October',
+//     'November',
+//     'December',
+//   ]
 
-  const date = new Date(inputDate)
-  const day = date.getDate()
-  const month = months[date.getMonth()]
-  const year = date.getFullYear()
-  const hours = date.getHours()
-  const minutes = date.getMinutes()
-  const ampm = hours >= 12 ? 'PM' : 'AM'
-  const formattedHours = hours % 12 === 0 ? 12 : hours % 12
-  const formattedMinutes = minutes < 10 ? '0' + minutes : minutes
+//   const date = new Date(inputDate)
+//   const day = date.getDate()
+//   const month = months[date.getMonth()]
+//   const year = date.getFullYear()
+//   const hours = date.getHours()
+//   const minutes = date.getMinutes()
+//   const ampm = hours >= 12 ? 'PM' : 'AM'
+//   const formattedHours = hours % 12 === 0 ? 12 : hours % 12
+//   const formattedMinutes = minutes < 10 ? '0' + minutes : minutes
 
-  return `${day} ${month} ${year} at ${formattedHours}:${formattedMinutes} ${ampm}`
+//   return `${day} ${month} ${year} at ${formattedHours}:${formattedMinutes} ${ampm}`
+// }
+
+export const CustomBackdrop: React.FC = () => {
+  return <div className={styles['custom-backdrop']}></div>
 }
-
 const AdminDashboard: React.FC = () => {
   const router = useRouter()
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
+  const [showAdminActionModal, setShowAdminActionModal] = useState(false)
   const [searchResults, setSearchResults] = useState<PostProps[]>([])
+  const [id, setId] = useState('')
   const [page, setPage] = useState(1)
   const [pagelimit, setPagelimit] = useState(25)
   const [deleteData, setDeleteData] = useState<{
@@ -68,22 +78,33 @@ const AdminDashboard: React.FC = () => {
     display: false,
     message: '',
   })
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value
-    setData((prev) => ({ ...prev, search: { value, error: null } }))
-  }
-
+  const dispatch = useDispatch()
   const fetchPosts = async () => {
+    dispatch(setShowPageLoader(true))
     const { res, err } = await getAllPostsWithComments(
-      `populate=_author,_genre,_hobby&limit=${pagelimit}&sort=-createdAt&page=${page}`,
+      `populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3&limit=${pagelimit}&sort=-createdAt&page=${page}`,
     )
     if (err) {
       console.log('An error', err)
+      dispatch(setShowPageLoader(false))
     } else {
       setSearchResults(res.data?.data?.posts)
       console.log('res', res.data?.data?.posts)
+      dispatch(setShowPageLoader(false))
     }
+  }
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    if (value === '') {
+      fetchPosts()
+    } else {
+      const searchres = searchResults.filter((item) =>
+        item?._author?.full_name?.toLowerCase().includes(value.toLowerCase()),
+      )
+      setSearchResults(searchres)
+    }
+    setData((prev) => ({ ...prev, search: { value, error: null } }))
   }
 
   const goToPreviousPage = () => {
@@ -188,7 +209,9 @@ const AdminDashboard: React.FC = () => {
   }
 
   const handleEdit = (post_id: string) => {
-    router.push(`/admin/posts/edit/${post_id}`)
+    setId(post_id)
+    console.log(id)
+    setShowAdminActionModal(true)
   }
 
   const handleDelete = (post_id: string) => {
@@ -254,6 +277,10 @@ const AdminDashboard: React.FC = () => {
                 {searchSvg}
               </button>
             </form>
+            <p>
+              Count :{' '}
+              <span style={{ color: '#0096C8' }}>{searchResults.length}</span>
+            </p>
             <button className={styles.filterBtn}>{filterSvg}</button>
           </div>
 
@@ -261,9 +288,19 @@ const AdminDashboard: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '18.06%' }}>User</th>
-                  <th style={{ width: '19.48%' }}>Content</th>
-                  <th style={{ width: '10%' }}>Posted at</th>
+                  <th style={{ width: '18.06%', textAlign: 'center' }}>User</th>
+                  <th style={{ width: '19.48%', textAlign: 'center' }}>
+                    Content
+                  </th>
+                  <th
+                    style={{
+                      width: '21.54%',
+                      textAlign: 'center',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    Posted at
+                  </th>
                   <th style={{ width: '9.163%' }}>Hobby</th>
                   <th
                     style={{
@@ -274,16 +311,42 @@ const AdminDashboard: React.FC = () => {
                   >
                     Location
                   </th>
-                  <th style={{ width: '6.939%', paddingRight: '16px' }}>
+                  <th
+                    style={{
+                      width: '6.939%',
+                      paddingRight: '16px',
+                      textAlign: 'center',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
                     Up Votes
                   </th>
-                  <th style={{ width: '6.672%', paddingRight: '16px' }}>
+                  <th
+                    style={{
+                      width: '6.672%',
+                      paddingRight: '16px',
+                      textAlign: 'center',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
                     Down Votes
                   </th>
-                  <th style={{ width: '6.87%', paddingRight: '16px' }}>
+                  <th
+                    style={{
+                      width: '6.87%',
+                      paddingRight: '16px',
+                      textAlign: 'center',
+                    }}
+                  >
                     Comments
                   </th>
-                  <th style={{ width: '6.252%', paddingRight: '16px' }}>
+                  <th
+                    style={{
+                      width: '6.252%',
+                      paddingRight: '16px',
+                      textAlign: 'center',
+                    }}
+                  >
                     Actions
                   </th>
                 </tr>
@@ -293,7 +356,10 @@ const AdminDashboard: React.FC = () => {
                   <tr key={index}>
                     <td>
                       <div className={styles.resultItem}>
-                        <div className={styles.avatarContainer}>
+                        <Link
+                          href={`/profile/${post?._author?.profile_url}`}
+                          className={styles.avatarContainer}
+                        >
                           {post.profile_image ? (
                             <img
                               src={post?._author?.profile_image}
@@ -311,23 +377,32 @@ const AdminDashboard: React.FC = () => {
                               height={40}
                             />
                           )}
-                        </div>
+                        </Link>
                         <div className={styles.detailsContainer}>
-                          <div className={styles.userName}>
+                          <Link
+                            href={`/profile/${post?._author?.profile_url}`}
+                            className={styles.userName}
+                          >
                             {post?._author?.full_name ||
                               post?._author?.title ||
                               ''}
-                          </div>
+                          </Link>
                         </div>
                       </div>
                     </td>
                     <td
                       dangerouslySetInnerHTML={{
-                        __html: post?.content.slice(0, 30) + '...' ?? '',
+                        __html: post?.content.slice(0, 30) + '...',
                       }}
                       className={styles.userEmail}
                     ></td>
-                    <td className={styles.userPhone}>
+                    <td
+                      className={styles.userPhone}
+                      style={{
+                        width: '20%',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
                       {formatDate(post?.createdAt)}
                     </td>
                     <td className={styles.LoginType}>
@@ -361,19 +436,57 @@ const AdminDashboard: React.FC = () => {
           </div>
           <div className={styles.pagination}>
             {/* Previous Page Button */}
-            {page > 1 ? (
-              <button onClick={goToPreviousPage}>Previous</button>
-            ) : (
-              ''
-            )}
-            {searchResults.length === pagelimit ? (
-              <button onClick={goToNextPage}>Next</button>
-            ) : (
-              ''
-            )}
+
+            <button
+              style={
+                page <= 1 ? { visibility: 'hidden' } : { display: 'block' }
+              }
+              className="admin-next-btn"
+              onClick={goToPreviousPage}
+            >
+              Previous
+            </button>
+
+            <button
+              style={
+                searchResults.length !== pagelimit
+                  ? { visibility: 'hidden' }
+                  : { display: 'block' }
+              }
+              className="admin-next-btn"
+              onClick={goToNextPage}
+            >
+              Next
+            </button>
           </div>
         </div>
       </AdminLayout>
+
+      {showAdminActionModal && (
+        <Modal
+          open
+          onClose={() => {
+            setShowAdminActionModal(false)
+          }}
+          slots={{ backdrop: CustomBackdrop }}
+          disableEscapeKeyDown
+          closeAfterTransition
+        >
+          <Fade>
+            <div className={styles['modal-wrapper']}>
+              <main className={styles['pos-relative']}>
+                <EditPostModal
+                  _id={id}
+                  handleClose={() => {
+                    setShowAdminActionModal(false)
+                  }}
+                />
+              </main>
+            </div>
+          </Fade>
+        </Modal>
+      )}
+
       {deleteData.open && (
         <DeletePrompt
           triggerOpen={deleteData.open}

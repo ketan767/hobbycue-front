@@ -13,12 +13,27 @@ export const getAllUserDetail = async (
   }
 }
 
+/** Get User Details `GET /api/user/byName?{query}`  */
+export const getUsersByName = async (
+  query: string,
+): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.get(`/user/byName?${query}`)
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 /** Get LoggedIn User Detail `GET /api/user/me/?{query}` */
 export const getMyProfileDetail = async () => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
+  // const query = 'populate=_hobbies,_addresses,primary_address,_listings,preferences.community_view.preferred_hobby.hobby,preferences.create_post_pref.preferred_hobby.hobby,preferences.community_view.preferred_location,preferences.create_post_pref.preferred_location'
 
-  const query = 'populate=_hobbies,_addresses,primary_address,_listings'
+  const query =
+    'populate=_hobbies,_addresses,primary_address,_listings,preferences.community_view.preferred_hobby.hobby,preferences.community_view.preferred_hobby.genre,preferences.create_post_pref.preferred_hobby.hobby,preferences.create_post_pref.preferred_hobby.genre,preferences.community_view.preferred_location,preferences.create_post_pref.preferred_location'
   try {
     const res = await axiosInstance.get(`/user/me?${query}`, { headers })
     return { res: res, err: null }
@@ -35,6 +50,24 @@ export const updateMyProfileDetail = async (data: UpdateProfilePayload) => {
 
   try {
     const res = await axiosInstance.patch(`/user/me`, data, { headers })
+    return { res: res, err: null }
+  } catch (error: any) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** Update LoggedIn User Detail `PATCH /api/user/me/` */
+export const updateMyProfileUrl = async (id: any, data: any) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(
+      `/user/update-profile-url/${id}`,
+      data,
+      { headers },
+    )
     return { res: res, err: null }
   } catch (error: any) {
     console.error(error)
@@ -135,10 +168,7 @@ export const updateUserAddress = async (
 }
 
 //delet address
-export const deleteUserAddress = async (
-  id: string,
-  cb: CallbackFunction,
-) => {
+export const deleteUserAddress = async (id: string, cb: CallbackFunction) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
@@ -174,6 +204,22 @@ export const updateUserProfile = async (formData: FormData) => {
   }
 }
 
+export const updateUserpreferences = async (
+  data: any,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.put(`/user/update-preferences`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 /** Update User Cover  `POST /user/me/cover-image`
  * - FormData Required Key: `user-cover` */
 export const updateUserCover = async (formData: FormData) => {
@@ -191,29 +237,46 @@ export const updateUserCover = async (formData: FormData) => {
   }
 }
 
-
-export const searchUsers = async (searchCriteria:any) => {
+export const searchUsers = async (searchCriteria: any) => {
   try {
-  
-    const queryParams = new URLSearchParams();
+    const queryParams = new URLSearchParams()
     for (const key in searchCriteria) {
       if (searchCriteria.hasOwnProperty(key)) {
-        queryParams.append(key, searchCriteria[key]);
+        queryParams.append(key, searchCriteria[key])
       }
     }
-    console.log(`/user/user-search?${queryParams.toString()}`);
-    
-    const response = await axiosInstance.get(`/user/user-search?${queryParams.toString()}`);
-    return { res: response.data, err: null };
+
+    let url = `/user/user-search-advanced?${queryParams.toString()}`
+    console.log(url)
+    const response = await axiosInstance.get(url)
+    return { res: response.data, err: null }
   } catch (error) {
-    console.error('Error searching for users:', error);
-    return { res: null, err: error };
+    console.error('Error searching for users:', error)
+    return { res: null, err: error }
   }
-};
+}
 
-export const getAllUserUrls = async (
+export const searchUsersAdvanced = async (searchCriteria: any) => {
+  try {
+    const queryParams = new URLSearchParams()
+    for (const key in searchCriteria) {
+      if (searchCriteria.hasOwnProperty(key)) {
+        queryParams.append(key, searchCriteria[key])
+      }
+    }
+    console.log(`/user/user-search-advanced?${queryParams.toString()}`)
 
-): Promise<ApiReturnObject> => {
+    const response = await axiosInstance.get(
+      `/user/user-search-advanced?${queryParams.toString()}`,
+    )
+    return { res: response.data, err: null }
+  } catch (error) {
+    console.error('Error searching for users:', error)
+    return { res: null, err: error }
+  }
+}
+
+export const getAllUserUrls = async (): Promise<ApiReturnObject> => {
   try {
     const res = await axiosInstance.get(`/user/urls`)
     return { res: res, err: null }
@@ -223,43 +286,51 @@ export const getAllUserUrls = async (
   }
 }
 
-export const addContactUs = async (data: ContactUspayload): Promise<ApiReturnObject> => {
+export const addContactUs = async (
+  data: ContactUspayload,
+): Promise<ApiReturnObject> => {
   try {
-    const res = await axiosInstance.post(`/user/add-contact`, data);
-    return { res: res, err: null };
+    const res = await axiosInstance.post(`/user/add-contact`, data)
+    return { res: res, err: null }
   } catch (error: any) {
-    return { err: error, res: null };
+    return { err: error, res: null }
   }
-};
+}
 
-
-export const support = async (data: supportPayload): Promise<ApiReturnObject> => {
+export const support = async (
+  data: supportPayload,
+): Promise<ApiReturnObject> => {
   try {
-    const res = await axiosInstance.post(`/user/add-support`, data);
-    return { res: res, err: null };
+    const res = await axiosInstance.post(`/user/add-support`, data)
+    return { res: res, err: null }
   } catch (error: any) {
-    return { err: error, res: null };
+    return { err: error, res: null }
   }
-};
+}
 
-
-export const ReportUser = async (data: ReportPayload): Promise<ApiReturnObject> => {
+export const ReportUser = async (
+  data: ReportPayload,
+): Promise<ApiReturnObject> => {
   try {
-    const res = await axiosInstance.post(`/user/user-report`, data);
-    return { res: res, err: null };
+    const res = await axiosInstance.post(`/user/user-report`, data)
+    return { res: res, err: null }
   } catch (error: any) {
-    return { err: error, res: null };
+    return { err: error, res: null }
   }
-};
+}
 
-export const addSearchHistory = async (data: {search_input:string, no_of_pages:number, user_id: any}): Promise<ApiReturnObject> => {
+export const addSearchHistory = async (data: {
+  search_input: string
+  no_of_pages: number
+  user_id: any
+}): Promise<ApiReturnObject> => {
   try {
-    const res = await axiosInstance.post(`/user/search-history`, data,);
-    return { res: res, err: null };
+    const res = await axiosInstance.post(`/user/search-history`, data)
+    return { res: res, err: null }
   } catch (error: any) {
-    return { err: error, res: null };
+    return { err: error, res: null }
   }
-};
+}
 
 export const TrendingHobbiesByUser = async (): Promise<ApiReturnObject> => {
   try {
@@ -268,5 +339,23 @@ export const TrendingHobbiesByUser = async (): Promise<ApiReturnObject> => {
   } catch (error) {
     console.error(error)
     return { err: error, res: null }
+  }
+}
+
+interface NotifyMaintenanceArgsType {
+  username?: string
+  email: string
+}
+
+export const notifyMaintenance = async ({
+  username = '',
+  email,
+}: NotifyMaintenanceArgsType) => {
+  try {
+    const body = { username, email }
+    const res = await axiosInstance.post(`/under-maintenance`, body)
+    return { res, err: null }
+  } catch (err) {
+    return { res: null, err }
   }
 }

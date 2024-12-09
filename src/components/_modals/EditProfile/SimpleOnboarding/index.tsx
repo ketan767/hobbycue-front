@@ -8,6 +8,7 @@ import {
   addUserHobby,
   getMyProfileDetail,
   updateMyProfileDetail,
+  updateMyProfileUrl,
   updateUserAddress,
 } from '@/services/user.service'
 import {
@@ -67,6 +68,10 @@ type Props = {
     }
     showError?: boolean
   }
+}
+
+interface ResponseData {
+  message: string
 }
 
 type AddressObj = {
@@ -379,16 +384,56 @@ const SimpleOnboarding: React.FC<Props> = ({
     }
   }
 
+  const checkProfileUrl = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      const headers = { Authorization: `Bearer ${token}` }
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${profileUrl}`,
+        { headers },
+      )
+
+      if (!res.data.success) {
+        let profileurlname =
+          data?.full_name?.replace(/[^a-zA-Z0-9-]/g, '-') || ''
+        let profileUrlExistId = data.profile_url
+        const newProfileUrl = profileurlname + '-' + profileUrlExistId
+        setData((prev) => ({
+          ...prev,
+          profile_url: newProfileUrl,
+        }))
+        return newProfileUrl
+      } else {
+        const newProfileUrl =
+          data?.full_name?.replace(/[^a-zA-Z0-9-]/g, '-') || ''
+        setData((prev) => ({
+          ...prev,
+          profile_url: newProfileUrl,
+        }))
+        return true
+      }
+    } catch (error) {
+      if (error) {
+        let profileurlname =
+          data?.full_name?.replace(/[^a-zA-Z0-9-]/g, '-') || ''
+        let profileUrlExistId = data.profile_url
+        const newProfileUrl = profileurlname + '-' + profileUrlExistId
+        setData((prev) => ({
+          ...prev,
+          profile_url: newProfileUrl,
+        }))
+        return newProfileUrl
+      } else {
+        console.error('An error occurred:', error)
+      }
+      return false
+    }
+  }
+
   const handleSubmit = async (checkErrors = true) => {
     let inputhobby = null
     let hasErrors = false
-    const isProfileUrlValid = await checkProfileUrl()
 
-    if (!isProfileUrlValid) {
-      console.log('Profile URL is invalid')
-    }
-
-    console.log('Profile URL is valid, proceeding')
     if (checkErrors) {
       if (
         hobbyInputValue?.includes(',') ||
@@ -562,11 +607,21 @@ const SimpleOnboarding: React.FC<Props> = ({
     setSubmitBtnLoading(false)
     if (error || !response?.data?.success) return
 
-    dispatch(updateUser(response?.data?.data?.user))
-    // window.location.href = '/community'
+
+
+    console.warn('userId', response?.data?.data?.user?._id)
+    console.warn('newurl', profileUrl)
+    const urldata = {
+      new_url: profileUrl,
+    }
+    const { err: updateUrlError, res: updateUrlResponse } =
+      await updateMyProfileUrl(response?.data?.data?.user?._id, urldata)
+
+    dispatch(updateUser(updateUrlResponse?.data?.data?.user))
+     window.location.href = '/community'
+
+
     dispatch(closeModal())
-    // router.push(`/profile/${response?.data?.data?.user.profile_url}`)
-    router.push('/community')
   }
 
   useEffect(() => {
@@ -580,32 +635,6 @@ const SimpleOnboarding: React.FC<Props> = ({
       setNextDisabled(false)
     }
   }, [data])
-
-  const checkProfileUrl = async () => {
-    const token = localStorage.getItem('token')
-
-    const headers = { Authorization: `Bearer ${token}` }
-
-    try {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${profileUrl}`,
-        { headers },
-      )
-
-      setData((prev) => ({
-        ...prev,
-        profile_url: data?.full_name?.replace(/[^a-zA-Z0-9-]/g, '-') || '',
-      }))
-      return true
-    } catch (err) {
-      console.log('err', err)
-      setInputErrs((prev) => ({
-        ...prev,
-        profile_url: 'This profile URL is already taken',
-      }))
-      return false
-    }
-  }
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -1429,6 +1458,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                   onChange={handleInputChangeAddress}
                   autoComplete="new"
                   onKeyDown={handleLocationKeyDown}
+                  style={{paddingRight: '28px'}}
                 />
                 <Image
                   src={LocationIcon}
@@ -1453,28 +1483,53 @@ const SimpleOnboarding: React.FC<Props> = ({
               </div>
               {/* <div> */}
               {ShowAutoAddress && (
-                <div className={styles['dropdown']} ref={locationDropdownRef}>
-                  {suggestions.map((suggestion, index) => (
-                    <p
-                      onClick={() => {
-                        handleSelectAddressTwo(
-                          suggestion.description,
-                          suggestion.place_id,
-                        )
-                        setSelectedAddress(suggestion.description)
-                      }}
-                      key={index}
-                      className={
-                        index === focusedLocationIdx
-                          ? styles['dropdown-option-focus']
-                          : ''
-                      }
-                    >
-                      {suggestion.description}
-                    </p>
-                  ))}
-                </div>
-              )}
+    <div className={styles['dropdown']} ref={locationDropdownRef}>
+      {suggestions.map((suggestion, index) => {
+        const regex = new RegExp(`(${addressDataString})`, 'i');
+        const highlightedDescription = suggestion.description.replace(
+          regex,
+          (match) => `<span style="color: black;">${match}</span>`
+        );
+        return (
+          <p
+            ref={(el) => {
+              if (index === focusedLocationIdx && el) {
+                el.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'nearest',
+                });
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+                handleSelectAddressTwo(
+                  suggestion.description,
+                  suggestion.place_id
+                );
+                setSelectedAddress(suggestion.description);
+              }
+            }}
+            onClick={() => {
+              handleSelectAddressTwo(
+                suggestion.description,
+                suggestion.place_id
+              );
+              setSelectedAddress(suggestion.description);
+            }}
+            key={index}
+            className={
+              index === focusedLocationIdx
+                ? styles['dropdown-option-focus']
+                : ''
+            }
+            dangerouslySetInnerHTML={{ __html: highlightedDescription }}
+          />
+        );
+      })}
+    </div>
+  )}
               {/* </div> */}
               {/* {ShowDropdown && dropdownList.length !== 0 && (
                 <div className={styles['dropdown']}>

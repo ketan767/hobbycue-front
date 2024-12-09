@@ -4,11 +4,11 @@ import styles from './Modal.module.css'
 
 interface ModalProps {
   isOpen: boolean
-  onClose: () => void
+  onClose: (() => void) | React.Dispatch<React.SetStateAction<any>>
   children: React.ReactNode
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+const ModalWrapper: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   const [isAnimating, setIsAnimating] = useState(false)
 
   useEffect(() => {
@@ -39,4 +39,4 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   )
 }
 
-export default Modal
+export default ModalWrapper

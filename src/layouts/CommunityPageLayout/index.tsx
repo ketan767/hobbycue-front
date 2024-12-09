@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
 import EditIcon from '@/assets/svg/edit-icon.svg'
 import { openModal } from '@/redux/slices/modal'
-import { getAllPosts } from '@/services/post.service'
+import { getAllHobbyPosts } from '@/services/post.service'
 import { GetServerSideProps } from 'next'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import post, {
@@ -53,7 +53,12 @@ import CommunityTopDropdown from '@/components/_formElements/CommunityTopDropdow
 import { CommunityDropdownOption } from '@/components/_formElements/CommunityDropdownOption/CommunityDropdownOption'
 import PanelDropdownList from './PanelDropdownList'
 import { showProfileError } from '@/redux/slices/user'
-import { TrendingHobbiesByUser } from '@/services/user.service'
+import {
+  searchUsers,
+  searchUsersAdvanced,
+  TrendingHobbiesByUser,
+} from '@/services/user.service'
+import AddHobbyImg from '@/assets/image/AddHobbyImg.png'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -109,6 +114,7 @@ const CommunityLayout: React.FC<Props> = ({
   const { activeProfile, user, isLoggedIn } = useSelector(
     (state: RootState) => state.user,
   )
+
   const { allPosts, filters, post_pagination } = useSelector(
     (state: RootState) => state.post,
   )
@@ -121,13 +127,13 @@ const CommunityLayout: React.FC<Props> = ({
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
   const [selectedHobby, setSelectedHobby] = useState(
-    filters.hobby || 'All Hobbies',
+    user?.preferences?.community_view?.preferred_hobby?.hobby?._id,
   )
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(
-    filters.genre,
+    user?.preferences?.community_view?.preferred_hobby?.genre?._id,
   )
-  const [selectedLocation, setSelectedLocation] = useState(
-    filters.location || 'All Locations',
+  const [selectedLocation, setSelectedLocation] = useState<string>(
+    user?.preferences?.community_view?.preferred_location?.city?.split(' ')[0],
   )
 
   const [snackbar, setSnackbar] = useState({
@@ -155,7 +161,9 @@ const CommunityLayout: React.FC<Props> = ({
   const [trendingHobbies, setTrendingHobbies] = useState([])
   const [seeMoreMembers, setSeeMoreMembers] = useState(0)
   const [seeMoreTrendHobbies, setSeeMoreTrendHobbies] = useState(true)
+  const [showModal, setShowModal] = useState(false)
   const [hobbyMembers, setHobbymembers] = useState<HobbyMember[]>([])
+  const [selectedUser, setSelectedUser] = useState<any>()
   const [whatsNew, setWhatsNew] = useState([])
   const [SeeMorewhatsNew, setSeeMoreWhatsNew] = useState(true)
   const [childData, setChildData] = useState<singlePostProps | null>({
@@ -163,12 +171,14 @@ const CommunityLayout: React.FC<Props> = ({
     whatsNew: [],
     trendingHobbies: [],
   })
-
+  const [filteredUsers, setFilteredUsers] = useState([])
   const hideThirdColumnTabs = ['pages', 'links', 'store', 'blogs']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
   const { refreshNum } = useSelector((state: RootState) => state.post)
   const router = useRouter()
 
+  const [seeMoreOpenedFirstTime, setSeeMoreOpenedFirstTime] =
+    useState<boolean>(false)
   const toggleSeeMore = () => {
     setSeeMoreHobby(!seeMoreHobby)
     dispatch(setFilters({ seeMoreHobbies: !seeMoreHobby }))
@@ -273,7 +283,7 @@ const CommunityLayout: React.FC<Props> = ({
   }
   useEffect(() => {
     scrollToTop()
-  }, [selectedHobby])
+  }, [selectedHobby, selectedGenre])
 
   const fetchPosts = async (page = 1) => {
     if (showPageLoader) {
@@ -294,11 +304,7 @@ const CommunityLayout: React.FC<Props> = ({
     if (activeTab === 'links') {
       params.append('has_link', 'true')
     }
-    if (
-      selectedGenre &&
-      selectedGenre !== 'undefined' &&
-      selectedGenre !== ''
-    ) {
+    if (selectedGenre && selectedGenre !== undefined && selectedGenre !== '') {
       params.append('_genre', selectedGenre)
     }
     if (selectedHobby === 'My Hobbies') {
@@ -307,7 +313,7 @@ const CommunityLayout: React.FC<Props> = ({
       })
     } else if (selectedHobby === 'All Hobbies') {
       params = new URLSearchParams(
-        `page=${page}&limit=10&populate=_author,_genre,_hobby`,
+        `page=${page}&limit=10&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`,
       )
     } else if (
       selectedHobby !== '' &&
@@ -315,6 +321,10 @@ const CommunityLayout: React.FC<Props> = ({
       selectedHobby !== 'My Hobbies'
     ) {
       params.append('_hobby', selectedHobby)
+      params.append('hobbyId', selectedHobby)
+      if (selectedGenre) {
+        params.append('genreId', selectedGenre)
+      }
     } else {
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item?.hobby?._id)
@@ -355,8 +365,7 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
     if (page === 1) dispatch(updateLoading(true))
-
-    const { err, res } = await getAllPosts(params.toString())
+    const { err, res } = await getAllHobbyPosts(params.toString())
     if (err) return console.log(err)
     if (res?.data?.success) {
       let posts = res.data.data.posts.map((post: any) => {
@@ -383,7 +392,11 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    if (post_pagination !== 1) fetchPosts(post_pagination)
+    if (post_pagination !== 1) {
+      console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#2')
+
+      fetchPosts(post_pagination)
+    }
   }, [post_pagination, router.asPath])
 
   const fetchHobbyMembers = async (hobbies?: HobbyEntry[]) => {
@@ -498,20 +511,82 @@ const CommunityLayout: React.FC<Props> = ({
   }, [])
 
   useEffect(() => {
+    if (!user) return
+    if (user && user.preferences) {
+      if (!user.preferences.community_view?.preferred_hobby?.hobby) {
+        setSelectedHobby('All Hobbies')
+      } else if (!user.preferences.community_view.all_hobbies) {
+        setSelectedHobby(
+          user.preferences.community_view.preferred_hobby.hobby._id,
+        )
+
+        if (user._hobbies?.length > 0) {
+          const preferredHobbyId =
+            user?.preferences?.community_view?.preferred_hobby?.hobby?._id
+          const preferredGenreId =
+            user?.preferences?.community_view?.preferred_hobby?.genre?._id
+
+          user._hobbies?.forEach((hobb: any, index: number) => {
+            if (preferredGenreId && preferredHobbyId) {
+              if (
+                hobb?.hobby?._id === preferredHobbyId &&
+                hobb?.genre?._id === preferredGenreId &&
+                index > 2
+              ) {
+                console.log('preferredGenreId is called')
+                dispatch(setFilters({ seeMoreHobbies: true }))
+              }
+            } else if (preferredHobbyId) {
+              if (hobb?.genre?._id) {
+              } else if (hobb?.hobby?._id === preferredHobbyId && index > 2) {
+                console.log('preferredHobbyId is called')
+                dispatch(setFilters({ seeMoreHobbies: true }))
+              }
+            }
+          })
+        }
+        if (user.preferences.community_view.preferred_hobby.genre) {
+          setSelectedGenre(
+            user.preferences.community_view.preferred_hobby.genre._id,
+          )
+        }
+      }
+
+      if (!user.preferences.community_view.all_locations) {
+        console.log(
+          '###########################2',
+          user.preferences.community_view.preferred_location.city.split(' ')[0],
+        )
+
+        setSelectedLocation(
+          user.preferences.community_view.preferred_location.city.split(' ')[0],
+        )
+      }
+    }
+  }, [user])
+
+  useEffect(() => {
     dispatch(updateListingModalData(activeProfile.data))
   }, [activeProfile.type])
 
   useEffect(() => {
+    if (!user?.preferences?.community_view) return
     if (
       activeProfile.data !== null &&
       (activeTab === 'links' || activeTab === 'posts')
     ) {
       if (selectedLocation !== '') {
-        console.warn('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT', activeProfile.data)
+        console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT', activeProfile.data)
         fetchPosts()
       }
     }
-  }, [selectedHobby, selectedLocation, activeProfile?.type, refreshNum])
+  }, [
+    selectedHobby,
+    selectedGenre,
+    selectedLocation,
+    activeProfile?.type,
+    refreshNum,
+  ])
 
   useEffect(() => {
     if (selectedHobby !== '' && selectedLocation !== '') {
@@ -538,9 +613,26 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
-    setSelectedHobby(!filters.hobby ? 'All Hobbies' : filters.hobby)
-    setSelectedLocation(filters.location ?? '')
+    console.log('filters.genre', filters.genre)
+    if (filters.genre) {
+      if (filters.genre === 'No genre') {
+        setSelectedGenre(undefined)
+        // dispatch(
+        //   setFilters({
+        //     genre: '',
+        //   }),
+        // )
+      } else {
+        setSelectedGenre(filters.genre ? filters.genre : undefined)
+      }
+    }
+
+    if (filters.hobby) {
+      setSelectedHobby(filters.hobby)
+    }
+    if (filters.location) {
+      setSelectedLocation(filters.location ?? '')
+    }
   }, [filters.genre, filters.hobby, filters.location])
 
   useEffect(() => {
@@ -598,10 +690,29 @@ const CommunityLayout: React.FC<Props> = ({
           if (filters.location === null) {
             dispatch(
               setFilters({
-                location: 'All Locations',
+                location:
+                  user?.preferences?.community_view?.preferred_location?.city?.split(
+                    ' ',
+                  )[0]
+                    ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                        ' ',
+                      )[0]
+                    : 'All Locations',
               }),
             )
-            setSelectedLocation('All Locations')
+            console.log('###########################4', 'All Locations')
+
+            setSelectedLocation(
+              user?.preferences?.community_view?.preferred_location?.city?.split(
+                ' ',
+              )[0]
+                ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                    ' ',
+                  )[0]
+                : 'All Locations',
+            )
+            console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#5')
+            fetchPosts(1)
           }
           setVisibilityData(visibilityArr)
         }
@@ -650,13 +761,36 @@ const CommunityLayout: React.FC<Props> = ({
       }
       setVisibilityData(visibilityArr)
 
-      if (filters.location === null) {
+      if (
+        filters.location === null &&
+        user?.preferences?.community_view?.preferred_location?.city?.split(
+          ' ',
+        )[0]
+      ) {
         dispatch(
           setFilters({
-            location: 'All Locations',
+            location:
+              user?.preferences?.community_view?.preferred_location?.city?.split(
+                ' ',
+              )[0]
+                ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                    ' ',
+                  )[0]
+                : 'All Locations',
           }),
         )
-        setSelectedLocation('All Locations')
+        console.log('###########################5', 'All Locations')
+
+        setSelectedLocation(
+          user?.preferences?.community_view?.preferred_location?.city?.split(
+            ' ',
+          )[0]
+            ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                ' ',
+              )[0]
+            : 'All Locations',
+        )
+        fetchPosts()
       }
     }
   }, [activeProfile])
@@ -666,12 +800,16 @@ const CommunityLayout: React.FC<Props> = ({
       dispatch(openModal({ type: 'auth', closable: true }))
       return
     }
+    console.log('Location-------->', selectedLocation)
+    console.log('selectedLocation === val ------->', selectedLocation === val)
+    console.log('val----->', val)
     dispatch(
       setFilters({
         location: selectedLocation === val ? 'All Locations' : val,
       }),
     )
-    setSelectedLocation((prev) => {
+    console.log('###########################6', val)
+    setSelectedLocation((prev: any) => {
       if (prev === val) {
         return 'All Locations'
       } else {
@@ -708,12 +846,18 @@ const CommunityLayout: React.FC<Props> = ({
       return
     }
 
-    const to = email
+    let to = email
+
     if (!to || to === '') {
       setErrorMessage('This field is required')
       return
     }
-    if (!validateEmail(to)) {
+
+    if (selectedUser.display_name === email) {
+      to = selectedUser?.email
+    }
+
+    if (!validateEmail(to) && selectedUser.display_name !== email) {
       setErrorMessage('Please enter a valid email')
       return
     }
@@ -739,6 +883,7 @@ const CommunityLayout: React.FC<Props> = ({
         message: 'Invitation sent',
       })
       setEmail('')
+      setSelectedUser({})
     }
     if (err) {
       setEmail('')
@@ -824,6 +969,59 @@ const CommunityLayout: React.FC<Props> = ({
       }`,
     })) ?? []
 
+  // user search for invite
+
+  const fetchUsers = async (query: string) => {
+    try {
+      let searchCriteria = {
+        name: query,
+      }
+      const { res, err } = await searchUsersAdvanced(searchCriteria)
+      console.log('Data : ', res.data)
+
+      setFilteredUsers(res.data)
+    } catch (error) {
+      console.error('Error fetching users:', error)
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value
+    setEmail(input)
+    setErrorMessage('')
+
+    if (input.startsWith('@') && input.length > 1) {
+      setShowModal(true)
+    } else {
+      setShowModal(false)
+    }
+  }
+
+  const handleUserSelect = (selectedUser: any) => {
+    setEmail(selectedUser.display_name)
+    setSelectedUser(selectedUser)
+    setShowModal(false)
+  }
+
+  // Effect to call API when email starts with @ and modal is open
+  useEffect(() => {
+    if (showModal) {
+      const query = email.slice(1) // Remove "@" from query
+      console.log(query)
+      fetchUsers(query || '') // Fetch all users if query is empty
+    }
+  }, [email, showModal])
+
+  const handleAddTrendingHobby = (hobby: any) => {
+    // dispatch(
+    //   openModal({
+    //     type: 'add-hobby',
+    //     closable: true,
+    //     propData: { defaultValue: hobby },  // need to add propData
+    //   }),
+    // )
+  }
+
   return (
     <>
       <PageGridLayout
@@ -874,7 +1072,7 @@ const CommunityLayout: React.FC<Props> = ({
               <section>
                 <ul>
                   <li
-                    onClick={() => handleHobbyClick('All Hobbies', null)}
+                    onClick={() => handleHobbyClick('All Hobbies', undefined)}
                     className={
                       selectedHobby === 'All Hobbies' ? styles.selectedItem : ''
                     }
@@ -882,9 +1080,10 @@ const CommunityLayout: React.FC<Props> = ({
                     All Hobbies
                   </li>
                   <li
-                    onClick={() => handleHobbyClick('My Hobbies', null)}
+                    onClick={() => handleHobbyClick('My Hobbies', undefined)}
                     className={
-                      selectedHobby === 'My Hobbies' && selectedGenre === null
+                      selectedHobby === 'My Hobbies' &&
+                      selectedGenre === undefined
                         ? styles.selectedItem
                         : ''
                     }
@@ -1062,7 +1261,11 @@ const CommunityLayout: React.FC<Props> = ({
                           (obj: any) => obj?.value === selectedHobby,
                         )?.display ?? selectedHobby
                       }
-                      variant={selectedHobby === '' ? 'secondary' : 'primary'}
+                      variant={
+                        selectedHobby === 'All Hobbies'
+                          ? 'secondary'
+                          : 'primary'
+                      }
                     >
                       {[
                         { display: 'All Hobbies', value: 'All Hobbies' },
@@ -1293,19 +1496,17 @@ const CommunityLayout: React.FC<Props> = ({
                 </h3>
               </header>
               {/* <span className={styles['divider']}></span> */}
-              <section>
+              <section className={styles['.invite-wrapper']}>
                 <input
                   autoComplete="new"
                   value={email}
-                  placeholder="Email"
+                  placeholder="Email or @ mention "
                   name="society"
-                  onChange={(e: any) => {
-                    setEmail(e.target.value)
-                    setErrorMessage('')
-                  }}
+                  onChange={handleInputChange}
                   type="email"
                   id=""
                   className={errorMessage !== '' ? styles['error-input'] : ''}
+                  //style={selectedUser?.email?{color:'blue'}:{color:'black'}}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       inviteBtnRef?.current?.click()
@@ -1327,6 +1528,54 @@ const CommunityLayout: React.FC<Props> = ({
                 {/* <CircularProgress color="inherit" size={'22px'} /> */}
                 {errorMessage !== '' && (
                   <span className={styles['error-invite']}>{errorMessage}</span>
+                )}
+
+                {showModal && (
+                  <div className={styles['modal-container']}>
+                    <ul className={styles['modal-list']}>
+                      <h4
+                        className={styles['user-name']}
+                        style={{
+                          fontWeight: '600',
+                          marginLeft: '12px',
+                          marginTop: '8px',
+                        }}
+                      >
+                        Hobbycue
+                      </h4>
+                      {filteredUsers.length > 0 ? (
+                        filteredUsers.map((user: any) => (
+                          <li
+                            key={user.id}
+                            className={styles['modal-item']}
+                            onClick={() => handleUserSelect(user)}
+                          >
+                            <img
+                              src={user.profile_image || defaultUserIcon.src} // Ensure `defaultUserIcon` is defined
+                              alt={user.display_name}
+                              className={styles['profile-pic']}
+                            />
+                            <div>
+                              <p className={styles['user-name']}>
+                                {user.display_name ||
+                                  user.full_name.slice(0, 20) + '...'}
+                              </p>
+                              <p
+                                className={styles['user-name']}
+                                style={{ fontSize: 12 }}
+                              >
+                                {user.tagline
+                                  ? user.tagline.slice(0, 25) + '...'
+                                  : ''}
+                              </p>
+                            </div>
+                          </li>
+                        ))
+                      ) : (
+                        <li className={styles['modal-item']}>No users found</li>
+                      )}
+                    </ul>
+                  </div>
                 )}
               </section>
             </section>
@@ -1457,6 +1706,14 @@ const CommunityLayout: React.FC<Props> = ({
                             )}
                             <span>{`${hobby.display}`}</span>
                           </Link>
+                          <img
+                            src={AddHobbyImg.src}
+                            height={20}
+                            width={20}
+                            alt="Add"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => handleAddTrendingHobby(hobby)}
+                          />
                         </li>
                       )
                     })}

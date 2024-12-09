@@ -33,6 +33,7 @@ interface Props {
   data?: any
   error?: any
   hasLink?: boolean
+  onStatusChange?: (isChanged: boolean) => void
 }
 
 const CustomEditor: React.FC<Props> = ({
@@ -43,6 +44,7 @@ const CustomEditor: React.FC<Props> = ({
   setData,
   error,
   hasLink,
+  onStatusChange,
 }) => {
   const editorRef = useRef(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -72,6 +74,9 @@ const CustomEditor: React.FC<Props> = ({
   }, [])
 
   const handleImageChange = (e: any) => {
+    if (onStatusChange) {
+      onStatusChange(true)
+    }
     let images = [...e.target.files]
     // setData((prev: any) => ({ ...prev, media: [...prev.media, ...images] }))
     if (data.video_url !== '')
@@ -85,6 +90,9 @@ const CustomEditor: React.FC<Props> = ({
   }
 
   const handleImageUpload = async (image: any, isVideo: boolean) => {
+    if (onStatusChange) {
+      onStatusChange(true)
+    }
     const formData = new FormData()
     formData.append('post', image)
     console.log('formData', formData)
@@ -122,6 +130,15 @@ const CustomEditor: React.FC<Props> = ({
         ref={editorRef}
         value={data.content}
         onChange={(updatedValue) => {
+          if (onStatusChange) {
+            if (updatedValue == '') {
+              onStatusChange(false)
+            } else {
+              onStatusChange(true)
+            }
+          }
+          console.log(`status is changed`)
+
           setData((prev: any) => ({ ...prev, content: updatedValue }))
         }}
         className={`${styles.quill} ${error ? styles['quill-error'] : ''} ${

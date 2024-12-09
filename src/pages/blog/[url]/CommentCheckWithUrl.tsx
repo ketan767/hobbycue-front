@@ -61,7 +61,7 @@ const CommentCheckWithUrl: FC<CommentCheckWithUrlProps> = ({ children }) => {
       />
     );
   } else {
-    return <p className={contentClass}>{children}</p>;
+    return <div className={contentClass}>{children}</div>;
   }
 };
 

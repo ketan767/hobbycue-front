@@ -2,6 +2,9 @@ import Link from 'next/link'
 import styles from './styles.module.css'
 import Footer from '@/components/Footer/Footer'
 import Head from 'next/head'
+import CWEimg from '@/assets/image/CWE_logo.png'
+import govLogo from '@/assets/image/KarnatakaGovtLogo.png'
+import nasComimg from '@/assets/image/nasscom_initiative_img.jpg'
 
 export default function index() {
   return (
@@ -65,15 +68,15 @@ export default function index() {
               </Link>
             </p>
             <img
-              src="https://blog.hobbycue.com/wp-content/uploads/2018/08/CWE-Logo.png"
+              src={CWEimg.src}
               alt="CWE"
             />
             <img
-              src="https://blog.hobbycue.com/wp-content/uploads/2018/08/nascomm-10000startups-600x346.jpg"
+              src={nasComimg.src}
               alt="Nascomm 10000 Startups"
             />
             <img
-              src="https://blog.hobbycue.com/wp-content/uploads/2018/08/KarnatakaGovtLogo.png"
+              src={govLogo.src}
               alt="Karnataka Government Logo"
             />
             <p>

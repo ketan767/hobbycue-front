@@ -1,8 +1,10 @@
+/* Task Id:07B002-39 */
 .wrapper {
   position: absolute;
   top: 0;
-  left: 0;
+  left: 2.4%;
   right: 0;
+  width: 96.4%;
 }
 
 .wrapper>div {
@@ -340,11 +342,12 @@
 }
 
 .my-community-wrapper-mobile img{
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   position: absolute;
   z-index: 2;
-  top: 4px;
+  top: 0px;
+  left: 0px;
 }
 
 .my-community-wrapper-mobile>div {
@@ -390,7 +393,7 @@
 .search-wrapper-mobile {
   position: absolute;
   top: 0.5rem;
-  right: 6.6rem;
+  right: 6rem;
 }
 
 .search-wrapper-mobile {
@@ -441,7 +444,7 @@
 .my-profile-wrapper-mobile {
   position: absolute;
   top: 0.5rem;
-  right: 1rem;
+  right: 0rem;
 }
 
 .my-profile-wrapper-mobile {
@@ -485,6 +488,11 @@
 
 
 @media screen and (max-width: 1100px) {
+
+  .wrapper {
+    left: 0%;
+  }
+
   .display-desktop {
     display: none !important;
   }

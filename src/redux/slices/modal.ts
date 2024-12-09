@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export type ModalType =
   | null
+  | 'blogPublish'
   | 'post'
   | 'auth'
   | 'add-hobby'

@@ -583,6 +583,25 @@ const ProfileHeader: React.FC<Props> = ({
 
         {/* Action Buttons */}
         <div className={styles['actions-container-mobile']}>
+          {profileLayoutMode === 'edit' && (
+            <div className={styles.makeMyPageMobileWrapper}>
+              <OutlinedButton
+                onClick={() => {
+                  if (noDataChecker?.() === true) {
+                    return
+                  }
+                  dispatch(updateListingModalData({ type: 1 }))
+                  dispatch(
+                    openModal({ type: 'CopyProfileDataModal', closable: true }),
+                  )
+                  dispatch(updateListingTypeModalMode({ mode: 'create' }))
+                }}
+                className={styles.makeMyPageButton}
+              >
+                Make My Page
+              </OutlinedButton>
+            </div>
+          )}
           <div className={styles['action-btn-wrapper']}>
             {/* Send Email Button  */}
             {/* <Link href={`mailto:${data.public_email || data.email}`}> */}

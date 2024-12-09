@@ -419,17 +419,18 @@ const HobbyPageLayout: React.FC<Props> = ({
                                       alt=""
                                     />
                                   )}
-                                  <div>{user.full_name}</div>
+                                  <div className='truncateOneLine'>{user.full_name}</div>
                                 </div>
                               </div>
                             </p>
                           ))}
                         {members.length > 5 && !seeAll && (
                           <p
+                            style={{textAlign: 'center'}}
                             className={styles.seeAllBtn}
                             onClick={toggleMembers}
                           >
-                            See All
+                            See More
                           </p>
                         )}
                       </>

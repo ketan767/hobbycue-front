@@ -170,7 +170,7 @@ export const PostModal: React.FC<Props> = ({
 
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
-      `_id=${activePost._id}&populate=_author,_genre,_hobby`,
+      `_id=${activePost._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`,
     )
     if (err) return console.log(err)
     if (res.data.success) {
@@ -291,7 +291,7 @@ export const PostModal: React.FC<Props> = ({
               )}
 
               <div className={styles['title']}>
-                <p>
+                <p className="truncateOneLine">
                   {activePost.author_type === 'User'
                     ? activePost?._author?.full_name
                     : activePost?._author?.title}
@@ -301,8 +301,69 @@ export const PostModal: React.FC<Props> = ({
                     {dateFormat?.format(new Date(activePost?.createdAt))}
                     {' | '}
                   </span>
+                  {/* {activePost?._allHobbies?.length > 0 ? (
+                    activePost?._allHobbies?.map(
+                      (hobby: any, index: number) => {
+                        return (
+                          <span key={index}>
+                            {`${hobby?.display}${
+                              activePost?._allGenres[index - 1]?.display
+                                ? ' - ' +
+                                  activePost?._allGenres[index - 1]?.display
+                                : ''
+                            }`}
+                            {index < activePost?._allHobbies?.length - 1
+                              ? ', '
+                              : ''}
+                          </span>
+                        )
+                      },
+                    )
+                  ) : (
+                    <span>{`${activePost?._hobby?.display}${
+                      activePost._genre
+                        ? ' - ' + activePost?._genre?.display
+                        : ''
+                    }`}</span>
+                  )} */}
+                  {activePost?._allHobbies?._hobby1?.display ? (
+                    <>
+                      <span>
+                        {`${activePost?._allHobbies?._hobby1?.display}${
+                          activePost?._allHobbies?._genre1?.display
+                            ? ' - ' + activePost?._allHobbies?._genre1?.display
+                            : ''
+                        }`}
+                        {activePost?._allHobbies?._hobby2?.display ? ', ' : ''}
+                        {`${
+                          activePost?._allHobbies?._hobby2?.display
+                            ? activePost?._allHobbies?._hobby2?.display
+                            : ''
+                        }${
+                          activePost?._allHobbies?._genre2?.display
+                            ? ' - ' + activePost?._allHobbies?._genre2?.display
+                            : ''
+                        }`}
+                        {activePost?._allHobbies?._hobby3?.display ? ', ' : ''}
+                        {`${
+                          activePost?._allHobbies?._hobby3?.display
+                            ? activePost?._allHobbies?._hobby3?.display
+                            : ''
+                        }${
+                          activePost?._allHobbies?._genre3?.display
+                            ? ' - ' + activePost?._allHobbies?._genre3?.display
+                            : ''
+                        }`}
+                      </span>
+                    </>
+                  ) : (
+                    <span>{`${activePost?._hobby?.display}${
+                      activePost._genre
+                        ? ' - ' + activePost?._genre?.display
+                        : ''
+                    }`}</span>
+                  )}
                   <span>
-                    {activePost?._hobby?.display}{' '}
                     {activePost?._genre?.display &&
                       ` - ` + activePost?._genre.display}
                     {' | '}
@@ -312,8 +373,8 @@ export const PostModal: React.FC<Props> = ({
               </div>
             </div>
           </Link>
-          <div className={`${styles['header-options']}`}>
-            {/* <svg
+          {/* <div className={`${styles['header-options']}`}> */}
+          {/* <svg
               className={styles['more-actions-icon']}
               width="24"
               height="24"
@@ -332,7 +393,7 @@ export const PostModal: React.FC<Props> = ({
                 </clipPath>
               </defs>
             </svg> */}
-          </div>
+          {/* </div> */}
         </div>
         <div className={`${styles['body-wrapper']}`}>
           <div className={`${styles['body']}`}>
@@ -370,7 +431,7 @@ export const PostModal: React.FC<Props> = ({
             )}
             {activePost?.has_link && activePost?.media.length == 0 && (
               <div
-                style={linkLoading ? { margin:"none"} : { }}
+                style={linkLoading ? { margin: 'none' } : {}}
                 className={
                   isVideoLink(url)
                     ? styles['post-video-link']
@@ -378,8 +439,8 @@ export const PostModal: React.FC<Props> = ({
                 }
               >
                 {linkLoading ? (
-                  <div style={{ width:"100%"}}>
-                  <LinkPreviewLoader />
+                  <div style={{ width: '100vw' }}>
+                    <LinkPreviewLoader />
                   </div>
                 ) : (
                   <>

@@ -64,8 +64,8 @@ type Props = {
   style?: React.CSSProperties
 }
 const inter = Inter({
-  subsets: ['latin'], // Choose subsets like 'latin' or others as per your needs
-  weight: ['400','500','600', '700'], // Select the weights you want to use (optional)
+  subsets: ['latin'], 
+  weight: ['400','500','600', '700'], 
 })
 
 const ListingCardProduct: React.FC<Props> = ({

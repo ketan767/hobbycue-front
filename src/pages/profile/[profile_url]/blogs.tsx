@@ -19,8 +19,19 @@ import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import ErrorPage from '@/components/ErrorPage'
 import { useMediaQuery } from '@mui/material'
 
-import { getAllBlogs } from '@/services/blog.services'
+import { createBlog, getAllBlogs } from '@/services/blog.services'
 import BlogCard from '@/components/BlogCard/BlogCard'
+import PlusIcon from '@/assets/icons/PlusIcon'
+import dynamic from 'next/dynamic'
+const ResponsiveMasonry = dynamic(
+  () => import('react-responsive-masonry').then((mod) => mod.ResponsiveMasonry),
+  {
+    ssr: false,
+  },
+)
+const Masonry = dynamic(() => import('react-responsive-masonry'), {
+  ssr: false,
+})
 
 interface Props {
   data: ProfilePageData
@@ -31,6 +42,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
   const { user } = useSelector((state: RootState) => state.user)
+  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const [expandAll, setExpandAll] = useState(profile)
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
@@ -72,6 +84,20 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
     }
   }, [])
 
+  const handleAddBlog = async (e: any) => {
+    try {
+      const { res, err } = await createBlog()
+      if (err) throw err
+      if (!res?.data?.success)
+        throw new Error(res?.data?.message || 'Error creating blog!')
+      const url = res?.data?.data?.url
+      if (url) router.push(`/blog/${url}`)
+      else throw new Error('Unsuccessful!')
+    } catch (err) {
+      console.log('Error while creating blog at handleAddBlog()!', err)
+    }
+  }
+
   return (
     <>
       <Head>
@@ -106,32 +132,131 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
           </aside>
 
           <main>
+            {/* </Masonry> */}
             {data?.blogsData.length !== 0 ? (
-              <div className={styles['three-column-grid-blogs']}>
-                {data?.blogsData.map((blog: any) => {
-                  return <BlogCard key={blog._id} data={blog} />
-                })}
-              </div>
+              // <div className={styles['three-column-grid-blogs']}>
+              <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 3 }}>
+                <Masonry
+                  gutter={isMobile ? `8px` : `24px`}
+                  style={
+                    isMobile
+                      ? { columnGap: '24px', rowGap: '12px', marginTop: '8px' }
+                      : { columnGap: '24px', rowGap: '24px' }
+                  }
+                >
+                  {profileLayoutMode === 'edit' && (
+                    <div
+                      className={styles.uploadButtonDescktop}
+                      onClick={handleAddBlog}
+                    >
+                      <div className={styles.newTag}>ADD NEW</div>
+                      <PlusIcon />
+                    </div>
+                  )}
+                  {data?.blogsData.map((blog: any) => {
+                    return <BlogCard key={blog._id} data={blog} />
+                  })}
+                </Masonry>
+              </ResponsiveMasonry>
             ) : (
-              <section
-                className={`${styles['dual-section-wrapper']} ${styles['mob-min-height']} ${styles['mob-h-auto']}`}
-              >
-                <div
-                style={
-                  isMobile
-                    ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
-                    : undefined
-                }
-                className={styles['no-posts-div']}>
-                  <p className={styles['no-posts-text']}>No Blogs Available</p>
-                </div>
-                {isMobile ? null : (
-                  <>
-                    <div className={styles['no-posts-div']}></div>
-                    <div className={styles['no-posts-div']}></div>
-                  </>
-                )}
-              </section>
+              <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 3 }}>
+                <Masonry
+                  gutter={isMobile ? `8px` : `12px`}
+                  style={
+                    isMobile
+                      ? { columnGap: '24px', rowGap: '12px', marginTop: '8px' }
+                      : { columnGap: '24px', rowGap: '12px' }
+                  }
+                  className={styles['dual-section-wrapper']}
+                >
+                  {profileLayoutMode === 'edit' ? (
+                    <div
+                      className={styles.uploadButtonDescktop}
+                      onClick={handleAddBlog}
+                    >
+                      <div className={styles.newTag}>ADD NEW</div>
+                      <PlusIcon />
+                    </div>
+                  ) : (
+                    <div
+                      style={
+                        isMobile
+                          ? {
+                              marginTop: '8px',
+                              height: '100px',
+                              borderRadius: '0px',
+                            }
+                          : undefined
+                      }
+                      className={styles['no-posts-div']}
+                    >
+                      <p className={styles['no-posts-text']}>
+                        No Blogs Available
+                      </p>
+                    </div>
+                  )}
+                  {/* {!isMobile && ( */}
+                  <div
+                    style={
+                      isMobile
+                        ? {
+                            marginTop: '8px',
+                            height: '100px',
+                            borderRadius: '0px',
+                          }
+                        : undefined
+                    }
+                    className={styles['no-posts-div']}
+                  >
+                    <p className={styles['no-posts-text']}>
+                      No Blogs Available
+                    </p>
+                  </div>
+                  {/* )} */}
+                  {!isMobile && (
+                    <div
+                      style={
+                        isMobile
+                          ? {
+                              marginTop: '8px',
+                              height: '100px',
+                              borderRadius: '0px',
+                            }
+                          : undefined
+                      }
+                      className={styles['no-posts-div']}
+                    >
+                      <p className={styles['no-posts-text']}>
+                        No Blogs Available
+                      </p>
+                    </div>
+                  )}
+                </Masonry>
+              </ResponsiveMasonry>
+              // <section
+              //   className={`${styles['dual-section-wrapper']} ${styles['mob-min-height']} ${styles['mob-h-auto']}`}
+              // >
+              //   <div
+              //     style={
+              //       isMobile
+              //         ? {
+              //             marginTop: '8px',
+              //             height: '100px',
+              //             borderRadius: '0px',
+              //           }
+              //         : undefined
+              //     }
+              //     className={styles['no-posts-div']}
+              //   >
+              //     <p className={styles['no-posts-text']}>No Blogs Available</p>
+              //   </div>
+              //   {isMobile ? null : (
+              //     <>
+              //       <div className={styles['no-posts-div']}></div>
+              //       <div className={styles['no-posts-div']}></div>
+              //     </>
+              //   )}
+              // </section>
             )}
           </main>
         </PageGridLayout>
@@ -157,9 +282,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     return { notFound: true }
 
   const { err: error, res: response } = await getAllBlogs(
-    `populate=_hobbies,author&author=${user?._id}&status=Published`,
+    `populate=_hobbies,author&author=${user?._id}`,
   )
-  console.warn('blogdataaaaaa', response)
 
   const data = {
     pageData: res.data.data.users[0],
@@ -167,6 +291,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     mediaData: null,
     listingsData: null,
     blogsData: response?.data?.data?.blog,
+    response: response?.data,
   }
   return {
     props: {
