@@ -1,12 +1,12 @@
 .wrapper{
     display: flex;
-width: 100%;
-flex-direction: column;
-align-items: flex-start;
-flex-shrink: 0;
-border-radius: 8px;
-border: 1px solid var(--Grey-Lighter, #EBEDF0);
-background: var(--Base-White, #FFF);
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-shrink: 0;
+    border-radius: 8px;
+    border: 1px solid var(--Grey-Lighter, #EBEDF0);
+    background: var(--Base-White, #FFF);
 }
 
 .content{
@@ -64,6 +64,7 @@ background: var(--Grey-Lighter, #EBEDF0);
         padding: 11.5px 8px;
     }
     .content{
-        width: calc(100vw - 270px);
+        /* width: calc(100vw - 270px); */
+        width: 100%;
     }
 }

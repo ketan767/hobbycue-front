@@ -82,9 +82,14 @@ const CommunityLinks: React.FC<Props> = ({}) => {
   useEffect(() => {
     getPost()
   }, [activeProfile])
+  
 
   let posts = [...allPosts]
   posts = posts.filter((item: any) => item.has_link === true)
+
+  useEffect(() => {
+    console.log({ Link_posts: posts })
+  }, [posts])
   return (
     <>
       <CommunityPageLayout activeTab="links">
