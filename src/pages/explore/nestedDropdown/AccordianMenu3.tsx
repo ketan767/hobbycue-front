@@ -23,12 +23,22 @@ import { getAllListingCategories } from '@/services/listing.service'
 import { isEmptyField } from '@/utils'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-import { setCategory, setSearching, setPageType } from '@/redux/slices/explore'
-import { RootState } from '@/redux/store'
 
 interface AccordianMenuProps {
-  categoryValue: string
-  handleSubmit: () => void
+  defaultCategory: string
+  selectedCategory: string
+  selectedPageType: string
+  selectedHobby: string
+  selectedLocation: string
+  setDefaultCategory: (category: string) => void
+  setSelectedCategory: (category: string) => void
+  setSelectedPageType: (category: string) => void
+  handleSubmit: (
+    cat: string,
+    pageType: string,
+    selectedHobby: string,
+    selectedLocation: string,
+  ) => void
 }
 type DropdownListItem = {
   _id: string
@@ -37,12 +47,19 @@ type DropdownListItem = {
   pageType: string
   listingCategory: string
 }
-const AccordionMenu2: React.FC<AccordianMenuProps> = ({
-  categoryValue,
+const AccordionMenu3: React.FC<AccordianMenuProps> = ({
+  defaultCategory,
+  setDefaultCategory,
+  selectedCategory,
+  selectedPageType,
+  setSelectedCategory,
+  setSelectedPageType,
+  selectedHobby,
+  selectedLocation,
   handleSubmit,
 }) => {
   const router = useRouter()
-  // const { query } = router
+  const { filter } = router.query
   // const { sub_category } = query
   // const { category } = query
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -73,9 +90,6 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
   // const [subCategory, setSubCategory] = useState('')
   const searchCategoryRef = useRef<HTMLDivElement>(null)
   const dispatch = useDispatch()
-  const { category: currCategory, page_type: currPageType } = useSelector(
-    (state: RootState) => state.explore,
-  )
   // const [categoryInput, setCategoryInput] = useState('')
   const [isCategoryFilled, setIsCategoryFilled] = useState(false)
 
@@ -103,16 +117,16 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
       // setValue({ value: '', error: null })
 
       // searchResult(undefined, undefined, subCategory)
-      dispatch(setCategory(category))
-      dispatch(setPageType(''))
+      setSelectedCategory(category)
+      setSelectedPageType('')
     } else if (page_type) {
       // setSubCategory({ value: '', error: null })
       // setCategoryValue(name)
       // setCategoryInput(page_type)
       // setValue({ value: name, error: null })
       // searchResult(name)
-      dispatch(setCategory(''))
-      dispatch(setPageType(page_type))
+      setSelectedCategory('')
+      setSelectedPageType(page_type)
     }
   }
   const handleCategoryInputChange = (e: any) => {
@@ -121,8 +135,8 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
     // setCategoryInput(e.target.value)
 
     // whille typing we always setting the subCategory
-    dispatch(setCategory(e.target.value))
-    dispatch(setPageType(''))
+    setSelectedCategory(e.target.value)
+    setSelectedPageType('')
     if (e.target.value === '') {
       setIsCategoryFilled(false)
       // alert('false')
@@ -130,8 +144,9 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
 
     if (isEmptyField(e.target.value)) {
       // dispatch(setSearching(true))
-      dispatch(setPageType(''))
-      dispatch(setCategory(''))
+      setSelectedCategory('')
+      setSelectedPageType('')
+      setDefaultCategory('')
       return setFilteredDropdownList(categoryDropdownList)
     }
 
@@ -161,32 +176,47 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
         break
       case 'Enter':
         // e.stopPropagation()
-        if (currCategory.length !== 0 && categoryIndex === -1) {
+        if (selectedCategory.length !== 0 && categoryIndex === -1) {
           //AddButtonRef.current?.click()
-          handleSubmit()
+          handleSubmit(
+            selectedCategory ? selectedCategory : defaultCategory,
+            selectedPageType!,
+            selectedHobby!,
+            selectedLocation!,
+          )
         } else if (categoryIndex !== -1) {
           // setCategoryValue(filteredDropdownList[categoryIndex].listingCategory)
           // setCategoryInput(filteredDropdownList[categoryIndex].listingCategory)
           setShowCategoryDropdown(false)
           if (showCategoryDropdown) {
-            dispatch(
-              setCategory(filteredDropdownList[categoryIndex].listingCategory),
+            setSelectedCategory(
+              filteredDropdownList[categoryIndex].listingCategory,
             )
           }
           if (isCategoryFilled) {
-            handleSubmit()
+            handleSubmit(
+              selectedCategory ? selectedCategory : defaultCategory,
+              selectedPageType!,
+              selectedHobby!,
+              selectedLocation!,
+            )
           }
           setIsCategoryFilled(true)
           // alert('True')
           //   searchResult()
-        } else if (categoryIndex === -1 && currCategory.length === 0) {
+        } else if (categoryIndex === -1 && selectedCategory.length === 0) {
           setShowCategoryDropdown(false)
           //   setValue({ value: '', error: null })
 
           // handleGenreInputFocus();
           // alert('Enter is pressed')
           //   searchResult('Empty')
-          handleSubmit()
+          handleSubmit(
+            selectedCategory ? selectedCategory : defaultCategory,
+            selectedPageType!,
+            selectedHobby!,
+            selectedLocation!,
+          )
         }
         break
       default:
@@ -258,6 +288,34 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
     }
     fetchCategories()
   }, [])
+  useEffect(() => {
+    if (filter === 'people') {
+      setSelectedPageType('People')
+      setSelectedCategory('')
+    } else if (filter === 'places') {
+      setSelectedPageType('Place')
+      setSelectedCategory('')
+    } else if (filter === 'programs') {
+      setSelectedPageType('Program')
+      setSelectedCategory('')
+    } else if (filter === 'products') {
+      setSelectedPageType('Product')
+      setSelectedCategory('')
+    }
+
+    if (filter === 'classes') {
+      setSelectedCategory('Classes')
+      setSelectedPageType('')
+    } else if (filter === 'rentals') {
+      setSelectedCategory('Item Rental')
+      setSelectedPageType('')
+    }
+
+    if (!filter) {
+      setSelectedPageType('')
+      setSelectedCategory('')
+    }
+  }, [filter])
   return (
     <div className={styles.relative} ref={containerRef}>
       <div className={styles.relative}>
@@ -290,7 +348,13 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
               // alert('Enter')
               // }
             }}
-            value={currCategory ? currCategory : currPageType}
+            value={
+              selectedCategory
+                ? selectedCategory
+                : selectedPageType
+                ? selectedPageType
+                : defaultCategory
+            }
             onBlur={() =>
               setTimeout(() => {
                 setShowCategoryDropdown(false)
@@ -348,8 +412,8 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
                       //   undefined,
                       //   category.listingCategory,
                       // )
-                      dispatch(setCategory(category.listingCategory))
-                      dispatch(setPageType(''))
+                      setSelectedCategory(category.listingCategory)
+                      setSelectedPageType('')
                     }}
                     className={`${styles['text-left']} ${
                       index === categoryIndex
@@ -830,4 +894,4 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
   )
 }
 
-export default AccordionMenu2
+export default AccordionMenu3
