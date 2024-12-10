@@ -172,6 +172,7 @@ const CommunityLayout: React.FC<Props> = ({
     trendingHobbies: [],
   })
   const [filteredUsers, setFilteredUsers] = useState([])
+  const [filtersUsersLoading, setFilteredUsersLoading] = useState(false)
   const hideThirdColumnTabs = ['pages', 'links', 'store', 'blogs']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
   const { refreshNum } = useSelector((state: RootState) => state.post)
@@ -183,6 +184,7 @@ const CommunityLayout: React.FC<Props> = ({
     setSeeMoreHobby(!seeMoreHobby)
     dispatch(setFilters({ seeMoreHobbies: !seeMoreHobby }))
   }
+  console.warn('trending hobbies', trendingHobbies)
 
   const handleHobbyClick = async (hobbyId: any, genreId: any) => {
     if (!isLoggedIn) {
@@ -231,7 +233,7 @@ const CommunityLayout: React.FC<Props> = ({
     }
 
     if (activeProfile?.type === 'user') {
-      window.location.href = '/settings/localization-payments'
+      router.push('/settings/localization-payments')
     } else {
       dispatch(openModal({ type: 'listing-address-edit', closable: true }))
     }
@@ -855,11 +857,11 @@ const CommunityLayout: React.FC<Props> = ({
       return
     }
 
-    if (selectedUser.display_name === email) {
+    if (selectedUser?.display_name === email) {
       to = selectedUser?.email
     }
 
-    if (!validateEmail(to) && selectedUser.display_name !== email) {
+    if (!validateEmail(to) && selectedUser?.display_name !== email) {
       setErrorMessage('Please enter a valid email')
       return
     }
@@ -974,6 +976,7 @@ const CommunityLayout: React.FC<Props> = ({
   // user search for invite
 
   const fetchUsers = async (query: string) => {
+    setFilteredUsersLoading(true)
     try {
       let searchCriteria = {
         name: query,
@@ -982,7 +985,9 @@ const CommunityLayout: React.FC<Props> = ({
       console.log('Data : ', res.data)
 
       setFilteredUsers(res.data)
+      setFilteredUsersLoading(false)
     } catch (error) {
+      setFilteredUsersLoading(false)
       console.error('Error fetching users:', error)
     }
   }
@@ -1005,6 +1010,30 @@ const CommunityLayout: React.FC<Props> = ({
     setShowModal(false)
   }
 
+  const handleAddTrendingHobby = (hobby: any) => {
+    if (!hobby.genre) {
+      dispatch(
+        openModal({
+          type: 'profile-hobby-edit',
+          closable: true,
+          propData: { selectedHobbyToAdd: hobby?.hobby },
+        }),
+      )
+    } else if (hobby.genre) {
+      dispatch(
+        openModal({
+          type: 'profile-hobby-edit',
+          closable: true,
+          propData: {
+            selectedHobbyToAdd: hobby?.hobby,
+            hobbyAndGenre: true,
+            selectedGenreToAdd: hobby.genre,
+          },
+        }),
+      )
+    }
+  }
+
   // Effect to call API when email starts with @ and modal is open
   useEffect(() => {
     if (showModal) {
@@ -1013,16 +1042,6 @@ const CommunityLayout: React.FC<Props> = ({
       fetchUsers(query || '') // Fetch all users if query is empty
     }
   }, [email, showModal])
-
-  const handleAddTrendingHobby = (hobby: any) => {
-    // dispatch(
-    //   openModal({
-    //     type: 'add-hobby',
-    //     closable: true,
-    //     propData: { defaultValue: hobby },  // need to add propData
-    //   }),
-    // )
-  }
 
   return (
     <>
@@ -1573,8 +1592,10 @@ const CommunityLayout: React.FC<Props> = ({
                             </div>
                           </li>
                         ))
-                      ) : (
+                      ) : !filtersUsersLoading ? (
                         <li className={styles['modal-item']}>No users found</li>
+                      ) : (
+                        <li className={styles['modal-item']}>loading...</li>
                       )}
                     </ul>
                   </div>

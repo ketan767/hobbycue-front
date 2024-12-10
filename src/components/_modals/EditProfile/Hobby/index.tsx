@@ -50,6 +50,15 @@ type Props = {
   setShowAddHobbyModal?: any
   CheckIsOnboarded?: any
   propData?: {
+    hobbyAndGenre?: boolean
+    selectedGenreToAdd?: {
+      _id: string
+      display: string
+      level: number
+      show: boolean
+      sub_category: any
+      genre: any
+    }
     selectedHobbyToAdd?: {
       _id: string
       display: string
@@ -114,7 +123,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [errorOrmsg, setErrorOrmsg] = useState<string | null>(null)
-
+  console.warn('selectwwdhobb', propData)
   const [data, setData] = useState<ProfileHobbyData>({
     hobby: null,
     genre: null,
@@ -543,7 +552,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
         if (!hobbyInputValue.trim()) {
           if (userHobbies.length > 0) {
-            window.location.reload()
+            router.reload()
             handleClose()
             return
           } else {
@@ -661,18 +670,18 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             ) {
               const data = { is_onboarded: true }
               const { err, res } = await updateMyProfileDetail(data)
-              window.location.href = `/community`
+              router.push(`/community`)
             } else {
               dispatch(closeModal())
-              window.location.href = `/profile/${response?.data?.data?.user?.profile_url}`
+              router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
               dispatch(showProfileError(true))
             }
             return
           } else {
             if (user.is_onboarded) {
-              window.location.href = `/community`
+              router.push(`/community`)
             }
-            window.location.reload()
+            router.reload()
 
             dispatch(closeModal())
             return
@@ -693,19 +702,19 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       if (response?.data?.data?.user?.completed_onboarding_steps.length == 3) {
         const data = { is_onboarded: true }
         const { err, res } = await updateMyProfileDetail(data)
-        window.location.href = `/community`
+        router.push(`/community`)
       } else {
         dispatch(closeModal())
-        window.location.href = `/profile/${response?.data?.data?.user?.profile_url}`
+        router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
         dispatch(showProfileError(true))
       }
       return
     } else {
       if (!user.is_onboarded) {
-        window.location.href = `/profile/${user?.profile_url}`
+        router.push(`/profile/${user?.profile_url}`)
         dispatch(showProfileError(true))
       } else {
-        window.location.reload()
+        router.reload()
         dispatch(closeModal())
       }
       return
@@ -910,7 +919,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     //   return {...prev}
     // })
     const AddToMine = async () => {
-      if (selectedHobbyToAdd && selectedHobbyToAdd?.level >= 5) {
+      if (
+        selectedHobbyToAdd &&
+        selectedHobbyToAdd?.level >= 5 &&
+        !propData?.hobbyAndGenre
+      ) {
         if (selectedHobbyToAdd.show === true) {
           setData((prev) => ({ ...prev, genre: selectedHobbyToAdd }))
           setData((prev) => ({
@@ -936,11 +949,24 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         setHobbyInputValue(selectedHobbyToAdd?.sub_category?.display)
         setGenreInputValue(selectedHobbyToAdd.display)
         handleGenreInputChange
-      } else if (selectedHobbyToAdd && selectedHobbyToAdd?.level < 5) {
+      } else if (
+        selectedHobbyToAdd &&
+        selectedHobbyToAdd?.level < 5 &&
+        !propData?.hobbyAndGenre
+      ) {
         if (selectedHobbyToAdd.show === true) {
           setData((prev) => ({ ...prev, hobby: selectedHobbyToAdd }))
         }
         setHobbyInputValue(selectedHobbyToAdd.display)
+      } else if (propData?.hobbyAndGenre) {
+        setData((prev) => ({ ...prev, hobby: selectedHobbyToAdd || null }))
+        setData((prev) => ({
+          ...prev,
+          genre: propData.selectedGenreToAdd || null,
+        }))
+        setGenreId(selectedHobbyToAdd?.genre[0])
+        setHobbyInputValue(selectedHobbyToAdd?.display || '')
+        setGenreInputValue(propData?.selectedGenreToAdd?.display || '')
       }
     }
     AddToMine()
