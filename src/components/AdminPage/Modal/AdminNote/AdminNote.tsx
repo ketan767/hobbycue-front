@@ -14,7 +14,7 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { icon: newItem, text: 'New' },
+  { icon: newItem, text: 'New' }
   { icon: pending, text: 'In Progress' },
   { icon: approve, text: 'Approve' },
   { icon: reject, text: 'Rejected' },
