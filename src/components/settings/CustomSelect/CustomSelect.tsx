@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import styles from './CustomSelect.module.css'
-import ExpandMoreDropDown from '@/assets/icons/ExpandMoreDropDown'
+import DownArrow from '@/assets/icons/DownArrow'
 
 interface CustomSelectProps {
   options: string[]
@@ -60,9 +60,12 @@ export default function CustomSelect({
         </span>
         <div
           className={styles.expandMoreIcon}
-          style={{ rotate: isOpen ? '-180deg' : '0deg', transition: 'all 0.2s' }}
+          style={{
+            rotate: isOpen ? '-180deg' : '0deg',
+            transition: 'all 0.2s',
+          }}
         >
-          <ExpandMoreDropDown />
+          <DownArrow />
         </div>
       </div>
       {isOpen && !disabled && (
