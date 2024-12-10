@@ -24,7 +24,7 @@ import {
 } from '@/services/admin.service'
 import StatusDropdown from '@/components/_formElements/StatusDropdown'
 import { setShowPageLoader } from '@/redux/slices/site'
-import ModalWrapper from '@/components/Modal'
+
 import AdminNote from '@/components/AdminPage/Modal/AdminNote/AdminNote'
 
 type UserProps = {
@@ -150,7 +150,6 @@ const AdminReport: React.FC = () => {
     }
   }
 
-  console.log(adminNoteModal)
   const fullNumber = (user: any) => {
     if (user?.phone?.prefix && user?.phone?.number) {
       return user?.phone?.prefix + user?.phone?.number

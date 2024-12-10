@@ -23,9 +23,13 @@
   position: relative;
   transform: translateY(-100%);
   transition: transform 0.3s ease-in-out;
-  padding: 20px; /* Optional padding for spacing */
+  padding: 20px;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   scrollbar-width: thin;
 }
+
 .slideIn {
   transform: translateY(0); /* Slide in from top */
 }
@@ -34,47 +38,30 @@
   transform: translateY(-100%); /* Slide out to top */
 }
 
-.closeButton {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-}
 .mainContainer {
   width: 719px;
-  position: absolute;
-  z-index: 1000;
-  background-color: rgb(223, 23, 23);
-  position: relative; /* To allow positioning of child elements */
+  position: relative;
   overflow: visible;
-}
-
-.mainWrapper {
-  width: 100%;
-  margin: 0 auto;
-  border-radius: 8px;
-  padding: 2px;
+  background-color: white;
+  border-radius: 4px;
 }
 
 .header {
-  max-width: 719px;
-  width: 100%;
+  width: 98%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px 5px;
+  margin: 0 auto;
 }
 
 .title {
-  color: black;
   font-family: Poppins;
   font-size: 18px;
   font-weight: 600;
   line-height: 26px;
   text-align: left;
+  text-underline-position: from-font;
   text-decoration-skip-ink: none;
 }
 
@@ -96,19 +83,34 @@
 }
 
 .label {
-  display: inline;
-  font-weight: bold;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #6d747a;
 }
 
 .textarea {
-  all: unset; /* Removes all styles */
-  resize: none; /* Disables the resize handle */
-  width: 100%;
+  all: unset;
+  resize: none;
   height: 100px;
   border: 1px solid #ddd;
   border-radius: 4px;
   padding: 10px;
-  font-size: 1rem;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: black;
+  padding: 12px;
+  border-radius: 8px 0px 0px 0px;
+  border: 1px solid var(--Grey-Lighter, #ebedf0);
 }
 
 .optionsContainer {
@@ -119,10 +121,8 @@
 }
 
 .statusContainer {
-  width: 200px;
-  display: flex;
-  flex-direction: column;
   position: relative;
+  width: 200px;
 }
 
 .dropdown {
@@ -131,27 +131,32 @@
   border-radius: 5px;
   padding: 10px;
   background-color: white;
-  width: 100%; /* Ensure the dropdown stretches */
 }
 
 .selectedOption {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 1rem;
+  color: #939ca3;
+  font-family: Poppins;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
 }
 
 .dropdownMenu {
   position: absolute;
-  top: 100%;
-  left: 0%;
-  right: 0;
+  top: calc(100% + 4px);
+  left: 0;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 5px;
-  z-index: 1000; /* High z-index for dropdown visibility */
+  z-index: 1050;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 200px;
+  width: 180px;
 }
 
 .dropdownItem {
@@ -160,20 +165,36 @@
   gap: 8px;
   padding: 10px;
   cursor: pointer;
-  font-size: 1rem;
+  color: #939ca3;
+  font-family: Poppins;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
 }
 
 .dropdownItem:hover {
-  background-color: #f0f0f0;
+  background-color: #f7f7f7;
 }
 
 .saveButton {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
+  width: 99px;
+  height: 40px;
+  padding: 12px 33.5px 12px 33.5px;
+
+  border-radius: 8px;
+  background: #8064a2;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  color: white;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
 }
 
 .emailContainer {
@@ -185,8 +206,5 @@
 }
 
 .checkbox {
-}
-
-.saveButton:hover {
-  background-color: #0056b3;
+  margin-right: 10px;
 }

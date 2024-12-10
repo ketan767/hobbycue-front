@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import styles from './AdminNote.module.css'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import approve from '@/assets/icons/adminNote/Status-Approve-Resolve.png'
@@ -14,7 +14,7 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { icon: newItem, text: 'New' }
+  { icon: newItem, text: 'New' },
   { icon: pending, text: 'In Progress' },
   { icon: approve, text: 'Approve' },
   { icon: reject, text: 'Rejected' },
@@ -31,6 +31,7 @@ const AdminNote: React.FC<PropTypes> = ({ setIsModalOpen, isModalOpen }) => {
   const [status, setStatus] = useState<string>('In Progress')
   const [emailUser, setEmailUser] = useState<boolean>(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const handleStatusChange = (newStatus: string) => {
     setStatus(newStatus)
@@ -40,6 +41,24 @@ const AdminNote: React.FC<PropTypes> = ({ setIsModalOpen, isModalOpen }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log({ adminNotes, status, emailUser })
+  }
+
+  const handleOutsideClick = (e: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(e.target as Node)
+    ) {
+      setIsDropdownOpen(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick)
+    return () => document.removeEventListener('mousedown', handleOutsideClick)
+  }, [])
+
+  if (!isModalOpen) {
+    return null
   }
 
   return (
@@ -83,6 +102,7 @@ const AdminNote: React.FC<PropTypes> = ({ setIsModalOpen, isModalOpen }) => {
                   <label className={styles.label}>Status</label>
                   <div
                     className={styles.dropdown}
+                    ref={dropdownRef}
                     onClick={() => setIsDropdownOpen((prev) => !prev)}
                   >
                     <div className={styles.selectedOption}>
