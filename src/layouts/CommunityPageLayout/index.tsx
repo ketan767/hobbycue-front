@@ -233,7 +233,7 @@ const CommunityLayout: React.FC<Props> = ({
     }
 
     if (activeProfile?.type === 'user') {
-      window.location.href = '/settings/localization-payments'
+      router.push('/settings/localization-payments')
     } else {
       dispatch(openModal({ type: 'listing-address-edit', closable: true }))
     }
@@ -1010,7 +1010,7 @@ const CommunityLayout: React.FC<Props> = ({
     setShowModal(false)
   }
 
-  const handleAddTrendingHobby = (hobby: any, genre?: string) => {
+  const handleAddTrendingHobby = (hobby: any) => {
     if (!hobby.genre) {
       dispatch(
         openModal({
