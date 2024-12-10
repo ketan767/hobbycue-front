@@ -147,8 +147,7 @@ const Explore: React.FC<Props> = ({ data }) => {
   }
 
   const filteredData = filterBlogs(data, formValues) || []
-  console.log(filteredData)
-  console.log(data)
+  console.warn('filtereddata', filteredData)
 
   return (
     <>
@@ -159,15 +158,27 @@ const Explore: React.FC<Props> = ({ data }) => {
         <title>HobbyCue - Blog</title>
       </Head>
       <div className={styles['main-container']}>
-        {/* <div className={styles.filterContainer}>
-          <BlogFilter formValues={formValues} setFormValues={setFormValues} />
-        </div> */}
+        <div className={styles['blog-container']}>
+          <div className={styles.filterContainer}>
+            <BlogFilter formValues={formValues} setFormValues={setFormValues} />
+          </div>
 
-        <div className={styles.container}>
-          <div className={styles.gridContainer}>
-            {filteredData?.map((el: any) => (
-              <BlogCard key={el._id} data={el} />
-            ))}
+          <div className={styles.container}>
+            <div className={styles.gridContainer}>
+              {filteredData.length > 0 ? (
+                filteredData?.map((el: any) => (
+                  <BlogCard key={el._id} data={el} />
+                ))
+              ) : (
+                <>
+                  <div className={styles['no-posts-div']}>
+                    <p className={styles['no-post-text']}>No Blogs available</p>
+                  </div>
+                  <div className={styles['no-posts-div']}></div>
+                  <div className={styles['no-posts-div']}></div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

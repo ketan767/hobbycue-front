@@ -1,3 +1,7 @@
+.main-container {
+  background-color: #f2f0f5;
+}
+
 .all button:focus-visible {
   outline: #8064a2 2px solid;
   border: white 1px solid;
@@ -12,7 +16,37 @@
   resize: none;
   overflow: hidden;
 }
-.main-container {
+
+.blog-container {
+  max-width: 1240px;
+  display: grid;
+  display: flex;
+  margin: auto;
+  column-gap: 24px;
+}
+
+.no-posts-div {
+  max-width: 508px;
+  width: 100%;
+  min-width: 250px;
+  position: relative;
+  max-height: 329px;
+  height: 100%;
+  background-color: #ffffff;
+  padding: 1.2rem;
+  border-radius: 8px;
+  border: 2px solid rgb(242, 242, 242);
+}
+
+.no-post-text {
+  font-size: 14px;
+    font-weight: 500;
+    color: #6d747a;
+
+}
+
+.container {
+
   max-width: 1296px;
   margin: 0 auto;
   background-color: #f2f0f5;
@@ -25,10 +59,15 @@
   margin: 0 auto;
 }
 .filterContainer {
-  max-width: 280px;
+  max-width: 229px;
   width: 100%;
   display: flex;
   justify-content: center;
+  
+  height: 90vh;
+  position: sticky;
+  top: calc(var(--navbar-height-desktop) + var(--spacing-12));
+  margin-bottom: var(--spacing-12);
 }
 
 .gridContainer {
@@ -596,6 +635,17 @@
     gap: 24px;
   }
 }
+
+
+.gridContainer {
+  margin: 0 auto;
+  max-width: 1296px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: 12px;
+  column-gap: 24px;
+}
+
 
 @media (max-width: 1100px) {
   .blogButtons {
