@@ -1,3 +1,7 @@
+.main-container {
+  background-color: #f2f0f5;
+}
+
 .all button:focus-visible {
   outline: #8064a2 2px solid;
   border: white 1px solid;
