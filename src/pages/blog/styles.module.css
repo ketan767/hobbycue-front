@@ -375,9 +375,53 @@
   padding-right: 15px !important;
 }
 
+.ql-editor table,
+.blogContent table {
+  border: none;
+  border-collapse: collapse;
+  width: 100%;
+
+  color: var(--Grey-Darkest, #08090a);
+  font-family: Cambria;
+  font-size: 16px !important;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.ql-editor tr,
+.blogContent tr {
+  border: none;
+}
+
+.ql-editor td,
+.blogContent td {
+  border: 1px solid black;
+  padding: 15px;
+}
+
+.ql-editor figure,
+.blogContent figure,
+.blogContent img,
+.ql-editor img {
+  display: block;
+  margin: 11px auto;
+}
+
+.ql-editor figcaption,
+.blogContent figcaption {
+  text-align: center;
+  color: var(--Grey-Darkest, #08090a);
+  font-family: Poppins;
+  font-size: 16px !important;
+  font-style: normal;
+  line-height: 24px;
+}
+
 .ql-editor.ql-indent-1 {
   padding-left: 4px;
 }
+
 .ql-editor ul,
 .ql-editor ol {
   color: var(--Grey-Darkest, #08090a);

@@ -211,11 +211,44 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     const { err, res } = await uploadBlogImage(formData, data.blog_url._id)
     if (err) return console.log('Error in uploadImageToServer(): ', err)
     if (res?.data.success) {
-      // setBlog({ ...blog, cover_pic: res?.data?.data.cover_pic })
-      dispatch(setBlog({ ...blog, cover_pic: res?.data?.data.cover_pic }))
+      dispatch(setBlog({ ...blog, cover_pic: res?.data?.data.img_url }))
       dispatch(closeModal())
     }
   }
+
+  // const handleImageUpload = () => {
+  //   if (!quillInstance) return
+
+  //   const input = document.createElement('input')
+  //   input.setAttribute('type', 'file')
+  //   input.setAttribute('accept', 'image/*')
+  //   input.click()
+
+  //   input.onchange = async () => {
+  //     const file = input.files?.[0]
+  //     if (!file) return
+
+  //     const formData = new FormData()
+  //     formData.append('blog-image', file)
+  //     // Send the image to the backend
+  //     const { res, err } = await uploadBlogImage(formData, blog?._id, false)
+
+  //     if (err)
+  //       console.log('Error in uploading image @handleImageUpload(): ', err)
+
+  //     if (res?.data?.success) {
+  //       // Insert the uploaded image URL into the editor
+  //       const imgUrl = res?.data?.data?.img_url
+  //       const range = quillInstance.getSelection()
+  //       quillInstance.insertEmbed(range.index, 'image', imgUrl)
+  //     } else {
+  //       console.error(
+  //         'Image upload failed @handleImageUpload():',
+  //         res?.data?.message,
+  //       )
+  //     }
+  //   }
+  // }
 
   useEffect(() => {
     if (blog?.content !== data?.blog_url?.content) {
@@ -559,12 +592,9 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                     theme="snow"
                     value={blog.content}
                     onChange={(updatedValue) => {
-                      // setBlog((prev: any) => ({
-                      //   ...prev,
-                      //   content: updatedValue,
-                      // }))
                       dispatch(setBlog({ ...blog, content: updatedValue }))
                     }}
+                    // onFocus={(e, editor) => setQuillInstance(editor)}
                     // onBlur={() => handleEditBlog('content')}
                     className={`${styles.quill} ${styles['ql-editor']} blog-quill`}
                     placeholder={'Text'}
@@ -582,6 +612,9 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                           ],
                           ['link', 'image'],
                         ],
+                        // handlers: {
+                        //   image: () => handleImageUpload(), // Custom handler
+                        // },
                       },
                     }}
                   />
