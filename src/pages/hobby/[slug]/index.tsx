@@ -290,7 +290,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
               <div className={styles['keyword-container']} style={{
                 justifyContent:'space-between'
               }}>
-                <div style={{display:"flex", gap:"16px", justifyItems:"center",alignItems:"center"}}>
+                <div style={{display:"flex", gap:"8px", justifyItems:"center",alignItems:"center"}}>
                   <h4 className={styles['keyword-text']}>Keywords :</h4>
                   <ul style={{transform:"translateY(0.25px)"}} className={`${styles['keyword-list']}`}>
                     <li>{data?.keywords.join(', ')}</li>
