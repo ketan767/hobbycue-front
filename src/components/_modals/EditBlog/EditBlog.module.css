@@ -185,6 +185,8 @@
 .searchPicImage {
   width: 100%;
   height: 100%;
+  object-fit: contain;
+  border: 1px solid #8064a2;
   border-radius: 64px;
 }
 .searchPicDetails {
@@ -224,7 +226,7 @@
 }
 .hr {
   border: none;
-  margin: 0 -20px;
+  margin: 0 -24px;
   border-bottom: 1px solid var(--Grey-Light, #ced4da);
 }
 /* Middle Content */
