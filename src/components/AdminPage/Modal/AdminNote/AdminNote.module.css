@@ -1,0 +1,192 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 999;
+}
+
+.modalOverlay.showOverlay {
+  opacity: 1;
+}
+
+.modalContent {
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+  padding: 20px; /* Optional padding for spacing */
+  scrollbar-width: thin;
+}
+.slideIn {
+  transform: translateY(0); /* Slide in from top */
+}
+
+.slideOut {
+  transform: translateY(-100%); /* Slide out to top */
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+.mainContainer {
+  width: 719px;
+  position: absolute;
+  z-index: 1000;
+  background-color: rgb(223, 23, 23);
+  position: relative; /* To allow positioning of child elements */
+  overflow: visible;
+}
+
+.mainWrapper {
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.header {
+  max-width: 719px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 5px;
+}
+
+.title {
+  color: black;
+  font-family: Poppins;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 26px;
+  text-align: left;
+  text-decoration-skip-ink: none;
+}
+
+.formContainer {
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.notesSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  display: inline;
+  font-weight: bold;
+}
+
+.textarea {
+  all: unset; /* Removes all styles */
+  resize: none; /* Disables the resize handle */
+  width: 100%;
+  height: 100px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.optionsContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.statusContainer {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.dropdown {
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: white;
+  width: 100%; /* Ensure the dropdown stretches */
+}
+
+.selectedOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  left: 0%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  z-index: 1000; /* High z-index for dropdown visibility */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 200px;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.dropdownItem:hover {
+  background-color: #f0f0f0;
+}
+
+.saveButton {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.emailContainer {
+  padding-top: 20px;
+  width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.checkbox {
+}
+
+.saveButton:hover {
+  background-color: #0056b3;
+}

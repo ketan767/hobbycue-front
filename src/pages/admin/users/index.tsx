@@ -67,7 +67,6 @@ const searchSvg = (
     />
   </svg>
 )
-
 const pencilSvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -495,7 +494,7 @@ const AdminDashboard: React.FC = () => {
                         {/* user */}
                         <td>
                           <Link
-                            href={`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${user.profile_url}`}
+                            href={`/profile/${user.profile_url}`}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
@@ -699,8 +698,6 @@ const AdminDashboard: React.FC = () => {
                           <div className={styles.accountStatus}>
                             <ToggleButton isOn={user.is_account_activated} />
                           </div>
-
-                          {/* {user.is_account_activated ? 'Active' : 'Deactivated'} */}
                         </td>
                         <td>
                           <div className={styles.actions}>
