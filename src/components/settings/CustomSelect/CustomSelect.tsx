@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import styles from './CustomSelect.module.css'
+import ExpandMoreDropDown from '@/assets/icons/ExpandMoreDropDown'
 
 interface CustomSelectProps {
   options: string[]
@@ -57,6 +58,12 @@ export default function CustomSelect({
         <span className={disabled ? styles.optionDisabled : styles.selected}>
           {selected}
         </span>
+        <div
+          className={styles.expandMoreIcon}
+          style={{ rotate: isOpen ? '-180deg' : '0deg', transition: 'all 0.2s' }}
+        >
+          <ExpandMoreDropDown />
+        </div>
       </div>
       {isOpen && !disabled && (
         <div className={styles.optionsContainer}>
@@ -65,7 +72,7 @@ export default function CustomSelect({
               key={index}
               className={`${styles.option} ${
                 disabled ? styles.disabledOption : ''
-              }`}
+              } ${selected === option ? styles.selectedOption : ''}`}
               onClick={() => handleOptionClick(option)}
             >
               {option}
