@@ -2,10 +2,8 @@ import React, { useState } from 'react'
 import styles from '../styles.module.css'
 import HobbyField from '../FilterComponents/HobbyField'
 import LocationField from '../FilterComponents/LocationField'
-import { isMobile } from '@/utils'
-import useHandleUserProfileSearch from '../utils/HandleUserProSearch'
 import PostField from '../FilterComponents/PostField'
-import useHandlePostsSearch from '../utils/HandlePostsSearch'
+import PostSearchButton from './buttons/post/PostSearchButton'
 
 type PostExploreProps = {
   currPostedBy: string
@@ -15,53 +13,67 @@ const PostExplore: React.FC<PostExploreProps> = ({
   currPostedBy,
   setCurrPostedBy,
 }) => {
-  const isMob = isMobile()
-  const handlePostsSearch = useHandlePostsSearch()
   const [selectedHobby, setSelectedHobby] = useState('')
   const [selectedLocation, setSelectedLocation] = useState('')
   return (
-    <div className={styles.siteExploreParent}>
-      <div className={styles.inputExploreContainer}>
-        <PostField
-          currPostedBy={currPostedBy}
-          setCurrPostedBy={setCurrPostedBy}
-          selectedLocation={selectedLocation}
-          selectedHobby={selectedHobby}
-        />
-        <HobbyField
-          filterPage={'Post'}
-          currPostedBy={currPostedBy}
-          selectedLocation={selectedLocation}
-          selectedHobby={selectedHobby}
-          setSelectedHobby={setSelectedHobby}
-        />
-        <LocationField
-          filterPage={'Post'}
-          currPostedBy={currPostedBy}
-          selectedHobby={selectedHobby}
-          selectedLocation={selectedLocation}
-          setSelectedLocation={setSelectedLocation}
-        />
+    <>
+      <div className={styles.siteExploreParent}>
+        <div className={styles.inputExploreContainer}>
+          <PostField
+            currPostedBy={currPostedBy}
+            setCurrPostedBy={setCurrPostedBy}
+            selectedLocation={selectedLocation}
+            selectedHobby={selectedHobby}
+          />
+          <div className={`${styles.mobileHidden}`}>
+            <HobbyField
+              filterPage={'Post'}
+              currPostedBy={currPostedBy}
+              selectedLocation={selectedLocation}
+              selectedHobby={selectedHobby}
+              setSelectedHobby={setSelectedHobby}
+            />
+          </div>
 
-        <button
-          className="modal-footer-btn"
-          style={{
-            width: isMob ? '100%' : 71,
-            height: 32,
-            marginLeft: 'auto',
-          }}
-          onClick={() => {
-            handlePostsSearch(
-              currPostedBy,
-              selectedHobby,
-              selectedLocation,
-            )
-          }}
-        >
-          Search
-        </button>
+          <LocationField
+            filterPage={'Post'}
+            currPostedBy={currPostedBy}
+            selectedHobby={selectedHobby}
+            selectedLocation={selectedLocation}
+            setSelectedLocation={setSelectedLocation}
+          />
+          <div className={styles.mobileHidden}>
+            <PostSearchButton
+              currPostedBy={currPostedBy}
+              selectedHobby={selectedHobby}
+              selectedLocation={selectedLocation}
+            />
+          </div>
+        </div>
       </div>
-    </div>
+      <div className={`${styles.siteExploreParent} ${styles.laptopHidden}`}>
+        <div
+          className={`${styles.inputExploreContainer} ${styles.inputExploreContainerWithBtn}`}
+        >
+          <div className={`${styles.accordianPositionMobile}`}>
+            <HobbyField
+              filterPage={'Post'}
+              currPostedBy={currPostedBy}
+              selectedLocation={selectedLocation}
+              selectedHobby={selectedHobby}
+              setSelectedHobby={setSelectedHobby}
+            />
+          </div>
+          <div className={`${styles.submitMobile}`}>
+            <PostSearchButton
+              currPostedBy={currPostedBy}
+              selectedHobby={selectedHobby}
+              selectedLocation={selectedLocation}
+            />
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
 
