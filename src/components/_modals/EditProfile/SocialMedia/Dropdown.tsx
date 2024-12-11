@@ -197,7 +197,7 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
     setShowOptions(true)
   };
   const handleBlur = () => {
-    setTimeout(() => setShowOptions(false), 100);
+    setTimeout(() => setShowOptions(false), 400);
   };
 
   type SocialMediaOption =
@@ -273,7 +273,6 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
 
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      console.log("down", filteredOptions.length, highlightIndex);
       const a = highlightIndex < filteredOptions.length - 1 ? highlightIndex + 1 : 0
       setHighlightIndex((prev) => a);
     } else if (e.key === "ArrowUp") {
@@ -296,7 +295,6 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
 
   const handleFullKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
-      e.stopPropagation();
       e.preventDefault();
       inputRef.current?.blur();
       setShowOptions(false);
@@ -312,6 +310,17 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
       setDropdownMaxHeight(Math.max(spaceAbove, spaceBelow) - 10);
     }
   }, [showOptions]);
+
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    if (itemRefs.current[highlightIndex]) {
+      itemRefs.current[highlightIndex].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+    }
+  }, [highlightIndex]);
 
   return (
     <div
@@ -355,12 +364,10 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
       <ArrowDropDownIcon
         onClick={() => {
           if (!showOptions) {
-            console.log("focus");
             inputRef.current?.focus();
             setShowOptions(true);
           } else {
             inputRef.current?.blur();
-            console.log("blur");
             setShowOptions(false);
           }
         }}
@@ -405,6 +412,7 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
                   .map((option: any, i: any) => (
                     <>
               <div
+              ref={(el) => (itemRefs.current[i] = el)}
                 key={i}
                 style={{
                   margin: "3px 3px",
@@ -416,10 +424,9 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
                     highlightIndex === i ? "#efecf4" : "#f5f3f8" :
                     highlightIndex === i ? "#f0f0f0" : "transparent",
                 }}
-                // onMouseEnter={() => setHighlightIndex(i)}
+                onMouseEnter={() => setHighlightIndex(i)}
                 onClick={(e) => {
-                  console.log("click", option); 
-                  e.stopPropagation();
+                  setSelectQuery(option.socialMedia);
                   onChange(option.socialMedia);
                   setShowOptions(false);
                 }}

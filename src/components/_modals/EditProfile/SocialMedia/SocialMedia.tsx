@@ -202,6 +202,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
   const [isChanged, setIsChanged] = useState(false)
 
   useEffect(() => {
+    console.log("}, [user])")
     if (!user.social_media_urls) return
 
     let arr = []
@@ -576,7 +577,6 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
 
       // if (err) return console.log(err)
       if (res?.data.success) {
-        console.log('res', res)
         window.location.reload()
         dispatch(closeModal())
       }
@@ -621,8 +621,6 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
             res.data.data as SocialMediaData1[],
           )
           setAllOptions(reorderedData)
-          console.log({ dayatsa: res?.data?.data })
-          console.log({ reorderedData })
         }
       })
       .catch((err) => {
@@ -634,7 +632,6 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
 
   const handleFullKeyDown = (e: React.KeyboardEvent) => {
     // if enter is pressed then it should submit the form
-    console.log(e.key)
     if (e.key === 'ENTER') {
       handleSubmit()
     }
@@ -719,13 +716,21 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
               className={styles.inputContainer}
               key={idx}
             >
-              <div style={{ width: '184px', height: '40px' }}>
+              <div id='social-media-dropdown' style={{ width: '184px', height: '40px' }}>
                 <DropdownComponent
                   key={idx}
                   options={allOptions}
                   placeholder={'Select Social Media'}
                   value={item.socialMedia}
                   onChange={(e) => {
+                    const targetDiv = document.getElementById('social-media-dropdown');
+if (targetDiv) {
+  targetDiv.style.setProperty('border', '5px solid #E0E0E0');
+  
+  setTimeout(() => {
+    targetDiv.style.setProperty('border', 'initial');
+  }, 1000);
+}
                     const selectedSocialMedia = e as SocialMediaOption
                     const defaultUrl =
                       defaultSocialMediaURLs[selectedSocialMedia]
