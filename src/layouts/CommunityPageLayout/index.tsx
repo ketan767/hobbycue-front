@@ -1562,7 +1562,7 @@ const CommunityLayout: React.FC<Props> = ({
                           marginTop: '8px',
                         }}
                       >
-                        Hobbycue
+                        HobbyCue
                       </h4>
                       {filteredUsers.length > 0 ? (
                         filteredUsers.map((user: any) => (
@@ -1573,13 +1573,12 @@ const CommunityLayout: React.FC<Props> = ({
                           >
                             <img
                               src={user.profile_image || defaultUserIcon.src} // Ensure `defaultUserIcon` is defined
-                              alt={user.display_name}
+                              alt={user.full_name}
                               className={styles['profile-pic']}
                             />
                             <div>
                               <p className={styles['user-name']}>
-                                {user.display_name ||
-                                  user.full_name.slice(0, 20) + '...'}
+                                {user?.full_name?.slice(0, 23) + '...'}
                               </p>
                               <p
                                 className={styles['user-name']}
