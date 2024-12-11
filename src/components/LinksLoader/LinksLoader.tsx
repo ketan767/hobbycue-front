@@ -120,29 +120,39 @@ const LinksLoader: FC<LinksLoaderProps> = ({}) => {
               ry={6}
               fill="#F7F5F9"
             />
-
+            {/* two stroke in a line */}
             <rect
               x="0"
-              y="30"
-              width="60%"
+              y="38"
+              width="20%"
               height="10"
               rx={6}
               ry={6}
               fill="#F7F5F9"
             />
             <rect
+              x="40%"
+              y="38"
+              width="20%"
+              height="10"
+              rx={6}
+              ry={6}
+              fill="#F7F5F9"
+            />
+            {/* two stroke in a line */}
+            <rect
               x="0"
-              y="45"
-              width="70%"
+              y="57"
+              width="22%"
               height="10"
               rx={6}
               ry={6}
               fill="#F7F5F9"
             />
             <rect
-              x="0"
-              y="60"
-              width="65%"
+              x="40%"
+              y="57"
+              width="20%"
               height="10"
               rx={6}
               ry={6}
@@ -178,16 +188,7 @@ const LinksLoader: FC<LinksLoaderProps> = ({}) => {
 
             <rect
               x="0"
-              y="48"
-              width="81"
-              height="14"
-              rx={6}
-              ry={6}
-              fill="#F7F5F9"
-            />
-            <rect
-              x="0"
-              y="72"
+              y="60"
               width="145"
               height="14"
               rx={6}
@@ -196,7 +197,7 @@ const LinksLoader: FC<LinksLoaderProps> = ({}) => {
             />
             <rect
               x="0"
-              y="96"
+              y="84"
               width="113"
               height="14"
               rx={6}

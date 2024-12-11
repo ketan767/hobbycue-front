@@ -556,31 +556,31 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
         }
       }
     }
-    if (errorSaving === true) {
-      setSubmitBtnLoading(false)
-      setSnackbar({
-        display: true,
-        type: 'warning',
-        message: 'Please enter a valid URL',
-      })
-      return console.log('Invalid URL')
-    } else {
+    // if (errorSaving === true) {
+    //   setSubmitBtnLoading(false)
+    //   setSnackbar({
+    //     display: true,
+    //     type: 'warning',
+    //     message: 'Please enter a valid URL',
+    //   })
+    //   return console.log('Invalid URL')
+    // } else {
       const { err, res } = await updateMyProfileDetail({
         social_media_urls: reqBody,
       })
 
-      if (err) {
-        setSubmitBtnLoading(false)
-        return console.log(err)
-      }
+      // if (err) {
+      //   setSubmitBtnLoading(false)
+      //   return console.log(err)
+      // }
 
-      if (err) return console.log(err)
+      // if (err) return console.log(err)
       if (res?.data.success) {
         console.log('res', res)
         window.location.reload()
         dispatch(closeModal())
       }
-    }
+    // }
   }
   console.warn('dataaa', mediaData)
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
@@ -739,7 +739,8 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                       url: defaultUrl,
                       error: false,
                     }
-                    setMediaData(updatedMediaData)
+                    console.log({ updatedMediaData })
+                    setMediaData(()=>updatedMediaData)
                   }}
                 />
               </div>
@@ -789,7 +790,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                       return prev
                     })
                   }}
-                  style={item?.error === true ? { borderColor: 'red' } : {}}
+                  // style={item?.error === true ? { borderColor: 'red' } : {}}
                 />
               </div>
               <Image
