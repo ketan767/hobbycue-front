@@ -114,7 +114,8 @@ const Filter = () => {
         setSelectedHobby={setSelectedHobby}
       />
       {filter !== 'users' && filter !== 'posts' && (
-        <div className={styles.relative}>
+        <div className={`${styles.relative} ${styles['mt-4px']}`}>
+
           {/* <AccordionMenu2
             categoryValue={categoryValue}
             handleSubmit={handleSubmit}
