@@ -38,6 +38,7 @@ import useHandlePostsSearch from './utils/HandlePostsSearch'
 import useHandleSubmit from './utils/HandleSubmit'
 import LocationField from './FilterComponents/LocationField'
 import AccordionMenu3 from '../explore/nestedDropdown/AccordianMenu3'
+import PostField from './FilterComponents/PostField'
 
 const Filter = () => {
   const {
@@ -51,7 +52,6 @@ const Filter = () => {
     (state: RootState) => state.search,
   )
   const dispatch = useDispatch()
-  const postedByRef = useRef<HTMLInputElement>(null)
   const [showPostedByDropdown, setShowPostedByDropdown] = useState(false)
 
   const [focusedPostedByIdx, setFocusedPostedByIdx] = useState<number>(-1)
@@ -96,78 +96,12 @@ const Filter = () => {
       )}
 
       {filter === 'posts' && (
-        <div className={styles.hobbySuggestion}>
-          <Image
-            src={SearchIcon}
-            width={16}
-            height={16}
-            alt="SearchIcon"
-            className={styles.searchIcon}
-          />
-          <TextField
-            autoComplete="off"
-            inputRef={postedByRef}
-            variant="standard"
-            label="Posted by"
-            size="small"
-            name="postedBy"
-            className={styles.hobbySearch}
-            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-              if (e.key === 'Enter') {
-                dispatch(setPostedBy(currPostedBy))
-              }
-              if (e.key === 'Enter') {
-                let query = {}
-                query = { ...query, filter: 'posts' }
-                if (currPostedBy) {
-                  query = { ...query, postedBy: currPostedBy }
-                }
-                if (userHobby) {
-                  query = { ...query, hobby: userHobby }
-                }
-                if (userLocation) {
-                  query = { ...query, location: userLocation }
-                }
-                router.push({
-                  pathname: `/search`,
-                  query: query,
-                })
-              }
-            }}
-            value={currPostedBy}
-            // onBlur={() =>
-            //   setTimeout(() => {
-            //     setShowHobbyDropdown(false)
-            //   }, 300)
-            // }
-            onChange={(e) => {
-              setCurrPostedBy(e.target.value)
-            }}
-            sx={{
-              '& label': {
-                fontSize: '16px',
-                paddingLeft: '24px',
-              },
-              '& label.Mui-focused': {
-                fontSize: '14px',
-                marginLeft: '-16px',
-              },
-              '& .MuiInputLabel-shrink': {
-                marginTop: '3px',
-                fontSize: '14px',
-                marginLeft: '-16px',
-              },
-              '& .MuiInput-underline:hover:before': {
-                borderBottomColor: '#7F63A1 !important',
-              },
-            }}
-            InputProps={{
-              sx: {
-                paddingLeft: '24px',
-              },
-            }}
-          />
-        </div>
+        <PostField
+          currPostedBy={currPostedBy}
+          setCurrPostedBy={setCurrPostedBy}
+          selectedLocation={selectedLocation}
+          selectedHobby={selectedHobby}
+        />
       )}
 
       <HobbyField
@@ -230,7 +164,11 @@ const Filter = () => {
           }}
           onClick={() => {
             if (filter === 'users') {
-              handleUserProfileSearch(currUserName, selectedHobby, selectedLocation)
+              handleUserProfileSearch(
+                currUserName,
+                selectedHobby,
+                selectedLocation,
+              )
             } else if (filter === 'posts') {
               handlePostsSearch(currPostedBy, selectedHobby, selectedLocation)
             }

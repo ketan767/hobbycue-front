@@ -90,6 +90,7 @@ import { searchPosts } from '@/services/post.service'
 import { Inter } from 'next/font/google'
 import UserExplore from './explore/UserExplore'
 import PExplore from './explore/PExplore'
+import PostExplore from './explore/PostExplore'
 
 type Props = {
   data?: any
@@ -424,6 +425,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const [exploreHobbyHoved, setExploreHobbyHoved] = useState<boolean>(false)
   const [exploreBlogHoved, setExploreBlogHoved] = useState<boolean>(false)
   const [currUserName, setCurrUserName] = useState<string>('')
+  const [currPostedBy, setCurrPostedBy] = useState<string>('')
 
   const [defaultPeopleCategory, setDefaultPeopleCategory] =
     useState<string>('People')
@@ -1745,17 +1747,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
     fetchMoreProductPages,
   ])
 
-  useEffect(()=>{
-    setOpenExploreUser(false);
-    setOpenExplorePeople(false);
-    setOpenExplorePlace(false);
-    setOpenExploreProgram(false);
-    setOpenExploreProduct(false);
-    setOpenExploreClass(false);
-    setOpenExploreRental(false);
-    setOpenExplorePost(false);
+  useEffect(() => {
+    setOpenExploreUser(false)
+    setOpenExplorePeople(false)
+    setOpenExplorePlace(false)
+    setOpenExploreProgram(false)
+    setOpenExploreProduct(false)
+    setOpenExploreClass(false)
+    setOpenExploreRental(false)
+    setOpenExplorePost(false)
     setCurrUserName('')
-  },[q,filter])
+    setCurrPostedBy('')
+  }, [q, filter])
 
   return (
     <main className={styles.searchResults}>
@@ -2805,7 +2808,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       ) : (
                         ''
                       )) || ''}
-                      <div
+                  <div
                     className={`${styles.userExploreContainer} ${
                       openExploreClass ? styles.visible : styles.hidden
                     }`}
@@ -2911,19 +2914,63 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     ),
                   )}
-                  <div className={styles['view-more-btn-container']}>
-                    {showAllRentals
-                      ? undefined
-                      : (RentalResults.length > 3 ? (
+                  {showAllRentals
+                    ? undefined
+                    : (RentalResults.length > 3 ? (
+                        <div className={styles['view-more-btn-container']}>
                           <button
                             onClick={toggleShowAllrentals}
-                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                            className={`${styles['view-more-btn']}`}
                           >
                             View More
                           </button>
-                        ) : (
-                          ''
-                        )) || ''}
+                          <button
+                            onClick={() =>
+                              setOpenExploreRental(!openExploreRental)
+                            }
+                            onMouseEnter={() => setExploreRentalHoved(true)}
+                            onMouseLeave={() => setExploreRentalHoved(false)}
+                            className={`${styles['explore-btn']}`}
+                          >
+                            Explore{' '}
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreRental
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                            {!exploreRentalHoved && (
+                              <Image
+                                src={Dropdown}
+                                width={16}
+                                height={16}
+                                alt="Dropdown"
+                                className={`${styles.arrow} ${
+                                  openExploreRental
+                                    ? `${styles.arrowRotated}`
+                                    : ''
+                                }`}
+                              />
+                            )}
+                          </button>
+                        </div>
+                      ) : (
+                        ''
+                      )) || ''}
+                  <div
+                    className={`${styles.userExploreContainer} ${
+                      openExploreRental ? styles.visible : styles.hidden
+                    }`}
+                  >
+                    <PExplore
+                      categoryValue={defaultRentalCategory}
+                      setCategoryValue={setDefaultRentalCategory}
+                    />
                   </div>
                 </div>
               </section>
@@ -3036,19 +3083,58 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePostsPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllPosts
-                    ? undefined
-                    : (PostsResults.length > 3 ? (
+                {showAllPosts
+                  ? undefined
+                  : (PostsResults.length > 3 ? (
+                      // toggleShowAllposts
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllposts}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
+                        <button
+                          onClick={() => setOpenExplorePost(!openExplorePost)}
+                          onMouseEnter={() => setExplorePostHoved(true)}
+                          onMouseLeave={() => setExplorePostHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          Explore{' '}
+                          <Image
+                            src={DropdownWhite}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrow} ${
+                              openExplorePost ? `${styles.arrowRotated}` : ''
+                            }`}
+                          />
+                          {!explorePostHoved && (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePost ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExplorePost ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PostExplore
+                    currPostedBy={currPostedBy}
+                    setCurrPostedBy={setCurrPostedBy}
+                  />
                 </div>
               </div>
             </section>
