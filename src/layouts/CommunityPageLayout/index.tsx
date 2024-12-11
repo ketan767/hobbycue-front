@@ -15,6 +15,7 @@ import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import post, {
   appendPosts,
   setFilters,
+  setIsPinCode,
   updateCurrentPage,
   updateHasMore,
   updateLoading,
@@ -1174,6 +1175,7 @@ const CommunityLayout: React.FC<Props> = ({
                   className={` ${styles['location-dropdown']}`}
                 >
                   {visibilityData?.map((item: any, idx) => {
+                    console.log('asifs obj', item)
                     return (
                       <>
                         <DropdownOption
@@ -1316,7 +1318,9 @@ const CommunityLayout: React.FC<Props> = ({
                       ))}
                     </CommunityTopDropdown>
 
-                    <div className={styles.hobbyDropDownOption}>in</div>
+                    <div className={styles.hobbyDropDownOption}>
+                      {filters.isPinCode ? `at` : `in`}
+                    </div>
 
                     {visibilityData?.length > 0 && (
                       <CommunityTopDropdown
@@ -1340,11 +1344,15 @@ const CommunityLayout: React.FC<Props> = ({
                             {...item}
                             key={idx}
                             currentValue={selectedLocation}
-                            onChange={(val: any) =>
+                            onChange={(val: any) => {
+                              if (val?.display?.includes('PIN Code'))
+                                dispatch(setIsPinCode(true))
+                              else dispatch(setIsPinCode(false))
+
                               updateFilterLocation(
                                 val?.display?.split('-')[0]?.trim(),
                               )
-                            }
+                            }}
                           />
                         ))}
                       </CommunityTopDropdown>
@@ -1513,7 +1521,8 @@ const CommunityLayout: React.FC<Props> = ({
                         )?.genre?.display
                       } `}
                   </span>{' '}
-                  in <span>{selectedLocation}</span>
+                  {filters.isPinCode ? `at` : `in`}{' '}
+                  <span>{selectedLocation}</span>
                 </h3>
               </header>
               {/* <span className={styles['divider']}></span> */}
