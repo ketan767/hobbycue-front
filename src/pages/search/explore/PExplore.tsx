@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from '../styles.module.css'
 import HobbyField from '../FilterComponents/HobbyField'
 import LocationField from '../FilterComponents/LocationField'
-import { isMobile } from '@/utils'
 import useHandleSubmit from '../utils/HandleSubmit'
-import AccordionMenu2 from '@/pages/explore/nestedDropdown/AccordionMenu2'
 import AccordionMenu3 from '@/pages/explore/nestedDropdown/AccordianMenu3'
 import { useDispatch } from 'react-redux'
 import {
@@ -13,6 +11,7 @@ import {
   setLocation,
   setPageType,
 } from '@/redux/slices/explore'
+import SubmitButton from './buttons/explore/SubmitButton'
 
 type PExploreProps = {
   categoryValue: string
@@ -22,7 +21,6 @@ const PExplore: React.FC<PExploreProps> = ({
   categoryValue,
   setCategoryValue,
 }) => {
-  const isMob = isMobile()
   const handleSubmit = useHandleSubmit()
   const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedPageType, setSelectedPageType] = useState('')
@@ -37,57 +35,87 @@ const PExplore: React.FC<PExploreProps> = ({
     dispatch(setCategory(''))
   }, [])
   return (
-    <div className={styles.siteExploreParent}>
-      <div className={styles.inputExploreContainer}>
-        <HobbyField
-          selectedCategory={selectedCategory ? selectedCategory : categoryValue}
-          selectedPageType={selectedPageType}
-          selectedLocation={selectedLocation}
-          selectedHobby={selectedHobby}
-          setSelectedHobby={setSelectedHobby}
-        />
-        <div className={styles.accordianPosition}>
-          <AccordionMenu3
-            defaultCategory={categoryValue}
-            setDefaultCategory={setCategoryValue}
-            selectedCategory={selectedCategory}
+    <>
+      <div className={styles.siteExploreParent}>
+        <div className={styles.inputExploreContainer}>
+          <HobbyField
+            selectedCategory={
+              selectedCategory ? selectedCategory : categoryValue
+            }
             selectedPageType={selectedPageType}
-            setSelectedCategory={setSelectedCategory}
-            setSelectedPageType={setSelectedPageType}
+            selectedLocation={selectedLocation}
+            selectedHobby={selectedHobby}
+            setSelectedHobby={setSelectedHobby}
+          />
+          <div className={`${styles.accordianPosition} ${styles.mobileHidden}`}>
+            <AccordionMenu3
+              defaultCategory={categoryValue}
+              setDefaultCategory={setCategoryValue}
+              selectedCategory={selectedCategory}
+              selectedPageType={selectedPageType}
+              setSelectedCategory={setSelectedCategory}
+              setSelectedPageType={setSelectedPageType}
+              selectedHobby={selectedHobby}
+              selectedLocation={selectedLocation}
+              handleSubmit={handleSubmit}
+            />
+          </div>
+
+          <LocationField
+            selectedCategory={
+              selectedCategory ? selectedCategory : categoryValue
+            }
+            selectedPageType={selectedPageType}
             selectedHobby={selectedHobby}
             selectedLocation={selectedLocation}
-            handleSubmit={handleSubmit}
+            setSelectedLocation={setSelectedLocation}
           />
+
+          <div className={styles.mobileHidden}>
+            <SubmitButton
+              selectedCategory={
+                selectedCategory ? selectedCategory : categoryValue
+              }
+              selectedPageType={selectedPageType}
+              selectedHobby={selectedHobby}
+              selectedLocation={selectedLocation}
+            />
+          </div>
         </div>
-
-        <LocationField
-          selectedCategory={selectedCategory ? selectedCategory : categoryValue}
-          selectedPageType={selectedPageType}
-          selectedHobby={selectedHobby}
-          selectedLocation={selectedLocation}
-          setSelectedLocation={setSelectedLocation}
-        />
-
-        <button
-          className="modal-footer-btn"
-          style={{
-            width: isMob ? '100%' : 71,
-            height: 32,
-            marginLeft: 'auto',
-          }}
-          onClick={() =>
-            handleSubmit(
-              selectedCategory ? selectedCategory : categoryValue,
-              selectedPageType,
-              selectedHobby,
-              selectedLocation,
-            )
-          }
-        >
-          Explore
-        </button>
       </div>
-    </div>
+      <div className={`${styles.siteExploreParent} ${styles.laptopHidden}`}>
+        <div
+          className={`${styles.inputExploreContainer} ${styles.inputExploreContainerWithBtn}`}
+        >
+          <div
+            className={`${styles.accordianPosition} ${styles.accordianPositionMobile}`}
+          >
+            <AccordionMenu3
+              defaultCategory={categoryValue}
+              setDefaultCategory={setCategoryValue}
+              selectedCategory={selectedCategory}
+              selectedPageType={selectedPageType}
+              setSelectedCategory={setSelectedCategory}
+              setSelectedPageType={setSelectedPageType}
+              selectedHobby={selectedHobby}
+              selectedLocation={selectedLocation}
+              handleSubmit={handleSubmit}
+            />
+          </div>
+
+          <div className={`${styles.submitMobile}`}>
+            <SubmitButton
+              selectedCategory={
+                selectedCategory ? selectedCategory : categoryValue
+              }
+              selectedPageType={selectedPageType}
+              selectedHobby={selectedHobby}
+              selectedLocation={selectedLocation}
+            />
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
 
