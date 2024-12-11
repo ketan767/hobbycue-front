@@ -150,9 +150,10 @@ const RelatedListingEditModal: React.FC<Props> = ({
     setShowDropdown(true)
     setDropdownLoading(true)
     const { res, err } = await searchPages({
-      title: pageInputValue,
+      searchValue: pageInputValue.toString(),
+      page: 1,
+      limit: 50,
     })
-    console.log(res)
 
     setAllDropdownValues(res?.data)
     setAllListingPages(res?.data)
@@ -371,7 +372,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
                 {dropdownLoading ? (
                   <div className={styles.dropdownItem}>Loading...</div>
                 ) : allDropdownValues?.length !== 0 ? (
-                  allDropdownValues.map((item: any) => {
+                  allDropdownValues?.map((item: any) => {
                     return (
                       <div
                         key={item?._id}

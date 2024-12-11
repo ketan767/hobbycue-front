@@ -172,7 +172,9 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
     setShowDropdown(true)
     setDropdownLoading(true)
     const { res, err } = await searchPages({
-      title: pageInputValue,
+      searchValue: pageInputValue.toString(),
+      page: 1,
+      limit: 50,
     })
     console.log(res)
 
@@ -256,7 +258,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
       relatedListingsRight.includes(item._id),
     )
 
-    const matchedTitles = matchedListings.map((listing: any) => ({
+    const matchedTitles = matchedListings?.map((listing: any) => ({
       id: listing._id,
       title: listing.title,
     }))
