@@ -44,6 +44,38 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
     }))
   }
 
+  const handleChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target
+
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      keywords: value,
+    }))
+
+    if (!value.trim()) {
+      return
+    }
+
+    const searchQuery = value.toLowerCase()
+
+    const combinedData = [...allHobbiesList, ...allGenreList]
+
+    const filteredResults = combinedData.filter((item) =>
+      ['display', 'author', 'title', 'tagline', 'hobby'].some((field) =>
+        item[field]?.toLowerCase().includes(searchQuery),
+      ),
+    )
+
+    const uniqueResults = Array.from(
+      new Map(filteredResults.map((item) => [item.id, item])).values(),
+    )
+
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      searchResults: uniqueResults,
+    }))
+  }
+
   const handleHobbyInputChange = async (e: any) => {
     const { name, value, type, checked } = e.target
     setFormValues((prevValues) => ({
@@ -283,7 +315,7 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
             placeholder="Title,Tagline,Keyword"
             className={styles.formInput}
             value={formValues.keywords}
-            onChange={handleChange}
+            onChange={handleChangeKeyword}
           />
         </div>
         <div className={styles.formGroup}>

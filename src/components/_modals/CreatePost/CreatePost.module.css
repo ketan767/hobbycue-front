@@ -265,9 +265,6 @@
   overflow: auto;
 }
 
-.editor-container::-webkit-scrollbar {
-  width: 0px;
-}
 
 .editor-container::-webkit-scrollbar-track {
   background: transparent;

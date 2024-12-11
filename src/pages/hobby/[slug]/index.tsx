@@ -246,7 +246,6 @@ const HobbyDetail: React.FC<Props> = (props) => {
         onclickEdit={() => {
           setShowAdminActionModal(true)
         }}
-
         onclickmemberEdit={() => {
           setModalTitle('Admin')
           console.log(modalTitle)
@@ -262,7 +261,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
                 {'About'}{' '}
                 {user?.is_admin && (
                   <Image
-                    className={styles['pencil-edit']}
+                    className={styles['pencil-edit-about']}
                     src={EditIcon}
                     alt="edit"
                     onClick={() =>
@@ -287,12 +286,25 @@ const HobbyDetail: React.FC<Props> = (props) => {
             // showEditButton={false}
             // setDisplayData={setShowKeywords}
             >
-              <div className={styles['keyword-container']} style={{
-                justifyContent:'space-between'
-              }}>
-                <div style={{display:"flex", gap:"16px", justifyItems:"center",alignItems:"center"}}>
+              <div
+                className={styles['keyword-container']}
+                style={{
+                  justifyContent: 'space-between',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '16px',
+                    justifyItems: 'center',
+                    alignItems: 'center',
+                  }}
+                >
                   <h4 className={styles['keyword-text']}>Keywords :</h4>
-                  <ul style={{transform:"translateY(0.25px)"}} className={`${styles['keyword-list']}`}>
+                  <ul
+                    style={{ transform: 'translateY(0.25px)' }}
+                    className={`${styles['keyword-list']}`}
+                  >
                     <li>{data?.keywords.join(', ')}</li>
                   </ul>
                 </div>
@@ -304,7 +316,10 @@ const HobbyDetail: React.FC<Props> = (props) => {
                       alt="edit"
                       onClick={() =>
                         dispatch(
-                          openModal({ type: 'Hobby-about-edit', closable: true }),
+                          openModal({
+                            type: 'Hobby-about-edit',
+                            closable: true,
+                          }),
                         )
                       }
                     />
@@ -323,34 +338,36 @@ const HobbyDetail: React.FC<Props> = (props) => {
                 // showEditButton={false}
                 // setDisplayData={setShowNextLevels}
                 >
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: 10
-                  }}>
-                    <h4 style={{
-                      fontWeight: '600',
-                    }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      marginBottom: 10,
+                    }}
+                  >
+                    <h4
+                      style={{
+                        fontWeight: '600',
+                      }}
+                    >
                       {data?.level === 0
                         ? 'Sub-Categories and Tags'
                         : data?.level === 1
-                          ? 'Tags and Hobbies'
-                          : data?.level === 2
-                            ? 'Hobbies'
-                            : data?.level === 3
-                              ? 'Genre/Styles'
-                              : data?.level === 5
-                                ? 'Next Level'
-                                : 'Next Level'}
+                        ? 'Tags and Hobbies'
+                        : data?.level === 2
+                        ? 'Hobbies'
+                        : data?.level === 3
+                        ? 'Genre/Styles'
+                        : data?.level === 5
+                        ? 'Next Level'
+                        : 'Next Level'}
                     </h4>
                     {user?.is_admin && (
                       <Image
                         className={styles['pencil-edit']}
                         src={EditIcon}
                         alt="edit"
-                        onClick={() =>
-                          setShowAdminActionModal(true)
-                        }
+                        onClick={() => setShowAdminActionModal(true)}
                       />
                     )}
                   </div>
@@ -373,7 +390,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
                         </ul>
                       </>
                     ) : (
-                      <span style={isMobile ? {marginTop:"16px"} : {}} >No further sub-classification.</span>
+                      <span style={isMobile ? { marginTop: '16px' } : {}}>
+                        No further sub-classification.
+                      </span>
                     )}
                   </div>
                 </PageContentBox>
@@ -383,14 +402,18 @@ const HobbyDetail: React.FC<Props> = (props) => {
                 // showEditButton={false}
                 // setDisplayData={setShowRelatedHobbies}
                 >
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: 10
-                  }}>
-                    <h4 style={{
-                      fontWeight: '600',
-                    }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      marginBottom: 10,
+                    }}
+                  >
+                    <h4
+                      style={{
+                        fontWeight: '600',
+                      }}
+                    >
                       Related
                     </h4>
                     {user?.is_admin && (
@@ -398,9 +421,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
                         className={styles['pencil-edit']}
                         src={EditIcon}
                         alt="edit"
-                        onClick={() =>
-                          setShowRelatedHobbies(true)
-                        }
+                        onClick={() => setShowRelatedHobbies(true)}
                       />
                     )}
                   </div>
@@ -450,15 +471,14 @@ const HobbyDetail: React.FC<Props> = (props) => {
                         className={styles['pencil-edit']}
                         src={EditIcon}
                         alt="edit"
-                        onClick={() =>
-                          setShowAdminActionModal(true)
-                        }
+                        onClick={() => setShowAdminActionModal(true)}
                       />
                     )}
                   </h4>
                   <div
-                    className={`${styles['display-desktop']}${showHobby ? ' ' + styles['display-mobile'] : ''
-                      }`}
+                    className={`${styles['display-desktop']}${
+                      showHobby ? ' ' + styles['display-mobile'] : ''
+                    }`}
                   >
                     <ul className={styles['classification-items']}>
                       {data.level !== 5 && nextLevels?.length > 0 ? (
@@ -474,7 +494,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
                           </ul>
                         </>
                       ) : (
-                        <span style={isMobile ? {marginTop:"16px"} : {}}>No further sub-classification.</span>
+                        <span style={isMobile ? { marginTop: '16px' } : {}}>
+                          No further sub-classification.
+                        </span>
                       )}
                       <li className={styles['active']}></li>
                     </ul>
@@ -485,7 +507,6 @@ const HobbyDetail: React.FC<Props> = (props) => {
           </section>
         </main>
       </HobbyPageLayout>
-
     </>
   )
 }

@@ -52,6 +52,8 @@ import styles from './styles.module.css'
 import { SetLinkviaAuth } from '@/redux/slices/user'
 import Link from 'next/link'
 import SearchLoader from '@/components/SearchLoader'
+import Dropdown from '@/assets/svg/exploreSearch/Down.svg'
+import DropdownWhite from '@/assets/svg/exploreSearch/DownWhite.svg'
 
 import { addSearchHistory, searchUsers } from '@/services/user.service'
 import {
@@ -86,6 +88,8 @@ import Product from '../../assets/svg/Search/Product.svg'
 import Blogs from '../../assets/svg/Search/blogs.svg'
 import { searchPosts } from '@/services/post.service'
 import { Inter } from 'next/font/google'
+import UserExplore from './explore/UserExplore'
+import PExplore from './explore/PExplore'
 
 type Props = {
   data?: any
@@ -401,7 +405,38 @@ const MainContent: React.FC<SearchResultsProps> = ({
     useState<boolean>(false)
   const [hasNoMoreBlogsPages, setHasNoMoreBlogsPages] = useState<boolean>(false)
   const [hasNoMorePostsPages, setHasNoMorePostsPages] = useState<boolean>(false)
+  const [openExploreClass, setOpenExploreClass] = useState<boolean>(false)
+  const [exploreClassHoved, setExploreClassHoved] = useState<boolean>(false)
+  const [openExploreUser, setOpenExploreUser] = useState<boolean>(false)
+  const [exploreUserHoved, setExploreUserHoved] = useState<boolean>(false)
+  const [openExplorePeople, setOpenExplorePeople] = useState<boolean>(false)
+  const [explorePeopleHoved, setExplorePeopleHoved] = useState<boolean>(false)
+  const [openExplorePlace, setOpenExplorePlace] = useState<boolean>(false)
+  const [explorePlaceHoved, setExplorePlaceHoved] = useState<boolean>(false)
+  const [openExploreProgram, setOpenExploreProgram] = useState<boolean>(false)
+  const [exploreProgramHoved, setExploreProgramHoved] = useState<boolean>(false)
+  const [openExploreProduct, setOpenExploreProduct] = useState<boolean>(false)
+  const [exploreProductHoved, setExploreProductHoved] = useState<boolean>(false)
+  const [openExploreRental, setOpenExploreRental] = useState<boolean>(false)
+  const [exploreRentalHoved, setExploreRentalHoved] = useState<boolean>(false)
+  const [openExplorePost, setOpenExplorePost] = useState<boolean>(false)
+  const [explorePostHoved, setExplorePostHoved] = useState<boolean>(false)
+  const [exploreHobbyHoved, setExploreHobbyHoved] = useState<boolean>(false)
+  const [exploreBlogHoved, setExploreBlogHoved] = useState<boolean>(false)
+  const [currUserName, setCurrUserName] = useState<string>('')
 
+  const [defaultPeopleCategory, setDefaultPeopleCategory] =
+    useState<string>('People')
+  const [defaultPlaceCategory, setDefaultPlaceCategory] =
+    useState<string>('Place')
+  const [defaultProgramCategory, setDefaultProgramCategory] =
+    useState<string>('Program')
+  const [defaultProductCategory, setDefaultProductCategory] =
+    useState<string>('Product')
+  const [defaultProductClass, setDefaultClassCategory] =
+    useState<string>('Classes')
+  const [defaultRentalCategory, setDefaultRentalCategory] =
+    useState<string>('Item Rental')
   // const callForData = async (page: number) => {
   //   if (page === 1) return
   //   setMoreLoading(true)
@@ -1710,6 +1745,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
     fetchMoreProductPages,
   ])
 
+  useEffect(()=>{
+    setOpenExploreUser(false);
+    setOpenExplorePeople(false);
+    setOpenExplorePlace(false);
+    setOpenExploreProgram(false);
+    setOpenExploreProduct(false);
+    setOpenExploreClass(false);
+    setOpenExploreRental(false);
+    setOpenExplorePost(false);
+    setCurrUserName('')
+  },[q,filter])
+
   return (
     <main className={styles.searchResults}>
       {noResultsFound && searchLoading === false ? (
@@ -1820,20 +1867,44 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreHobbies ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllhobbies
-                    ? undefined
-                    : (hobbyResults.length > 3 ? (
+                {showAllhobbies
+                  ? undefined
+                  : (hobbyResults.length > 3 ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllhobbies}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
-                </div>
+                        <button
+                          onClick={() => router.push('/hobby')}
+                          onMouseEnter={() => setExploreHobbyHoved(true)}
+                          onMouseLeave={() => setExploreHobbyHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          Explore{' '}
+                          <Image
+                            src={DropdownWhite}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrowRight}`}
+                          />
+                          {!exploreHobbyHoved && (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrowRight}`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
               </div>
             </section>
           )}
@@ -1918,19 +1989,57 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreUsers ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllUsers
-                    ? undefined
-                    : (userPages.length > 3 ? (
+                {showAllUsers
+                  ? undefined
+                  : (userPages.length > 3 ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllusers}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
+                        <button
+                          onClick={() => setOpenExploreUser(!openExploreUser)}
+                          onMouseEnter={() => setExploreUserHoved(true)}
+                          onMouseLeave={() => setExploreUserHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          Explore{' '}
+                          <Image
+                            src={DropdownWhite}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrow} ${
+                              openExploreUser ? `${styles.arrowRotated}` : ''
+                            }`}
+                          />
+                          {!exploreUserHoved && (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreUser ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExploreUser ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <UserExplore
+                    currUserName={currUserName}
+                    setCurrUserName={setCurrUserName}
+                  />
                 </div>
               </div>
             </section>
@@ -2026,19 +2135,61 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePersonPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllPeople
-                    ? undefined
-                    : (peopleResults.length > 3 ? (
+                {showAllPeople
+                  ? undefined
+                  : (peopleResults.length > 3 ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllpeople}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
+                        <button
+                          onClick={() =>
+                            setOpenExplorePeople(!openExplorePeople)
+                          }
+                          onMouseEnter={() => setExplorePeopleHoved(true)}
+                          onMouseLeave={() => setExplorePeopleHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          Explore{' '}
+                          <Image
+                            src={DropdownWhite}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrow} ${
+                              openExplorePeople ? `${styles.arrowRotated}` : ''
+                            }`}
+                          />
+                          {!explorePeopleHoved && (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePeople
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExplorePeople ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PExplore
+                    categoryValue={defaultPeopleCategory}
+                    setCategoryValue={setDefaultPeopleCategory}
+                  />
                 </div>
               </div>
             </section>
@@ -2118,19 +2269,57 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePlacePages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllPlace
-                    ? undefined
-                    : (placeResults.length > 3 ? (
+                {showAllPlace
+                  ? undefined
+                  : (placeResults.length > 3 ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllplace}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
+                        <button
+                          onClick={() => setOpenExplorePlace(!openExplorePlace)}
+                          onMouseEnter={() => setExplorePlaceHoved(true)}
+                          onMouseLeave={() => setExplorePlaceHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          Explore{' '}
+                          <Image
+                            src={DropdownWhite}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrow} ${
+                              openExplorePlace ? `${styles.arrowRotated}` : ''
+                            }`}
+                          />
+                          {!explorePlaceHoved && (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePlace ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExplorePlace ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PExplore
+                    categoryValue={defaultPlaceCategory}
+                    setCategoryValue={setDefaultPlaceCategory}
+                  />
                 </div>
               </div>
             </section>
@@ -2194,43 +2383,46 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             </>
                           )}
                         </div>
-                         <div className={styles.blogAuthor}>
+                        <div className={styles.blogAuthor}>
                           <div className={styles.address}>
-                          {page?.page_type?.map((pt: string, index: number) => {
-                            return `${index > 0 ? ' ' : ''}${pt}`
-                          }) +
-                            (page._address?.city
-                              ? ` | ${page._address?.city}`
-                              : '') || '\u00a0'}
+                            {page?.page_type?.map(
+                              (pt: string, index: number) => {
+                                return `${index > 0 ? ' ' : ''}${pt}`
+                              },
+                            ) +
+                              (page._address?.city
+                                ? ` | ${page._address?.city}`
+                                : '') || '\u00a0'}
+                          </div>
 
-                                         </div>
-
-                              <div>
-                          {page?.event_date_time &&
-                            page?.event_date_time.length !== 0 && (
-                              <>
-                                {' | '}
-                                {formatDateRange(page?.event_date_time[0])}
-                                {!isMobile && (
-                                  <>
-                                    {', '}
-                                    {page?.event_date_time[0]?.from_time +
-                                      ' - '}
-                                    {page?.event_weekdays?.length > 0 ? (
-                                      <>
-                                        ...
-                                        <span className={styles['purpleText']}>
-                                          more
-                                        </span>
-                                      </>
-                                    ) : (
-                                      page?.event_date_time[0]?.to_time
-                                    )}
-                                  </>
-                                )}
-                              </>
-                            )}
-                        </div>
+                          <div>
+                            {page?.event_date_time &&
+                              page?.event_date_time.length !== 0 && (
+                                <>
+                                  {' | '}
+                                  {formatDateRange(page?.event_date_time[0])}
+                                  {!isMobile && (
+                                    <>
+                                      {', '}
+                                      {page?.event_date_time[0]?.from_time +
+                                        ' - '}
+                                      {page?.event_weekdays?.length > 0 ? (
+                                        <>
+                                          ...
+                                          <span
+                                            className={styles['purpleText']}
+                                          >
+                                            more
+                                          </span>
+                                        </>
+                                      ) : (
+                                        page?.event_date_time[0]?.to_time
+                                      )}
+                                    </>
+                                  )}
+                                </>
+                              )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2241,19 +2433,61 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreProgramPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllEvent
-                    ? undefined
-                    : (EventResults.length > 3 ? (
+                {showAllEvent
+                  ? undefined
+                  : (EventResults.length > 3 ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllevent}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
+                        <button
+                          onClick={() =>
+                            setOpenExploreProgram(!openExploreProgram)
+                          }
+                          onMouseEnter={() => setExploreProgramHoved(true)}
+                          onMouseLeave={() => setExploreProgramHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          Explore{' '}
+                          <Image
+                            src={DropdownWhite}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrow} ${
+                              openExploreProgram ? `${styles.arrowRotated}` : ''
+                            }`}
+                          />
+                          {!exploreProgramHoved && (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreProgram
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExploreProgram ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PExplore
+                    categoryValue={defaultProgramCategory}
+                    setCategoryValue={setDefaultProgramCategory}
+                  />
                 </div>
               </div>
             </section>
@@ -2359,19 +2593,69 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       {!hasNoMoreProductPages ? <SearchLoader /> : ''}
                     </div>
                   )}
-                  <div className={styles['view-more-btn-container']}>
-                    {showAllProducts
-                      ? undefined
-                      : (ProductResults.length > 3 ? (
+                  {showAllProducts
+                    ? undefined
+                    : (ProductResults.length > 3 ? (
+                        // <button
+                        //   onClick={toggleShowAllproducts}
+                        //   className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                        // >
+                        //   View More
+                        // </button>
+                        <div className={styles['view-more-btn-container']}>
                           <button
                             onClick={toggleShowAllproducts}
-                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                            className={`${styles['view-more-btn']}`}
                           >
                             View More
                           </button>
-                        ) : (
-                          ''
-                        )) || ''}
+                          <button
+                            onClick={() =>
+                              setOpenExploreProduct(!openExploreProduct)
+                            }
+                            onMouseEnter={() => setExploreProductHoved(true)}
+                            onMouseLeave={() => setExploreProductHoved(false)}
+                            className={`${styles['explore-btn']}`}
+                          >
+                            Explore{' '}
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreProduct
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                            {!exploreProductHoved && (
+                              <Image
+                                src={Dropdown}
+                                width={16}
+                                height={16}
+                                alt="Dropdown"
+                                className={`${styles.arrow} ${
+                                  openExploreProduct
+                                    ? `${styles.arrowRotated}`
+                                    : ''
+                                }`}
+                              />
+                            )}
+                          </button>
+                        </div>
+                      ) : (
+                        ''
+                      )) || ''}
+                  <div
+                    className={`${styles.userExploreContainer} ${
+                      openExploreProduct ? styles.visible : styles.hidden
+                    }`}
+                  >
+                    <PExplore
+                      categoryValue={defaultProductCategory}
+                      setCategoryValue={setDefaultProductCategory}
+                    />
                   </div>
                 </div>
               </section>
@@ -2411,89 +2695,122 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           <div className={styles.userName}>{page?.title}</div>
                           <div className={styles.userTagline}>
                             {page?.tagline ? (
-                            page?.tagline
-                          ) : (
-                            <>
-                              <span>
-                                {`${
-                                  page?._address?.society
-                                    ? page?._address?.society
-                                    : ''
-                                }`}
-                                {page?._address?.locality ? ', ' : ''}
-                                {`${
-                                  page?._address?.locality
-                                    ? page?._address?.locality
-                                    : ''
-                                }`}
-                                {page?._address?.city ? ', ' : ''}
-                                {`${
-                                  page?._address?.city
-                                    ? page?._address?.city
-                                    : ''
-                                }`}
-                              </span>
-                            </>
-                          )}
+                              page?.tagline
+                            ) : (
+                              <>
+                                <span>
+                                  {`${
+                                    page?._address?.society
+                                      ? page?._address?.society
+                                      : ''
+                                  }`}
+                                  {page?._address?.locality ? ', ' : ''}
+                                  {`${
+                                    page?._address?.locality
+                                      ? page?._address?.locality
+                                      : ''
+                                  }`}
+                                  {page?._address?.city ? ', ' : ''}
+                                  {`${
+                                    page?._address?.city
+                                      ? page?._address?.city
+                                      : ''
+                                  }`}
+                                </span>
+                              </>
+                            )}
                           </div>
-                        <div className={styles.blogAuthor}>
-                          <div className={styles.address}>
-
-                            {page?.page_type?.map((pt: string, index: number) => {
-                            return `${index > 0 ? ' ' : ''}${pt}`
-                          }) +
-                              (page._address?.city
-                                ? ` | ${page._address?.city}`
-                                : '') || '\u00a0'}
+                          <div className={styles.blogAuthor}>
+                            <div className={styles.address}>
+                              {page?.page_type?.map(
+                                (pt: string, index: number) => {
+                                  return `${index > 0 ? ' ' : ''}${pt}`
+                                },
+                              ) +
+                                (page._address?.city
+                                  ? ` | ${page._address?.city}`
+                                  : '') || '\u00a0'}
                             </div>
 
-                              <div>
-                            {page?.event_date_time &&
-                              page?.event_date_time.length !== 0 && (
-                                <>
-                                  {' | '}
-                                  {formatDateRange(page?.event_date_time[0])}
-                                  {!isMobile && (
-                                    <>
-                                      {', '}
-                                      {page?.event_date_time[0]?.from_time +
-                                        ' - '}
-                                      {page?.event_weekdays?.length > 0 ? (
-                                        <>
-                                          ...
-                                          <span
-                                            className={styles['purpleText']}
-                                          >
-                                            more
-                                          </span>
-                                        </>
-                                      ) : (
-                                        page?.event_date_time[0]?.to_time
-                                      )}
-                                    </>
-                                  )}
-                                </>
-                              )}
-                          </div>
+                            <div>
+                              {page?.event_date_time &&
+                                page?.event_date_time.length !== 0 && (
+                                  <>
+                                    {' | '}
+                                    {formatDateRange(page?.event_date_time[0])}
+                                    {!isMobile && (
+                                      <>
+                                        {', '}
+                                        {page?.event_date_time[0]?.from_time +
+                                          ' - '}
+                                        {page?.event_weekdays?.length > 0 ? (
+                                          <>
+                                            ...
+                                            <span
+                                              className={styles['purpleText']}
+                                            >
+                                              more
+                                            </span>
+                                          </>
+                                        ) : (
+                                          page?.event_date_time[0]?.to_time
+                                        )}
+                                      </>
+                                    )}
+                                  </>
+                                )}
+                            </div>
                           </div>
                         </div>
                       </div>
                     ),
                   )}
-                  <div className={styles['view-more-btn-container']}>
-                    {showAllClasses
-                      ? undefined
-                      : (ClassesResults.length > 3 ? (
+                  {showAllClasses
+                    ? undefined
+                    : (ClassesResults.length > 3 ? (
+                        <div className={styles['view-more-btn-container']}>
                           <button
                             onClick={toggleShowAllclasses}
-                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                            className={`${styles['view-more-btn']}`}
                           >
                             View More
                           </button>
-                        ) : (
-                          ''
-                        )) || ''}
-                  </div>
+                          <button
+                            onClick={() =>
+                              setOpenExploreClass(!openExploreClass)
+                            }
+                            onMouseEnter={() => setExploreClassHoved(true)}
+                            onMouseLeave={() => setExploreClassHoved(false)}
+                            className={`${styles['explore-btn']}`}
+                          >
+                            Explore{' '}
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreClass ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                            {!exploreClassHoved && (
+                              <Image
+                                src={Dropdown}
+                                width={16}
+                                height={16}
+                                alt="Dropdown"
+                                className={`${styles.arrow} ${
+                                  openExploreClass
+                                    ? `${styles.arrowRotated}`
+                                    : ''
+                                }`}
+                              />
+                            )}
+                          </button>
+                        </div>
+                      ) : (
+                        ''
+                      )) || ''}
                 </div>
               </section>
             )}
@@ -2785,20 +3102,44 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreBlogsPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllBlogs
-                    ? undefined
-                    : (BlogsResults.length > 3 ? (
+                {showAllBlogs
+                  ? undefined
+                  : (BlogsResults.length > 3 ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllblogs}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
-                </div>
+                        <button
+                          onClick={() => router.push('/blog')}
+                          onMouseEnter={() => setExploreBlogHoved(true)}
+                          onMouseLeave={() => setExploreBlogHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          Explore{' '}
+                          <Image
+                            src={DropdownWhite}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrowRight}`}
+                          />
+                          {!exploreBlogHoved && (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrowRight}`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
               </div>
             </section>
           )}
@@ -2829,7 +3170,7 @@ const FilterDropdown: React.FC<Props> = () => {
   // const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
   // const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
   // const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
-  // const showAllProducts = useSelector(
+  // const showAllProducts = useSelector(!
   //   (state: any) => state.search.showAllProducts,
   // )
   // const showAllPosts = useSelector((state: any) => state.search.showAllPosts)
