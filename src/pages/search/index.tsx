@@ -433,7 +433,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
     useState<string>('Program')
   const [defaultProductCategory, setDefaultProductCategory] =
     useState<string>('Product')
-  const [defaultProductClass, setDefaultClassCategory] =
+  const [defaultClassCategory, setDefaultClassCategory] =
     useState<string>('Classes')
   const [defaultRentalCategory, setDefaultRentalCategory] =
     useState<string>('Item Rental')
@@ -2596,12 +2596,6 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   {showAllProducts
                     ? undefined
                     : (ProductResults.length > 3 ? (
-                        // <button
-                        //   onClick={toggleShowAllproducts}
-                        //   className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
-                        // >
-                        //   View More
-                        // </button>
                         <div className={styles['view-more-btn-container']}>
                           <button
                             onClick={toggleShowAllproducts}
@@ -2811,6 +2805,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       ) : (
                         ''
                       )) || ''}
+                      <div
+                    className={`${styles.userExploreContainer} ${
+                      openExploreClass ? styles.visible : styles.hidden
+                    }`}
+                  >
+                    <PExplore
+                      categoryValue={defaultClassCategory}
+                      setCategoryValue={setDefaultClassCategory}
+                    />
+                  </div>
                 </div>
               </section>
             )}
