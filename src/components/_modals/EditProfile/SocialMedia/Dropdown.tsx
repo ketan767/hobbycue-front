@@ -184,15 +184,18 @@ interface Props {
 const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onChange }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [showOptions, setShowOptions] = useState(false);
-  const [selectQuery, setSelectQuery] = useState(value);
+  const [selectQuery, setSelectQuery] = useState("");
   const [filteredOptions, setFilteredOptions] = useState(options);
   const [highlightIndex, setHighlightIndex] = useState(-1); 
 
   useEffect(() => {
-    setSelectQuery(value);
-  }, [value]);
+    setSelectQuery("");
+  }, []);
 
-  const handleFocus = () => { setShowOptions(true)};
+  const handleFocus = () => {
+    setSelectQuery(""); 
+    setShowOptions(true)
+  };
   const handleBlur = () => {
     setTimeout(() => setShowOptions(false), 100);
   };

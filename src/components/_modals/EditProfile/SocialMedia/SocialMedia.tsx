@@ -632,16 +632,6 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
 
   const isMobile = useMediaQuery('(max-width:1100px)')
 
-  if (confirmationModal) {
-    return (
-      <SaveModal
-        handleClose={handleClose}
-        handleSubmit={handleSubmit}
-        setConfirmationModal={setConfirmationModal}
-      />
-    )
-  }
-
   const handleFullKeyDown = (e: React.KeyboardEvent) => {
     // if enter is pressed then it should submit the form
     console.log(e.key)
@@ -676,6 +666,17 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
       window.removeEventListener('resize', updateOptionsHeights)
     }
   }, [mediaData])
+
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
+  }
+
   return (
     <div className={styles['modal-wrapper']}>
       {/* Modal Header */}
