@@ -52,6 +52,8 @@ import styles from './styles.module.css'
 import { SetLinkviaAuth } from '@/redux/slices/user'
 import Link from 'next/link'
 import SearchLoader from '@/components/SearchLoader'
+import Dropdown from '@/assets/svg/exploreSearch/Down.svg'
+import DropdownWhite from '@/assets/svg/exploreSearch/DownWhite.svg'
 
 import { addSearchHistory, searchUsers } from '@/services/user.service'
 import {
@@ -85,6 +87,9 @@ import Program from '../../assets/svg/Search/Program.svg'
 import Product from '../../assets/svg/Search/Product.svg'
 import Blogs from '../../assets/svg/Search/blogs.svg'
 import { searchPosts } from '@/services/post.service'
+import { Inter } from 'next/font/google'
+import UserExplore from './explore/UserExplore'
+import PExplore from './explore/PExplore'
 
 type Props = {
   data?: any
@@ -97,8 +102,10 @@ type User = {
   tagline: string
   primary_address: { city: string }
   profile_url: string
+  _hobbies: any[]
 }
 type PeopleData = {
+  _hobbies: any
   profile_image: string
   title: string
   tagline: string
@@ -110,7 +117,11 @@ type PlaceData = {
   profile_image: string
   title: string
   tagline: string
-  _address: { city: string }
+  _address: {
+    society: string
+    city: string
+    locality: string
+  }
   page_url: string
   page_type: []
 }
@@ -118,13 +129,15 @@ type EventData = {
   profile_image: string
   title: string
   tagline: string
-  _address: { city: string }
+  _address: { society: string; city: string; locality: string }
   page_url: string
   page_type: []
   event_date_time: any
   event_weekdays: any
 }
 type ProductData = {
+  _hobbies: any
+  product_variant: any
   profile_image: string
   title: string
   tagline: string
@@ -187,6 +200,11 @@ type PropsExploreMoreBtn = {
   text: string
   icon?: React.ReactNode
 }
+
+const inter = Inter({
+  subsets: ['latin'], // Choose subsets like 'latin' or others as per your needs
+  weight: ['400', '500', '600', '700'], // Select the weights you want to use (optional)
+})
 
 const ExploreSidebarBtn: React.FC<PropsExploreSidebarBtn> = ({
   href,
@@ -387,7 +405,38 @@ const MainContent: React.FC<SearchResultsProps> = ({
     useState<boolean>(false)
   const [hasNoMoreBlogsPages, setHasNoMoreBlogsPages] = useState<boolean>(false)
   const [hasNoMorePostsPages, setHasNoMorePostsPages] = useState<boolean>(false)
+  const [openExploreClass, setOpenExploreClass] = useState<boolean>(false)
+  const [exploreClassHoved, setExploreClassHoved] = useState<boolean>(false)
+  const [openExploreUser, setOpenExploreUser] = useState<boolean>(false)
+  const [exploreUserHoved, setExploreUserHoved] = useState<boolean>(false)
+  const [openExplorePeople, setOpenExplorePeople] = useState<boolean>(false)
+  const [explorePeopleHoved, setExplorePeopleHoved] = useState<boolean>(false)
+  const [openExplorePlace, setOpenExplorePlace] = useState<boolean>(false)
+  const [explorePlaceHoved, setExplorePlaceHoved] = useState<boolean>(false)
+  const [openExploreProgram, setOpenExploreProgram] = useState<boolean>(false)
+  const [exploreProgramHoved, setExploreProgramHoved] = useState<boolean>(false)
+  const [openExploreProduct, setOpenExploreProduct] = useState<boolean>(false)
+  const [exploreProductHoved, setExploreProductHoved] = useState<boolean>(false)
+  const [openExploreRental, setOpenExploreRental] = useState<boolean>(false)
+  const [exploreRentalHoved, setExploreRentalHoved] = useState<boolean>(false)
+  const [openExplorePost, setOpenExplorePost] = useState<boolean>(false)
+  const [explorePostHoved, setExplorePostHoved] = useState<boolean>(false)
+  const [exploreHobbyHoved, setExploreHobbyHoved] = useState<boolean>(false)
+  const [exploreBlogHoved, setExploreBlogHoved] = useState<boolean>(false)
+  const [currUserName, setCurrUserName] = useState<string>('')
 
+  const [defaultPeopleCategory, setDefaultPeopleCategory] =
+    useState<string>('People')
+  const [defaultPlaceCategory, setDefaultPlaceCategory] =
+    useState<string>('Place')
+  const [defaultProgramCategory, setDefaultProgramCategory] =
+    useState<string>('Program')
+  const [defaultProductCategory, setDefaultProductCategory] =
+    useState<string>('Product')
+  const [defaultProductClass, setDefaultClassCategory] =
+    useState<string>('Classes')
+  const [defaultRentalCategory, setDefaultRentalCategory] =
+    useState<string>('Item Rental')
   // const callForData = async (page: number) => {
   //   if (page === 1) return
   //   setMoreLoading(true)
@@ -463,8 +512,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHideProduct(false)
       setHideBlogs(false)
       setHidePosts(false)
-      setHideClasses(true)
-      setHideRentals(true)
+      setHideClasses(false)
+      setHideRentals(false)
     } else if (showAllUsers === true) {
       setHideHobbies(true)
       setHidePeople(true)
@@ -1253,6 +1302,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       ProductResults.length === 0 &&
       PostsResults.length === 0 &&
       BlogsResults.length === 0 &&
+      ClassesResults.length === 0 &&
+      RentalResults.length === 0 &&
       showAll) ||
     (searchResults.length === 0 && showAllUsers) ||
     (hobbyResults.length === 0 && showAllhobbies) ||
@@ -1261,6 +1312,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
     (EventResults.length === 0 && showAllEvent) ||
     (ProductResults.length === 0 && showAllProducts) ||
     (PostsResults.length === 0 && showAllPosts) ||
+    (ClassesResults.length === 0 && showAllClasses) ||
+    (RentalResults.length === 0 && showAllRentals) ||
     (BlogsResults.length === 0 && showAllBlogs && searchLoading === false)
 
   const isMobile = useMediaQuery('(max-width:1100px)')
@@ -1692,6 +1745,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
     fetchMoreProductPages,
   ])
 
+  useEffect(()=>{
+    setOpenExploreUser(false);
+    setOpenExplorePeople(false);
+    setOpenExplorePlace(false);
+    setOpenExploreProgram(false);
+    setOpenExploreProduct(false);
+    setOpenExploreClass(false);
+    setOpenExploreRental(false);
+    setOpenExplorePost(false);
+    setCurrUserName('')
+  },[q,filter])
+
   return (
     <main className={styles.searchResults}>
       {noResultsFound && searchLoading === false ? (
@@ -1802,20 +1867,44 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreHobbies ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllhobbies
-                    ? undefined
-                    : (hobbyResults.length > 3 ? (
+                {showAllhobbies
+                  ? undefined
+                  : (hobbyResults.length > 3 ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllhobbies}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
-                </div>
+                        <button
+                          onClick={() => router.push('/hobby')}
+                          onMouseEnter={() => setExploreHobbyHoved(true)}
+                          onMouseLeave={() => setExploreHobbyHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          Explore{' '}
+                          <Image
+                            src={DropdownWhite}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrowRight}`}
+                          />
+                          {!exploreHobbyHoved && (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrowRight}`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
               </div>
             </section>
           )}
@@ -1851,7 +1940,43 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{user?.full_name}</div>
                         <div className={styles.userTagline}>
-                          {user?.tagline || '\u00a0'}
+                          {user?.tagline ? (
+                            user?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  user?._hobbies[0]?.hobby?.display
+                                    ? user?._hobbies[0]?.hobby?.display
+                                    : ''
+                                }${
+                                  user?._hobbies[0]?.genre?.display
+                                    ? ' - ' + user?._hobbies[0]?.genre?.display
+                                    : ''
+                                }`}
+                                {user?._hobbies[1]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  user?._hobbies[1]?.hobby?.display
+                                    ? user?._hobbies[1]?.hobby?.display
+                                    : ''
+                                }${
+                                  user?._hobbies[1]?.genre?.display
+                                    ? ' - ' + user?._hobbies[1]?.genre?.display
+                                    : ''
+                                }`}
+                                {user?._hobbies[2]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  user?._hobbies[2]?.hobby?.display
+                                    ? user?._hobbies[2]?.hobby?.display
+                                    : ''
+                                }${
+                                  user?._hobbies[2]?.genre?.display
+                                    ? ' - ' + user?._hobbies[2]?.genre?.display
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className={styles.userLocation}>
                           {user.primary_address?.city || '\u00a0'}
@@ -1864,19 +1989,57 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreUsers ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllUsers
-                    ? undefined
-                    : (userPages.length > 3 ? (
+                {showAllUsers
+                  ? undefined
+                  : (userPages.length > 3 ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllusers}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
+                        <button
+                          onClick={() => setOpenExploreUser(!openExploreUser)}
+                          onMouseEnter={() => setExploreUserHoved(true)}
+                          onMouseLeave={() => setExploreUserHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          Explore{' '}
+                          <Image
+                            src={DropdownWhite}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrow} ${
+                              openExploreUser ? `${styles.arrowRotated}` : ''
+                            }`}
+                          />
+                          {!exploreUserHoved && (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreUser ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExploreUser ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <UserExplore
+                    currUserName={currUserName}
+                    setCurrUserName={setCurrUserName}
+                  />
                 </div>
               </div>
             </section>
@@ -1914,7 +2077,43 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{page?.title}</div>
                         <div className={styles.userTagline}>
-                          {page?.tagline || '\u00a0'}
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._hobbies[0]?.hobby?.display
+                                    ? page?._hobbies[0]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[0]?.genre?.display
+                                    ? ' - ' + page?._hobbies[0]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[1]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[1]?.hobby?.display
+                                    ? page?._hobbies[1]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[1]?.genre?.display
+                                    ? ' - ' + page?._hobbies[1]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[2]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[2]?.hobby?.display
+                                    ? page?._hobbies[2]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[2]?.genre?.display
+                                    ? ' - ' + page?._hobbies[2]?.genre?.display
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className={styles.userLocation}>
                           {page.page_type.map((item, idx) => {
@@ -1936,19 +2135,61 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePersonPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllPeople
-                    ? undefined
-                    : (peopleResults.length > 3 ? (
+                {showAllPeople
+                  ? undefined
+                  : (peopleResults.length > 3 ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllpeople}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
+                        <button
+                          onClick={() =>
+                            setOpenExplorePeople(!openExplorePeople)
+                          }
+                          onMouseEnter={() => setExplorePeopleHoved(true)}
+                          onMouseLeave={() => setExplorePeopleHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          Explore{' '}
+                          <Image
+                            src={DropdownWhite}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrow} ${
+                              openExplorePeople ? `${styles.arrowRotated}` : ''
+                            }`}
+                          />
+                          {!explorePeopleHoved && (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePeople
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExplorePeople ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PExplore
+                    categoryValue={defaultPeopleCategory}
+                    setCategoryValue={setDefaultPeopleCategory}
+                  />
                 </div>
               </div>
             </section>
@@ -1986,10 +2227,36 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{page?.title}</div>
                         <div className={styles.userTagline}>
-                          {page?.tagline || '\u00a0'}
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._address?.society
+                                    ? page?._address?.society
+                                    : ''
+                                }`}
+                                {page?._address?.locality ? ', ' : ''}
+                                {`${
+                                  page?._address?.locality
+                                    ? page?._address?.locality
+                                    : ''
+                                }`}
+                                {page?._address?.city ? ', ' : ''}
+                                {`${
+                                  page?._address?.city
+                                    ? page?._address?.city
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type +
+                          {page?.page_type?.map((pt: string, index: number) => {
+                            return `${index > 0 ? ' ' : ''}${pt}`
+                          }) +
                             (page._address?.city
                               ? ` | ${page._address?.city}`
                               : '') || '\u00a0'}
@@ -2002,19 +2269,57 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePlacePages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllPlace
-                    ? undefined
-                    : (placeResults.length > 3 ? (
+                {showAllPlace
+                  ? undefined
+                  : (placeResults.length > 3 ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllplace}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
+                        <button
+                          onClick={() => setOpenExplorePlace(!openExplorePlace)}
+                          onMouseEnter={() => setExplorePlaceHoved(true)}
+                          onMouseLeave={() => setExplorePlaceHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          Explore{' '}
+                          <Image
+                            src={DropdownWhite}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrow} ${
+                              openExplorePlace ? `${styles.arrowRotated}` : ''
+                            }`}
+                          />
+                          {!explorePlaceHoved && (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePlace ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExplorePlace ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PExplore
+                    categoryValue={defaultPlaceCategory}
+                    setCategoryValue={setDefaultPlaceCategory}
+                  />
                 </div>
               </div>
             </section>
@@ -2052,37 +2357,72 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{page?.title}</div>
                         <div className={styles.userTagline}>
-                          {page?.tagline || '\u00a0'}
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._address?.society
+                                    ? page?._address?.society
+                                    : ''
+                                }`}
+                                {page?._address?.locality ? ', ' : ''}
+                                {`${
+                                  page?._address?.locality
+                                    ? page?._address?.locality
+                                    : ''
+                                }`}
+                                {page?._address?.city ? ', ' : ''}
+                                {`${
+                                  page?._address?.city
+                                    ? page?._address?.city
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                         </div>
-                        <div className={styles.userLocation}>
-                          {page.page_type +
-                            (page._address?.city
-                              ? ` | ${page._address?.city}`
-                              : '') || '\u00a0'}
-                          {page?.event_date_time &&
-                            page?.event_date_time.length !== 0 && (
-                              <>
-                                {' | '}
-                                {formatDateRange(page?.event_date_time[0])}
-                                {!isMobile && (
-                                  <>
-                                    {', '}
-                                    {page?.event_date_time[0]?.from_time +
-                                      ' - '}
-                                    {page?.event_weekdays?.length > 0 ? (
-                                      <>
-                                        ...
-                                        <span className={styles['purpleText']}>
-                                          more
-                                        </span>
-                                      </>
-                                    ) : (
-                                      page?.event_date_time[0]?.to_time
-                                    )}
-                                  </>
-                                )}
-                              </>
-                            )}
+                        <div className={styles.blogAuthor}>
+                          <div className={styles.address}>
+                            {page?.page_type?.map(
+                              (pt: string, index: number) => {
+                                return `${index > 0 ? ' ' : ''}${pt}`
+                              },
+                            ) +
+                              (page._address?.city
+                                ? ` | ${page._address?.city}`
+                                : '') || '\u00a0'}
+                          </div>
+
+                          <div>
+                            {page?.event_date_time &&
+                              page?.event_date_time.length !== 0 && (
+                                <>
+                                  {' | '}
+                                  {formatDateRange(page?.event_date_time[0])}
+                                  {!isMobile && (
+                                    <>
+                                      {', '}
+                                      {page?.event_date_time[0]?.from_time +
+                                        ' - '}
+                                      {page?.event_weekdays?.length > 0 ? (
+                                        <>
+                                          ...
+                                          <span
+                                            className={styles['purpleText']}
+                                          >
+                                            more
+                                          </span>
+                                        </>
+                                      ) : (
+                                        page?.event_date_time[0]?.to_time
+                                      )}
+                                    </>
+                                  )}
+                                </>
+                              )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2093,19 +2433,61 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreProgramPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllEvent
-                    ? undefined
-                    : (EventResults.length > 3 ? (
+                {showAllEvent
+                  ? undefined
+                  : (EventResults.length > 3 ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllevent}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
+                        <button
+                          onClick={() =>
+                            setOpenExploreProgram(!openExploreProgram)
+                          }
+                          onMouseEnter={() => setExploreProgramHoved(true)}
+                          onMouseLeave={() => setExploreProgramHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          Explore{' '}
+                          <Image
+                            src={DropdownWhite}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrow} ${
+                              openExploreProgram ? `${styles.arrowRotated}` : ''
+                            }`}
+                          />
+                          {!exploreProgramHoved && (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreProgram
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExploreProgram ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PExplore
+                    categoryValue={defaultProgramCategory}
+                    setCategoryValue={setDefaultProgramCategory}
+                  />
                 </div>
               </div>
             </section>
@@ -2145,13 +2527,62 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userDetails}>
                           <div className={styles.userName}>{page?.title}</div>
                           <div className={styles.userTagline}>
-                            {page?.tagline || '\u00a0'}
+                            {page?.tagline ? (
+                              page?.tagline
+                            ) : (
+                              <>
+                                <span>
+                                  {`${
+                                    page?._hobbies[0]?.hobby?.display
+                                      ? page?._hobbies[0]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[0]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[0]?.genre?.display
+                                      : ''
+                                  }`}
+                                  {page?._hobbies[1]?.hobby?.display
+                                    ? ', '
+                                    : ''}
+                                  {`${
+                                    page?._hobbies[1]?.hobby?.display
+                                      ? page?._hobbies[1]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[1]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[1]?.genre?.display
+                                      : ''
+                                  }`}
+                                  {page?._hobbies[2]?.hobby?.display
+                                    ? ', '
+                                    : ''}
+                                  {`${
+                                    page?._hobbies[2]?.hobby?.display
+                                      ? page?._hobbies[2]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[2]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[2]?.genre?.display
+                                      : ''
+                                  }`}
+                                </span>
+                              </>
+                            )}
                           </div>
-                          <div className={styles.userLocation}>
-                            {page.page_type +
-                              (page._address?.city
-                                ? ` | ${page._address?.city}`
-                                : '') || '\u00a0'}
+                          <div
+                            className={`${styles.userLocation} ${inter.className}`}
+                          >
+                            {page?.page_type?.map(
+                              (pt: string, index: number) => {
+                                return `${index > 0 ? ' ' : ''}${pt}`
+                              },
+                            ) +
+                              (page?.product_variant?.variations[0]?.value
+                                ? ` | ₹${page?.product_variant?.variations[0]?.value}`
+                                : ` | ₹0`) || '\u00a0'}
                           </div>
                         </div>
                       </div>
@@ -2162,19 +2593,69 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       {!hasNoMoreProductPages ? <SearchLoader /> : ''}
                     </div>
                   )}
-                  <div className={styles['view-more-btn-container']}>
-                    {showAllProducts
-                      ? undefined
-                      : (ProductResults.length > 3 ? (
+                  {showAllProducts
+                    ? undefined
+                    : (ProductResults.length > 3 ? (
+                        // <button
+                        //   onClick={toggleShowAllproducts}
+                        //   className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                        // >
+                        //   View More
+                        // </button>
+                        <div className={styles['view-more-btn-container']}>
                           <button
                             onClick={toggleShowAllproducts}
-                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                            className={`${styles['view-more-btn']}`}
                           >
                             View More
                           </button>
-                        ) : (
-                          ''
-                        )) || ''}
+                          <button
+                            onClick={() =>
+                              setOpenExploreProduct(!openExploreProduct)
+                            }
+                            onMouseEnter={() => setExploreProductHoved(true)}
+                            onMouseLeave={() => setExploreProductHoved(false)}
+                            className={`${styles['explore-btn']}`}
+                          >
+                            Explore{' '}
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreProduct
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                            {!exploreProductHoved && (
+                              <Image
+                                src={Dropdown}
+                                width={16}
+                                height={16}
+                                alt="Dropdown"
+                                className={`${styles.arrow} ${
+                                  openExploreProduct
+                                    ? `${styles.arrowRotated}`
+                                    : ''
+                                }`}
+                              />
+                            )}
+                          </button>
+                        </div>
+                      ) : (
+                        ''
+                      )) || ''}
+                  <div
+                    className={`${styles.userExploreContainer} ${
+                      openExploreProduct ? styles.visible : styles.hidden
+                    }`}
+                  >
+                    <PExplore
+                      categoryValue={defaultProductCategory}
+                      setCategoryValue={setDefaultProductCategory}
+                    />
                   </div>
                 </div>
               </section>
@@ -2213,58 +2694,123 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userDetails}>
                           <div className={styles.userName}>{page?.title}</div>
                           <div className={styles.userTagline}>
-                            {page?.tagline || '\u00a0'}
+                            {page?.tagline ? (
+                              page?.tagline
+                            ) : (
+                              <>
+                                <span>
+                                  {`${
+                                    page?._address?.society
+                                      ? page?._address?.society
+                                      : ''
+                                  }`}
+                                  {page?._address?.locality ? ', ' : ''}
+                                  {`${
+                                    page?._address?.locality
+                                      ? page?._address?.locality
+                                      : ''
+                                  }`}
+                                  {page?._address?.city ? ', ' : ''}
+                                  {`${
+                                    page?._address?.city
+                                      ? page?._address?.city
+                                      : ''
+                                  }`}
+                                </span>
+                              </>
+                            )}
                           </div>
-                          <div className={styles.userLocation}>
-                            {page.page_type +
-                              (page._address?.city
-                                ? ` | ${page._address?.city}`
-                                : '') || '\u00a0'}
-                            {page?.event_date_time &&
-                              page?.event_date_time.length !== 0 && (
-                                <>
-                                  {' | '}
-                                  {formatDateRange(page?.event_date_time[0])}
-                                  {!isMobile && (
-                                    <>
-                                      {', '}
-                                      {page?.event_date_time[0]?.from_time +
-                                        ' - '}
-                                      {page?.event_weekdays?.length > 0 ? (
-                                        <>
-                                          ...
-                                          <span
-                                            className={styles['purpleText']}
-                                          >
-                                            more
-                                          </span>
-                                        </>
-                                      ) : (
-                                        page?.event_date_time[0]?.to_time
-                                      )}
-                                    </>
-                                  )}
-                                </>
-                              )}
+                          <div className={styles.blogAuthor}>
+                            <div className={styles.address}>
+                              {page?.page_type?.map(
+                                (pt: string, index: number) => {
+                                  return `${index > 0 ? ' ' : ''}${pt}`
+                                },
+                              ) +
+                                (page._address?.city
+                                  ? ` | ${page._address?.city}`
+                                  : '') || '\u00a0'}
+                            </div>
+
+                            <div>
+                              {page?.event_date_time &&
+                                page?.event_date_time.length !== 0 && (
+                                  <>
+                                    {' | '}
+                                    {formatDateRange(page?.event_date_time[0])}
+                                    {!isMobile && (
+                                      <>
+                                        {', '}
+                                        {page?.event_date_time[0]?.from_time +
+                                          ' - '}
+                                        {page?.event_weekdays?.length > 0 ? (
+                                          <>
+                                            ...
+                                            <span
+                                              className={styles['purpleText']}
+                                            >
+                                              more
+                                            </span>
+                                          </>
+                                        ) : (
+                                          page?.event_date_time[0]?.to_time
+                                        )}
+                                      </>
+                                    )}
+                                  </>
+                                )}
+                            </div>
                           </div>
                         </div>
                       </div>
                     ),
                   )}
-                  <div className={styles['view-more-btn-container']}>
-                    {showAllClasses
-                      ? undefined
-                      : (ClassesResults.length > 3 ? (
+                  {showAllClasses
+                    ? undefined
+                    : (ClassesResults.length > 3 ? (
+                        <div className={styles['view-more-btn-container']}>
                           <button
                             onClick={toggleShowAllclasses}
-                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                            className={`${styles['view-more-btn']}`}
                           >
                             View More
                           </button>
-                        ) : (
-                          ''
-                        )) || ''}
-                  </div>
+                          <button
+                            onClick={() =>
+                              setOpenExploreClass(!openExploreClass)
+                            }
+                            onMouseEnter={() => setExploreClassHoved(true)}
+                            onMouseLeave={() => setExploreClassHoved(false)}
+                            className={`${styles['explore-btn']}`}
+                          >
+                            Explore{' '}
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreClass ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                            {!exploreClassHoved && (
+                              <Image
+                                src={Dropdown}
+                                width={16}
+                                height={16}
+                                alt="Dropdown"
+                                className={`${styles.arrow} ${
+                                  openExploreClass
+                                    ? `${styles.arrowRotated}`
+                                    : ''
+                                }`}
+                              />
+                            )}
+                          </button>
+                        </div>
+                      ) : (
+                        ''
+                      )) || ''}
                 </div>
               </section>
             )}
@@ -2302,10 +2848,57 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userDetails}>
                           <div className={styles.userName}>{page?.title}</div>
                           <div className={styles.userTagline}>
-                            {page?.tagline || '\u00a0'}
+                            {page?.tagline ? (
+                              page?.tagline
+                            ) : (
+                              <>
+                                <span>
+                                  {`${
+                                    page?._hobbies[0]?.hobby?.display
+                                      ? page?._hobbies[0]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[0]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[0]?.genre?.display
+                                      : ''
+                                  }`}
+                                  {page?._hobbies[1]?.hobby?.display
+                                    ? ', '
+                                    : ''}
+                                  {`${
+                                    page?._hobbies[1]?.hobby?.display
+                                      ? page?._hobbies[1]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[1]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[1]?.genre?.display
+                                      : ''
+                                  }`}
+                                  {page?._hobbies[2]?.hobby?.display
+                                    ? ', '
+                                    : ''}
+                                  {`${
+                                    page?._hobbies[2]?.hobby?.display
+                                      ? page?._hobbies[2]?.hobby?.display
+                                      : ''
+                                  }${
+                                    page?._hobbies[2]?.genre?.display
+                                      ? ' - ' +
+                                        page?._hobbies[2]?.genre?.display
+                                      : ''
+                                  }`}
+                                </span>
+                              </>
+                            )}
                           </div>
                           <div className={styles.userLocation}>
-                            {page.page_type +
+                            {page?.page_type?.map(
+                              (pt: string, index: number) => {
+                                return `${index > 0 ? ' ' : ''}${pt}`
+                              },
+                            ) +
                               (page._address?.city
                                 ? ` | ${page._address?.city}`
                                 : '') || '\u00a0'}
@@ -2389,24 +2982,34 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userTagline}>
                           {convertDateToString(page?.createdAt) || '\u00a0'}
                           {' | '}
-                          {page?._allHobbies?.length > 0 ? (
-                            page?._allHobbies?.map(
-                              (hobby: any, index: number) => {
-                                return (
-                                  <span key={index}>
-                                    {`${hobby?.display}${
-                                      page?._allGenres[index-1]?.display
-                                        ? ' - ' +
-                                          page?._allGenres[index-1]?.display
-                                        : ''
-                                    }`}
-                                    {index < page?._allHobbies?.length - 1
-                                      ? ', '
-                                      : ''}
-                                  </span>
-                                )
-                              },
-                            )
+                          {page?._allHobbies?._hobby1?.display ? (
+                            <>
+                              {`${page?._allHobbies?._hobby1?.display}${
+                                page?._allHobbies?._genre1?.display
+                                  ? ' - ' + page?._allHobbies?._genre1?.display
+                                  : ''
+                              }`}
+                              {page?._allHobbies?._hobby2?.display ? ', ' : ''}
+                              {`${
+                                page?._allHobbies?._hobby2?.display
+                                  ? page?._allHobbies?._hobby2?.display
+                                  : ''
+                              }${
+                                page?._allHobbies?._genre2?.display
+                                  ? ' - ' + page?._allHobbies?._genre2?.display
+                                  : ''
+                              }`}
+                              {page?._allHobbies?._hobby3?.display ? ', ' : ''}
+                              {`${
+                                page?._allHobbies?._hobby3?.display
+                                  ? page?._allHobbies?._hobby3?.display
+                                  : ''
+                              }${
+                                page?._allHobbies?._genre3?.display
+                                  ? ' - ' + page?._allHobbies?._genre3?.display
+                                  : ''
+                              }`}
+                            </>
                           ) : (
                             <span>{`${page?._hobby?.display}${
                               page._genre ? ' - ' + page?._genre?.display : ''
@@ -2480,11 +3083,15 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userTagline}>
                           {page?.tagline || '\u00a0'}
                         </div>
-                        <div className={styles.userLocation}>
-                          {page?.author?.full_name}{' '}
-                          {page.createdAt
-                            ? ' | ' + formatDateTimeThree(page.createdAt)
-                            : ''}
+                        <div className={styles.blogAuthor}>
+                          <div className={styles.full_name}>
+                            {page?.author?.full_name}{' '}
+                          </div>
+                          <div>
+                            {page.createdAt
+                              ? ' | ' + formatDateTimeThree(page.createdAt)
+                              : ''}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2495,20 +3102,44 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreBlogsPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllBlogs
-                    ? undefined
-                    : (BlogsResults.length > 3 ? (
+                {showAllBlogs
+                  ? undefined
+                  : (BlogsResults.length > 3 ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllblogs}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
-                </div>
+                        <button
+                          onClick={() => router.push('/blog')}
+                          onMouseEnter={() => setExploreBlogHoved(true)}
+                          onMouseLeave={() => setExploreBlogHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          Explore{' '}
+                          <Image
+                            src={DropdownWhite}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrowRight}`}
+                          />
+                          {!exploreBlogHoved && (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrowRight}`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
               </div>
             </section>
           )}
@@ -2539,7 +3170,7 @@ const FilterDropdown: React.FC<Props> = () => {
   // const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
   // const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
   // const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
-  // const showAllProducts = useSelector(
+  // const showAllProducts = useSelector(!
   //   (state: any) => state.search.showAllProducts,
   // )
   // const showAllPosts = useSelector((state: any) => state.search.showAllPosts)
@@ -2834,6 +3465,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
   const showAllPosts = filter === 'posts'
   const showAllBlogs = filter === 'blogs'
   const showAllHobbies = filter === 'hobby'
+  const showAllClasses = filter === 'classes'
+  const showAllRentals = filter === 'rentals'
 
   const noResultsFound =
     (userSearchResults.length === 0 &&
@@ -2844,6 +3477,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
       ProductSearch.length === 0 &&
       PostsSearch.length === 0 &&
       BlogsSearch.length === 0 &&
+      ClassesSearch.length === 0 &&
+      RentalSearch.length === 0 &&
       showAll) ||
     (userSearchResults.length === 0 && showAllUsers) ||
     (hobbySearchResults.length === 0 && showAllHobbies) ||
@@ -2852,6 +3487,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
     (EventSearch.length === 0 && showAllEvent) ||
     (ProductSearch.length === 0 && showAllProducts) ||
     (PostsSearch.length === 0 && showAllPosts) ||
+    (ClassesSearch.length === 0 && showAllClasses) ||
+    (RentalSearch.length === 0 && showAllRentals) ||
     (BlogsSearch.length === 0 && showAllBlogs && searchLoading === false)
 
   return (

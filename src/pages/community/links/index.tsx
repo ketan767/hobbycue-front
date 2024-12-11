@@ -19,7 +19,7 @@ const CommunityLinks: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const getPost = async () => {
     const params = new URLSearchParams(
-      `has_link=true&populate=_author,_genre,_hobby,_allHobbies,_allGenres&sort=-up_votes.count`,
+      `has_link=true&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3&sort=-up_votes.count`,
     )
     if (filters.hobby !== '') {
       params.append('_hobby', filters.hobby)
@@ -82,9 +82,14 @@ const CommunityLinks: React.FC<Props> = ({}) => {
   useEffect(() => {
     getPost()
   }, [activeProfile])
+  
 
   let posts = [...allPosts]
   posts = posts.filter((item: any) => item.has_link === true)
+
+  useEffect(() => {
+    console.log({ Link_posts: posts })
+  }, [posts])
   return (
     <>
       <CommunityPageLayout activeTab="links">

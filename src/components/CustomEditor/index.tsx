@@ -33,6 +33,7 @@ interface Props {
   data?: any
   error?: any
   hasLink?: boolean
+  onStatusChange?: (isChanged: boolean) => void
 }
 
 const CustomEditor: React.FC<Props> = ({
@@ -43,6 +44,7 @@ const CustomEditor: React.FC<Props> = ({
   setData,
   error,
   hasLink,
+  onStatusChange,
 }) => {
   const editorRef = useRef(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -72,6 +74,9 @@ const CustomEditor: React.FC<Props> = ({
   }, [])
 
   const handleImageChange = (e: any) => {
+    if (onStatusChange) {
+      onStatusChange(true)
+    }
     let images = [...e.target.files]
     // setData((prev: any) => ({ ...prev, media: [...prev.media, ...images] }))
     if (data.video_url !== '')
@@ -85,6 +90,9 @@ const CustomEditor: React.FC<Props> = ({
   }
 
   const handleImageUpload = async (image: any, isVideo: boolean) => {
+    if (onStatusChange) {
+      onStatusChange(true)
+    }
     const formData = new FormData()
     formData.append('post', image)
     console.log('formData', formData)
@@ -117,16 +125,55 @@ const CustomEditor: React.FC<Props> = ({
 
   return (
     <>
+    <style>{`
+          .ql-editor.ql-indent-1{
+            padding-left:4px;
+          }
+          .ql-editor ul, 
+          .ql-editor ol {
+            font-family:'Poppins';
+            padding-left: 4px; 
+            font-size:14px;
+            text-align:left; 
+          }
+
+          .ql-editor a {
+            font-family:'Poppins';
+            color: rgb(128, 100, 162);  
+            text-decoration: none !important;
+            font-size:14px;
+            text-align:left;
+          }
+          .ql-editor p {
+            font-family:'Poppins';
+            font-size:14px;
+            text-align:left;
+          }
+          .ql-editor {
+            scrollbar-width: thin;
+            scrollbar-color: #777 #f1f1f1;
+          }
+      `}</style>
       <ReactQuill
         theme="snow"
         ref={editorRef}
         value={data.content}
         onChange={(updatedValue) => {
+          if (onStatusChange) {
+            if (updatedValue == '') {
+              onStatusChange(false)
+            } else {
+              onStatusChange(true)
+            }
+          }
+          console.log(`status is changed`)
+
           setData((prev: any) => ({ ...prev, content: updatedValue }))
         }}
         className={`${styles.quill} ${error ? styles['quill-error'] : ''} ${
           hasLink ? styles['quill-has-link'] : ''
         }`}
+        style={{maxHeight: '100%'}}
         placeholder="Start something interesting..."
         modules={{
           toolbar: {
@@ -171,32 +218,7 @@ const CustomEditor: React.FC<Props> = ({
       />
 
       {error && <p className={styles['error-text']}>{error}</p>}
-      <style>{`
-          .ql-editor.ql-indent-1{
-            padding-left:4px;
-          }
-          .ql-editor ul, 
-          .ql-editor ol {
-            font-family:'Poppins';
-            padding-left: 4px; 
-            font-size:14px;
-            text-align:left; 
-          }
-
-          .ql-editor a {
-            font-family:'Poppins';
-            color: rgb(128, 100, 162);  
-            text-decoration: none !important;
-            font-size:14px;
-            text-align:left;
-          }
-          .ql-editor p {
-            font-family:'Poppins';
-            font-size:14px;
-            text-align:left;
-          }
-          
-      `}</style>
+      
     </>
   )
 }

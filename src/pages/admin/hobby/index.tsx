@@ -25,6 +25,7 @@ import GoogleIcon from '@/assets/svg/google-icon.svg'
 import MailIcon from '@/assets/svg/mail.svg'
 import FacebookIcon from '@/assets/svg/mobile-social/facebook.svg'
 import { getAllHobbies } from '@/services/hobby.service'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 type SearchInput = {
   search: InputData<string>
@@ -56,8 +57,9 @@ const AdminHobby: React.FC = () => {
     display: false,
     message: '',
   })
-
+  const dispatch = useDispatch()
   const handleSearch = async (event: any) => {
+    dispatch(setShowPageLoader(true))
     const searchValue = data.search.value.trim()
     event.preventDefault()
     let searchCriteria = {
@@ -69,8 +71,10 @@ const AdminHobby: React.FC = () => {
     )
     if (err) {
       console.log('An error', err)
+      dispatch(setShowPageLoader(false))
     } else {
       setSearchResults(res.data.data.hobbies)
+      dispatch(setShowPageLoader(false))
       console.log('res', res)
     }
   }

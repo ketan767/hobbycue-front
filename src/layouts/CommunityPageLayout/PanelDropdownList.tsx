@@ -118,7 +118,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
             >
               <section>
                 <input
-                  placeholder=""
+                  placeholder="Email or @ mention "
                   type="text"
                   autoComplete="new"
                   name=""
@@ -198,10 +198,18 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                 .slice(0, seeMore ? 3 : options.length)
                 .map((obj: any, idx: number) => (
                   <div key={idx} className={styles['option']}>
-                    <div className={styles['member-container']}>
+                    <div
+                      className={
+                        styles['member-container'] +
+                        ' ' +
+                        styles['whatsNewContainer']
+                      }
+                    >
                       <Link
                         href={`/${pageType(obj?.type)}/${obj?.page_url}`}
-                        className={styles['img-name']}
+                        className={
+                          styles['img-name'] + ' ' + styles['whatsNewImg']
+                        }
                       >
                         {obj?.profile_image ? (
                           <img width={24} height={24} src={obj.profile_image} />
@@ -270,7 +278,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                   </p>
                 </div>
               </div>
-            )}
+            )} :
           </div>
         </>
       )}

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import styles from './PostCard.module.css'
-import { dateFormat, isVideoLink, pageType } from '@/utils'
+import { dateFormat, isInstagramReelLink, isVideoLink, isHobbycuePageLink, pageType } from '@/utils'
 import Link from 'next/link'
 import BarsIcon from '../../assets/svg/vertical-bars.svg'
 import PostVotes from './Votes'
@@ -29,6 +29,7 @@ import { useMediaQuery } from '@mui/material'
 import LinkPreviewLoader from '../LinkPreviewLoader'
 import DeletePrompt from '../DeletePrompt/DeletePrompt'
 import ReactPlayer from 'react-player'
+import VerticalBar from '@/assets/icons/VerticalBar'
 type Props = {
   postData: any
   fromProfile?: boolean
@@ -118,7 +119,7 @@ const PostCard: React.FC<Props> = (props) => {
 
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
-      `_id=${postData._id}&populate=_author,_genre,_hobby,_allHobbies,_allGenres`,
+      `_id=${postData._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`,
     )
     if (err) return console.log(err)
     if (res.data.success) {
@@ -128,12 +129,17 @@ const PostCard: React.FC<Props> = (props) => {
   }
 
   useEffect(() => {
+    async function fetch() {
+      await fetchComments()
+    }
+    fetch()
     if (router.query['comments'] === 'show') {
       setShowComments(true)
     }
   }, [])
 
   useEffect(() => {
+
     if (has_link) {
       const regex =
         /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
@@ -207,6 +213,8 @@ const PostCard: React.FC<Props> = (props) => {
     }
   }, [])
 
+  useEffect(() => { console.log({comments}) }, [comments])
+
   const handleDeletePost = async (postid: any) => {
     const { err, res } = await deletePost(postid)
     if (err) {
@@ -233,6 +241,7 @@ const PostCard: React.FC<Props> = (props) => {
     setDeleteData({ open: true, _id: postid })
   }
 
+  const isReelBreakpoint = useMediaQuery('(max-width:600px)')
   const isMobile = useMediaQuery('(max-width:1100px)')
   const processedContent = postData.content
 
@@ -273,7 +282,7 @@ const PostCard: React.FC<Props> = (props) => {
               href={
                 postData?.author_type === 'User'
                   ? `/profile/${postData?._author?.profile_url}`
-                  : `/${pageType(postData?._author.type)}/${
+                  : `/${pageType(postData?._author?.type)}/${
                       postData?._author?.page_url
                     }`
               }
@@ -336,7 +345,7 @@ const PostCard: React.FC<Props> = (props) => {
                 ></div>
               )}
             </Link>
-            <div>
+            <div style={{ maxWidth: 'calc(100% - 110px)' }}>
               <Link
                 href={
                   postData?.author_type === 'User'
@@ -360,7 +369,7 @@ const PostCard: React.FC<Props> = (props) => {
                     : dispatch(openModal({ type: 'auth', closable: true }))
                 }}
               >
-                <p className={styles['author-name']}>
+                <p style={{ width: '100%' }} className={styles['author-name']}>
                   {postData?.author_type === 'User'
                     ? postData?._author?.full_name
                     : postData?.author_type === 'Listing'
@@ -380,16 +389,51 @@ const PostCard: React.FC<Props> = (props) => {
                   {' | '}
                 </span>
 
-                {postData?._allHobbies?.length > 0 ? (
+                {postData?._allHobbies?._hobby1?.display ? (
+                  <>
+                    <span>
+                      {`${postData?._allHobbies?._hobby1?.display}${
+                        postData?._allHobbies?._genre1?.display
+                          ? ' - ' + postData?._allHobbies?._genre1?.display
+                          : ''
+                      }`}
+                      {postData?._allHobbies?._hobby2?.display ? ', ' : ''}
+                      {`${
+                        postData?._allHobbies?._hobby2?.display
+                          ? postData?._allHobbies?._hobby2?.display
+                          : ''
+                      }${
+                        postData?._allHobbies?._genre2?.display
+                          ? ' - ' + postData?._allHobbies?._genre2?.display
+                          : ''
+                      }`}
+                      {postData?._allHobbies?._hobby3?.display ? ', ' : ''}
+                      {`${
+                        postData?._allHobbies?._hobby3?.display
+                          ? postData?._allHobbies?._hobby3?.display
+                          : ''
+                      }${
+                        postData?._allHobbies?._genre3?.display
+                          ? ' - ' + postData?._allHobbies?._genre3?.display
+                          : ''
+                      }`}
+                    </span>
+                  </>
+                ) : (
+                  <span>{`${postData?._hobby?.display}${
+                    postData._genre ? ' - ' + postData?._genre?.display : ''
+                  }`}</span>
+                )}
+                {/* {postData?._allHobbies?.length > 0 ? (
                   postData?._allHobbies?.map((hobby: any, index: number) => {
                     return (
                       <span key={index}>
                         {`${hobby?.display}${
-                          postData?._allGenres[index-1]?.display
-                            ? ' - ' + postData?._allGenres[index-1]?.display
+                          postData?._allGenres[index]?.display
+                            ? ' - ' + postData?._allGenres[index]?.display
                             : ''
                         }`}
-                        {index < postData?._allHobbies?.length-1 ? ', ' : ''}
+                        {index < postData?._allHobbies?.length - 1 ? ', ' : ''}
                       </span>
                     )
                   })
@@ -397,7 +441,7 @@ const PostCard: React.FC<Props> = (props) => {
                   <span>{`${postData?._hobby?.display}${
                     postData._genre ? ' - ' + postData?._genre?.display : ''
                   }`}</span>
-                )}
+                )} */}
                 <span>
                   {postData?.visibility ? ` | ${postData?.visibility}` : ''}
                 </span>
@@ -610,7 +654,154 @@ const PostCard: React.FC<Props> = (props) => {
                             controls={true}
                           />
                         </div>
+                      ) : 
+                      isInstagramReelLink(url) ? (
+                        isReelBreakpoint ? (
+                          <div
+                            onClick={() => window.open(url, '_blank')}
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'between',
+                              alignItems: 'center',
+                              gap: '8px',
+                              cursor: 'pointer',
+                              flexDirection:"column"
+                            }}
+                          >
+                            <div
+                              style={{
+                                width: 'calc(100vw - 24px)',
+                              }}
+                              >
+                              <img
+                                style={{
+                                  cursor: 'pointer',
+                                }}
+                                width= '100%'
+                                onClick={() => window.open(url, '_blank')}
+                                src={
+                                  (typeof metaData?.image === 'string' &&
+                                    metaData.image) ||
+                                  (typeof metaData?.icon === 'string' &&
+                                    metaData.icon) ||
+                                  defaultImg
+                                }
+                                alt=""
+                              />
+                            </div>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '16px',
+                                fontSize: '15px',
+                                justifyContent: 'start',
+                              }}
+                            >
+                              <p style={{ fontWeight: '500' }}>
+                                {metaData?.title}
+                              </p>
+                              <p style={{ color: '#333' }}>
+                                {metaData?.description?.split(':')[0]}
+                              </p>
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            onClick={() => window.open(url, '_blank')}
+                            style={{
+                              display: 'flex',
+                              width: '100%',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              gap: '16px',
+                              cursor: 'pointer',
+                              ...(isMobile ? { padding: '0' } : { padding: '0 16px' }),
+                            }}
+                          >
+                            <div
+                              style={{
+                                width: '230.63px',
+                                maxHeight: '376.31px',
+                              }}
+                            >
+                              <img
+                                style={{
+                                  cursor: 'pointer',
+                                  maxHeight: '376.31px',
+                                }}
+                                onClick={() => window.open(url, '_blank')}
+                                width="230.63px"
+                                src={
+                                  (typeof metaData?.image === 'string' &&
+                                    metaData.image) ||
+                                  (typeof metaData?.icon === 'string' &&
+                                    metaData.icon) ||
+                                  defaultImg
+                                }
+                                alt=""
+                              />
+                            </div>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '16px',
+                                fontSize: '15px',
+                                justifyContent: 'start',
+                                height: '376.31px',
+                                width: "calc(100% - 230.63px)"
+                              }}
+                            >
+                              <p style={{ fontWeight: '500' }}>
+                                {metaData?.title}
+                              </p>
+                              <p style={{ color: '#333' }}>
+                                {metaData?.description?.split(':')[0]}
+                              </p>
+                            </div>
+                          </div>
+                        )
                       ) : (
+                      // isHobbycuePageLink(url) ? (
+                      //   <>
+                      //     <div className={styles['posts-meta-data-container']}>
+                      //       <a href={url} target="_blank">
+                      //         <div className={styles['posts-meta-img']}>
+                      //           <img
+                      //             src={
+                      //               (typeof metaData?.image === 'string' &&
+                      //                 metaData.image) ||
+                      //               (typeof metaData?.icon === 'string' &&
+                      //                 metaData.icon) ||
+                      //               defaultImg
+                      //             }
+                      //             alt="link-image"
+                      //             width={80}
+                      //             height={80}
+                      //           />
+                      //         </div>
+                      //       </a>
+                      //       <div className={styles['posts-meta-content']}>
+                      //         <a
+                      //           href={url}
+                      //           target="_blank"
+                      //           className={styles.contentHead}
+                      //         >
+                      //           {metaData?.title}
+                      //         </a>
+
+                      //         <a
+                      //           href={url}
+                      //           target="_blank"
+                      //           className={styles.contentUrl}
+                      //         >
+                      //           {metaData?.description}
+                      //         </a>
+                      //       </div>
+                      //     </div>
+                      //   </>
+                      // ) : (
                         <>
                           <div className={styles['posts-meta-data-container']}>
                             <a href={url} target="_blank">
@@ -687,15 +878,21 @@ const PostCard: React.FC<Props> = (props) => {
                       : ' '}
                   </p>
                   <p className={styles['date']}>
-                    <span className={styles['separator']}>|</span>
-                    {' ' + dateFormat.format(new Date(postData.createdAt))}
+                    <span className={styles['separator']}>
+                      <VerticalBar />
+                    </span>
+                    <span>
+                      {' ' + dateFormat.format(new Date(postData.createdAt))}
+                    </span>
                   </p>
                 </div>
                 <div className={styles['meta-author']}>
                   <p className={styles['date']}>{postData?._hobby?.display}</p>
 
                   <p className={styles['date']}>
-                    <span className={styles['separator']}>|</span>
+                    <span className={styles['separator']}>
+                      <VerticalBar />
+                    </span>
                     {' ' + postData?.visibility}
                   </p>
                 </div>
@@ -711,33 +908,47 @@ const PostCard: React.FC<Props> = (props) => {
                   />
                   {props?.currentSection === 'links' && (
                     <div className={styles['comment-and-count']}>
-                      <svg
-                        onClick={() => {
-                          dispatch(
-                            setActivePost({ ...postData, comments: comments }),
-                          )
-                          dispatch(openModal({ type: 'post', closable: false }))
+                      <CustomizedTooltips title="Comments">
+                        <svg
+                          onClick={() => {
+                            dispatch(
+                              setActivePost({
+                                ...postData,
+                                comments: comments,
+                              }),
+                            )
+                            dispatch(
+                              openModal({ type: 'post', closable: false }),
+                            )
+                          }}
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 18 18"
+                          fill="none"
+                        >
+                          <g clipPath="url(#clip0_10350_4296)">
+                            <path
+                              d="M15 12.8775L14.1225 12H3V3H15V12.8775ZM15 1.5H3C2.175 1.5 1.5 2.175 1.5 3V12C1.5 12.825 2.175 13.5 3 13.5H13.5L16.5 16.5V3C16.5 2.175 15.825 1.5 15 1.5Z"
+                              fill="#8064A2"
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id="clip0_10350_4296">
+                              <rect width="18" height="18" fill="white" />
+                            </clipPath>
+                          </defs>
+                        </svg>
+                      </CustomizedTooltips>
+                      <p
+                        style={{
+                          width: '28px',
+                          textAlign: 'center',
+                          transform: 'translateX(-2px)',
                         }}
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 18 18"
-                        fill="none"
+                        className={styles['comments-count']}
                       >
-                        <g clipPath="url(#clip0_10350_4296)">
-                          <path
-                            d="M15 12.8775L14.1225 12H3V3H15V12.8775ZM15 1.5H3C2.175 1.5 1.5 2.175 1.5 3V12C1.5 12.825 2.175 13.5 3 13.5H13.5L16.5 16.5V3C16.5 2.175 15.825 1.5 15 1.5Z"
-                            fill="#8064A2"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_10350_4296">
-                            <rect width="18" height="18" fill="white" />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                      <p className={styles['comments-count']}>
-                        {comments.length}
+                        {comments.length > 0 ? comments.length : ''}
                       </p>
                     </div>
                   )}
@@ -784,6 +995,7 @@ const PostCard: React.FC<Props> = (props) => {
                 updatePost={updatePost}
               />
               {/* Comment Icon */}
+              <div style={{display:"flex", justifyContent:"center", alignItems:"center", gap:"12px", flexDirection:"row"}}>
               <CustomizedTooltips title="Comments">
                 <svg
                   onClick={() => setShowComments(!showComments)}
@@ -813,6 +1025,16 @@ const PostCard: React.FC<Props> = (props) => {
                   </defs>
                 </svg>
               </CustomizedTooltips>
+              <p
+                style={{
+                  color: '#6D747A',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                }}
+              >
+                {comments.length > 0 ? comments.length : ''}
+              </p>
+              </div>
               {/* Share Icon */}
               <CustomizedTooltips title="Share">
                 <svg

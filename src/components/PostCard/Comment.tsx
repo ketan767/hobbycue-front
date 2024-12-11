@@ -7,7 +7,7 @@ import { openModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import DeletePrompt from '../DeletePrompt/DeletePrompt'
-import { deletePostComment } from '@/services/post.service'
+import { deletePostComment, editPostComment } from '@/services/post.service'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import CustomizedTooltips from '../Tooltip/ToolTip'
 import { TextareaAutosize } from '@mui/material'
@@ -104,15 +104,15 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
       return;
     }
 
-    // const { res, err } = await deletePostComment(comment._id, editCommentContent);
-    // if (err) {
-    //   console.log('Error in deletePostComment', err);
-    //   setSnackbar({
-    //     type: 'error',
-    //     display: true,
-    //     message: 'Error editing comment.',
-    //   });
-    // }
+    const { res, err } = await editPostComment(comment._id, editCommentContent);
+    if (err) {
+      console.log('Error in editPostComment', err);
+      setSnackbar({
+        type: 'error',
+        display: true,
+        message: 'Error editing comment.',
+      });
+    }
 
     fetchComments();
     setLoading(false);
@@ -152,7 +152,7 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
       <section className={styles['content-wrapper']}>
         {/* Header */}
         <header>
-          <p className={styles['author-name']}>
+          <p style={{maxWidth:"calc(100% - 80px)"}} className={styles['author-name']}>
             {comment?.author_type === 'Listing'
               ? comment?._author?.title
               : comment?._author?.full_name}
@@ -172,7 +172,8 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
                 className={styles['input']}
                 placeholder="Write a comment..."
                 onChange={(e: any) => {
-                  // setEditCommentContent(e.target.value)
+                  setEditCommentContent(e.target.value)
+                  console.log(e.target.value)
                   // sessionStorage.setItem(
                   //   'commentDraft',
                   //   JSON.stringify({ id: data?._id, content: e.target.value }),
@@ -297,14 +298,14 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
               <div style={{ marginTop:"12px" }} className={styles.editReportDelete}>
                 {postedByMe && (
                   <>
-                    {/* <button
+                    <button
                       onClick={() => {
                         setEditComment(true)
                         setOpenAction(false)
                       }}
                     >
                       Edit
-                    </button> */}
+                    </button>
                     <button
                       onClick={() => {
                         setShowDelModal(true)

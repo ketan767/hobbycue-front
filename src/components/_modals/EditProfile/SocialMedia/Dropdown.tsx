@@ -186,15 +186,15 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
   const [showOptions, setShowOptions] = useState(false);
   const [selectQuery, setSelectQuery] = useState(value);
   const [filteredOptions, setFilteredOptions] = useState(options);
-  const [highlightIndex, setHighlightIndex] = useState(-1); // Track highlighted option index
+  const [highlightIndex, setHighlightIndex] = useState(-1); 
 
   useEffect(() => {
     setSelectQuery(value);
   }, [value]);
 
-  const handleFocus = () => setShowOptions(true);
+  const handleFocus = () => { setShowOptions(true)};
   const handleBlur = () => {
-    setTimeout(() => setShowOptions(false), 200); // Delay to allow click
+    setTimeout(() => setShowOptions(false), 100);
   };
 
   type SocialMediaOption =
@@ -292,6 +292,15 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
   const [dropdownMaxHeight, setDropdownMaxHeight] = useState(0);
   const [dropdownPosition, setDropdownPosition] = useState("down");
 
+  const handleFullKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      e.stopPropagation();
+      e.preventDefault();
+      inputRef.current?.blur();
+      setShowOptions(false);
+    }
+  }
+
   useEffect(() => {
     if (showOptions && inputRef.current) {
       const rect = inputRef.current.getBoundingClientRect();
@@ -306,8 +315,10 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
     <div
       className={styles.inputContainer}
       style={{ width: "100%", height: "100%", position: "relative" }}
+      onKeyDown={handleFullKeyDown}
     >
       <input
+        className={styles["dropdown-input"]}
         type="text"
         value={selectQuery}
         onChange={(e) => setSelectQuery(e.target.value)}
@@ -341,16 +352,24 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
         }
       <ArrowDropDownIcon
         onClick={() => {
-          inputRef.current?.focus();
-          setShowOptions(!showOptions);
+          if (!showOptions) {
+            console.log("focus");
+            inputRef.current?.focus();
+            setShowOptions(true);
+          } else {
+            inputRef.current?.blur();
+            console.log("blur");
+            setShowOptions(false);
+          }
         }}
         style={{
+          transform: showOptions ? "rotate(180deg) translateY(50%)" : "rotate(0deg) translateY(-50%)",
           position: "absolute",
           right: "7px",
           top: "50%",
-          transform: "translateY(-50%)",
           color: "#727273",
           cursor: "pointer",
+          zIndex: 10,
         }}
       />
       {showOptions &&
@@ -361,12 +380,12 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
               position: "fixed",
               ...(dropdownPosition === "down"
                 ? {
-                    top: inputRef.current?.getBoundingClientRect().bottom || 0,
+                    top: (inputRef.current?.getBoundingClientRect().bottom || 0) + 1,
                   }
                 : {
                     bottom:
                       window.innerHeight -
-                        (inputRef.current?.getBoundingClientRect().top || 0) || 0,
+                      (inputRef.current?.getBoundingClientRect().top || 0) + 1, 
                   }),
               left: inputRef.current?.getBoundingClientRect().left || 0,
               width: inputRef.current?.offsetWidth || "auto",

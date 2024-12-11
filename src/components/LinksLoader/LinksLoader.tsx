@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import styles from './LinksLoader.module.css'
 import ContentLoader from 'react-content-loader'
+import { useMediaQuery } from '@mui/material'
 
 const upArrow = (
   <svg
@@ -83,11 +84,72 @@ const commentIcon = (
 interface LinksLoaderProps {}
 
 const LinksLoader: FC<LinksLoaderProps> = ({}) => {
+
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  
   return (
     <div className={styles.wrapper}>
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', width:"100%" }}>
         <div className={styles.box}></div>
         <div className={styles.content}>
+          {
+            isMobile ? (
+          <ContentLoader
+            speed={2}
+            width="100%"
+            backgroundColor="#f3f3f3"
+            foregroundColor="#ecebeb"
+            height={130}
+            viewBox='0 0 480 auto'
+          >
+            <rect
+              x="0"
+              y="0"
+              width="100%"
+              height="10"
+              rx={6}
+              ry={6}
+              fill="#F7F5F9"
+            />
+            <rect
+              x="0"
+              y="15"
+              width="80%"
+              height="10"
+              rx={6}
+              ry={6}
+              fill="#F7F5F9"
+            />
+
+            <rect
+              x="0"
+              y="30"
+              width="60%"
+              height="10"
+              rx={6}
+              ry={6}
+              fill="#F7F5F9"
+            />
+            <rect
+              x="0"
+              y="45"
+              width="70%"
+              height="10"
+              rx={6}
+              ry={6}
+              fill="#F7F5F9"
+            />
+            <rect
+              x="0"
+              y="60"
+              width="65%"
+              height="10"
+              rx={6}
+              ry={6}
+              fill="#F7F5F9"
+            />
+          </ContentLoader>
+            ) : (
           <ContentLoader
             speed={2}
             width="100%"
@@ -142,6 +204,8 @@ const LinksLoader: FC<LinksLoaderProps> = ({}) => {
               fill="#F7F5F9"
             />
           </ContentLoader>
+            )
+          }
           <div className={styles.iconsContainer}>
             <div className={styles.upArrow}>{upArrow}</div>
             <div className={styles.downArrow}>{downArrow}</div>
@@ -156,12 +220,13 @@ const LinksLoader: FC<LinksLoaderProps> = ({}) => {
           backgroundColor="#f3f3f3"
           foregroundColor="#D9DBE9"
           height={20}
+          viewBox="0 0 50 auto"
         >
           <rect
             x="0"
             y="4"
-            width="381"
-            height="14"
+            width="95%"
+            height="10"
             rx={6}
             ry={6}
             fill="#F7F5F9"

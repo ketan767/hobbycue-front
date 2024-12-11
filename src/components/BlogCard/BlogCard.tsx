@@ -25,7 +25,6 @@ const BlogCard: React.FC<Props> = ({ data }) => {
   const { user } = useSelector((state: RootState) => state.user)
   const type = getListingTypeName(data?.type)
 
-  console.warn({ data })
   function formatDateRange(prop: {
     from_date: string
     to_date: string
@@ -97,7 +96,7 @@ const BlogCard: React.FC<Props> = ({ data }) => {
     </svg>
   )
 
-  const itsMe = data?.admin === user?._id
+  const itsMe = data?.author?._id === user?._id
   const isMobile = useMediaQuery('(max-width:1100px)')
 
   return (
@@ -122,6 +121,17 @@ const BlogCard: React.FC<Props> = ({ data }) => {
         )} */}
 
         <div className={styles.imgContainer}>
+          {itsMe && (
+            <div
+              className={`${styles.status} ${
+                data?.status === 'Published'
+                  ? styles.published
+                  : styles.unpublished
+              }`}
+            >
+              {data?.status}
+            </div>
+          )}
           {data?.cover_pic ? (
             <>
               <div
@@ -151,10 +161,10 @@ const BlogCard: React.FC<Props> = ({ data }) => {
                   position: 'absolute',
                   bottom: 0,
                   width: '100%',
-                  height: '1px',
+                  height: '100%',
                   background: '#939ca3',
                 }}
-              ></div>{' '}
+              ></div>
             </div>
           )}
         </div>
@@ -162,20 +172,25 @@ const BlogCard: React.FC<Props> = ({ data }) => {
         <div className={styles.content}>
           <div className={styles.contentHead}>
             <div className={styles.contentTitle}>
-              <p className={styles.title}> {data?.title} </p>
+              <p className={`${styles.title} truncateTwoLines`}>
+                {data?.title}
+              </p>
             </div>
           </div>
           <div className={styles.contentTitle}>
             <p className={styles.tagline}>
               {' '}
-              {data?.description ? data?.description : '\u00A0'}
+              {data?.tagline ? data?.tagline : '\u00A0'}
             </p>
           </div>
 
           <div>
             <span className={styles.authorAndDate}>
-              {data.author?.full_name + ' | '}
+              <div className={`truncateOneLine ${styles.author}`}>
+                {data.author?.full_name}
+              </div>
               <span className={styles.date}>
+                {` | `}
                 {convertDateToString(data?.createdAt)}
               </span>
             </span>

@@ -15,6 +15,10 @@ const PagesLoader: FC<PagesLoaderProps> = ({}) => {
         foregroundColor="#ecebeb"
         height={130}
       >
+        <svg width="314" height="265" viewBox="0 0 314 265" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="1.16992" y="0.5" width="312" height="264" rx="7.5" fill="white" stroke="#EBEDF0"/>
+</svg>
+
         <rect
           x="10"
           y="10"
@@ -27,7 +31,7 @@ const PagesLoader: FC<PagesLoaderProps> = ({}) => {
         <rect
           x="69"
           y="12"
-          width="259"
+          width="230"
           height="14"
           rx={6}
           ry={6}

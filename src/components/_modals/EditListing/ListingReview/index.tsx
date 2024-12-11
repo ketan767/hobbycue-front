@@ -44,7 +44,7 @@ const ListingReview: React.FC<Props> = ({
     user_id: user._id,
     description: '',
   })
-  // const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -69,6 +69,9 @@ const ListingReview: React.FC<Props> = ({
     const value = event.target.value
     setData((prev) => ({ ...prev, description: value }))
     setInputErrs({ error: null })
+    if (onStatusChange) {
+      onStatusChange(true)
+    }
   }
 
   const handleSubmit = async () => {
@@ -97,8 +100,8 @@ const ListingReview: React.FC<Props> = ({
       })
       setSubmitBtnLoading(false)
       setTimeout(() => {
-        router.reload()
-      }, 2500)
+        dispatch(closeModal())
+      }, 500)
     } else if (err) {
       setSubmitBtnLoading(false)
       setSnackbar({
@@ -107,24 +110,27 @@ const ListingReview: React.FC<Props> = ({
         message: 'Something went wrong',
       })
       console.log(err)
+      setTimeout(() => {
+        dispatch(closeModal())
+      }, 500)
     }
   }
 
-  const HandleSaveError = async () => {
-    if (
-      !data.description ||
-      data.description?.trim() === '' ||
-      data.description === '<p><br></p>'
-    ) {
-      setIsError(true)
-    }
-  }
+  // const HandleSaveError = async () => {
+  //   if (
+  //     !data.description ||
+  //     data.description?.trim() === '' ||
+  //     data.description === '<p><br></p>'
+  //   ) {
+  //     setIsError(true)
+  //   }
+  // }
 
-  useEffect(() => {
-    if (confirmationModal) {
-      HandleSaveError()
-    }
-  }, [confirmationModal])
+  // useEffect(() => {
+  //   if (confirmationModal) {
+  //     HandleSaveError()
+  //   }
+  // }, [confirmationModal])
 
   useEffect(() => {
     if (isError) {
@@ -173,6 +179,7 @@ const ListingReview: React.FC<Props> = ({
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
+        content={'Would you like to send before exit?'}
       />
     )
   }
@@ -182,7 +189,7 @@ const ListingReview: React.FC<Props> = ({
       <div
         className={`${styles['modal-wrapper']} ${
           confirmationModal ? styles['ins-active'] : ''
-        } `}
+        } ${isKeyboardOpen ? styles['keyboard-open'] : ``}`}
       >
         {/* Modal Header */}
         <header className={styles['header']}>
@@ -206,13 +213,16 @@ const ListingReview: React.FC<Props> = ({
             >
               <textarea
                 ref={textareaRef}
-                className={styles['long-input-box']}
+                className={`${styles['long-input-box']} ${
+                  isKeyboardOpen ? styles['short-input-box'] : ``
+                }`}
                 required
                 placeholder="Write your review.  It will be sent to the page admin for their approval to publish."
                 name="message"
                 onChange={handleInputChange}
                 value={data.description}
-                // onFocus={() => setIsKeyboardOpen(true)}
+                onFocus={() => setIsKeyboardOpen(true)}
+                onBlur={() => setIsKeyboardOpen(false)}
               />
             </div>
             {inputErrs.error ? (

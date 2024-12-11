@@ -25,6 +25,7 @@ import {
   deleteRelatedListingLeft,
   searchPages,
   getAllListingRelationTypes,
+  searchPagesRelated,
 } from '@/services/listing.service'
 import {
   updateListingModalData,
@@ -149,7 +150,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
   const handleSearchPages = async (e: any) => {
     setShowDropdown(true)
     setDropdownLoading(true)
-    const { res, err } = await searchPages({
+    const { res, err } = await searchPagesRelated({
       title: pageInputValue,
     })
     console.log(res)
@@ -371,7 +372,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
                 {dropdownLoading ? (
                   <div className={styles.dropdownItem}>Loading...</div>
                 ) : allDropdownValues?.length !== 0 ? (
-                  allDropdownValues.map((item: any) => {
+                  allDropdownValues?.map((item: any) => {
                     return (
                       <div
                         key={item?._id}

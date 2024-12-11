@@ -34,7 +34,7 @@
   .dropdownMenu {
     position: absolute;
     top: 100%;
-    right: 0;
+    right: 5;
     background-color: white;
     border: 1px solid #ccc;
     width: 100%;
