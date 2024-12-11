@@ -723,14 +723,6 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                   placeholder={'Select Social Media'}
                   value={item.socialMedia}
                   onChange={(e) => {
-                    const targetDiv = document.getElementById('social-media-dropdown');
-if (targetDiv) {
-  targetDiv.style.setProperty('border', '5px solid #E0E0E0');
-  
-  setTimeout(() => {
-    targetDiv.style.setProperty('border', 'initial');
-  }, 1000);
-}
                     const selectedSocialMedia = e as SocialMediaOption
                     const defaultUrl =
                       defaultSocialMediaURLs[selectedSocialMedia]
