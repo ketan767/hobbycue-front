@@ -14,6 +14,7 @@ import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import BlogCard from '@/components/BlogCard/BlogCard'
 import { RootState } from '@/redux/store'
 import Link from 'next/link'
+import { setRefetch } from '@/redux/slices/blog'
 
 // interface Props {
 //   propData: any
@@ -91,7 +92,7 @@ const EditBlog: React.FC = () => {
   // }
 
   // const blog = data?.blog_url || {}
-  const { blog } = useSelector((state: RootState) => state.blog)
+  const { blog, refetch } = useSelector((state: RootState) => state.blog)
   const author = blog?.author
   const [editHobby, setEditHobby] = useState(false)
   const [urlText, setUrlText] = useState('')
@@ -195,6 +196,7 @@ const EditBlog: React.FC = () => {
       setPublishBtnLoading(false)
       if (data) {
         // refetch()
+        dispatch(setRefetch(refetch + 1))
         console.log(data)
       }
     } catch (err) {

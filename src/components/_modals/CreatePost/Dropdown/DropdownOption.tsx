@@ -4,8 +4,9 @@ import { MenuItem } from '@mui/material'
 import ChevronDown from '@/assets/svg/chevron-up.svg'
 import Image from 'next/image'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import { setIsPinCode } from '@/redux/slices/post'
 
 type Props = {
   type: String
@@ -40,6 +41,8 @@ export const DropdownOption: React.FC<Props> = (props) => {
   const [active, setActive] = useState(
     user?.primary_address?._id === _id ? true : false,
   )
+
+  const dispatch = useDispatch()
 
   const toggle = (e: any) => {
     e.stopPropagation()
@@ -99,7 +102,12 @@ export const DropdownOption: React.FC<Props> = (props) => {
     ${currentValue === display?.split(' ')[0] ? styles['city-select'] : ''} 
     ${active ? styles['active'] : ''}
   `}
-        onClick={() => onChange(display.split(' ')[0])}
+        onClick={() => {
+          if (display?.includes('PIN Code')) dispatch(setIsPinCode(true))
+          else dispatch(setIsPinCode(false))
+
+          onChange(display.split(' ')[0])
+        }}
       >
         <p>{display}</p>
       </aside>
@@ -130,7 +138,13 @@ export const DropdownOption: React.FC<Props> = (props) => {
               className={`${styles['dropdown-value']} ${
                 currentValue === option.value ? styles['option-active'] : ''
               }`}
-              onClick={() => onChange(option.value)}
+              onClick={() => {
+                if (option?.display?.includes('PIN Code'))
+                  dispatch(setIsPinCode(true))
+                else dispatch(setIsPinCode(false))
+
+                onChange(option.value)
+              }}
             >
               {option.display}
             </p>

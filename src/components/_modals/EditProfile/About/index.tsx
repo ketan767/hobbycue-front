@@ -12,7 +12,7 @@ import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
-import { updateUser } from '@/redux/slices/user'
+import { updateIsLoggedIn, updateUser } from '@/redux/slices/user'
 import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
@@ -81,7 +81,6 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   }, [user])
 
   const handleInputChange = (value: string) => {
-    console.warn('handleinputtt', value)
     setData((prev) => ({ ...prev, about: value }))
     setInputErrs({ about: null })
 

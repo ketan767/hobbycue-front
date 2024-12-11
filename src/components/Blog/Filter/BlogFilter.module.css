@@ -13,14 +13,12 @@
 }
 
 .blogsTitle {
-  width: 50px;
-  height: 26px;
   color: var(--Purple-1, #8064a2);
   font-family: Poppins;
-  font-size: 18px;
+  font-size: 20px;
   font-style: normal;
   font-weight: 500;
-  line-height: 24px; /* 133.333% */
+  line-height: 16px;
 }
 .filter {
   color: var(--Grey-Darkest, #08090a);

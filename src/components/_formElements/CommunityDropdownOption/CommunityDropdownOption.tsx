@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import styles from './styles.module.css'
 import ChevronDown from '@/assets/svg/chevron-up.svg'
 import Image from 'next/image'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { setIsPinCode } from '@/redux/slices/post'
 
 type Props = {
   type: String
@@ -31,6 +32,8 @@ export const CommunityDropdownOption: React.FC<Props> = (props) => {
     smallPencil,
     maxWidth,
   } = props
+
+  const dispatch = useDispatch()
 
   const { activeProfile, user } = useSelector((state: any) => state.user)
 
@@ -158,7 +161,10 @@ export const CommunityDropdownOption: React.FC<Props> = (props) => {
               <div
                 style={{ maxWidth }}
                 onClick={(e) => {
-                  console.log({ item })
+                  if (item?.display?.includes('PIN Code'))
+                    dispatch(setIsPinCode(true))
+                  else dispatch(setIsPinCode(false))
+
                   onChange(item)
                   document.documentElement.click()
                 }}

@@ -265,9 +265,6 @@
   overflow: auto;
 }
 
-.editor-container::-webkit-scrollbar {
-  width: 0px;
-}
 
 .editor-container::-webkit-scrollbar-track {
   background: transparent;
@@ -303,14 +300,16 @@
   padding: 16px;
   align-items: center;
   gap: 24px;
+  height: 116px;
 }
 
 .metadata-content > img {
-  width: 80px;
-  height: 80px;
+  width: 98.4px;
+  height: 98.4px;
   flex-shrink: 0;
   border-radius: 5px;
-  object-fit: cover;
+  object-fit: contain;
+  background-color: #000;
 }
 
 /* .metadata-content>div {
