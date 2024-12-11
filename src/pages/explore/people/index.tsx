@@ -54,7 +54,8 @@ const People: React.FC<Props> = ({ data: initialData }) => {
       queryString = `type=${encodeURIComponent(type.toString())}&` + queryString
     } else if (category) {
       queryString =
-        `type=1&page_type=${encodeURIComponent(category.toString())}&` + queryString
+        `type=1&page_type=${encodeURIComponent(category.toString())}&` +
+        queryString
     } else {
       queryString = `type=1&` + queryString
     }

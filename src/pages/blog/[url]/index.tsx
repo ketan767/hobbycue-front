@@ -47,8 +47,10 @@ import {
   setRefetch,
 } from '@/redux/slices/blog'
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
-
+const BlogEditor = dynamic(() => import('@/components/BlogEditor/BlogEditor'), {
+  ssr: false,
+  loading: () => <h1>Loading...</h1>,
+})
 type Props = {
   data: {
     blog_url?: any
@@ -72,6 +74,8 @@ export const downarrow = (
   </svg>
 )
 const BlogPage: React.FC<Props> = ({ data }) => {
+  const quillRef = useRef<any>(null)
+
   const [isAuthor, setIsAuthor] = useState(false)
   const [isAuthorizedToView, setIsAuthorizedToView] = useState(false)
   // const [isEditing, setIsEditing] = useState(false) // to check if the author is shown the editable interface
@@ -80,7 +84,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   // const [blog, setBlog] = useState(data?.blog_url || {})
 
   const [quillInstance, setQuillInstance] = useState<any>(null)
-  console.log("asifs quillInstance", quillInstance)
+  console.log('asifs quillInstance', quillInstance)
   const titleRef = useRef<HTMLTextAreaElement | null>(null)
   const taglineRef = useRef<HTMLTextAreaElement | null>(null)
   const cameraInputRef = useRef<HTMLInputElement | null>(null)
@@ -595,35 +599,13 @@ const BlogPage: React.FC<Props> = ({ data }) => {
               {/* <div className={styles.blogWrapper}> */}
               {isEditing ? (
                 <div className={styles.blogEditor}>
-                  <ReactQuill
-                    theme="snow"
+                  <BlogEditor
+                    placeholder=""
                     value={blog?.content}
-                    onChange={(updatedValue) => {
+                    onChange={(updatedValue: any) => {
                       dispatch(setBlog({ ...blog, content: updatedValue }))
                     }}
-                    onFocus={(e, editor) => setQuillInstance(editor)}
-                    // onBlur={() => handleEditBlog('content')}
-                    className={`${styles.quill} ${styles['ql-editor']} blog-quill`}
-                    placeholder={'Text'}
-                    modules={{
-                      toolbar: {
-                        container: [
-                          [
-                            'bold',
-                            'italic',
-                            'underline',
-                            { list: 'ordered' },
-                            { list: 'bullet' },
-                            { header: '1' },
-                            { header: '2' },
-                          ],
-                          ['link', 'image'],
-                        ],
-                        // handlers: {
-                        //   image: () => handleImageUpload(), // Custom handler
-                        // },
-                      },
-                    }}
+                    // onFocus={(e: any, editor: any) => setQuillInstance(editor)}
                   />
                   <div className={styles.blogButtons}>
                     <FilledButton

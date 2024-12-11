@@ -1587,7 +1587,9 @@ const CommunityLayout: React.FC<Props> = ({
                             />
                             <div>
                               <p className={styles['user-name']}>
-                                {user?.full_name?.slice(0, 23) + '...'}
+                                {user.full_name.length > 23
+                                  ? user.full_name.slice(0, 23) + '...'
+                                  : user.full_name}
                               </p>
                               <p
                                 className={styles['user-name']}

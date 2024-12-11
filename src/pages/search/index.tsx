@@ -1745,17 +1745,17 @@ const MainContent: React.FC<SearchResultsProps> = ({
     fetchMoreProductPages,
   ])
 
-  useEffect(()=>{
-    setOpenExploreUser(false);
-    setOpenExplorePeople(false);
-    setOpenExplorePlace(false);
-    setOpenExploreProgram(false);
-    setOpenExploreProduct(false);
-    setOpenExploreClass(false);
-    setOpenExploreRental(false);
-    setOpenExplorePost(false);
+  useEffect(() => {
+    setOpenExploreUser(false)
+    setOpenExplorePeople(false)
+    setOpenExplorePlace(false)
+    setOpenExploreProgram(false)
+    setOpenExploreProduct(false)
+    setOpenExploreClass(false)
+    setOpenExploreRental(false)
+    setOpenExplorePost(false)
     setCurrUserName('')
-  },[q,filter])
+  }, [q, filter])
 
   return (
     <main className={styles.searchResults}>
