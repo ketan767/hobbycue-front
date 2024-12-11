@@ -16,6 +16,8 @@
   line-height: 20px;
   color: #000000;
   margin-bottom: var(--spacing-16);
+  display: flex;
+  justify-content: space-between;
 }
 
 .wrapper > div {
@@ -74,6 +76,7 @@
     display: none;
   }
   .wrapper > h4 {
+    display: block;
     margin-bottom:0;
   }
 }

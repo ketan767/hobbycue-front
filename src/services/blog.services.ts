@@ -268,3 +268,23 @@ export const downvoteBlogComment = async (
     return { res: null, err }
   }
 }
+
+export const uploadEditorImage = async (base64Image: string) => {
+  const token = localStorage.getItem('token');
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json', // Set the content type to JSON
+  };
+
+  try {
+    const res = await axiosInstance.post(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/blogs/uploadimage`,
+      { base64Image }, // Send Base64 string in the request body
+      { headers }
+    );
+    return { res, err: null };
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    return { err: error, res: null };
+  }
+};

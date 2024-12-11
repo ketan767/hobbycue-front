@@ -152,12 +152,17 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
             {blogs.length === 0 && !loadingPosts && (
               <>
                 <div
-                style={
-                  isMobile
-                    ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
-                    : undefined
-                }
-                className={styles['no-posts-container']}>
+                  style={
+                    isMobile
+                      ? {
+                          marginTop: '8px',
+                          height: '100px',
+                          borderRadius: '0px',
+                        }
+                      : undefined
+                  }
+                  className={styles['no-posts-container']}
+                >
                   <p>No Blogs available</p>
                 </div>
                 {!isMobile && (

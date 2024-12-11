@@ -12,6 +12,7 @@ interface PostState {
   activePost: any;
   filters: {
     location: string | null;
+    isPinCode: boolean;
     hobby: string;
     genre: string;
     seeMoreHobbies: boolean;
@@ -31,6 +32,7 @@ const initialState: PostState = {
   activePost: {},
   filters: {
     location: null,
+    isPinCode: false,
     hobby: '',
     genre: '',
     seeMoreHobbies: false,
@@ -42,6 +44,9 @@ const postSlice = createSlice({
   name: 'post',
   initialState,
   reducers: {
+    setIsPinCode : (state, { payload }) => {
+      state.filters.isPinCode = payload;
+    },
     updatePosts: (state, { payload }) => {
       state.allPosts = payload;
     },
@@ -82,6 +87,7 @@ const postSlice = createSlice({
 });
 
 export const {
+  setIsPinCode,
   updatePosts,
   appendPosts,
   updatePages,

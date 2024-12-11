@@ -4,12 +4,14 @@ interface BlogState {
   blog: any
   refetch: number
   preview: boolean
+  isEditing: boolean
 }
 
 const initialState: BlogState = {
   blog: {},
   refetch: 0,
   preview: false,
+  isEditing: false,
 }
 
 const blogSlice = createSlice({
@@ -25,9 +27,13 @@ const blogSlice = createSlice({
     setPreview: (state, action) => {
       state.preview = action.payload
     },
+    setIsEditing: (state, action) => {
+      state.isEditing = action.payload
+    },
   },
 })
 
-export const { setBlog, setRefetch, setPreview } = blogSlice.actions
+export const { setBlog, setRefetch, setPreview, setIsEditing } =
+  blogSlice.actions
 
 export default blogSlice.reducer

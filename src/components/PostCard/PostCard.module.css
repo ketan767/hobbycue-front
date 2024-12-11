@@ -58,9 +58,9 @@
   cursor: pointer;
 }
 .separator {
-  margin-left: 4px;
+  margin-left: 6px;
   margin-right: 6px;
-  height: 20px;
+  height: 15px;
   color: #6D747A ;
 }
 .post-card-wrapper .body .content {
@@ -261,7 +261,8 @@
   justify-content: space-between;
 }
 .author-name{
-  width: calc(100% - 50px);
+  max-width: 130px;
+  /* width: calc(100% - 50px); */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -675,7 +676,7 @@ background: rgba(128, 100, 162, 0.25);
 
 @media screen and (max-width: 1100px) {
   .author-name {
-    max-width: 71vw;
+    max-width: calc(100vw - 260px);
   }
   .metadata-footer a {
     max-width: 350px;

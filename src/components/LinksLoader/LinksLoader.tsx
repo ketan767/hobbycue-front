@@ -89,7 +89,7 @@ const LinksLoader: FC<LinksLoaderProps> = ({}) => {
   
   return (
     <div className={styles.wrapper}>
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', width:"100%" }}>
         <div className={styles.box}></div>
         <div className={styles.content}>
           {

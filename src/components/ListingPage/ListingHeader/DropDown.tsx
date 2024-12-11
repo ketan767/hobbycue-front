@@ -170,7 +170,7 @@ const Dropdown: React.FC<Props> = ({
                       User Not Signed In
                     </li>
                     <li onClick={() => handleClickViewAs('print')}>
-                      Print Ready
+                      {isMob ? 'Screenshot Ready' : 'Print Ready'}
                     </li>
                   </ul>
                 ) : (

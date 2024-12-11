@@ -47,6 +47,7 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
   // const { category } = query
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [openMenu, setOpenMenu] = useState(false)
+  const containerRef = useRef(null)
   const [isPeopleOpened, setIsPeopleOpened] = useState(false)
   const [isPlaceOpened, setIsPlaceOpened] = useState(false)
   const [isProgramOpened, setIsProgramOpened] = useState(false)
@@ -258,7 +259,7 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
     fetchCategories()
   }, [])
   return (
-    <div className={styles.relative}>
+    <div className={styles.relative} ref={containerRef}>
       <div className={styles.relative}>
         <div className={styles.categorySuggestion}>
           <Image
@@ -365,7 +366,7 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
         </div>
       </div>
 
-      <Menu
+      {/* <Menu
         anchorEl={anchorEl}
         open={openMenu}
         onClose={handleClose}
@@ -379,6 +380,22 @@ const AccordionMenu2: React.FC<AccordianMenuProps> = ({
           left: '-144px',
           maxHeight: '47vh',
         }}
+      > */}
+      <Menu
+        anchorEl={anchorEl}
+        open={openMenu}
+        onClose={handleClose}
+        sx={{
+          '&:before': { display: 'none' },
+          width: '250px',
+          margin: '0',
+          padding: '0',
+          top: '8px',
+          left: '-144px',
+          maxHeight: '47vh',
+        }}
+        disableScrollLock={false}
+        container={containerRef.current}
       >
         <Accordion
           disableGutters

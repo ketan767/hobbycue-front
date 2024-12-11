@@ -152,7 +152,7 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
       <section className={styles['content-wrapper']}>
         {/* Header */}
         <header>
-          <p className={styles['author-name']}>
+          <p style={{maxWidth:"calc(100% - 80px)"}} className={styles['author-name']}>
             {comment?.author_type === 'Listing'
               ? comment?._author?.title
               : comment?._author?.full_name}

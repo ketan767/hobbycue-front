@@ -70,6 +70,7 @@ const ListingReport: React.FC<Props> = ({
   const [backDisabled, SetBackDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
   const [isError, setIsError] = useState(false)
   const listingPageData = useSelector(
     (state: RootState) => state.site.listingPageData,
@@ -259,7 +260,7 @@ const ListingReport: React.FC<Props> = ({
       <div
         className={`${styles['modal-wrapper']} ${
           confirmationModal ? styles['ins-active'] : ''
-        }  `}
+        } ${isKeyboardOpen ? styles['keyboard-open'] : ``} `}
       >
         {/* Modal Header */}
         <header className={styles['header']}>
@@ -283,12 +284,16 @@ const ListingReport: React.FC<Props> = ({
             >
               <textarea
                 ref={textareaRef}
-                className={styles['long-input-box']}
+                className={`${styles['long-input-box']} ${
+                  isKeyboardOpen ? styles['short-input-box'] : ``
+                }`}
                 required
                 placeholder="Report the issue to the admin for their action."
                 name="message"
                 onChange={handleInputChange}
                 value={data.description}
+                onFocus={() => setIsKeyboardOpen(true)}
+                onBlur={() => setIsKeyboardOpen(false)}
               />
             </div>
             {inputErrs.error ? (

@@ -489,8 +489,8 @@ const AdminDashboard: React.FC = () => {
 
                       return 0
                     })
-                    ?.map((user: any, index) => (
-                      <tr key={index}>
+                    ?.map((user: any) => (
+                      <tr key={user._id}>
                         {/* user */}
                         <td>
                           <Link

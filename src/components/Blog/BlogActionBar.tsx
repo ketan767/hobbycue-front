@@ -19,11 +19,12 @@ import DownvoteIcon from '@/assets/icons/DownvoteIcon'
 import RepostIconBlog from '@/assets/icons/RepostIconBlog'
 import { CircularProgress } from '@mui/material'
 import DeletePrompt from '../DeletePrompt/DeletePrompt'
+import { setIsEditing } from '@/redux/slices/blog'
 
 type Props = {
   data: any
-  isEditing: boolean
-  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
+  // isEditing: boolean
+  // setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
   isAuthor: boolean
   vote: { up: boolean; down: boolean }
   setVote: React.Dispatch<
@@ -36,8 +37,8 @@ type Props = {
 
 const BlogActionBar: React.FC<Props> = ({
   data,
-  setIsEditing,
-  isEditing,
+  // setIsEditing,
+  // isEditing,
   isAuthor,
   vote,
   setVote,
@@ -53,7 +54,7 @@ const BlogActionBar: React.FC<Props> = ({
   const dispatch = useDispatch()
   const router = useRouter()
   const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
-  const { preview } = useSelector((state: RootState) => state.blog)
+  const { preview, isEditing } = useSelector((state: RootState) => state.blog)
 
   const showFeatUnderDev = () => {
     setSnackbar({
@@ -233,7 +234,7 @@ const BlogActionBar: React.FC<Props> = ({
               <>
                 <button
                   onClick={() => {
-                    setIsEditing(true)
+                    dispatch(setIsEditing(true))
                     setShowMenu(false)
                   }}
                   disabled={btnDisabled('edit')}

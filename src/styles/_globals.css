@@ -332,7 +332,7 @@ select:-webkit-autofill {
 .blog-quill .ql-toolbar {
   border-radius: 8px 8px 0 0 !important;
   border: 0;
-  border-bottom: 1px solid #ccc;
+  /* border-bottom: 1px solid #ccc; */
 }
 
 .ck.ck-content.ck-editor__editable ul,

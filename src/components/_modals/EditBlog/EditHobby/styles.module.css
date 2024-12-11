@@ -1,3 +1,9 @@
+.modal-hr {
+  margin: 0 -24px;
+  border: none;
+  border-bottom: 1px solid #ced4da;
+}
+
 .modal-wrapper {
   background-color: white;
   border-radius: var(--spacing-8);
@@ -9,19 +15,20 @@
 
 .header {
   padding-top: 25px;
- }
+}
 
- .heading {
+.heading {
   margin-bottom: 17px;
- }
+}
 
- .hobbiesHeading {
+.hobbiesHeading {
   padding-block: 16px;
- }
+  margin-bottom: 0;
+}
 
- .body {
+.body {
   padding-top: 19px;
- }
+}
 
 .add-btn {
   width: 20px;

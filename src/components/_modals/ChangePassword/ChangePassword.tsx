@@ -257,6 +257,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               className={`${styles['input-box']} ${
                 errors.newPassword ? styles['input-box-error'] : ''
               }`}
+              style={{ marginBottom: 15 }}
             >
               <TextField
                 autoComplete="off"

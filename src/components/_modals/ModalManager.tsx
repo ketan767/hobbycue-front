@@ -464,7 +464,7 @@ const ModalManager: React.FC = () => {
                     </header>
                   </>
                 )}
-              {activeModal === 'blogPublish' && <BlogPublish propData={propData} />}
+              {activeModal === 'blogPublish' && <BlogPublish />}
               {activeModal === 'FBNoEmail' && <FBNoEmail />}
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
