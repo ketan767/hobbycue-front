@@ -481,7 +481,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                             data-profile-type="user"
                           ></div>
                         )}
-                        <p>{user.full_name}</p>
+                        <p className={styles['sidemenu-name']}>{user.full_name}</p>
                       </li>
 
                       {filteredListing.map((page: any) => {
