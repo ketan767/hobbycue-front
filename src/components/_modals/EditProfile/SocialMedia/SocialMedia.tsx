@@ -433,7 +433,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
           return updatedMediaData; 
         });
         errorSaving = true
-      }
+      } else {
       let key
       switch (socialMedia) {
         case 'Facebook':
@@ -551,11 +551,12 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
       if (key) {
         reqBody[key] = url
       }
+      }
     }
-    if(errorSaving === true){
-      setSubmitBtnLoading(false)
-      return
-    } else {
+    // if(errorSaving === true){
+    //   setSubmitBtnLoading(false)
+    //   return
+    // } else {
       const { err, res } = await updateMyProfileDetail({
         social_media_urls: reqBody,
       })
@@ -563,17 +564,15 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
       if (err) {
         setSubmitBtnLoading(false)
         return console.log(err)
-      }
-  
-      if (err) return console.log(err)
-      if (res?.data.success) {
+      } else if (res?.data.success) {
         console.log('res', res)
         window.location.reload()
         dispatch(closeModal())
       }
-    }
+    // }
 
   }
+  
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
     const handleKeyPress = (event: any) => {
@@ -613,6 +612,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
             res.data.data as SocialMediaData1[],
           )
           setAllOptions(reorderedData)
+          console.log({ dayatsa: res?.data?.data })
           console.log({ reorderedData })
         }
       })
@@ -631,6 +631,14 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
         setConfirmationModal={setConfirmationModal}
       />
     )
+  }
+
+  const handleFullKeyDown = (e: React.KeyboardEvent) => {
+    // if enter is pressed then it should submit the form
+    console.log(e.key)
+    if (e.key === 'ENTER') {
+      handleSubmit()
+    }
   }
 
   const selectFieldRefs = useRef<(HTMLDivElement | null)[]>([]) // Array of refs for each Select
@@ -779,6 +787,29 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                   placeholder={`URL`}
                   value={item.url}
                   name="url"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && idx === mediaData.length - 1) {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      handleSubmit()
+                    } else if (e.key === 'Enter' && idx !== mediaData.length - 1) {
+                      const focusableElements: NodeListOf<HTMLElement> = document.querySelectorAll(
+                        'input, button, select, textarea, a[href], [tabindex]:not([tabindex="-1"])'
+                      );
+                  
+                      const activeElement: Element | null = document.activeElement;
+                  
+                      if (activeElement instanceof HTMLElement) {
+                        const elementsArray = Array.from(focusableElements);
+                        const currentIndex = elementsArray.indexOf(activeElement);
+                  
+                        if (currentIndex !== -1) {
+                          const nextIndex = (currentIndex + 2) % elementsArray.length;
+                          elementsArray[nextIndex]?.focus();
+                        }
+                      }
+                    }
+                  }}
                   onChange={(e) => {
                     let val = e.target.value;
                     onChange(idx, 'url', val);
@@ -788,17 +819,25 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                       return updatedMediaData;
                     });
                   }}
-                  style={item?.error === true ? { borderColor: "red" } : {}}
+                  // style={item?.error === true ? { borderColor: "red" } : {}}
                 />
-                {
+                {/* {
                   item?.error === true ? <p style={{color: "#c0504d", fontSize: "12px", position:"absolute", bottom:"-17px", left:"5px"}}>Please enter a valid URL</p> : null
-                }
+                } */}
               </div>
               <Image
+                tabIndex={0}
                 src={DeleteIcon}
                 alt="delete"
                 className={styles.deleteIcon}
                 onClick={() => handleDelete(item)}
+                onKeyDown={(e)=>{
+                  if(e.key === 'Enter'){
+                    e.preventDefault()
+                    e.stopPropagation()
+                    handleDelete(item)
+                  }
+                }}
               />
             </div>
           )

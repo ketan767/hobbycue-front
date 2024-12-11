@@ -292,6 +292,15 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
   const [dropdownMaxHeight, setDropdownMaxHeight] = useState(0);
   const [dropdownPosition, setDropdownPosition] = useState("down");
 
+  const handleFullKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      e.stopPropagation();
+      e.preventDefault();
+      inputRef.current?.blur();
+      setShowOptions(false);
+    }
+  }
+
   useEffect(() => {
     if (showOptions && inputRef.current) {
       const rect = inputRef.current.getBoundingClientRect();
@@ -306,6 +315,7 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
     <div
       className={styles.inputContainer}
       style={{ width: "100%", height: "100%", position: "relative" }}
+      onKeyDown={handleFullKeyDown}
     >
       <input
         className={styles["dropdown-input"]}
