@@ -1,0 +1,18 @@
+.explore-sidebar button {
+  max-width: 1100px !important;
+  border: none;
+  border: 1px solid #8064a2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+}
+
+.explore-sidebar button:focus {
+  outline: 2px solid #8064a2;
+}

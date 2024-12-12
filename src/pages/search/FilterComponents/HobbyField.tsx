@@ -12,6 +12,7 @@ import { getAllHobbies } from '@/services/hobby.service'
 import useHandleUserProfileSearch from '../utils/HandleUserProSearch'
 import useHandlePostsSearch from '../utils/HandlePostsSearch'
 import useHandleSubmit from '../utils/HandleSubmit'
+import HobbyDropdown from './components/HobbyDropdown'
 
 type HobbyProps = {
   filterPage?: string
@@ -51,6 +52,8 @@ const HobbyField: React.FC<HobbyProps> = ({
   const [focusedHobbyIndex, setFocusedHobbyIndex] = useState<number>(-1)
   const dispatch = useDispatch()
   const [currHobby, setCurrHobby] = useState<string>('')
+  const inputRef = useRef<HTMLDivElement | null>(null)
+
   const router = useRouter()
   const { q = '', filter = '' } = router.query
 
@@ -126,7 +129,7 @@ const HobbyField: React.FC<HobbyProps> = ({
           }
 
           if (isHobbySelected) {
-            if (filter === 'users' || (filterPage && filterPage === 'User') ) {
+            if (filter === 'users' || (filterPage && filterPage === 'User')) {
               handleUserProfileSearch(
                 currUserName,
                 selectedHobby,
@@ -175,7 +178,7 @@ const HobbyField: React.FC<HobbyProps> = ({
     }
   }
   return (
-    <div className={styles.hobbySuggestion}>
+    <div className={styles.hobbySuggestion} ref={inputRef}>
       <Image
         src={SearchIcon}
         width={16}
@@ -233,26 +236,13 @@ const HobbyField: React.FC<HobbyProps> = ({
         }}
       />
       {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
-        <div className={styles.dropdownHobby} ref={searchHobbyRef}>
-          {hobbyDropdownList.map((hobby, index) => {
-            return (
-              <p
-                key={hobby._id}
-                onClick={() => {
-                  // dispatch(setHobby(hobby.display))
-                  setSelectedHobby(hobby.display)
-                }}
-                className={
-                  index === focusedHobbyIndex
-                    ? styles['dropdown-option-focus']
-                    : ''
-                }
-              >
-                {hobby.display}
-              </p>
-            )
-          })}
-        </div>
+        <HobbyDropdown
+          inputRef={inputRef}
+          hobbyDropdownList={hobbyDropdownList}
+          searchHobbyRef={searchHobbyRef}
+          focusedHobbyIndex={focusedHobbyIndex}
+          setSelectedHobby={setSelectedHobby}
+        />
       )}
     </div>
   )

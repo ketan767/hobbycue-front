@@ -12,6 +12,9 @@ import { RootState } from '@/redux/store'
 import SettingsDropdownLayout from '@/layouts/SettingsDropdownLayout'
 import { openModal } from '@/redux/slices/modal'
 import { withAuth } from '@/navigation/withAuth'
+import ViewProfileBtn from '../visibility-notification/components/viewProfile/ViewProfileBtn'
+import ExploreSidebarBtn from '../visibility-notification/components/ExploreSidebarBtn'
+import QuestionIcon from '@/assets/icons/QuestionIcon'
 
 type Props = {}
 
@@ -101,7 +104,7 @@ const DataAndOthers: React.FC<Props> = ({}) => {
           </section>
         </aside>
       )}
-      <PageGridLayout column={2}>
+      <PageGridLayout column={3}>
         <SettingsDropdownLayout>
           {isMobile ? null : <SettingsSidebar active="account-data" />}
           <div className={styles['container']}>
@@ -189,6 +192,16 @@ const DataAndOthers: React.FC<Props> = ({}) => {
             </div>
           </div>
         </SettingsDropdownLayout>
+         {!isMobile && (
+          <aside className={styles['aside-two']}>
+            <ViewProfileBtn />
+            <ExploreSidebarBtn
+              text="Help Center"
+              href="/help"
+              icon={<QuestionIcon />}
+            />
+          </aside>
+        )}
       </PageGridLayout>
       {
         <CustomSnackbar
