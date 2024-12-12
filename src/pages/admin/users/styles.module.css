@@ -85,7 +85,7 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 19px;
   position: relative;
 }
 
@@ -136,6 +136,14 @@
   border: none;
   outline: none;
   cursor: pointer;
+}
+.filterBtn img {
+  width: 40px;
+  height: 40px;
+  gap: 0px;
+  border-radius: 8.89px;
+  border: 1.11px solid #0096c8;
+  padding: 8px;
 }
 
 .searchButton {
@@ -239,6 +247,19 @@
   padding: 0 8px 0 8px;
   min-height: 48px;
 }
+.sortButtonWrapper {
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sortButton {
+  background: none;
+  border: none;
+}
+.sortButton img {
+  transform: rotate(180deg);
+}
 
 /* Avatar styles */
 .avatarImage {
@@ -252,6 +273,7 @@
 }
 
 .avatarContainer {
+  margin-left: 24px;
   margin-right: 10px;
   width: 40px;
   height: 40px;
@@ -309,13 +331,13 @@
 
 .pagesLength {
   text-align: center !important;
-  padding-right: 16px !important;
 }
 
 .accountStatus {
+  padding: 12px 8px 12px 24px;
   height: 100%;
   display: flex;
-  justify-content: center;
+
   align-items: center;
 }
 /* Responsive styles (optional) */
