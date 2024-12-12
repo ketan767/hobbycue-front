@@ -112,6 +112,14 @@ background-repeat: no-repeat; */
     width: auto;
     padding: 26px 16px;
   }
+
+  .viewOptionContainer {
+    display: block;
+  }
+
+  .viewOptionContainer > p {
+    margin-bottom: 10px;
+  }
 }
 
 /* .settingcontainer{
