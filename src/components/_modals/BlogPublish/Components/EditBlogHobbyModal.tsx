@@ -7,7 +7,7 @@ import {
 } from '@/services/user.service'
 import { CircularProgress, useMediaQuery } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
-import styles from './styles.module.css'
+import styles from './EditBlogHobbyModal.module.css'
 
 import CloseIcon from '@/assets/icons/CloseIcon'
 import NextIcon from '@/assets/svg/Next.svg'
@@ -63,7 +63,7 @@ type Props = {
   }
   // refetch: any
   setEditHobby: React.Dispatch<React.SetStateAction<boolean>>
-  handleClose: () => void
+  // handleClose: () => void
 }
 
 type ProfileHobbyData = {
@@ -99,7 +99,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
   CheckIsOnboarded,
   propData,
   // refetch,
-  handleClose,
+  // handleClose,
   setEditHobby,
 }) => {
   const { blog, refetch } = useSelector((state: RootState) => state.blog)
@@ -523,7 +523,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
         if (!hobbyInputValue.trim()) {
           if (userHobbies.length > 0) {
             window.location.reload()
-            handleClose()
+            // handleClose()
             return
           } else {
             setErrorOrmsg('Add atleast one hobby!')

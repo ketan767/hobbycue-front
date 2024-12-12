@@ -385,7 +385,7 @@
   }
   
   .parent-page{
-    max-height: 48px;
+    /* max-height: 48px; */
     background: var(--Grey-Hover, #F8F9FA);
     border: none !important;
   }

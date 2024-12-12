@@ -114,12 +114,21 @@ background-repeat: no-repeat; */
     width: auto;
     padding: 26px 16px;
   }
+
+  .viewOptionContainer {
+    display: block;
+  }
+
+  .viewOptionContainer > p {
+    margin-bottom: 10px;
+  }
   .aside-two {
     height: auto;
     background: #fff;
     margin: 0 0 12px;
     padding: 0 16px 16px;
     order: 1;
+
   }
 }
 

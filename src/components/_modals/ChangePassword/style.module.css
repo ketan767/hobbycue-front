@@ -197,6 +197,10 @@
   border: none;
 }
 
+.mobBtnCancel {
+  display: none;
+}
+
 @media screen and (max-width:1100px) {
 
 .modal-wrapper {
@@ -214,11 +218,25 @@
 .modal-wrapper .footer {
   display: flex;
   padding-top: 8px;
+  gap: 16px;
+}
+.footer button {
+  font-family: Poppins;
+  font-size: 14px !important;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px;
+  padding-block: 12px;
 }
 .body {
   padding-top: 0 !important;
 }
 .modal-hr{
   display: none;
+}
+.mobBtnCancel {
+  display: block;
+  border: 1px solid #8064A2 !important;
+  width: 100%;
 }
 }

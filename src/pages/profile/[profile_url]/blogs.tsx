@@ -23,6 +23,7 @@ import { createBlog, getAllBlogs } from '@/services/blog.services'
 import BlogCard from '@/components/BlogCard/BlogCard'
 import PlusIcon from '@/assets/icons/PlusIcon'
 import dynamic from 'next/dynamic'
+import { openModal } from '@/redux/slices/modal'
 const ResponsiveMasonry = dynamic(
   () => import('react-responsive-masonry').then((mod) => mod.ResponsiveMasonry),
   {
@@ -85,6 +86,10 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
   }, [])
 
   const handleAddBlog = async (e: any) => {
+    if (user.is_onboarded === false) {
+      dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
+      return
+    }
     try {
       const { res, err } = await createBlog()
       if (err) throw err
