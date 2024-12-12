@@ -102,6 +102,11 @@
     drop-shadow(0px 8px 12px rgba(147, 156, 163, 0.12));
   z-index: 500;
   text-align: left;
+  transition: all 0.3s ease-in-out;
+}
+.dropdownCategory-below-70vh {
+  top: auto;
+  bottom: 45px;
 }
 .text-left {
   text-align: left;
@@ -143,5 +148,9 @@
     position: absolute;
     top: 54px;
     z-index: 500;
+  }
+  .dropdownCategory-below-70vh {
+    top: auto;
+    bottom: 99px;
   }
 }

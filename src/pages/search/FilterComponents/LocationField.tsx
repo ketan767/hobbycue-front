@@ -14,6 +14,7 @@ import {
   getAutocompleteAddressFromGoogle,
   getLatLongFromPlaceID,
 } from '@/services/auth.service'
+import LocationDropdown from './components/LocationDropdown'
 
 type LocationProps = {
   filterPage?: string
@@ -62,6 +63,7 @@ const LocationField: React.FC<LocationProps> = ({
   const handleSubmit = useHandleSubmit()
   const router = useRouter()
   const { q = '', filter = '' } = router.query
+  const inputRef = useRef<HTMLDivElement | null>(null)
 
   const handleLocationKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     switch (e.key) {
@@ -281,7 +283,7 @@ const LocationField: React.FC<LocationProps> = ({
   }, [showAutoAddress])
 
   return (
-    <div className={styles.categorySuggestion}>
+    <div className={styles.categorySuggestion} ref={inputRef}>
       <Image
         src={SearchIcon}
         width={16}
@@ -332,27 +334,14 @@ const LocationField: React.FC<LocationProps> = ({
       />
 
       {showAutoAddress && (
-        <div className={styles['dropdown']} ref={locationDropdownRef}>
-          {suggestions.map((suggestion, index) => (
-            <p
-              onClick={() => {
-                handleSelectAddressTwo(
-                  suggestion.description.join(', '),
-                  suggestion.place_id,
-                )
-                setLocation(suggestion.description[0])
-              }}
-              key={index}
-              className={
-                index === focusedLocationIdx
-                  ? styles['dropdown-option-focus']
-                  : ''
-              }
-            >
-              {suggestion.description.join(', ')}
-            </p>
-          ))}
-        </div>
+        <LocationDropdown
+          inputRef={inputRef}
+          suggestions={suggestions}
+          locationDropdownRef={locationDropdownRef}
+          focusedLocationIdx={focusedLocationIdx}
+          setLocation={setLocation}
+          handleSelectAddressTwo={handleSelectAddressTwo}
+        />
       )}
     </div>
   )
