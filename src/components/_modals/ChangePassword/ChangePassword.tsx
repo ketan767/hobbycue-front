@@ -408,8 +408,16 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               'Save'
             )}
           </button>
+          <OutlinedButton
+            className={styles.mobBtnCancel}
+            onClick={() => {
+              handleClose()
+            }}
+          >
+            Cancel
+          </OutlinedButton>
           <button
-            className="modal-mob-btn-save"
+            className={`modal-mob-btn-save ${styles.mobBtnSave}`}
             onClick={() => {
               handleSubmit('confirmPassword')
             }}
