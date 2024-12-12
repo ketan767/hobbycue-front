@@ -314,8 +314,8 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    if (itemRefs.current[highlightIndex]) {
-      itemRefs.current[highlightIndex].scrollIntoView({
+    if (itemRefs?.current[highlightIndex]) {
+      itemRefs?.current[highlightIndex]?.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest',
       });
