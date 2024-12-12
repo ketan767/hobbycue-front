@@ -49,7 +49,9 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
       window.removeEventListener('scroll', checkPosition)
       window.removeEventListener('resize', checkPosition)
     }
-  }, [])
+  }, [inputRef])
+  if (!filteredDropdownList || filteredDropdownList.length === 0) return null
+
   return (
     <div
       className={`${styles.dropdownCategory}
