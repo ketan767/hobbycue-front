@@ -247,7 +247,7 @@
   /* justify-content: space-between; */
 }
 
-.singlePageExplore{
+.singlePageExplore {
   margin-top: 24px;
 }
 .programDetails {
@@ -880,7 +880,7 @@
 .laptopHidden {
   display: none;
 }
-.mt-4px{
+.mt-4px {
   margin-top: 4px;
 }
 
@@ -1145,5 +1145,11 @@
   }
   .accordianPositionMobile {
     width: 50%;
+  }
+}
+
+@media screen and (min-width: 1390px) {
+  .full_name {
+    max-width: 400px;
   }
 }
