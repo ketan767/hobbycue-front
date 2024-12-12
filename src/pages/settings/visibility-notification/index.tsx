@@ -21,6 +21,9 @@ import {
 } from '@/services/user.service'
 import { updateUser } from '@/redux/slices/user'
 import PreLoader from '@/components/PreLoader'
+import ExploreSidebarBtn from './components/ExploreSidebarBtn'
+import QuestionIcon from '@/assets/icons/QuestionIcon'
+import ViewProfileBtn from './components/viewProfile/ViewProfileBtn'
 
 interface Preferences {
   [key: string]: any
@@ -252,7 +255,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
           </section>
         </aside>
       )}
-      <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
+      <PageGridLayout column={3} customStyles={styles['settingcontainer']}>
         <SettingsDropdownLayout>
           {isMobile ? null : (
             <SettingsSidebar active="visibility-notification" />
@@ -467,6 +470,38 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
             </div>
           </div>
         </SettingsDropdownLayout>
+        {/* {isMobile && (
+          <div
+            className={
+              showExploreMoreMobile ? styles['visible'] : styles['not-visible']
+            }
+            ref={exploreMoreRef}
+          >
+            <aside className={styles['aside-two']} ref={mainContentRef}>
+              <ExploreMoreBtn
+                text="Explore More"
+                href="/explore"
+                icon={<ExploreIcon />}
+              />
+
+              <ExploreSidebarBtn
+                text="Help Center"
+                href="/help"
+                icon={<QuestionIcon />}
+              />
+            </aside>
+          </div>
+        )} */}
+        {!isMobile && (
+          <aside className={styles['aside-two']}>
+            <ViewProfileBtn />
+            <ExploreSidebarBtn
+              text="Help Center"
+              href="/help"
+              icon={<QuestionIcon />}
+            />
+          </aside>
+        )}
       </PageGridLayout>
     </>
   )

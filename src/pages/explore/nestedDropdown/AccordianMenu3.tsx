@@ -23,6 +23,7 @@ import { getAllListingCategories } from '@/services/listing.service'
 import { isEmptyField } from '@/utils'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
+import CategoryDropdown from './components/CategoryDropdown'
 
 interface AccordianMenuProps {
   defaultCategory: string
@@ -92,6 +93,7 @@ const AccordionMenu3: React.FC<AccordianMenuProps> = ({
   const dispatch = useDispatch()
   // const [categoryInput, setCategoryInput] = useState('')
   const [isCategoryFilled, setIsCategoryFilled] = useState(false)
+  const inputRef = useRef<HTMLDivElement | null>(null)
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget)
@@ -319,7 +321,7 @@ const AccordionMenu3: React.FC<AccordianMenuProps> = ({
   return (
     <div className={styles.relative} ref={containerRef}>
       <div className={styles.relative}>
-        <div className={styles.categorySuggestion}>
+        <div className={styles.categorySuggestion} ref={inputRef}>
           <Image
             src={SearchIcon}
             width={16}
@@ -397,35 +399,14 @@ const AccordionMenu3: React.FC<AccordianMenuProps> = ({
           />
 
           {showCategoryDropdown && filteredDropdownList.length !== 0 && (
-            <div className={styles.dropdownCategory} ref={searchCategoryRef}>
-              {filteredDropdownList.map((category, index) => {
-                return (
-                  <p
-                    key={category._id}
-                    onClick={() => {
-                      // setCategoryValue(category.listingCategory)
-                      // setCategoryInput(category.listingCategory)
-                      //   setValue({ value: '', error: null })
-
-                      // searchResult(
-                      //   undefined,
-                      //   undefined,
-                      //   category.listingCategory,
-                      // )
-                      setSelectedCategory(category.listingCategory)
-                      setSelectedPageType('')
-                    }}
-                    className={`${styles['text-left']} ${
-                      index === categoryIndex
-                        ? styles['dropdown-option-focus']
-                        : ''
-                    }`}
-                  >
-                    {category.listingCategory}
-                  </p>
-                )
-              })}
-            </div>
+            <CategoryDropdown
+              inputRef={inputRef}
+              searchCategoryRef={searchCategoryRef}
+              filteredDropdownList={filteredDropdownList}
+              setSelectedCategory={setSelectedCategory}
+              setSelectedPageType={setSelectedPageType}
+              categoryIndex={categoryIndex}
+            />
           )}
         </div>
       </div>

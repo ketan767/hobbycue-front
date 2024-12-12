@@ -2063,7 +2063,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     hasNoMoreUsers
                       ? `${styles.visible} ${styles.singlePageExplore}`
                       : styles.hidden
-                  }`}
+                  } ${!filter ? styles.hidden : ''}`}
                 >
                   <UserExplore
                     currUserName={currUserName}
@@ -2229,11 +2229,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     hasNoMorePersonPages
                       ? `${styles.visible} ${styles.singlePageExplore}`
                       : styles.hidden
-                  }`}
+                  } ${!filter ? styles.hidden : ''}`}
                 >
                   <PExplore
-                    categoryValue={defaultProgramCategory}
-                    setCategoryValue={setDefaultProgramCategory}
+                    categoryValue={defaultPeopleCategory}
+                    setCategoryValue={setDefaultPeopleCategory}
                   />
                 </div>
               </div>
@@ -2371,11 +2371,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     hasNoMorePlacePages
                       ? `${styles.visible} ${styles.singlePageExplore}`
                       : styles.hidden
-                  }`}
+                  } ${!filter ? styles.hidden : ''}`}
                 >
                   <PExplore
-                    categoryValue={defaultProgramCategory}
-                    setCategoryValue={setDefaultProgramCategory}
+                    categoryValue={defaultPlaceCategory}
+                    setCategoryValue={setDefaultPlaceCategory}
                   />
                 </div>
               </div>
@@ -2498,10 +2498,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 )}
                 <div
                   className={`${styles.userExploreContainer} ${
-                    hasNoMoreProgramPages
+                    hasNoMoreProgramPages && filter
                       ? `${styles.visible} ${styles.singlePageExplore}`
                       : styles.hidden
-                  }`}
+                  } `}
                 >
                   <PExplore
                     categoryValue={defaultProgramCategory}
@@ -2556,8 +2556,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     )) || ''}
                 <div
                   className={`${styles.userExploreContainer} ${
-                    openExploreProgram ? styles.visible : styles.hidden
-                  }`}
+                    openExploreProgram
+                      ? styles.visible
+                      : styles.hidden
+                  } `}
                 >
                   <PExplore
                     categoryValue={defaultProgramCategory}
@@ -2737,11 +2739,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       hasNoMoreProductPages
                         ? `${styles.visible} ${styles.singlePageExplore}`
                         : styles.hidden
-                    }`}
+                    } ${!filter ? styles.hidden : ''}`}
                   >
                     <PExplore
-                      categoryValue={defaultProgramCategory}
-                      setCategoryValue={setDefaultProgramCategory}
+                      categoryValue={defaultProductCategory}
+                      setCategoryValue={setDefaultProductCategory}
                     />
                   </div>
                 </div>
@@ -2896,7 +2898,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     />
                   </div>
                   {/* <div
-                  className={`${styles.userExploreContainer} ${hasNoMoreProgramPages ? `${styles.visible} ${styles.singlePageExplore}`:styles.hidden}`}
+                  className={`${styles.userExploreContainer} ${hasNoMoreProgramPages ? `${styles.visible} ${styles.singlePageExplore}`:styles.hidden} ${!filter ? styles.hidden : ''}`}
                 >
                   <PExplore
                     categoryValue={defaultProgramCategory}
@@ -3058,7 +3060,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     />
                   </div>
                   {/* <div
-                  className={`${styles.userExploreContainer} ${hasNoMoreProgramPages ? `${styles.visible} ${styles.singlePageExplore}`:styles.hidden}`}
+                  className={`${styles.userExploreContainer} ${hasNoMoreProgramPages ? `${styles.visible} ${styles.singlePageExplore}`:styles.hidden} ${!filter ? styles.hidden : ''}`}
                 >
                   <PExplore
                     categoryValue={defaultProgramCategory}
@@ -3234,7 +3236,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     hasNoMorePostsPages
                       ? `${styles.visible} ${styles.singlePageExplore}`
                       : styles.hidden
-                  }`}
+                  } ${!filter ? styles.hidden : ''}`}
                 >
                   <PostExplore
                     currPostedBy={currPostedBy}
