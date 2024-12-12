@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from 'react'
 import styles from '../AccordianMenu.module.css'
 type DropdownListItem = {
@@ -32,11 +34,8 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
         const rect = inputRef.current.getBoundingClientRect()
 
         if (rect.top > seventyVh) {
-          console.log('Above ---------')
           setOpenAbove(true)
         } else {
-          console.log('Below _______________')
-
           setOpenAbove(false)
         }
       }
@@ -50,7 +49,9 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
       window.removeEventListener('scroll', checkPosition)
       window.removeEventListener('resize', checkPosition)
     }
-  }, [])
+  }, [inputRef])
+  if (!filteredDropdownList || filteredDropdownList.length === 0) return null
+
   return (
     <div
       className={`${styles.dropdownCategory}

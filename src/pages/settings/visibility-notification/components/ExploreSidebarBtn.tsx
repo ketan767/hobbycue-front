@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import styles from './ExploreSideBar.module.css'
+import { useRouter } from 'next/router'
 
 type PropsExploreSidebarBtn = {
   href: string
@@ -11,14 +12,16 @@ const ExploreSidebarBtn: React.FC<PropsExploreSidebarBtn> = ({
   text,
   icon,
 }) => {
+  const router = useRouter()
+  const handleOpenHelp = () => {
+    router.push(href)
+  }
   return (
     <div className={styles['explore-sidebar']}>
-      <Link href={href}>
-        <button className="modal-footer-btn">
-          {icon}
-          {text}
-        </button>
-      </Link>
+      <button onClick={handleOpenHelp} className="modal-footer-btn">
+        {icon}
+        {text}
+      </button>
     </div>
   )
 }

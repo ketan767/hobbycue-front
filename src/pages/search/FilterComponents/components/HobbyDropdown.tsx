@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
+"use client"
+import React, { useEffect, useState } from 'react'
 import styles from './../../styles.module.css'
 type DropdownListItem = {
   _id: string
@@ -46,7 +47,9 @@ const HobbyDropdown: React.FC<HobbyDropdownProps> = ({
       window.removeEventListener('scroll', checkPosition)
       window.removeEventListener('resize', checkPosition)
     }
-  }, [])
+  }, [inputRef])
+
+  if (!hobbyDropdownList || hobbyDropdownList.length === 0) return null
 
   return (
     <div

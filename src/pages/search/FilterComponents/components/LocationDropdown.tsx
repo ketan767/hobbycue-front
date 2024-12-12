@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from 'react'
 import styles from './../../styles.module.css'
 
@@ -41,7 +42,9 @@ const LocationDropdown: React.FC<LocationDropdownProps> = ({
       window.removeEventListener('scroll', checkPosition)
       window.removeEventListener('resize', checkPosition)
     }
-  }, [])
+  }, [inputRef])
+  if (!suggestions || suggestions.length === 0) return null
+
   return (
     <div
       className={`${styles.dropdown}
