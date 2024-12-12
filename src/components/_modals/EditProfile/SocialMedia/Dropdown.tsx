@@ -197,7 +197,7 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
     setShowOptions(true)
   };
   const handleBlur = () => {
-    setTimeout(() => setShowOptions(false), 100);
+    setTimeout(() => setShowOptions(false), 400);
   };
 
   type SocialMediaOption =
@@ -273,14 +273,12 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
 
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setHighlightIndex((prev) =>
-        prev < filteredOptions.length - 1 ? prev + 1 : 0
-      );
+      const a = highlightIndex < filteredOptions.length - 1 ? highlightIndex + 1 : 0
+      setHighlightIndex((prev) => a);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setHighlightIndex((prev) =>
-        prev > 0 ? prev - 1 : filteredOptions.length - 1
-      );
+      const a = highlightIndex < filteredOptions.length - 1 ? highlightIndex - 1 : filteredOptions.length - 1
+      setHighlightIndex((prev) => a);
     } else if (e.key === "Enter") {
       e.preventDefault();
       if (highlightIndex !== -1) {
@@ -297,7 +295,6 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
 
   const handleFullKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
-      e.stopPropagation();
       e.preventDefault();
       inputRef.current?.blur();
       setShowOptions(false);
@@ -313,6 +310,17 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
       setDropdownMaxHeight(Math.max(spaceAbove, spaceBelow) - 10);
     }
   }, [showOptions]);
+
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    if (itemRefs.current[highlightIndex]) {
+      itemRefs.current[highlightIndex].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+    }
+  }, [highlightIndex]);
 
   return (
     <div
@@ -356,12 +364,10 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
       <ArrowDropDownIcon
         onClick={() => {
           if (!showOptions) {
-            console.log("focus");
             inputRef.current?.focus();
             setShowOptions(true);
           } else {
             inputRef.current?.blur();
-            console.log("blur");
             setShowOptions(false);
           }
         }}
@@ -378,7 +384,7 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
       {showOptions &&
         ReactDOM.createPortal(
           <div
-            className="custom-scrollbar-two"
+            className="custom-scrollbar"
             style={{
               position: "fixed",
               ...(dropdownPosition === "down"
@@ -391,24 +397,27 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
                       (inputRef.current?.getBoundingClientRect().top || 0) + 1, 
                   }),
               left: inputRef.current?.getBoundingClientRect().left || 0,
-              width: inputRef.current?.offsetWidth || "auto",
+              width: inputRef.current?.offsetWidth ? inputRef.current?.offsetWidth + 5 : "auto",
               zIndex: 9999,
               maxHeight: dropdownMaxHeight,
               overflowY: "scroll",
               background: "white",
-              boxShadow:
-                "0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12)",
-              borderRadius: "8px",
+              boxShadow:" 0px 0px 2px 0px rgba(147, 156, 163, 0.36), 0px 8px 12px 0px rgba(147, 156, 163, 0.12)",
+              borderRadius: "4px",
               transitionDuration: "0.1s",
             }}
           >
             {filteredOptions
                   .filter((obj: any) => obj.Show === 'Y')
                   .map((option: any, i: any) => (
+                    <>
               <div
+              ref={(el) => (itemRefs.current[i] = el)}
                 key={i}
                 style={{
-                  padding: "7px 10px",
+                  margin: "3px 3px",
+                  borderRadius: "4px",
+                  padding: "7px 15px",
                   cursor: "pointer",
                   backgroundColor:
                     option.socialMedia === value ? 
@@ -429,9 +438,23 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
                     width={24}
                     height={24}
                   />
-                  <p style={{ marginLeft: "8px" }}>{option.socialMedia}</p>
+                  <p 
+                  style={{ 
+                    marginLeft: "8px", 
+                    color: "#6D747A",
+                    fontFamily: "Poppins",
+                    fontSize: "12px",
+                    fontStyle: "normal",
+                    fontWeight: "400",
+                    lineHeight: "16px"
+                  }}
+                  >
+                    {option.socialMedia}
+                  </p>
                 </div>
               </div>
+              <div style={{height:"1px", width:"100%", backgroundColor:"#ebedf0" }}></div>
+              </>
             ))}
           </div>,
           document.body
