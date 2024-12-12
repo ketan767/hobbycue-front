@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState, useEffect, Ref } from 'react'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 // import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline'
-import styles from './style.module.css'
+import styles from '@/pages/blog/styles.module.css'
 import dynamic from 'next/dynamic'
 import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload'
 import { uploadImage } from '@/services/post.service'
@@ -109,7 +109,7 @@ const BlogEditor: React.FC<Props> = ({
   }, [value])
 
   return (
-    <div className={`about-quill-container =  ${error ? 'quill-error' : ''}  `}>
+    <div className={`${error ? 'quill-error' : ''}`}>
       <ReactQuill
         ref={quillRef}
         theme="snow"
