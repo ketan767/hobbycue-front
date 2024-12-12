@@ -3,7 +3,7 @@
   border: 1px solid var(--grey-lighter, #ebedf0);
   background: var(--grey-white, #fff);
   padding: 26px 24px;
-  max-width: 726px;
+  max-width: 671px;
 }
 
 .header {
@@ -34,9 +34,9 @@
   margin: 24px 0;
 }
 
-.checkbox-container{
-   margin-top: 15px;
-   margin-bottom: 7px;
+.checkbox-container {
+  margin-top: 15px;
+  margin-bottom: 7px;
 }
 .checkbox-text {
   color: #000;
@@ -46,16 +46,25 @@
   font-weight: 400;
   line-height: 16px;
 }
-.disablebtn{
+.disablebtn {
   cursor: not-allowed;
 }
-
-@media screen and (max-width:1100px) {
-  .container{
+.aside-two {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+@media screen and (max-width: 1100px) {
+  .container {
     width: auto;
     padding: 24px 16px;
   }
-  .header{
+  .header {
     margin-bottom: 16px;
+  }
+  .aside-two {
+    height: auto;
+    background: #fff;
+    order: 1;
   }
 }
