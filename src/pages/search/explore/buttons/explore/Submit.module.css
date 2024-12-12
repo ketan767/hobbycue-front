@@ -1,0 +1,6 @@
+@media screen and (max-width: 1100px) {
+  .submitButtonMobile {
+    width: 114px;
+    max-width: 114px;
+  }
+}

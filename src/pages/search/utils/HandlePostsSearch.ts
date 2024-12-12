@@ -8,17 +8,17 @@ export default function useHandlePostsSearch() {
 
   const handlePostsSearch = (
     currPostedBy: string,
-    hobby: string,
-    currLocation: string
+    selectedHobby: string,
+    selectedLocation: string
   ) => {
     dispatch(setPostedBy(currPostedBy));
-    dispatch(setUserHobby(hobby));
-    dispatch(setUserLocation(currLocation));
+    dispatch(setUserHobby(selectedHobby));
+    dispatch(setUserLocation(selectedLocation));
 
     const query: Record<string, string> = { filter: 'posts' };
     if (currPostedBy) query.postedBy = currPostedBy;
-    if (hobby) query.hobby = hobby;
-    if (currLocation) query.location = currLocation;
+    if (selectedHobby) query.hobby = selectedHobby;
+    if (selectedLocation) query.location = selectedLocation;
 
     router.push({
       pathname: '/search',

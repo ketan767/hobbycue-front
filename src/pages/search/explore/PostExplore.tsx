@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
 import styles from '../styles.module.css'
-import NameField from '../FilterComponents/NameField'
 import HobbyField from '../FilterComponents/HobbyField'
 import LocationField from '../FilterComponents/LocationField'
-import UserSearchButton from './buttons/user/UserSearchButton'
+import PostField from '../FilterComponents/PostField'
+import PostSearchButton from './buttons/post/PostSearchButton'
 
-type UserExploreProps = {
-  currUserName: string
-  setCurrUserName: (name: string) => void
+type PostExploreProps = {
+  currPostedBy: string
+  setCurrPostedBy: (name: string) => void
 }
-const UserExplore: React.FC<UserExploreProps> = ({
-  currUserName,
-  setCurrUserName,
+const PostExplore: React.FC<PostExploreProps> = ({
+  currPostedBy,
+  setCurrPostedBy,
 }) => {
   const [selectedHobby, setSelectedHobby] = useState('')
   const [selectedLocation, setSelectedLocation] = useState('')
@@ -19,32 +19,32 @@ const UserExplore: React.FC<UserExploreProps> = ({
     <>
       <div className={styles.siteExploreParent}>
         <div className={styles.inputExploreContainer}>
-          <NameField
-            filterPage={'User'}
-            currUserName={currUserName}
-            setCurrUserName={setCurrUserName}
+          <PostField
+            currPostedBy={currPostedBy}
+            setCurrPostedBy={setCurrPostedBy}
             selectedLocation={selectedLocation}
             selectedHobby={selectedHobby}
           />
           <div className={`${styles.mobileHidden}`}>
             <HobbyField
-              filterPage={'User'}
-              currUserName={currUserName}
+              filterPage={'Post'}
+              currPostedBy={currPostedBy}
               selectedLocation={selectedLocation}
               selectedHobby={selectedHobby}
               setSelectedHobby={setSelectedHobby}
             />
           </div>
+
           <LocationField
-            filterPage={'User'}
-            currUserName={currUserName}
+            filterPage={'Post'}
+            currPostedBy={currPostedBy}
             selectedHobby={selectedHobby}
             selectedLocation={selectedLocation}
             setSelectedLocation={setSelectedLocation}
           />
           <div className={styles.mobileHidden}>
-            <UserSearchButton
-              currUserName={currUserName}
+            <PostSearchButton
+              currPostedBy={currPostedBy}
               selectedHobby={selectedHobby}
               selectedLocation={selectedLocation}
             />
@@ -55,20 +55,18 @@ const UserExplore: React.FC<UserExploreProps> = ({
         <div
           className={`${styles.inputExploreContainer} ${styles.inputExploreContainerWithBtn}`}
         >
-          <div
-            className={`${styles.accordianPositionMobile}`}
-          >
+          <div className={`${styles.accordianPositionMobile}`}>
             <HobbyField
-              filterPage={'User'}
-              currUserName={currUserName}
+              filterPage={'Post'}
+              currPostedBy={currPostedBy}
               selectedLocation={selectedLocation}
               selectedHobby={selectedHobby}
               setSelectedHobby={setSelectedHobby}
             />
           </div>
           <div className={`${styles.submitMobile}`}>
-            <UserSearchButton
-              currUserName={currUserName}
+            <PostSearchButton
+              currPostedBy={currPostedBy}
               selectedHobby={selectedHobby}
               selectedLocation={selectedLocation}
             />
@@ -79,4 +77,4 @@ const UserExplore: React.FC<UserExploreProps> = ({
   )
 }
 
-export default UserExplore
+export default PostExplore
