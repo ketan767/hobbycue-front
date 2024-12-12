@@ -125,10 +125,14 @@ background-repeat: no-repeat; */
   .aside-two {
     height: auto;
     background: #fff;
-    margin: 0 0 12px;
-    padding: 0 16px 16px;
     order: 1;
-
+  }
+  .emailUpdates {
+    display: flex;
+  }
+  .select{
+    height: 40px;
+    width: 156px;
   }
 }
 
