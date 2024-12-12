@@ -1,10 +1,20 @@
+.mainContainer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: beige;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .modal-wrapper {
   background-color: white;
   border-radius: var(--spacing-8);
   max-width: 50rem;
   width: 38rem;
-  display: flex;
-  flex-direction: column;
 }
 
 .long-input-box {
@@ -29,7 +39,7 @@
   outline: 1px solid #8064a2;
 }
 .input-box-error textarea:focus-visible {
-  outline: none ;
+  outline: none;
 }
 
 @media screen and (min-width: 1100px) {

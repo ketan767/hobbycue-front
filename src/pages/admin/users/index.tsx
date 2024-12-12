@@ -1,18 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { getAllUserDetail, searchUsers } from '../../../services/user.service'
 import styles from './styles.module.css'
 import Image from 'next/image'
 import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
-import { forgotPassword } from '@/services/auth.service'
-import {
-  closeModal,
-  openModal,
-  updateForgotPasswordEmail,
-} from '@/redux/slices/modal'
-import { RootState } from '@/redux/store'
-import AdminNavbar from '@/components/AdminNavbar/AdminNavbar'
 import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
@@ -25,18 +17,15 @@ import GoogleIcon from '@/assets/svg/admin_google.svg'
 import MailIcon from '@/assets/svg/admin_email.svg'
 import FacebookIcon from '@/assets/svg/admin_facebook.svg'
 import ToggleButton from '@/components/_buttons/ToggleButton'
-
 import ModalWrapper from '@/components/Modal'
 import UserFilter from '@/components/AdminPage/Modal/UserFilterModal/UserFilter'
 import EditUser from '@/components/AdminPage/Modal/UserEditModal/UserEditModal'
 import { setShowPageLoader } from '@/redux/slices/site'
-import DisplayState from '@/components/AdminPage/Users/DiplayState/DisplayState'
-import { Fade, Modal } from '@mui/material'
-import { CustomBackdrop } from '../posts'
-interface ModalProps {
-  isModalOpen: boolean
-  setIsModalOpen: (value: boolean) => void
-}
+import DisplayState from '@/components/AdminPage/Users/DsiplayState/DisplayState'
+import filterIcon from '@/assets/icons/Filter-On.png'
+import sortAscending from '@/assets/icons/Sort-Ascending-On.png'
+import sortDescending from '@/assets/icons/Sort-Ascending-Off.png'
+import { User } from '@/types/user'
 
 export interface ModalState {
   onboarded: string
@@ -78,7 +67,6 @@ const searchSvg = (
     />
   </svg>
 )
-
 const pencilSvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -117,16 +105,7 @@ const deleteSvg = (
     />
   </svg>
 )
-const formatDate = (date: string): string => {
-  if (!date) return ''
-  const options: Intl.DateTimeFormatOptions = {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  }
-  const dateObj = new Date(date)
-  return new Intl.DateTimeFormat('en-GB', options).format(dateObj) // 'en-GB' for DD MMM YYYY format
-}
+
 const AdminDashboard: React.FC = () => {
   const router = useRouter()
   const dispatch = useDispatch()
@@ -135,9 +114,12 @@ const AdminDashboard: React.FC = () => {
   })
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [email, setEmail] = useState('')
-  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [searchResults, setSearchResults] = useState<User[]>([])
   const [pageNumber, setPageNumber] = useState<number>(0)
+
+  const [loginSort, setLoginSort] = useState<boolean>(false)
+  const [joinedSort, setJoinedSort] = useState<boolean>(false)
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
@@ -242,7 +224,7 @@ const AdminDashboard: React.FC = () => {
       fetchUsers()
     }
   }, [data.search.value, page, pagelimit])
-  const filterUsers = (users: object[], criteria: ModalState) => {
+  const filterUsers = (users: User[], criteria: ModalState) => {
     const { onboarded, joined, loginModes, pageCount, status } = criteria
 
     return users.filter((user: any) => {
@@ -295,7 +277,7 @@ const AdminDashboard: React.FC = () => {
     })
   }
 
-  const filteredUsers = filterUsers(searchResults, modalState) || []
+  const filteredUsers: User[] = filterUsers(searchResults, modalState) || []
 
   const goToPreviousPage = () => {
     setPage(page - 1)
@@ -341,6 +323,16 @@ const AdminDashboard: React.FC = () => {
           Object.values(value).every((v) => v === '')),
     )
   }
+  const handleLoginSort = () => {
+    setLoginSort((prev) => !prev)
+    setJoinedSort(false)
+  }
+
+  const handleJoinedSort = () => {
+    setJoinedSort((prev) => !prev)
+    setLoginSort(false)
+  }
+  console.log(filteredUsers.slice(1, 3))
 
   useEffect(() => {
     if (hasNonEmptyValues(modalState)) {
@@ -373,12 +365,22 @@ const AdminDashboard: React.FC = () => {
               <DisplayState modalState={modalState} />
             )}
 
-            <button
-              className={styles.filterBtn}
-              onClick={() => setIsModalOpen(!isModalOpen)}
-            >
-              {filterSvg}
-            </button>
+            {hasNonEmptyValues(modalState) ? (
+              <button
+                className={styles.filterBtn}
+                onClick={() => setIsModalOpen(!isModalOpen)}
+              >
+                <Image src={filterIcon} width={25} height={30} alt="filter" />
+              </button>
+            ) : (
+              <button
+                className={styles.filterBtn}
+                onClick={() => setIsModalOpen(!isModalOpen)}
+              >
+                {filterSvg}
+              </button>
+            )}
+
             {isModalOpen && (
               <UserFilter
                 modalState={modalState}
@@ -395,7 +397,31 @@ const AdminDashboard: React.FC = () => {
                 <tr>
                   <th style={{ width: '20.06%' }}>User</th>
                   <th style={{ width: '4.48%' }}>Contact</th>
-                  <th style={{ width: '16.48%' }}>Last Login</th>
+                  <th style={{ width: '16.48%' }}>
+                    <div className={styles.sortButtonWrapper}>
+                      Last Login
+                      <button
+                        className={styles.sortButton}
+                        onClick={handleLoginSort}
+                      >
+                        {loginSort ? (
+                          <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                          />
+                        ) : (
+                          <Image
+                            src={sortDescending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                          />
+                        )}
+                      </button>
+                    </div>
+                  </th>
 
                   <th style={{ width: '6.163%' }}>Modes</th>
                   <th
@@ -404,7 +430,29 @@ const AdminDashboard: React.FC = () => {
                       paddingRight: '16px',
                     }}
                   >
-                    Joined
+                    <div className={styles.sortButtonWrapper}>
+                      Joined
+                      <button
+                        className={styles.sortButton}
+                        onClick={handleJoinedSort}
+                      >
+                        {joinedSort ? (
+                          <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                          />
+                        ) : (
+                          <Image
+                            src={sortDescending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                          />
+                        )}
+                      </button>
+                    </div>
                   </th>
                   <th style={{ width: '5.939%' }}>Onb</th>
                   <th style={{ width: '4.939%', paddingRight: '16px' }}>
@@ -421,227 +469,248 @@ const AdminDashboard: React.FC = () => {
               </thead>
               <tbody>
                 {filteredUsers?.length > 0 &&
-                  filteredUsers?.map((user: any, index) => (
-                    <tr key={index}>
-                      <td>
-                        <Link
-                          href={`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${user.profile_url}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <div className={styles.resultItem}>
-                            <div className={styles.avatarContainer}>
-                              {user.profile_image ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img
-                                  src={user.profile_image}
-                                  alt={`${user.full_name}'s profile`}
-                                  width={40}
-                                  height={40}
-                                  className={styles.avatarImage}
-                                />
-                              ) : (
-                                <Image
-                                  className={styles['img']}
-                                  src={DefaultProfile}
-                                  alt="profile"
-                                  width={40}
-                                  height={40}
-                                />
-                              )}
-                            </div>
-                            <div
-                              className={styles.detailsContainer}
-                              title={
-                                user?.full_name?.length > 25
-                                  ? user?.full_name
-                                  : ''
-                              }
-                            >
-                              {user?.full_name?.slice(0, 25)}
-                            </div>
-                          </div>
-                        </Link>
-                      </td>
-                      <td className={styles.LoginType}>
-                        <div className={styles.loginIcon}>
-                          {user?.phone?.number && (
-                            <Link
-                              href={`tel:${
-                                user.phone.prefix + user.phone.number
-                              }`}
-                            >
-                              <Image alt={user?.full_name} src={phoneIcon} />
-                            </Link>
-                          )}
-                          {user?.email && (
-                            <Link href={`mailto:${user.public_email}`}>
-                              <Image alt={user?.full_name} src={emailIcon} />
-                            </Link>
-                          )}
-                        </div>
-                      </td>
-                      <td>
-                        <div className={styles.lastLoggedIn}>
-                          {user?.last_loggedIn_via === 'google' ? (
-                            <Image
-                              src={GoogleIcon}
-                              alt="Google Icon"
-                              className={styles.icon}
-                            />
-                          ) : user?.last_loggedIn_via === 'facebook' ? (
-                            <Image
-                              src={FacebookIcon}
-                              alt="Facebook Icon"
-                              className={styles.icon}
-                            />
-                          ) : user?.last_loggedIn_via === 'mail' ? (
-                            <Image
-                              src={MailIcon}
-                              alt="Mail Icon"
-                              className={styles.icon}
-                            />
-                          ) : (
-                            ''
-                          )}
-                          {` ` + formatDateTimeTwo(user?.last_login)}
-                          {user?._sessions[0]?.device
-                            ? ' | ' + user?._sessions[0]?.device.split(' ')[0]
-                            : ''}
-                        </div>
-                      </td>
+                  filteredUsers
+                    ?.sort((a, b) => {
+                      if (loginSort) {
+                        return loginSort
+                          ? new Date(a.last_login).getTime() -
+                              new Date(b.last_login).getTime()
+                          : new Date(b.last_login).getTime() -
+                              new Date(a.last_login).getTime()
+                      }
 
-                      <td className={styles.LoginType}>
-                        <div className={styles.loginIcon}>
-                          {user.facebook.id &&
-                            user.google.id &&
-                            user.is_password && (
-                              <>
-                                <Image
-                                  src={GoogleIcon}
-                                  alt="Google Icon"
-                                  className={styles.icon}
-                                />
-                                <Image
-                                  src={FacebookIcon}
-                                  alt="Facebook Icon"
-                                  className={styles.icon}
-                                />
-                                <Image
-                                  src={MailIcon}
-                                  alt="Mail Icon"
-                                  className={styles.icon}
-                                />
-                              </>
+                      if (joinedSort) {
+                        return joinedSort
+                          ? new Date(a.createdAt).getTime() -
+                              new Date(b.createdAt).getTime()
+                          : new Date(b.createdAt).getTime() -
+                              new Date(a.createdAt).getTime()
+                      }
+
+                      return 0
+                    })
+                    ?.map((user: any) => (
+                      <tr key={user._id}>
+                        {/* user */}
+                        <td>
+                          <Link
+                            href={`/profile/${user.profile_url}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <div className={styles.resultItem}>
+                              <div className={styles.avatarContainer}>
+                                {user.profile_image ? (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <img
+                                    src={user.profile_image}
+                                    alt={`${user.full_name}'s profile`}
+                                    width={40}
+                                    height={40}
+                                    className={styles.avatarImage}
+                                  />
+                                ) : (
+                                  <Image
+                                    className={styles['img']}
+                                    src={DefaultProfile}
+                                    alt="profile"
+                                    width={40}
+                                    height={40}
+                                  />
+                                )}
+                              </div>
+                              <div
+                                className={styles.detailsContainer}
+                                title={
+                                  user?.full_name?.length > 25
+                                    ? user?.full_name
+                                    : ''
+                                }
+                              >
+                                {user?.full_name?.slice(0, 25)}
+                              </div>
+                            </div>
+                          </Link>
+                        </td>
+                        {/* contact */}
+                        <td className={styles.LoginType}>
+                          <div className={styles.loginIcon}>
+                            {user?.phone?.number && (
+                              <Link
+                                href={`tel:${
+                                  user.phone.prefix + user.phone.number
+                                }`}
+                              >
+                                <Image alt={user?.full_name} src={phoneIcon} />
+                              </Link>
                             )}
-                          {user.facebook.id &&
-                            user.google.id &&
-                            !user.is_password && (
-                              <>
-                                <Image
-                                  src={GoogleIcon}
-                                  alt="Google Icon"
-                                  className={styles.icon}
-                                />
-                                <Image
-                                  src={FacebookIcon}
-                                  alt="Facebook Icon"
-                                  className={styles.icon}
-                                />
-                              </>
+                            {user?.email && (
+                              <Link href={`mailto:${user.public_email}`}>
+                                <Image alt={user?.full_name} src={MailIcon} />
+                              </Link>
                             )}
-                          {user.facebook.id &&
-                            !user.google.id &&
-                            user.is_password && (
-                              <>
-                                <Image
-                                  src={FacebookIcon}
-                                  alt="Facebook Icon"
-                                  className={styles.icon}
-                                />
-                                <Image
-                                  src={MailIcon}
-                                  alt="Mail Icon"
-                                  className={styles.icon}
-                                />
-                              </>
-                            )}
-                          {!user.facebook.id &&
-                            user.google.id &&
-                            user.is_password && (
-                              <>
-                                <Image
-                                  src={GoogleIcon}
-                                  alt="Google Icon"
-                                  className={styles.icon}
-                                />
-                                <Image
-                                  src={MailIcon}
-                                  alt="Mail Icon"
-                                  className={styles.icon}
-                                />
-                              </>
-                            )}
-                          {user.facebook.id &&
-                            !user.google.id &&
-                            !user.is_password && (
-                              <Image
-                                src={FacebookIcon}
-                                alt="Facebook Icon"
-                                className={styles.icon}
-                              />
-                            )}
-                          {!user.facebook.id &&
-                            user.google.id &&
-                            !user.is_password && (
+                          </div>
+                        </td>
+                        {/* last login */}
+                        <td>
+                          <div className={styles.lastLoggedIn}>
+                            {user?.last_loggedIn_via === 'google' ? (
                               <Image
                                 src={GoogleIcon}
                                 alt="Google Icon"
                                 className={styles.icon}
                               />
-                            )}
-                          {!user.facebook.id &&
-                            !user.google.id &&
-                            user.is_password && (
+                            ) : user?.last_loggedIn_via === 'facebook' ? (
                               <Image
-                                src={MailIcon}
+                                src={FacebookIcon}
+                                alt="Facebook Icon"
+                                className={styles.icon}
+                              />
+                            ) : user?.last_loggedIn_via === 'mail' ? (
+                              <Image
+                                src={emailIcon}
                                 alt="Mail Icon"
                                 className={styles.icon}
                               />
+                            ) : (
+                              ''
                             )}
-                        </div>
-                      </td>
-                      <td className={styles.userName}>
-                        <div>{formatDateTime(user?.createdAt)}</div>
-                      </td>
-                      <td className={styles.pagesLength}>
-                        {user.is_onboarded ? 'Y' : 'N'}
-                      </td>
-                      <td className={styles.pagesLength}>
-                        {pagesLength(user)}
-                      </td>
-                      <td className={styles.pagesLength}>
-                        {/* posts not in logs */}0
-                      </td>
-                      <td>
-                        <div className={styles.accountStatus}>
-                          <ToggleButton isOn={user.is_account_activated} />
-                        </div>
-
-                        {/* {user.is_account_activated ? 'Active' : 'Deactivated'} */}
-                      </td>
-                      <td>
-                        <div className={styles.actions}>
-                          <div onClick={() => handleEdit(user.profile_url)}>
-                            {pencilSvg}
+                            {` ` + formatDateTimeTwo(user?.last_login)}
+                            {user?._sessions[0]?.device
+                              ? ' | ' + user?._sessions[0]?.device.split(' ')[0]
+                              : ''}
                           </div>
-                          <div onClick={() => handleDelete(user._id)}>
-                            {deleteSvg}
+                        </td>
+                        {/* login via */}
+                        <td className={styles.LoginType}>
+                          <div className={styles.loginIcon}>
+                            {user.facebook.id &&
+                              user.google.id &&
+                              user.is_password && (
+                                <>
+                                  <Image
+                                    src={GoogleIcon}
+                                    alt="Google Icon"
+                                    className={styles.icon}
+                                  />
+                                  <Image
+                                    src={FacebookIcon}
+                                    alt="Facebook Icon"
+                                    className={styles.icon}
+                                  />
+                                  <Image
+                                    src={MailIcon}
+                                    alt="Mail Icon"
+                                    className={styles.icon}
+                                  />
+                                </>
+                              )}
+                            {user.facebook.id &&
+                              user.google.id &&
+                              !user.is_password && (
+                                <>
+                                  <Image
+                                    src={GoogleIcon}
+                                    alt="Google Icon"
+                                    className={styles.icon}
+                                  />
+                                  <Image
+                                    src={FacebookIcon}
+                                    alt="Facebook Icon"
+                                    className={styles.icon}
+                                  />
+                                </>
+                              )}
+                            {user.facebook.id &&
+                              !user.google.id &&
+                              user.is_password && (
+                                <>
+                                  <Image
+                                    src={FacebookIcon}
+                                    alt="Facebook Icon"
+                                    className={styles.icon}
+                                  />
+                                  <Image
+                                    src={MailIcon}
+                                    alt="Mail Icon"
+                                    className={styles.icon}
+                                  />
+                                </>
+                              )}
+                            {!user.facebook.id &&
+                              user.google.id &&
+                              user.is_password && (
+                                <>
+                                  <Image
+                                    src={GoogleIcon}
+                                    alt="Google Icon"
+                                    className={styles.icon}
+                                  />
+                                  <Image
+                                    src={MailIcon}
+                                    alt="Mail Icon"
+                                    className={styles.icon}
+                                  />
+                                </>
+                              )}
+                            {user.facebook.id &&
+                              !user.google.id &&
+                              !user.is_password && (
+                                <Image
+                                  src={FacebookIcon}
+                                  alt="Facebook Icon"
+                                  className={styles.icon}
+                                />
+                              )}
+                            {!user.facebook.id &&
+                              user.google.id &&
+                              !user.is_password && (
+                                <Image
+                                  src={GoogleIcon}
+                                  alt="Google Icon"
+                                  className={styles.icon}
+                                />
+                              )}
+                            {!user.facebook.id &&
+                              !user.google.id &&
+                              user.is_password && (
+                                <Image
+                                  src={MailIcon}
+                                  alt="Mail Icon"
+                                  className={styles.icon}
+                                />
+                              )}
                           </div>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className={styles.userName}>
+                          <div>{formatDateTime(user?.createdAt)}</div>
+                        </td>
+                        <td className={styles.pagesLength}>
+                          {user.is_onboarded ? 'Y' : 'N'}
+                        </td>
+                        <td className={styles.pagesLength}>
+                          {pagesLength(user)}
+                        </td>
+                        <td className={styles.pagesLength}>
+                          {/* posts not in logs */}0
+                        </td>
+                        <td>
+                          <div className={styles.accountStatus}>
+                            <ToggleButton isOn={user.is_account_activated} />
+                          </div>
+                        </td>
+                        <td>
+                          <div className={styles.actions}>
+                            <div onClick={() => handleEdit(user.profile_url)}>
+                              {pencilSvg}
+                            </div>
+                            <div onClick={() => handleDelete(user._id)}>
+                              {deleteSvg}
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
 
                 {filteredUsers?.length === 0 && (
                   <p style={{ display: 'inline', margin: 'auto' }}>
