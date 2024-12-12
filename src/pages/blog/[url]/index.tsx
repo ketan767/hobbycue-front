@@ -686,6 +686,9 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   </div>
 
                   <ul className={styles['hobby-list']}>
+                    <div style={{height: "28px", display:"flex", justifyContent:"center", alignItems:"center"}}>
+                      <HobbyIconHexagon size={20} />
+                    </div>
                     {data?.blog_url?._hobbies?.map((item: any) => {
                       if (typeof item === 'string') return
                       return (

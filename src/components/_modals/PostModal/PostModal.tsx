@@ -191,6 +191,7 @@ export const PostModal: React.FC<Props> = ({
       setIsChanged(true)
     }
   }, [newComment])
+  const isReelBreakpoint = useMediaQuery('(max-width:600px)')
   const isMobile = useMediaQuery('(max-width:1100px)')
   dispatch(setShowPageLoader(false))
   if (confirmationModal) {
@@ -450,14 +451,17 @@ export const PostModal: React.FC<Props> = ({
                         <ReactPlayer
                           width="100%"
                           height="410px"
+                          style={{overflow:"hidden"}}
                           url={url}
                           controls={true}
                         />
                       </div>
                     ) : 
                     isInstagramReelLink(url) ? (
-                      <div onClick={()=>window.open(url,"_blank")} 
-                      style={isMobile ? {background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"16px", cursor:"pointer", padding:"0"} :{background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"16px", cursor:"pointer", padding:"0 16px"}}>
+                      
+                        !isReelBreakpoint ? (
+                          <div onClick={()=>window.open(url,"_blank")} 
+                      style={isMobile ? {background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"16px", cursor:"pointer", padding:"0"} :{background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"16px", cursor:"pointer", padding:"0 12px"}}>
                           <div style={{width:"230.63px", maxHeight:"376.31px"}}>
                       <img
                         style={{cursor:"pointer", maxHeight:"376.31px"}}
@@ -482,6 +486,58 @@ export const PostModal: React.FC<Props> = ({
                               </p>
                             </div>
                         </div>
+                        ) : (
+                          <div
+                            onClick={() => window.open(url, '_blank')}
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'between',
+                              alignItems: 'center',
+                              gap: '8px',
+                              cursor: 'pointer',
+                              flexDirection:"column"
+                            }}
+                          >
+                            <div
+                              style={{
+                                width: 'calc(100%)',
+                              }}
+                              >
+                              <img
+                                style={{
+                                  cursor: 'pointer',
+                                }}
+                                width= '100%'
+                                onClick={() => window.open(url, '_blank')}
+                                src={
+                                  (typeof metaData?.image === 'string' &&
+                                    metaData.image) ||
+                                  (typeof metaData?.icon === 'string' &&
+                                    metaData.icon) ||
+                                  defaultImg
+                                }
+                                alt=""
+                              />
+                            </div>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '16px',
+                                fontSize: '15px',
+                                justifyContent: 'start',
+                              }}
+                            >
+                              <p style={{ fontWeight: '500' }}>
+                                {metaData?.title}
+                              </p>
+                              <p style={{ color: '#333' }}>
+                                {metaData?.description?.split(':')[0]}
+                              </p>
+                            </div>
+                          </div>
+                        )
+                      
                       ) :
                     (
                       <>
