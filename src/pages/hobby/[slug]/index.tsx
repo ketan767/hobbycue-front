@@ -295,7 +295,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
                 <div
                   style={{
                     display: 'flex',
-                    gap: '16px',
+                    gap: '8px',
                     justifyItems: 'center',
                     alignItems: 'center',
                   }}
