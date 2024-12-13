@@ -1,0 +1,103 @@
+.modal {
+  background-color: white;
+  position: absolute;
+  right: 0;
+  top: 110%;
+  z-index: 99;
+  max-width: 328px;
+  min-height: 292px;
+  width: 100%;
+  padding: 16px 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modalHeader {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalTitle {
+  color: var(--Grey-Darkest, #08090a);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+.wrapper {
+  display: flex;
+  gap: 9px;
+}
+.applyButton {
+  display: flex;
+  height: 30px;
+  padding: 12px 24px;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 8px;
+  background: var(--Blue1, #0096c8);
+  color: var(--Grey-white, #fff);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px; /* 114.286% */
+}
+.clearButton {
+  display: flex;
+  height: 30px;
+  padding: 12px 24px;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 8px;
+  border: 1px solid #0096c8;
+  color: #0096c8;
+  background-color: white;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px; /* 114.286% */
+}
+
+.modalBody {
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.keyword {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+.keyword label {
+  color: var(--grey-darkest, #08090a);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  flex-shrink: 0;
+  margin: 7px 0 8px 3px;
+}
+.keyword input {
+  width: 100%;
+  padding: 5px 10px;
+
+  border: 1px solid var(--Grey-Lighter, #ebedf0);
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  transition: border-color 0.3s;
+}

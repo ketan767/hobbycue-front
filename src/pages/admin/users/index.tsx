@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux'
 import { getAllUserDetail, searchUsers } from '../../../services/user.service'
@@ -18,15 +18,14 @@ import MailIcon from '@/assets/svg/admin_email.svg'
 import FacebookIcon from '@/assets/svg/admin_facebook.svg'
 import ToggleButton from '@/components/_buttons/ToggleButton'
 import ModalWrapper from '@/components/Modal'
-import UserFilter from '@/components/AdminPage/Modal/UserFilterModal/UserFilter'
+import UserFilter from '@/components/AdminPage/Filters/UserFilter/UserFilter'
 import EditUser from '@/components/AdminPage/Modal/UserEditModal/UserEditModal'
 import { setShowPageLoader } from '@/redux/slices/site'
 import DisplayState from '@/components/AdminPage/Users/DsiplayState/DisplayState'
-import filterIcon from '@/assets/icons/Filter-On.png'
+import x from '@/assets/icons/Filter-On.png'
 import sortAscending from '@/assets/icons/Sort-Ascending-On.png'
 import sortDescending from '@/assets/icons/Sort-Ascending-Off.png'
 import { User } from '@/types/user'
-
 export interface ModalState {
   onboarded: string
   joined: { start: string; end: string }
@@ -37,7 +36,9 @@ export interface ModalState {
 type SearchInput = {
   search: InputData<string>
 }
-const filterSvg = (
+export const filterIcon = x
+
+export const filterSvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="40"
@@ -53,7 +54,7 @@ const filterSvg = (
   </svg>
 )
 
-const searchSvg = (
+export const searchSvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="19"
@@ -67,7 +68,7 @@ const searchSvg = (
     />
   </svg>
 )
-const pencilSvg = (
+export const pencilSvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="25"
@@ -89,7 +90,7 @@ const pencilSvg = (
   </svg>
 )
 
-const deleteSvg = (
+export const deleteSvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="25"

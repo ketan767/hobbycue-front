@@ -2,76 +2,83 @@ import axiosInstance, { operation } from './_axios'
 
 /** Get dashboard Details `GET /api/user/?{query}`  */
 export const admindashboard = async () => {
-    try {
-      const res = await axiosInstance.get(`/admin/dashboard`)
-      return { res: res, err: null }
-    } catch (error) {
-      console.error(error)
-      return { err: error, res: null }
-    }
+  try {
+    const res = await axiosInstance.get(`/admin/dashboard`)
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
   }
-
-  /** Get `/api/admin/support` */
-  export const getAdminHobbies = async (query: string,): Promise<ApiReturnObject> => {
-    const token = localStorage.getItem('token')
-    const headers = { Authorization: `Bearer ${token}` }
-    try {
-      const res = await axiosInstance.get(`/admin/hobby/?${query}`, { headers })
-      return { res: res, err: null }
-    } catch (error) {
-      console.error(error)
-      return { err: error, res: null }
-    }
-  }
-
+}
 
 /** Get `/api/admin/support` */
-  export const getSupports = async (query: string,): Promise<ApiReturnObject> => {
-    const token = localStorage.getItem('token')
-    const headers = { Authorization: `Bearer ${token}` }
-    try {
-      const res = await axiosInstance.get(`/admin/support/?${query}`, { headers })
-      return { res: res, err: null }
-    } catch (error) {
-      console.error(error)
-      return { err: error, res: null }
-    }
-  }
-
-
-  /** Get `/api/admin/report` */
-  export const getReports = async (query: string,): Promise<ApiReturnObject> => {
-    const token = localStorage.getItem('token')
-    const headers = { Authorization: `Bearer ${token}` }
-    try {
-      const res = await axiosInstance.get(`/admin/report/?${query}`, { headers })
-      return { res: res, err: null }
-    } catch (error) {
-      console.error(error)
-      return { err: error, res: null }
-    }
-  }
-
-  /** Get `/api/admin/contactUs` */
-  export const getContactUs = async (query: string,): Promise<ApiReturnObject> => {
-    const token = localStorage.getItem('token')
-    const headers = { Authorization: `Bearer ${token}` }
-    try {
-      const res = await axiosInstance.get(`/admin/contactUs/?${query}`, { headers })
-      return { res: res, err: null }
-    } catch (error) {
-      console.error(error)
-      return { err: error, res: null }
-    }
-  }
-
-/** PATCH `/api/admin/user/:user_id` */
-
-export const updateUserByAdmin = async (user_id: string,data:any): Promise<ApiReturnObject> => {
+export const getAdminHobbies = async (
+  query: string,
+): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
   try {
-    const res = await axiosInstance.patch(`/admin/user/${user_id}`,data, { headers })
+    const res = await axiosInstance.get(`/admin/hobby/?${query}`, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** Get `/api/admin/support` */
+export const getSupports = async (query: string): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.get(`/admin/support/?${query}`, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** Get `/api/admin/report` */
+export const getReports = async (query: string): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.get(`/admin/report/?${query}`, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** Get `/api/admin/contactUs` */
+export const getContactUs = async (query: string): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.get(`/admin/contactUs/?${query}`, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** PATCH `/api/admin/user/:user_id` */
+
+export const updateUserByAdmin = async (
+  user_id: string,
+  data: any,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.patch(`/admin/user/${user_id}`, data, {
+      headers,
+    })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -80,11 +87,15 @@ export const updateUserByAdmin = async (user_id: string,data:any): Promise<ApiRe
 }
 /** DELETE `/api/admin/user/:user_id` */
 
-export const deleteUserByAdmin = async (user_id: string): Promise<ApiReturnObject> => {
+export const deleteUserByAdmin = async (
+  user_id: string,
+): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
   try {
-    const res = await axiosInstance.delete(`/admin/user/${user_id}`, { headers })
+    const res = await axiosInstance.delete(`/admin/user/${user_id}`, {
+      headers,
+    })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -94,11 +105,18 @@ export const deleteUserByAdmin = async (user_id: string): Promise<ApiReturnObjec
 
 /** PATCH `/api/admin/listing/:listing_id` */
 
-export const updateListingByAdmin = async (listing_id: string,data:any): Promise<ApiReturnObject> => {
+export const updateListingByAdmin = async (
+  listing_id: string,
+  data: any,
+): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
   try {
-    const res = await axiosInstance.patch(`/admin/listing/${listing_id}`,data, { headers })
+    const res = await axiosInstance.patch(
+      `/admin/listing/${listing_id}`,
+      data,
+      { headers },
+    )
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -107,11 +125,18 @@ export const updateListingByAdmin = async (listing_id: string,data:any): Promise
 }
 
 /** Update Listing Address `PATCH: /api/admin/address/:addressId` */
-export const updateListingAddressByAdmin = async (addressId: string, data: any) => {
+export const updateListingAddressByAdmin = async (
+  addressId: string,
+  data: any,
+) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
   try {
-    const res = await axiosInstance.patch(`/admin/listing/address/${addressId}`, data, { headers })
+    const res = await axiosInstance.patch(
+      `/admin/listing/address/${addressId}`,
+      data,
+      { headers },
+    )
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -121,11 +146,15 @@ export const updateListingAddressByAdmin = async (addressId: string, data: any) 
 
 /** DELETE `/api/admin/listing/:listing_id` */
 
-export const deleteListingByAdmin = async (listing_id: string): Promise<ApiReturnObject> => {
+export const deleteListingByAdmin = async (
+  listing_id: string,
+): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
   try {
-    const res = await axiosInstance.delete(`/admin/listing/${listing_id}`, { headers })
+    const res = await axiosInstance.delete(`/admin/listing/${listing_id}`, {
+      headers,
+    })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -135,11 +164,16 @@ export const deleteListingByAdmin = async (listing_id: string): Promise<ApiRetur
 
 /** PATCH `/api/admin/post/:post_id` */
 
-export const updatePostByAdmin = async (post_id: string,data:any): Promise<ApiReturnObject> => {
+export const updatePostByAdmin = async (
+  post_id: string,
+  data: any,
+): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
   try {
-    const res = await axiosInstance.patch(`/admin/post/${post_id}`,data, { headers })
+    const res = await axiosInstance.patch(`/admin/post/${post_id}`, data, {
+      headers,
+    })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -149,11 +183,15 @@ export const updatePostByAdmin = async (post_id: string,data:any): Promise<ApiRe
 
 /** DELETE `/api/admin/post/:post_id` */
 
-export const deletePostByAdmin = async (post_id: string): Promise<ApiReturnObject> => {
+export const deletePostByAdmin = async (
+  post_id: string,
+): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
   try {
-    const res = await axiosInstance.delete(`/admin/post/${post_id}`, { headers })
+    const res = await axiosInstance.delete(`/admin/post/${post_id}`, {
+      headers,
+    })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -163,11 +201,16 @@ export const deletePostByAdmin = async (post_id: string): Promise<ApiReturnObjec
 
 /** PATCH `/api/admin/hobby/:hobby_id` */
 
-export const updateHobbyByAdmin = async (hobby_id: string,data:any): Promise<ApiReturnObject> => {
+export const updateHobbyByAdmin = async (
+  hobby_id: string,
+  data: any,
+): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearerhobby_id ${token}` }
   try {
-    const res = await axiosInstance.patch(`/admin/hobby/${hobby_id}`,data, { headers })
+    const res = await axiosInstance.patch(`/admin/hobby/${hobby_id}`, data, {
+      headers,
+    })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -176,11 +219,15 @@ export const updateHobbyByAdmin = async (hobby_id: string,data:any): Promise<Api
 }
 
 /** Get `/api/admin/hobbyreq` */
-export const getHobbyRequests = async (query: string,): Promise<ApiReturnObject> => {
+export const getHobbyRequests = async (
+  query: string,
+): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
   try {
-    const res = await axiosInstance.get(`/admin/hobbyreq/?${query}`, { headers })
+    const res = await axiosInstance.get(`/admin/hobbyreq/?${query}`, {
+      headers,
+    })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -189,11 +236,15 @@ export const getHobbyRequests = async (query: string,): Promise<ApiReturnObject>
 }
 
 /** Get `/api/admin/hobbyreq` */
-export const getClaimRequests = async (query: any,): Promise<ApiReturnObject> => {
+export const getClaimRequests = async (
+  query: any,
+): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
   try {
-    const res = await axiosInstance.get(`/admin/claimreq/?${query}`, { headers })
+    const res = await axiosInstance.get(`/admin/claimreq/?${query}`, {
+      headers,
+    })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -202,25 +253,34 @@ export const getClaimRequests = async (query: any,): Promise<ApiReturnObject> =>
 }
 
 /** Get `/api/admin/hobbyreq` */
-export const getsearchHistory = async (query: any,): Promise<ApiReturnObject> => {
+export const getsearchHistory = async (
+  query: any,
+): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
+
+  let url = `/admin/search-history?${query}`
+  console.log(url)
+
   try {
-    const res = await axiosInstance.get(`/admin/search-history/?${query}`, { headers })
+    const res = await axiosInstance.get(url, {
+      headers,
+    })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
     return { err: error, res: null }
   }
 }
-
 
 /** Get `/api/admin/hobbyreq` */
 export const getCommunities = async (): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
   try {
-    const res = await axiosInstance.get(`/admin/countUsersByHobbyAndCity`, { headers })
+    const res = await axiosInstance.get(`/admin/countUsersByHobbyAndCity`, {
+      headers,
+    })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -229,7 +289,7 @@ export const getCommunities = async (): Promise<ApiReturnObject> => {
 }
 
 /** Post `/api/admin/hobbyreq` */
-export const UpdateClaim = async (data:any): Promise<ApiReturnObject> => {
+export const UpdateClaim = async (data: any): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
   try {
@@ -241,9 +301,8 @@ export const UpdateClaim = async (data:any): Promise<ApiReturnObject> => {
   }
 }
 
-
 /** Post `/api/admin/hobbreq` */
-export const UpdateHobbyreq = async (data:any): Promise<ApiReturnObject> => {
+export const UpdateHobbyreq = async (data: any): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
   try {
@@ -255,15 +314,19 @@ export const UpdateHobbyreq = async (data:any): Promise<ApiReturnObject> => {
   }
 }
 
-export const updateHobbyProfile = async (hobbyId:any, formData: FormData) => {
+export const updateHobbyProfile = async (hobbyId: any, formData: FormData) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.post(`/admin/hobby/profile-image`, formData, {
-      headers,
-      params: { hobbyId },
-    })
+    const res = await axiosInstance.post(
+      `/admin/hobby/profile-image`,
+      formData,
+      {
+        headers,
+        params: { hobbyId },
+      },
+    )
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -273,10 +336,10 @@ export const updateHobbyProfile = async (hobbyId:any, formData: FormData) => {
 
 /** Update User Cover  `POST /user/me/cover-image`
  * - FormData Required Key: `user-cover` */
-export const updateHobbyCover = async (hobbyId:any,formData: FormData) => {
+export const updateHobbyCover = async (hobbyId: any, formData: FormData) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
-    formData.append('hobbyId', hobbyId);
+  formData.append('hobbyId', hobbyId)
   try {
     const res = await axiosInstance.post(`/admin/hobby/cover-image`, formData, {
       headers,
@@ -300,11 +363,18 @@ export const getBrand = async (): Promise<ApiReturnObject> => {
   }
 }
 
-export const updateBrand = async (brand_id: string,data:any): Promise<ApiReturnObject> => {
+export const updateBrand = async (
+  brand_id: string,
+  data: any,
+): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearerhobby_id ${token}` }
   try {
-    const res = await axiosInstance.patch(`/brand/updateBrand/${brand_id}`,data, { headers })
+    const res = await axiosInstance.patch(
+      `/brand/updateBrand/${brand_id}`,
+      data,
+      { headers },
+    )
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
