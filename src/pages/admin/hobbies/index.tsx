@@ -5,6 +5,7 @@ import { getAllUserDetail, searchUsers } from '../../../services/user.service'
 import styles from './styles.module.css'
 import Image from 'next/image'
 import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
+import HobbiesFilter from '@/components/AdminPage/Modal/HobbiesFilterModal/HobbiesFilter'
 import { forgotPassword } from '@/services/auth.service'
 import {
   closeModal,
@@ -36,6 +37,13 @@ type SearchInput = {
   search: InputData<string>
 }
 
+export interface ModalState {
+  onboarded: string
+  joined: { start: string; end: string }
+  loginModes: string[]
+  pageCount: { min: string; max: string }
+  status: string
+}
 const HobbiesRequest: React.FC = () => {
   const router = useRouter();
   const [showPreLoader, setShowPreLoader] = useState(true);
@@ -43,6 +51,8 @@ const HobbiesRequest: React.FC = () => {
     search: { value: '', error: null },
   })
   const [email, setEmail] = useState('')
+  const [count, setCount] = useState(0)
+   const [isModalOpen, setIsModalOpen] = useState(false)
   const [notes, setNotes] = useState<{ [key: string]: string }>({})
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [pageNumber, setPageNumber] = useState<number[]>([])
@@ -52,6 +62,14 @@ const HobbiesRequest: React.FC = () => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
   }
+  const [modalState, setModalState] = useState<ModalState>({
+      onboarded: '',
+      joined: { start: '', end: '' },
+      loginModes: [],
+      pageCount: { min: '', max: '' },
+      status: '',
+    })
+  const [applyFilter, setApplyFilter] = useState<boolean>(false)
   const [page, setPage] = useState(1)
   const [pagelimit, setPagelimit] = useState(25)
   const [deleteData, setDeleteData] = useState<{
@@ -74,21 +92,19 @@ const HobbiesRequest: React.FC = () => {
     listing_id: '',
   })
 
-  const handleSearch = async (event: any) => {
-    const searchValue = data.search.value.trim()
-    event.preventDefault()
-    let searchCriteria = {
-      full_name: searchValue,
+  const handleSearch = async (event: React.FormEvent) => {
+    event.preventDefault(); // Prevent page reload
+    const searchValue = data.search.value.trim();
+  
+    if (!searchValue) {
+      setSearchResults([]);
+      setPageNumber([]);
+      setCount(0);
+      return;
     }
-
-    const { res, err } = await searchUsers(searchCriteria)
-    if (err) {
-      console.log('An error', err)
-    } else {
-      setSearchResults(res.data)
-      console.log('res', res)
-    }
-  }
+  
+    await fetchSearchResults();
+  };
 
   const filterSvg = (
     <svg
@@ -173,34 +189,23 @@ const HobbiesRequest: React.FC = () => {
     }
   }
 
-  const pagesLength = (user: any) => {
-    return user?._listings?.length || 0
-  }
-  const handleEdit = (profile_url: any) => {
-    router.push(`/admin/users/edit/${profile_url}`)
-  }
-
   const fetchSearchResults = async () => {
-    const searchValue = data.search.value.trim()
-    let searchCriteria = {
-      full_name: searchValue,
-    }
-
-    const { res, err } = await searchUsers(searchCriteria)
+    const searchValue = data.search.value.trim();
+    if (!searchValue) return;
+  
+    const queryString = `limit=${pagelimit}&sort=-createdAt&page=${page}&populate=user_id,listing_id&search=${encodeURIComponent(searchValue)}`;
+    const { res, err } = await getHobbyRequests(queryString);
     if (err) {
-      console.log('An error', err)
+      console.error('Error fetching search results:', err);
     } else {
-      setSearchResults(res.data)
-
-      // Calculate total number of pages based on search results length
-      const totalPages = Math.ceil(res.data.length / 50)
-      const pages = []
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i)
-      }
-      setPageNumber(pages)
+      setSearchResults(res.data.data.hobbyreq || []);
+      setCount(res.data.data.no_of_requests || 0);
+  
+      const totalPages = Math.ceil(res.data.data.no_of_requests / 50);
+      setPageNumber(Array.from({ length: totalPages }, (_, i) => i + 1));
     }
-  }
+  };
+
   const FetchHobbyReq = async () => {
     dispatch(setShowPageLoader(true))
     const { res, err } = await getHobbyRequests(
@@ -211,7 +216,19 @@ const HobbiesRequest: React.FC = () => {
       dispatch(setShowPageLoader(false))
     } else {
       console.log('FetchHobbyReq', res.data)
-      setSearchResults(res.data.data.hobbyreq)
+      let filteredResults = res.data.data.hobbyreq;
+
+      if (modalState.onboarded === 'Yes') {
+        filteredResults = filteredResults.filter(
+          (hobbyreq : any) => hobbyreq?.user_id?.is_onboarded === true
+        );
+      } else if (modalState.onboarded === 'No') {
+        filteredResults = filteredResults.filter(
+          (hobbyreq : any) => hobbyreq?.user_id?.is_onboarded === false
+        );
+      }
+      setSearchResults(filteredResults);
+      setCount(filteredResults.length);
       dispatch(setShowPageLoader(false))
     }
   }
@@ -223,7 +240,7 @@ const HobbiesRequest: React.FC = () => {
       FetchHobbyReq()
     }
     setShowPreLoader(false)
-  }, [data.search.value, page])
+  }, [data.search.value, page, modalState.onboarded])
 
   useEffect(() => {
     const initialNotes: { [key: string]: string } = {}
@@ -235,15 +252,9 @@ const HobbiesRequest: React.FC = () => {
     setNotes(initialNotes)
   }, [searchResults, page])
 
-  const getUserName = async (_id: any) => {
-    const { res, err } = await getAllUserDetail(`_id=${_id}`)
-    return res?.data.data.users[0].full_name
-  }
 
-  const goToPage = (page: number) => {
-    // Logic to navigate to specific page
-  }
 
+  
   const goToPreviousPage = () => {
     setPage(page - 1)
   }
@@ -252,9 +263,7 @@ const HobbiesRequest: React.FC = () => {
     setPage(page + 1)
   }
 
-  const handleDelete = (user_id: string) => {
-    setDeleteData({ open: true, _id: user_id })
-  }
+
 
   const deleteFunc = async (user_id: string) => {
     const { err, res } = await deleteUserByAdmin(user_id)
@@ -314,6 +323,8 @@ const HobbiesRequest: React.FC = () => {
       console.error(error)
     }
   }
+
+  
 
   const handleSubmit = async () => {
     let jsondata = {
@@ -409,15 +420,28 @@ const HobbiesRequest: React.FC = () => {
                 {searchSvg}
               </button>
             </form>
-            <button className={styles.filterBtn}>{filterSvg}</button>
-          </div>
+
+            <div className={styles.countAndFilter}>
+            <span className={styles.countText}>Count: <span style={{ color:"#0096c8", fontWeight:"500"}}>{count}</span></span>
+          
+            <button className={styles.filterBtn} onClick={() => setIsModalOpen(!isModalOpen)}>{filterSvg}</button>
+            {isModalOpen && ( 
+              <HobbiesFilter
+                modalState={modalState}
+                setModalState={setModalState}
+                setIsModalOpen={setIsModalOpen}
+                setApplyFilter={setApplyFilter}
+              />
+              )}
+        </div>
+      </div>
 
           <div className={styles.resultsContainer}>
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '8.06%' }}>Hobby</th>
-                  <th style={{ width: '8%' }}>Level</th>
+                  <th style={{ width: '8.06%', padding:'1px' }}>Hobby</th>
+                  <th style={{ width: '8%', padding:'1px' }}>Genre/Style</th>
 
                   <th style={{ width: '12.163%' }}>Requested By</th>
                   <th style={{ width: '12.163%' }}>On ▼</th>
@@ -456,22 +480,42 @@ const HobbiesRequest: React.FC = () => {
                     <td className={styles.userName}>
                       <div>{hobbyreq?.level}</div>
                     </td>
-
                     <td className={styles.LoginType}>
                       <Link
                         href={
                           hobbyreq.user_type == 'user'
                             ? `/profile/${hobbyreq.user_id?.profile_url}`
-                            : `/${pageType(hobbyreq?.listing_id?.type)}/${
-                                hobbyreq.listing_id?.page_url
-                              }`
+                            : `/${pageType(hobbyreq?.listing_id?.type)}/${hobbyreq.listing_id?.page_url}`
                         }
                       >
-                        {hobbyreq.user_type == 'user'
-                          ? hobbyreq.user_id?.full_name
-                          : hobbyreq.listing_id?.title}
+                        <div className={styles.userInfo}>
+                          {hobbyreq.user_type == 'user' && hobbyreq.user_id?.profile_image ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={hobbyreq.user_id.profile_image}
+                              alt={`${hobbyreq.user_id.full_name}'s profile`}
+                              width={40}
+                              height={40}
+                              className={styles.avatarImage}
+                            />
+                          ) : (
+                            <Image
+                              className={styles.img}
+                              src={DefaultProfile}
+                              alt="profile"
+                              width={40}
+                              height={40}
+                            />
+                          )}
+                          <span className={styles.userName}>
+                            {hobbyreq.user_type == 'user'
+                              ? hobbyreq.user_id?.full_name
+                              : hobbyreq.listing_id?.title}
+                          </span>
+                        </div>
                       </Link>
                     </td>
+
                     <td className={styles.userName}>
                       <div>{formatDate(hobbyreq?.createdAt)}</div>
                     </td>

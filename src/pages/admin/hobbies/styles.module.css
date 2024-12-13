@@ -177,6 +177,8 @@
   cursor: pointer;
 }
 
+
+
 .searchButton {
   width: 40px;
   height: 40px;
@@ -212,6 +214,7 @@
 .resultsTable thead {
   position: sticky;
   top: 0;
+  z-index: 10;
 }
 
 .resultsTable td
@@ -286,14 +289,33 @@
   padding: 0 8px 0 24px; 
 }
 
-/* Avatar styles */
+
 .avatarImage {
   border-radius: 50%;
+  border: 2px solid #0096c8; 
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+.countAndFilter {
+  display: flex;
+  align-items: center;
+  gap: 40px; 
+}
+
+.countText {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333; 
 }
 
 
 
-/* User details container styles */
 .resultItem {
   display: flex;
   align-items: center;
@@ -393,6 +415,7 @@
   justify-content: center;
   align-items: flex-start;
   gap: 16px;
+
 }
 
 .actions svg {
