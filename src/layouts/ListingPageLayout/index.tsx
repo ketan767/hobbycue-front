@@ -76,6 +76,8 @@ const ListingPageLayout: React.FC<Props> = ({
   const [LocationErr, setLocationErr] = useState(false)
   const [snackBarOpen, setSnackBarOpen] = useState(false)
 
+  const { viewAs } = useSelector((state: RootState) => state.site)
+
   const { listingModalData, listingLayoutMode, totalEvents } = useSelector(
     (state: RootState) => state.site,
   )
@@ -231,6 +233,11 @@ const ListingPageLayout: React.FC<Props> = ({
     }
   }, [user, router.query.page_url, isLoggedIn, isAuthenticated, dispatch])
 
+  useEffect(() => {
+    if (viewAs === 'print') setExpandAll?.(true)
+    else setExpandAll?.(false)
+  }, [viewAs])
+
   const tabs: ListingPageTabs[] = [
     'home',
     'posts',
@@ -255,8 +262,6 @@ const ListingPageLayout: React.FC<Props> = ({
     content = children
   }
 
-  const { viewAs } = useSelector((state: RootState) => state.site)
-
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
@@ -275,7 +280,10 @@ const ListingPageLayout: React.FC<Props> = ({
       )}
       {/* Navigation Links */}
       <nav className={styles['nav']}>
-        <div style={viewAs === 'print' ? { height: '0' } : {}} className={styles.navContainer}>
+        <div
+          style={viewAs === 'print' ? { height: '0' } : {}}
+          className={styles.navContainer}
+        >
           <div className={`${styles['navigation-tabs']}`}>
             {viewAs !== 'print' &&
               tabs.map((tab) => {
@@ -346,50 +354,61 @@ const ListingPageLayout: React.FC<Props> = ({
           </div>
         </div>
       </nav>
-      <nav className={styles['nav-mobile']}>
-        <div
-          className={`${styles['navigation-tabs']} ${
-            !expandAll ? styles['mobile-mt-0'] : ''
-          }`}
-        >
-          {tabs.map((tab) => {
-            if (['posts', 'store'].includes(tab)) {
-              if (data.pageData.type === 4) {
-                return
+      {viewAs !== 'print' && (
+        <nav className={styles['nav-mobile']}>
+          <div
+            className={`${styles['navigation-tabs']} ${
+              !expandAll ? styles['mobile-mt-0'] : ''
+            }`}
+          >
+            {tabs.map((tab) => {
+              if (['posts', 'store'].includes(tab)) {
+                if (data.pageData.type === 4) {
+                  return
+                }
               }
-            }
 
-            if (tab === 'related') {
-              if (data.pageData.type !== 4) {
-                return
+              if (tab === 'related') {
+                if (data.pageData.type !== 4) {
+                  return
+                }
               }
-            }
 
-            if (tab === 'events') {
-              if (![3, 4].includes(data.pageData.type))
-                return (
-                  <a
-                    key={tab}
-                    onClick={() => navigationTabs(tab)}
-                    className={
-                      activeTab === tab
-                        ? styles['active']
-                        : '' + ` ${styles['event-tab']}`
-                    }
-                  >
-                    {totalEvents > 0 && (
-                      <button className={styles['event-count']}>
-                        {totalEvents}
-                      </button>
-                    )}
-                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                  </a>
+              if (tab === 'events') {
+                if (![3, 4].includes(data.pageData.type))
+                  return (
+                    <a
+                      key={tab}
+                      onClick={() => navigationTabs(tab)}
+                      className={
+                        activeTab === tab
+                          ? styles['active']
+                          : '' + ` ${styles['event-tab']}`
+                      }
+                    >
+                      {totalEvents > 0 && (
+                        <button className={styles['event-count']}>
+                          {totalEvents}
+                        </button>
+                      )}
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </a>
+                  )
+              } else if (tab === 'orders') {
+                if (
+                  [3, 4].includes(data.pageData.type) &&
+                  listingLayoutMode === 'edit'
                 )
-            } else if (tab === 'orders') {
-              if (
-                [3, 4].includes(data.pageData.type) &&
-                listingLayoutMode === 'edit'
-              )
+                  return (
+                    <a
+                      key={tab}
+                      onClick={() => navigationTabs(tab)}
+                      className={activeTab === tab ? styles['active'] : ''}
+                    >
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </a>
+                  )
+              } else {
                 return (
                   <a
                     key={tab}
@@ -399,20 +418,11 @@ const ListingPageLayout: React.FC<Props> = ({
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
                   </a>
                 )
-            } else {
-              return (
-                <a
-                  key={tab}
-                  onClick={() => navigationTabs(tab)}
-                  className={activeTab === tab ? styles['active'] : ''}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </a>
-              )
-            }
-          })}
-        </div>
-      </nav>
+              }
+            })}
+          </div>
+        </nav>
+      )}
       {activeTab === 'home' && (
         <>
           <div className={styles.gapabovehome}></div>
@@ -470,24 +480,26 @@ const ListingPageLayout: React.FC<Props> = ({
               {listingLayoutMode === 'edit' && <Image src={EditIcon} alt="" />}
             </div>
 
-            <div
-              onClick={() => {
-                if (setExpandAll !== undefined) setExpandAll(!expandAll)
-              }}
-              className={styles['expand-all']}
-            >
-              <p>{expandAll ? 'See less' : 'See more'}</p>
-              <Image
-                width={15}
-                height={15}
-                src={DoubleChevron}
-                style={{ transition: 'all 0.3s ease' }}
-                className={`${
-                  expandAll ? styles['rotate-180'] : styles['rotate-0']
-                }`}
-                alt=""
-              />
-            </div>
+            {viewAs !== 'print' && (
+              <div
+                onClick={() => {
+                  if (setExpandAll !== undefined) setExpandAll(!expandAll)
+                }}
+                className={styles['expand-all']}
+              >
+                <p>{expandAll ? 'See less' : 'See more'}</p>
+                <Image
+                  width={15}
+                  height={15}
+                  src={DoubleChevron}
+                  style={{ transition: 'all 0.3s ease' }}
+                  className={`${
+                    expandAll ? styles['rotate-180'] : styles['rotate-0']
+                  }`}
+                  alt=""
+                />
+              </div>
+            )}
           </div>
         </>
       )}

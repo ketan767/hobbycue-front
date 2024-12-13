@@ -755,12 +755,13 @@ const ListingHeader: React.FC<Props> = ({
         <div className={styles.mobileViewAs}>
           <div>
             {viewAs === 'print' ? (
-              <FilledButton
-                className={styles.viewButtonPrint}
-                onClick={() => window.print()}
-              >
-                <PrintIcon /> Print
-              </FilledButton>
+              // <FilledButton
+              //   className={styles.viewButtonPrint}
+              //   onClick={() => window.print()}
+              // >
+              //   <PrintIcon /> Print
+              // </FilledButton>
+              <></>
             ) : (
               <div className={styles.viewingAs}>
                 You are viewing this page as a{' '}
@@ -1792,83 +1793,85 @@ const ListingHeader: React.FC<Props> = ({
           <></>
         )}
       </header>
-      <div className={styles['actions-container-mobile']}>
-        {listingLayoutMode === 'edit' && (
-          <div className={styles['publish-btn-container']}>
-            <FilledButton
-              className={
-                data.is_published ? styles.unpublishBtn : styles.publishBtn
-              }
-              onClick={handlePublish}
-            >
-              {data.is_published ? 'Unpublish' : 'Publish'}
-            </FilledButton>
-          </div>
-        )}
-        {/* Action Buttons */}
-        <div className={styles['action-btn-wrapper']}>
-          {/* Send Email Button  */}
-          <CustomTooltip title="Repost">
-            <div
-              onClick={(e) => handleRepost()}
-              className={styles['action-btn']}
-            >
-              <RepostIcon />
+      {viewAs !== 'print' && (
+        <div className={styles['actions-container-mobile']}>
+          {listingLayoutMode === 'edit' && (
+            <div className={styles['publish-btn-container']}>
+              <FilledButton
+                className={
+                  data.is_published ? styles.unpublishBtn : styles.publishBtn
+                }
+                onClick={handlePublish}
+              >
+                {data.is_published ? 'Unpublish' : 'Publish'}
+              </FilledButton>
             </div>
-          </CustomTooltip>
-
-          {/* Bookmark Button */}
-          <CustomTooltip title="Bookmark">
-            <div
-              onClick={showFeatureUnderDevelopment}
-              className={styles['action-btn']}
-            >
-              <BookmarkBorderRoundedIcon color="primary" />
-            </div>
-          </CustomTooltip>
-
-          {/* Share Button */}
-          <CustomTooltip title="Share">
-            <div
-              onClick={(e) => handleShare()}
-              className={styles['action-btn']}
-            >
-              <ShareIcon />
-            </div>
-          </CustomTooltip>
-
-          {/* More Options Button */}
-          <div
-            className={styles['action-btn-dropdown-wrapper']}
-            ref={mobileDropdownRef}
-          >
-            <CustomTooltip title="Click to view options">
+          )}
+          {/* Action Buttons */}
+          <div className={styles['action-btn-wrapper']}>
+            {/* Send Email Button  */}
+            <CustomTooltip title="Repost">
               <div
-                onClick={(e) => handleDropdown()}
+                onClick={(e) => handleRepost()}
                 className={styles['action-btn']}
               >
-                <MoreHorizRoundedIcon color="primary" />
+                <RepostIcon />
               </div>
             </CustomTooltip>
-            {listingLayoutMode === 'edit'
-              ? open && (
-                  <Dropdown
-                    showFeatureUnderDevelopment={showFeatureUnderDevelopment}
-                    userType={'edit'}
-                    handleClose={handleDropdown}
-                  />
-                )
-              : open && (
-                  <Dropdown
-                    userType={'anonymous'}
-                    handleClose={handleDropdown}
-                    showFeatureUnderDevelopment={showFeatureUnderDevelopment}
-                  />
-                )}
+
+            {/* Bookmark Button */}
+            <CustomTooltip title="Bookmark">
+              <div
+                onClick={showFeatureUnderDevelopment}
+                className={styles['action-btn']}
+              >
+                <BookmarkBorderRoundedIcon color="primary" />
+              </div>
+            </CustomTooltip>
+
+            {/* Share Button */}
+            <CustomTooltip title="Share">
+              <div
+                onClick={(e) => handleShare()}
+                className={styles['action-btn']}
+              >
+                <ShareIcon />
+              </div>
+            </CustomTooltip>
+
+            {/* More Options Button */}
+            <div
+              className={styles['action-btn-dropdown-wrapper']}
+              ref={mobileDropdownRef}
+            >
+              <CustomTooltip title="Click to view options">
+                <div
+                  onClick={(e) => handleDropdown()}
+                  className={styles['action-btn']}
+                >
+                  <MoreHorizRoundedIcon color="primary" />
+                </div>
+              </CustomTooltip>
+              {listingLayoutMode === 'edit'
+                ? open && (
+                    <Dropdown
+                      showFeatureUnderDevelopment={showFeatureUnderDevelopment}
+                      userType={'edit'}
+                      handleClose={handleDropdown}
+                    />
+                  )
+                : open && (
+                    <Dropdown
+                      userType={'anonymous'}
+                      handleClose={handleDropdown}
+                      showFeatureUnderDevelopment={showFeatureUnderDevelopment}
+                    />
+                  )}
+            </div>
+            {button}
           </div>
-          {button}
         </div>
-      </div>
+      )}
       {
         <CustomSnackbar
           message={snackbar.message}
