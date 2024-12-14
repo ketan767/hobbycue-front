@@ -178,6 +178,7 @@ type hobby = {
   category: { display: string }
   sub_category: { display: string }
   description: string
+  level:number
 }
 type SearchResultsProps = {
   searchResults: User[]
@@ -1851,16 +1852,33 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{hobby.display}</div>
                         <div className={styles.userTagline}>
-                          {`${
-                            hobby?.category?.display
-                              ? hobby.category.display
-                              : ''
-                          }${
-                            hobby?.sub_category?.display
-                              ? ' | ' + hobby.sub_category.display
-                              : ''
-                          }`}
-                          &nbsp;
+                          <span>
+                            {hobby?.level === 0
+                              ? 'Category'
+                              : hobby?.level === 1
+                              ? 'Sub-Category'
+                              : hobby?.level === 2
+                              ? 'Hobby Tag'
+                              : hobby?.level === 3
+                              ? 'Hobby'
+                              : hobby?.level === 5
+                              ? 'Genre/Style'
+                              : 'Hobby'}
+                          </span>
+                          {hobby?.level !== 0 && (
+                            <>
+                              {' | '}
+                              <span>
+                                {hobby?.category?.display}
+                                {hobby?.level > 1 && (
+                                  <>
+                                    ,{` `}
+                                    {hobby?.sub_category?.display}
+                                  </>
+                                )}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className={styles.hobbydescription}>
                           {hobby?.description}

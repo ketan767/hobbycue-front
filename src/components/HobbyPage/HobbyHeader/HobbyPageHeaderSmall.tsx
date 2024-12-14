@@ -140,7 +140,7 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
             <h1 className={styles['name']}>{data?.display}</h1>
 
             <p className={styles['category']}>
-              <span>
+              {/* <span>
                 {data?.level === 0
                   ? 'Category'
                   : data?.level === 1
@@ -152,7 +152,7 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
                   : data?.level === 5
                   ? 'Genre/Style'
                   : 'Hobby'}
-              </span>
+              </span> */}
               {data?.level !== 0 && (
                 <>
                   <VerticalBar />
