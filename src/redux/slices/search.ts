@@ -9,7 +9,7 @@ export interface User {
   profile_image: string
   full_name: string
   tagline: string
-  primary_address: { city: string }
+  primary_address: { society: string; locality: string; city: string }
   profile_url: string
   _hobbies: any[]
 }
