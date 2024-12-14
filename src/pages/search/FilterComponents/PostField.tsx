@@ -1,19 +1,25 @@
 import { TextField } from '@mui/material'
 import Image from 'next/image'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import styles from '../styles.module.css'
 import SearchIcon from '@/assets/svg/search.svg'
 import { setPostedBy } from '@/redux/slices/search'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
+import { RootState } from '@/redux/store'
+import usePostedByChange from './components/postFieldComponents/usePostedByChange'
+import PostedByDropdown from './components/PostedByDropdown'
+import usePostedByKeyDown from './components/postFieldComponents/usePostedByKeyDown'
 
 type PostFieldProps = {
+  filterPage?: string
   currPostedBy: string
   setCurrPostedBy: (name: string) => void
   selectedLocation: string
-  selectedHobby: String
+  selectedHobby: string
 }
 const PostField: React.FC<PostFieldProps> = ({
+  filterPage,
   currPostedBy,
   setCurrPostedBy,
   selectedLocation,
@@ -22,9 +28,37 @@ const PostField: React.FC<PostFieldProps> = ({
   const dispatch = useDispatch()
   const router = useRouter()
   const postedByRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLDivElement | null>(null)
+  const [showPostedByDropdown, setShowPostedByDropdown] = useState(false)
+  const [postedByDropdownList, setPostedByDropdownList] = useState<string[]>([])
+  const [isPostedBySelected, setIsPostedBySelected] = useState<boolean>(false)
+  const [focusedPostedByIdx, setFocusedPostedByIdx] = useState<number>(-1)
+  const { q = '', filter = '' } = router.query
+  const { postedBy, userHobby, userLocation } = useSelector(
+    (state: RootState) => state.search,
+  )
 
+  const handlePostedByChange = usePostedByChange(
+    setFocusedPostedByIdx,
+    setPostedByDropdownList,
+  )
+
+  const handlePostedByKeyDown = usePostedByKeyDown(
+    postedByRef,
+    setFocusedPostedByIdx,
+    postedByDropdownList,
+    focusedPostedByIdx,
+    showPostedByDropdown,
+    setShowPostedByDropdown,
+    isPostedBySelected,
+    setIsPostedBySelected,
+    selectedHobby,
+    selectedLocation,
+    setCurrPostedBy,
+    filterPage,
+  )
   return (
-    <div className={styles.hobbySuggestion}>
+    <div className={styles.hobbySuggestion} ref={inputRef}>
       <Image
         src={SearchIcon}
         width={16}
@@ -41,27 +75,37 @@ const PostField: React.FC<PostFieldProps> = ({
         name="postedBy"
         className={styles.hobbySearch}
         onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-          if (e.key === 'Enter') {
-            dispatch(setPostedBy(currPostedBy))
+          if (e.key !== 'Enter') {
+            setShowPostedByDropdown(true)
+            setIsPostedBySelected(false)
           }
-          if (e.key === 'Enter') {
-            let query = {}
-            query = { ...query, filter: 'posts' }
-            if (currPostedBy) {
-              query = { ...query, postedBy: currPostedBy }
-            }
-            if (selectedHobby) {
-              query = { ...query, hobby: selectedHobby }
-            }
-            if (selectedLocation) {
-              query = { ...query, location: selectedLocation }
-            }
-            router.push({
-              pathname: `/search`,
-              query: query,
-            })
-          }
+          handlePostedByKeyDown(e)
+          // if (e.key === 'Enter') {
+          //   dispatch(setPostedBy(currPostedBy))
+          // }
+          // if (e.key === 'Enter') {
+          //   let query = {}
+          //   query = { ...query, filter: 'posts' }
+          //   if (currPostedBy) {
+          //     query = { ...query, postedBy: currPostedBy }
+          //   }
+          //   if (selectedHobby) {
+          //     query = { ...query, hobby: selectedHobby }
+          //   }
+          //   if (selectedLocation) {
+          //     query = { ...query, location: selectedLocation }
+          //   }
+          //   router.push({
+          //     pathname: `/search`,
+          //     query: query,
+          //   })
+          // }
         }}
+        onBlur={() =>
+          setTimeout(() => {
+            setShowPostedByDropdown(false)
+          }, 300)
+        }
         value={currPostedBy}
         // onBlur={() =>
         //   setTimeout(() => {
@@ -70,6 +114,7 @@ const PostField: React.FC<PostFieldProps> = ({
         // }
         onChange={(e) => {
           setCurrPostedBy(e.target.value)
+          handlePostedByChange(e)
         }}
         sx={{
           '& label': {
@@ -95,6 +140,15 @@ const PostField: React.FC<PostFieldProps> = ({
           },
         }}
       />
+      {showPostedByDropdown && postedByDropdownList?.length !== 0 && (
+        <PostedByDropdown
+          inputRef={inputRef}
+          postedByDropdownList={postedByDropdownList}
+          postedByRef={postedByRef}
+          focusedPostedByIdx={focusedPostedByIdx}
+          setCurrPostedBy={setCurrPostedBy}
+        />
+      )}
     </div>
   )
 }
