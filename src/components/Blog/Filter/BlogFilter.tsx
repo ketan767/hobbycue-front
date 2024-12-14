@@ -312,7 +312,7 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
           <input
             type="text"
             name="keywords"
-            placeholder="Title,Tagline,Keyword"
+            placeholder="Title, Tagline, Keyword"
             className={styles.formInput}
             value={formValues.keywords}
             onChange={handleChangeKeyword}

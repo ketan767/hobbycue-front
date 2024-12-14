@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState, useEffect, Ref } from 'react'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 // import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline'
-import styles from './style.module.css'
+import styles from '@/pages/blog/styles.module.css'
 import dynamic from 'next/dynamic'
 import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload'
 import { uploadImage } from '@/services/post.service'
@@ -38,16 +38,15 @@ const BlogEditor: React.FC<Props> = ({
   useEffect(() => {
     if (quillRef.current) {
       const quill = quillRef.current.getEditor()
-      const processedImages = new Set() // To track uploaded images
-      let timeoutId: NodeJS.Timeout | null = null // For debouncing
+      const processedImages = new Set()
+      let timeoutId: NodeJS.Timeout | null = null
 
       const handleTextChange = async () => {
-        if (timeoutId) clearTimeout(timeoutId) // Clear any existing debounce timeout
+        if (timeoutId) clearTimeout(timeoutId)
 
         timeoutId = setTimeout(async () => {
           const editorContent = quill.root.innerHTML
 
-          // Check for base64 image in content
           const base64ImageRegex =
             /<img src="data:image\/[^;]+;base64,[^"]+"[^>]*>/g
           const matches = editorContent.match(base64ImageRegex)
@@ -65,14 +64,13 @@ const BlogEditor: React.FC<Props> = ({
                   if (res?.data.success) {
                     const imageUrl = res.data.data.url
 
-                    // Replace the base64 image with the uploaded image URL
                     const newContent = editorContent.replace(
                       base64ImageTag,
                       `<img src="${imageUrl}" alt="Uploaded Image"/>`,
                     )
 
-                    quill.root.innerHTML = newContent // Replace the editor content
-                    processedImages.add(base64Src) // Mark the image as processed
+                    quill.root.innerHTML = newContent
+                    processedImages.add(base64Src)
                   }
                 } catch (error) {
                   console.error('Image upload failed:', error)
@@ -80,36 +78,20 @@ const BlogEditor: React.FC<Props> = ({
               }
             }
           }
-        }, 300) // Debounce delay (in milliseconds)
+        }, 300)
       }
 
       quill.on('text-change', handleTextChange)
 
       return () => {
-        quill.off('text-change', handleTextChange) // Cleanup listener on unmount
-        if (timeoutId) clearTimeout(timeoutId) // Clear timeout on unmount
+        quill.off('text-change', handleTextChange)
+        if (timeoutId) clearTimeout(timeoutId)
       }
     }
   }, [])
 
-  useEffect(() => {
-    const handleQuillFocus = () => {
-      const quillEditor = quillRef.current?.getEditor()
-      if (quillEditor) {
-        const contentLength = value?.length || 0
-        quillEditor.setSelection(contentLength, 0)
-      }
-    }
-
-    const quillEditor = quillRef.current?.getEditor()
-    if (quillEditor) {
-      quillEditor.focus()
-      handleQuillFocus()
-    }
-  }, [value])
-
   return (
-    <div className={`about-quill-container =  ${error ? 'quill-error' : ''}  `}>
+    <div className={`${error ? 'quill-error' : ''}`}>
       <ReactQuill
         ref={quillRef}
         theme="snow"
