@@ -96,6 +96,10 @@ const ListingHeader: React.FC<Props> = ({
   const [quantity, setQuantity] = useState(1)
   const [HighlightRed, SetHiglightRed] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const eventDateOpenRef = useRef<HTMLDivElement | null>(null)
+  const eventDateParentRef = useRef<HTMLDivElement | null>(null)
+  const eventDateOpenRefMob = useRef<HTMLDivElement | null>(null)
+  const eventDateParentRefMob = useRef<HTMLDivElement | null>(null)
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
@@ -613,6 +617,44 @@ const ListingHeader: React.FC<Props> = ({
 
     setInpSelectValues(data?.product_variant?.variations?.[0])
   }, [])
+
+  useEffect(() => {
+    if (
+      viewAs === 'print' &&
+      eventDateParentRef.current &&
+      eventDateOpenRef.current
+    ) {
+      if (showDays) {
+        eventDateParentRef.current.style.height =
+          eventDateOpenRef.current?.offsetHeight + 'px'
+      } else {
+        eventDateParentRef.current.style.height = 'auto'
+      }
+    } else if (eventDateParentRef.current && eventDateOpenRef.current) {
+      eventDateParentRef.current.style.height = 'auto'
+    }
+  }, [viewAs, showDays, eventDateOpenRef.current?.offsetHeight])
+
+  /**
+   * For Mobile
+   */
+  useEffect(() => {
+    if (
+      viewAs === 'print' &&
+      eventDateParentRefMob.current &&
+      eventDateOpenRefMob.current
+    ) {
+      if (showDays) {
+        eventDateParentRefMob.current.style.height =
+          eventDateOpenRefMob.current?.offsetHeight + 'px'
+      } else {
+        eventDateParentRefMob.current.style.height = 'auto'
+      }
+    } else if (eventDateParentRefMob.current && eventDateOpenRefMob.current) {
+      eventDateParentRefMob.current.style.height = 'auto'
+    }
+  }, [viewAs, showDays, eventDateOpenRefMob.current?.offsetHeight])
+
   console.warn('variendata', VarientData)
   const handleImageChange = (e: any) => {
     const images = [...e?.target?.files]
@@ -850,13 +892,23 @@ const ListingHeader: React.FC<Props> = ({
             </div>
           )}
         </div>
-        <div className={styles['event-date-container-responsive']}>
+        <div
+          className={styles['event-date-container-responsive']}
+          style={{ maxHeight: viewAs === 'print' ? 'unset' : 24 }}
+        >
           {data?.type === listingTypes.PROGRAM && data?.event_date_time ? (
-            <div className={styles['eventDate-parent']}>
+            <div
+              className={styles['eventDate-parent']}
+              ref={eventDateParentRefMob}
+            >
               <div
                 className={
-                  styles.eventDate + ` ${showDays && styles['eventDate-open']}`
+                  styles.eventDate +
+                  ` ${showDays && styles['eventDate-open']} ${
+                    viewAs === 'print' ? styles.noBoxShadow : ''
+                  } `
                 }
+                ref={eventDateOpenRefMob}
               >
                 <Image className={styles['im']} src={Calendar} alt="calendar" />
                 <div className={styles['event-dates']}>
@@ -1127,12 +1179,19 @@ const ListingHeader: React.FC<Props> = ({
               <div className={styles['event-date-container']}>
                 {data?.type === listingTypes.PROGRAM &&
                 data?.event_date_time ? (
-                  <div className={styles['eventDate-parent']}>
+                  <div
+                    className={styles['eventDate-parent']}
+                    // style={{ height: eventDateOpenRef?.current?.offsetHeight }}
+                    ref={eventDateParentRef}
+                  >
                     <div
                       className={
                         styles.eventDate +
-                        ` ${showDays && styles['eventDate-open']}`
+                        ` ${showDays && styles['eventDate-open']} ${
+                          viewAs === 'print' ? styles.noBoxShadow : ''
+                        } `
                       }
+                      ref={eventDateOpenRef}
                     >
                       <Image
                         className={styles['im']}

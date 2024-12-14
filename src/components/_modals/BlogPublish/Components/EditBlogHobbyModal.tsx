@@ -475,7 +475,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
         genre: selectedGenre?._id,
         level: data.level,
       }
-      console.log('Asifs blog', { blog })
+
       const sameAsPrevious = blog?._hobbies?.find(
         (obj: any) =>
           obj.hobby?._id === jsonData.hobby &&
