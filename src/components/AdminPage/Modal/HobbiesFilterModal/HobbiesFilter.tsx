@@ -31,8 +31,6 @@ const HobbiesFilter: React.FC<UserFilterProps> = ({
   setIsModalOpen,
   setApplyFilter,
 }) => {
-  const startDateRef = useRef<HTMLInputElement>(null)
-  const endDateRef = useRef<HTMLInputElement>(null)
   const [showStartDateCalender, setShowStartDateCalender] = useState(false)
   const [showEndDateCalender, setShowEndDateCalender] = useState(false)
   const handleOnboardedChange = (value: string) => {
@@ -81,7 +79,6 @@ const HobbiesFilter: React.FC<UserFilterProps> = ({
     })
     setIsModalOpen?.(false)
   }
-  console.log(modalState)
   return (
     <main className={styles.modal}>
       <div className={styles.modalHeader}>
