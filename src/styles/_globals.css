@@ -284,6 +284,15 @@ select:-webkit-autofill {
 .ql-toolbar.ql-snow .ql-formats:nth-child(1) {
   margin-right: 6px;
 }
+.ql-toolbar.ql-snow .ql-formats:nth-child(3) .ql-link {
+  padding: 0 !important;
+}
+.ql-toolbar.ql-snow .ql-formats:nth-child(3) {
+  
+  padding: 0 !important;
+  width: 30px;
+  margin-left: auto;
+}
 .ql-toolbar.ql-snow > img {
   padding-top: 0px;
   display: inline-block;

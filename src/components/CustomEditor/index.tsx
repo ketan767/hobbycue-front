@@ -62,13 +62,20 @@ const CustomEditor: React.FC<Props> = ({
   )
   const onReady = () => {
     if (image && !imageIconAdded) {
-      const toolbar = document.querySelector('.ql-toolbar.ql-snow')
-      const img = document.createElement('img')
-      img.src = '/image.svg'
-      img.addEventListener('click', openInput)
-      toolbar?.append(img)
+      const toolbar = document.querySelector('.ql-toolbar.ql-snow');
+      // Check if an <img> already exists inside the toolbar
+      const existingImg = toolbar?.querySelector('img');
+      
+      if (!existingImg) {  // Only append the new image if no img exists
+        const img = document.createElement('img');
+        img.src = '/image.svg';
+        img.addEventListener('click', openInput);
+        toolbar?.append(img);
+        setImageIconAdded(true);
+      }
     }
-  }
+  };
+  
 
   useEffect(() => {
     if (editorRef.current === undefined) return
@@ -201,7 +208,7 @@ const CustomEditor: React.FC<Props> = ({
 
                 // 'emoji',
               ],
-              [{ list: 'ordered' }, { list: 'bullet' }, 'link'],
+              [{ list: 'ordered' }, { list: 'bullet' }], ['link'],
             ],
           },
           // 'emoji-toolbar': true,

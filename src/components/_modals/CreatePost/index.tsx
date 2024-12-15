@@ -958,10 +958,12 @@ export const CreatePost: React.FC<Props> = ({
                     classForShowDropdown={styles['full-width-all']}
                     className={styles['profile-switcher-parent']}
                   />
-                  <FilledButton
+                  {
+                    !isMobile && (
+                      <FilledButton
                     disabled={submitBtnLoading}
                     onClick={handleSubmit}
-                    className={styles['create-post-btn']}
+                    className={styles['create-post-btn2']}
                     loading={submitBtnLoading}
                   >
                     {submitBtnLoading ? (
@@ -970,6 +972,8 @@ export const CreatePost: React.FC<Props> = ({
                       'Post'
                     )}
                   </FilledButton>
+                    )
+                  }
                 </div>
                 <section
                   className={styles1.z10}
@@ -1219,7 +1223,7 @@ export const CreatePost: React.FC<Props> = ({
               </aside>
             </div>
             <section
-              className={styles['editor-container'] + ' btnOutlinePurple custom-scrollbar-two'}
+              className={styles['editor-container'] + ` btnOutlinePurple ${!isMobile ? "custom-scrollbar-two" : styles['no-scroll']}`}
               ref={editBoxRef}
             >
               <CustomEditor
@@ -1447,6 +1451,22 @@ export const CreatePost: React.FC<Props> = ({
                 </>
               )}
             </section>
+            {
+              isMobile && (
+                <FilledButton
+              disabled={submitBtnLoading}
+              onClick={handleSubmit}
+              className={styles['create-post-btn']}
+              loading={submitBtnLoading}
+            >
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'16px'} />
+              ) : (
+                'Post'
+              )}
+            </FilledButton>
+              )
+            }
           </div>
         </div>
       </div>

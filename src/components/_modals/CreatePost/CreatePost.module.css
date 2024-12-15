@@ -215,6 +215,23 @@
   background: #8064a2;
   border-radius: 8px;
   cursor: pointer;
+  margin-left: auto;
+  margin-top: -10px; /*changed it from -24px*/
+  margin-bottom: 16px;
+}
+
+.create-post-btn2 {
+  border: none;
+  width: 99px;
+  height: 40px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  color: #ffffff;
+
+  background: #8064a2;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 .imgWrapper {
@@ -252,6 +269,9 @@
   background-color: #1e1e1e;
   top: 0;
   left: 0;
+}
+.no-scroll::-webkit-scrollbar {
+  width: 0;
 }
 .editor-container {
   display: flex;
@@ -500,6 +520,9 @@
   }
 
   .create-post-btn {
+    width: 100%;
+  }
+  .create-post-btn2 {
     width: 100%;
     /* height: 80%; */
   }
