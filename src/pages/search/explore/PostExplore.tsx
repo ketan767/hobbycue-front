@@ -20,6 +20,7 @@ const PostExplore: React.FC<PostExploreProps> = ({
       <div className={styles.siteExploreParent}>
         <div className={styles.inputExploreContainer}>
           <PostField
+            filterPage={'Post'}
             currPostedBy={currPostedBy}
             setCurrPostedBy={setCurrPostedBy}
             selectedLocation={selectedLocation}
