@@ -9,6 +9,7 @@ import { isEmptyField } from '@/utils'
 import { getUsersByName } from '@/services/user.service'
 import { useRouter } from 'next/router'
 import { RootState } from '@/redux/store'
+import NameDropdown from './components/NameDropdown'
 
 type NameProps = {
   filterPage?: string
@@ -25,6 +26,7 @@ const NameField: React.FC<NameProps> = ({
   selectedHobby,
 }) => {
   const nameInputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLDivElement | null>(null)
   const [showNameDropdown, setShowNameDropdown] = useState(false)
   const [isNameSelected, setIsNameSelected] = useState<boolean>(false)
   const [nameDropdownList, setNameDropdownList] = useState<string[]>([])
@@ -176,7 +178,7 @@ const NameField: React.FC<NameProps> = ({
     }
   }
   return (
-    <div className={styles.hobbySuggestion}>
+    <div className={styles.hobbySuggestion} ref={inputRef}>
       <Image
         src={SearchIcon}
         width={16}
@@ -234,25 +236,13 @@ const NameField: React.FC<NameProps> = ({
         }}
       />
       {showNameDropdown && nameDropdownList?.length !== 0 && (
-        <div className={styles.dropdownHobby} ref={searchNameRef}>
-          {nameDropdownList?.map((name, index) => {
-            return (
-              <p
-                key={index}
-                onClick={() => {
-                  dispatch(setUserName(name))
-                }}
-                className={
-                  index === focusedNameIdx
-                    ? styles['dropdown-option-focus']
-                    : ''
-                }
-              >
-                {name}
-              </p>
-            )
-          })}
-        </div>
+        <NameDropdown
+          inputRef={inputRef}
+          nameDropdownList={nameDropdownList}
+          searchNameRef={searchNameRef}
+          focusedNameIdx={focusedNameIdx}
+          setCurrUserName={setCurrUserName}
+        />
       )}
     </div>
   )

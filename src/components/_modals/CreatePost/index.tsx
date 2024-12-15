@@ -46,6 +46,7 @@ import { updateActiveProfile } from '@/redux/slices/user'
 import defaultImg from '@/assets/svg/default-images/default-user-icon.svg'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import ReactPlayer from 'react-player'
+import useGetDefaultHobby from './components/hobby/useDefaultHobby'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -389,7 +390,7 @@ export const CreatePost: React.FC<Props> = ({
     DropdownListItem[]
   >([])
   const [visibilityData, setVisibilityData] = useState(['public'])
-
+  const defaultFirstHobby = useGetDefaultHobby()
   useEffect(() => {
     console.log('metaData', metaData)
   }, [metaData])
@@ -808,22 +809,8 @@ export const CreatePost: React.FC<Props> = ({
       }
       setSelectedHobbies(existingHobbies)
     } else {
-      const firstHobby =
-        activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
-          ?.hobby?.display
-      const firstGenre =
-        activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
-          ?.genre?.display
-      const firstHobbyId = activeProfile?.data?.preferences?.create_post_pref
-        ?.preferred_hobby?.hobby?._id
-        ? activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
-            ?.hobby?._id
-        : undefined
-      const firstGenreId = activeProfile?.data?.preferences?.create_post_pref
-        ?.preferred_hobby?.genre?._id
-        ? activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
-            ?.genre?._id
-        : undefined
+      const { firstHobby, firstGenre, firstHobbyId, firstGenreId } =
+        defaultFirstHobby()
 
       const preferredLocation =
         user?.preferences?.create_post_pref?.preferred_location?.city?.split(
