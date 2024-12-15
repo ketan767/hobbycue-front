@@ -651,7 +651,7 @@ select:-webkit-autofill {
   }
   .ql-toolbar.ql-snow + .ql-container.ql-snow {
     border: none !important;
-    border-bottom: 1px solid #ccc !important;
+    border-bottom: 1px solid #ccc;
   }
   .ql-toolbar.ql-snow {
     border-radius: 0 !important;
