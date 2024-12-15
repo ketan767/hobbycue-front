@@ -172,7 +172,7 @@ const CustomEditor: React.FC<Props> = ({
 
           setData((prev: any) => ({ ...prev, content: updatedValue }))
         }}
-        className={`${styles.quill} ${error ? styles['quill-error'] : ''} ${
+        className={` ${error ? styles['quill-error'] : ''} ${
           hasLink ? styles['quill-has-link'] : ''
         }`}
         style={forWhichComponent === "createPost" ? {maxHeight: '100%'}:{}}
@@ -211,6 +211,9 @@ const CustomEditor: React.FC<Props> = ({
       />
 
       <style>{`
+          .ql-container.ql-snow {
+            border:none !important;
+          }
           .ql-editor.ql-indent-1{
             padding-left:4px;
           }
@@ -233,6 +236,9 @@ const CustomEditor: React.FC<Props> = ({
             font-family:'Poppins';
             font-size:14px;
             text-align:left;
+          }
+          .ql-editor {
+            min-height: 100px;
           }
           ${
             forWhichComponent === "createPost" && 

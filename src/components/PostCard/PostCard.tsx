@@ -648,7 +648,7 @@ const PostCard: React.FC<Props> = (props) => {
                         <div className={styles.videoPlayer}>
                           <ReactPlayer
                             className={styles.reactplayer}
-                            // style={{minHeight: "376.31px"}}
+                            style={{maxHeight: "376.31px"}}
                             width="100%"
                             url={url}
                             controls={true}

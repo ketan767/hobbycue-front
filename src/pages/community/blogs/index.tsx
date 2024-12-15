@@ -73,7 +73,7 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
   return (
     <>
       <CommunityPageLayout activeTab="blogs">
-        <section className={styles['blog-container']}>
+        <section style={isMobile ? {marginTop:"8px"} : {}} className={styles['blog-container']}>
           {pagesLoading ? (
             <>
               <BlogLoader />

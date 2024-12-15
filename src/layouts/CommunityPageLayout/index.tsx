@@ -1667,6 +1667,7 @@ const CommunityLayout: React.FC<Props> = ({
                 hobbyMembers
                 ?.slice(0, seeMoreMembers === 0 ? 3 : hobbyMembers.length)
                 .map((obj: any, idx) => (
+                  obj !== null &&
                   <div key={idx} className={styles['member']}>
                     <Link
                       href={`/profile/${obj?.profile_url}`}

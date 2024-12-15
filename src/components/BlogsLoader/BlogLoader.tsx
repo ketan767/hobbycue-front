@@ -78,6 +78,8 @@ const BlogLoader: FC<PagesLoaderProps> = ({}) => {
       </ContentLoader>
       </>
         ) : (
+          <div style={{marginTop: '8px', width: '100%'}}>
+
           <ContentLoader
         speed={2}
         width="100%"
@@ -99,6 +101,7 @@ const BlogLoader: FC<PagesLoaderProps> = ({}) => {
         <rect x="37" y="91.22%" width="60" height="5.68%" rx="11" fill="#F7F5F9" />
         <rect x="100" y="91.22%" width="60" height="5.68%" rx="11" fill="#F7F5F9" />
       </ContentLoader>
+          </div>
         )
       }
     </div>

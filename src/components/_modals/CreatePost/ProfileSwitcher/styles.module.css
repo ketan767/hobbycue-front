@@ -13,7 +13,7 @@
   background: #ffffff;
   border: 1px solid #ebedf0;
   border-radius: 8px;
-  max-width: 100%;
+  max-width: calc(100% - 116px) !important;
   z-index: 10;
 }
 .default-img[data-profile-type='user'] {

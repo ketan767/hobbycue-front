@@ -353,7 +353,9 @@ const DropdownComponent: React.FC<Props> = ({ options, placeholder, value, onCha
         value !== "" && (!showOptions || selectQuery === "") &&
             <div style={{position:"absolute", left:"15px", top:"calc(50% - 12px)", display:"flex", alignItems:"center"}}>
                 <img
-                    src={socialMediaIcons[value as SocialMediaOption]}
+                    src={value === "Youtube" 
+                      ? 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/youtube.svg' 
+                      : socialMediaIcons[value as SocialMediaOption] }
                     alt={value}
                     width={24}
                     height={24}

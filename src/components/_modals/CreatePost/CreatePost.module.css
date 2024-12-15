@@ -35,7 +35,7 @@
   flex-grow: 1;
   height: calc(100vh - 20rem);
   max-height: 585px;
-  border-radius: 8px;
+  /* border-radius: 8px; */
 }
 
 .image-posting-as {
@@ -215,9 +215,6 @@
   background: #8064a2;
   border-radius: 8px;
   cursor: pointer;
-  margin-left: auto;
-  margin-top: -10px; /*changed it from -24px*/
-  margin-bottom: 16px;
 }
 
 .imgWrapper {
@@ -504,7 +501,7 @@
 
   .create-post-btn {
     width: 100%;
-    height: 80%; /*added*/
+    /* height: 80%; */
   }
 
   .background {
