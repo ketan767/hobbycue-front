@@ -98,7 +98,7 @@ const LinksLoader: FC<LinksLoaderProps> = ({}) => {
             speed={2}
             width="100%"
             backgroundColor="#f3f3f3"
-            foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
             height={130}
             viewBox='0 0 480 auto'
           >
@@ -164,7 +164,7 @@ const LinksLoader: FC<LinksLoaderProps> = ({}) => {
             speed={2}
             width="100%"
             backgroundColor="#f3f3f3"
-            foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
             height={130}
           >
             <rect
@@ -209,8 +209,14 @@ const LinksLoader: FC<LinksLoaderProps> = ({}) => {
           }
           <div className={styles.iconsContainer}>
             <div className={styles.upArrow}>{upArrow}</div>
+            <svg width="25" height="14" viewBox="0 0 25 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0.5" width="24" height="14" rx="7" fill="#D9DBE9"/>
+            </svg>
             <div className={styles.downArrow}>{downArrow}</div>
-            <div>{commentIcon}</div>
+            <div className={styles.commentIcon}>{commentIcon}</div>
+            <svg width="23" height="14" viewBox="0 0 23 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0.5" width="22" height="14" rx="7" fill="#D9DBE9"/>
+            </svg>
           </div>
         </div>
       </div>
@@ -219,7 +225,7 @@ const LinksLoader: FC<LinksLoaderProps> = ({}) => {
           speed={2}
           width="100%"
           backgroundColor="#f3f3f3"
-          foregroundColor="#D9DBE9"
+                foregroundColor="#ecebeb"
           height={20}
           viewBox="0 0 50 auto"
         >

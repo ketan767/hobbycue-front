@@ -20,10 +20,24 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+    align-content: center;
 }
 .upArrow {
-    margin-right: 46px;
+    margin-right: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.downArrow{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.commentIcon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .box{
     width: 195px;
@@ -55,9 +69,6 @@ background: var(--Grey-Lighter, #EBEDF0);
     }
     .iconsContainer{
         transform: translateY(-50px);
-    }
-    .upArrow {
-        margin-right: 24px;
     }
     .bottom{
         transform: translateY(-62.5px);

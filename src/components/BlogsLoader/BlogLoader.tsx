@@ -17,7 +17,7 @@ const BlogLoader: FC<PagesLoaderProps> = ({}) => {
         speed={2}
         width="100%"
         backgroundColor="#f3f3f3"
-        foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
         height={170}
       >
         <rect
@@ -84,7 +84,7 @@ const BlogLoader: FC<PagesLoaderProps> = ({}) => {
         speed={2}
         width="100%"
         backgroundColor="#f3f3f3"
-        foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
         height={367}
         viewBox='0 0 360 auto'
       >
