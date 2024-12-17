@@ -3,16 +3,9 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllUserDetail, searchUsers } from '../../../services/user.service'
 import styles from './styles.module.css'
+import sortAscending from '@/assets/icons/Sort-Ascending-On.png'
+import sortDescending from '@/assets/icons/Sort-Ascending-Off.png'
 import Image from 'next/image'
-import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
-import { forgotPassword } from '@/services/auth.service'
-import {
-  closeModal,
-  openModal,
-  updateForgotPasswordEmail,
-} from '@/redux/slices/modal'
-import { RootState } from '@/redux/store'
-import AdminNavbar from '@/components/AdminNavbar/AdminNavbar'
 import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
@@ -22,13 +15,7 @@ import {
   getCommunities,
   getsearchHistory,
 } from '@/services/admin.service'
-import { formatDateTime, formatDateTimeTwo } from '@/utils'
-import phoneIcon from '@/assets/svg/admin_phone.svg'
-import emailIcon from '@/assets/svg/admin_email.svg'
-import GoogleIcon from '@/assets/svg/google-icon.svg'
-import MailIcon from '@/assets/svg/mail.svg'
-import FacebookIcon from '@/assets/svg/mobile-social/facebook.svg'
-import StatusDropdown from '@/components/_formElements/StatusDropdown'
+
 import { setShowPageLoader } from '@/redux/slices/site'
 
 type SearchInput = {
@@ -280,9 +267,33 @@ const AdminCommunities: React.FC = () => {
                 <tr>
                   <th style={{ width: '20.06%' }}>Hobby</th>
                   <th style={{ width: '30.48%' }}>Location</th>
-                  <th style={{ width: '15.48%' }}>Members</th>
+                  <th style={{ width: '15.48%' }}>
+                    <div className={styles.sortButtonWrapper}>
+                    Members
+                    <button className={styles.sortButton}>
+                            <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                            />
+                    </button>
+                    </div>
+                  </th>
 
-                  <th style={{ width: '8.163%' }}>Posts</th>
+                  <th style={{ width: '8.163%' }}>
+                  <div className={styles.sortButtonWrapper}>
+                    Posts
+                    <button className={styles.sortButton}>
+                            <Image
+                            src={sortDescending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                            />
+                    </button>
+                    </div>
+                  </th>
 
                   <th style={{ width: '13.252%', textAlign: 'center' }}>
                     Most Active

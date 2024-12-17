@@ -1,19 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllUserDetail, searchUsers } from '../../../services/user.service'
+
 import styles from './styles.module.css'
 import Image from 'next/image'
 import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
 import HobbiesFilter from '@/components/AdminPage/Modal/HobbiesFilterModal/HobbiesFilter'
-import { forgotPassword } from '@/services/auth.service'
-import {
-  closeModal,
-  openModal,
-  updateForgotPasswordEmail,
-} from '@/redux/slices/modal'
-import { RootState } from '@/redux/store'
-import AdminNavbar from '@/components/AdminNavbar/AdminNavbar'
+
 import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
@@ -23,18 +16,26 @@ import {
   deleteUserByAdmin,
   getHobbyRequests,
 } from '@/services/admin.service'
-import { formatDateTime, pageType } from '@/utils'
+import { pageType } from '@/utils'
 
 import AdminActionModal from '@/components/_modals/AdminModals/ActionModal'
 import { Fade, Modal } from '@mui/material'
-import { log } from 'console'
+
 import { formatDate } from '@/utils/Date'
 import StatusDropdown from '@/components/_formElements/AdminStatusDropdown'
 import PreLoader from '@/components/PreLoader'
 import { setShowPageLoader } from '@/redux/slices/site'
 
+import HobbiesNotesModal from '@/components/AdminPage/Modal/HobbiesFilterModal/HobbiesNotesModal'
 type SearchInput = {
   search: InputData<string>
+}
+
+export interface AdminNoteModalData {
+  adminNotes: String
+  status: String
+  emailUser: boolean
+  userId: string
 }
 
 export interface ModalState {
@@ -55,6 +56,7 @@ const HobbiesRequest: React.FC = () => {
    const [isModalOpen, setIsModalOpen] = useState(false)
   const [notes, setNotes] = useState<{ [key: string]: string }>({})
   const [searchResults, setSearchResults] = useState<any[]>([])
+  const [singleData, setSingleData] = useState({})
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const [showAdminActionModal, setShowAdminActionModal] = useState(false)
   const dispatch = useDispatch()
@@ -70,6 +72,15 @@ const HobbiesRequest: React.FC = () => {
       pageCount: { min: '', max: '' },
       status: '',
     })
+const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
+     const [adminNoteModalData, setAdminNoteModalData] =
+        useState<AdminNoteModalData>({
+          adminNotes: 'Admin Note',
+          status: 'in_progress',
+          emailUser: false,
+          userId: '',
+        })
+
   const [applyFilter, setApplyFilter] = useState<boolean>(false)
   const [page, setPage] = useState(1)
   const [pagelimit, setPagelimit] = useState(25)
@@ -209,6 +220,8 @@ const HobbiesRequest: React.FC = () => {
     setCreatedAtSort((prev) => !prev);
   };
 
+
+  
   const FetchHobbyReq = async () => {
     dispatch(setShowPageLoader(true))
     const { res, err } = await getHobbyRequests(
@@ -235,6 +248,12 @@ const HobbiesRequest: React.FC = () => {
       dispatch(setShowPageLoader(false))
     }
   }
+  const handleModalSubmit = async (updatedData: any) => {
+    await FetchHobbyReq();
+    setAdminNoteModal(false);
+  };
+
+
   useEffect(() => {
     setShowPreLoader(true)
     if (data.search.value) {
@@ -367,8 +386,9 @@ const HobbiesRequest: React.FC = () => {
       status: hobbyreq?.status,
     })
     console.log('Hobby data received')
-
+    setSingleData(hobbyreq)
     console.log(hobbyData, 10000)
+    setAdminNoteModal(true)
 
     //setShowAdminActionModal(true)
   }
@@ -561,7 +581,7 @@ const HobbiesRequest: React.FC = () => {
                     </td>
                     <td>
                       <div
-                        
+                        onClick={() => handleAction(hobbyreq)}
                         className={styles.actions}
                       >
                         {pencilSvg}
@@ -634,6 +654,13 @@ const HobbiesRequest: React.FC = () => {
           }}
         />
       }
+      <HobbiesNotesModal
+        data={singleData}
+        pageName={'HobbyRequest'}
+        setAdminNoteModalData={handleModalSubmit}
+        setIsModalOpen={setAdminNoteModal}
+        isModalOpen={adminNoteModal}
+      />
     </>
   )
 }
