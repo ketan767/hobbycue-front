@@ -178,7 +178,7 @@ type hobby = {
   category: { display: string }
   sub_category: { display: string }
   description: string
-  level:number
+  level: number
 }
 type SearchResultsProps = {
   searchResults: User[]
@@ -1893,11 +1893,14 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 )}
                 {showAllhobbies
                   ? undefined
-                  : (hobbyResults.length > 3 ? (
+                  : (hobbyResults ? (
                       <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllhobbies}
-                          className={`${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']} ${
+                            hobbyResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={hobbyResults.length <= 3}
                         >
                           View More
                         </button>
@@ -2036,11 +2039,14 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 )}
                 {showAllUsers
                   ? undefined
-                  : (userPages.length > 3 ? (
+                  : (userPages ? (
                       <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllusers}
-                          className={`${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']} ${
+                            userPages.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={userPages.length <= 3}
                         >
                           View More
                         </button>
@@ -2198,11 +2204,14 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 )}
                 {showAllPeople
                   ? undefined
-                  : (peopleResults.length > 3 ? (
+                  : (peopleResults ? (
                       <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllpeople}
-                          className={`${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']} ${
+                            peopleResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={peopleResults.length <= 3}
                         >
                           View More
                         </button>
@@ -2344,11 +2353,14 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 )}
                 {showAllPlace
                   ? undefined
-                  : (placeResults.length > 3 ? (
+                  : (placeResults ? (
                       <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllplace}
-                          className={`${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']} ${
+                            placeResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={placeResults.length <= 3}
                         >
                           View More
                         </button>
@@ -2538,11 +2550,14 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 </div>
                 {showAllEvent
                   ? undefined
-                  : (EventResults.length > 3 ? (
+                  : (EventResults ? (
                       <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllevent}
-                          className={`${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']} ${
+                            EventResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={EventResults.length <= 3}
                         >
                           View More
                         </button>
@@ -2704,11 +2719,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   )}
                   {showAllProducts
                     ? undefined
-                    : (ProductResults.length > 3 ? (
+                    : (ProductResults ? (
                         <div className={styles['view-more-btn-container']}>
                           <button
                             onClick={toggleShowAllproducts}
-                            className={`${styles['view-more-btn']}`}
+                            className={`${styles['view-more-btn']} ${
+                              ProductResults.length <= 3
+                                ? styles.btnDisabled
+                                : ''
+                            }`}
+                            disabled={ProductResults.length <= 3}
                           >
                             View More
                           </button>
@@ -2869,11 +2889,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   )}
                   {showAllClasses
                     ? undefined
-                    : (ClassesResults.length > 3 ? (
+                    : (ClassesResults ? (
                         <div className={styles['view-more-btn-container']}>
                           <button
                             onClick={toggleShowAllclasses}
-                            className={`${styles['view-more-btn']}`}
+                            className={`${styles['view-more-btn']} ${
+                              ClassesResults.length <= 3
+                                ? styles.btnDisabled
+                                : ''
+                            }`}
+                            disabled={ClassesResults.length <= 3}
                           >
                             View More
                           </button>
@@ -3029,11 +3054,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   )}
                   {showAllRentals
                     ? undefined
-                    : (RentalResults.length > 3 ? (
+                    : (RentalResults ? (
                         <div className={styles['view-more-btn-container']}>
                           <button
                             onClick={toggleShowAllrentals}
-                            className={`${styles['view-more-btn']}`}
+                            className={`${styles['view-more-btn']} ${
+                              RentalResults.length <= 3
+                                ? styles.btnDisabled
+                                : ''
+                            }`}
+                            disabled={RentalResults.length <= 3}
                           >
                             View More
                           </button>
@@ -3206,12 +3236,15 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 )}
                 {showAllPosts
                   ? undefined
-                  : (PostsResults.length > 3 ? (
+                  : (PostsResults ? (
                       // toggleShowAllposts
                       <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllposts}
-                          className={`${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']} ${
+                            PostsResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={PostsResults.length <= 3}
                         >
                           View More
                         </button>
@@ -3327,11 +3360,14 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 )}
                 {showAllBlogs
                   ? undefined
-                  : (BlogsResults.length > 3 ? (
+                  : (BlogsResults ? (
                       <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllblogs}
-                          className={`${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']} ${
+                            BlogsResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={BlogsResults.length <= 3}
                         >
                           View More
                         </button>
@@ -3772,10 +3808,12 @@ const Search: React.FC<Props> = ({ data, children }) => {
                 // href="/explore"
                 icon={<ExploreIcon />}
               />
-              <InterestedDiv
-                seeMoreWhatsNew={seeMoreWhatsNew}
-                setSeeMoreWhatsNew={setSeeMoreWhatsNew}
-              />
+              {noResultsFound && searchLoading === false && (
+                <InterestedDiv
+                  seeMoreWhatsNew={seeMoreWhatsNew}
+                  setSeeMoreWhatsNew={setSeeMoreWhatsNew}
+                />
+              )}
               <ExploreSidebarBtn
                 text="Help Center"
                 href="/help"
@@ -3786,10 +3824,12 @@ const Search: React.FC<Props> = ({ data, children }) => {
         ) : (
           <aside className={styles['aside-two']}>
             <ExploreMoreBtn text="Explore More" icon={<ExploreIcon />} />
-            <InterestedDiv
-              seeMoreWhatsNew={seeMoreWhatsNew}
-              setSeeMoreWhatsNew={setSeeMoreWhatsNew}
-            />
+            {noResultsFound && searchLoading === false && (
+              <InterestedDiv
+                seeMoreWhatsNew={seeMoreWhatsNew}
+                setSeeMoreWhatsNew={setSeeMoreWhatsNew}
+              />
+            )}
             <ExploreSidebarBtn
               text="Help Center"
               href="/help"
