@@ -194,16 +194,6 @@ export const PostModal: React.FC<Props> = ({
   const isReelBreakpoint = useMediaQuery('(max-width:600px)')
   const isMobile = useMediaQuery('(max-width:1100px)')
   dispatch(setShowPageLoader(false))
-  if (confirmationModal) {
-    return (
-      <SaveModal
-        handleClose={handleClose}
-        handleSubmit={addComment}
-        setConfirmationModal={setConfirmationModal}
-        // isError={isError}
-      />
-    )
-  }
 
   const processedContent = activePost?.content
 
@@ -229,6 +219,17 @@ export const PostModal: React.FC<Props> = ({
 
   const { isLoggedIn } = useSelector((state: RootState) => state.user)
   const router = useRouter()
+
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={addComment}
+        setConfirmationModal={setConfirmationModal}
+        // isError={isError}
+      />
+    )
+  }
 
   return (
     <>
