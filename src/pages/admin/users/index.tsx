@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux'
 import { getAllUserDetail, searchUsers } from '../../../services/user.service'
@@ -11,6 +11,8 @@ import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { deleteUserByAdmin } from '@/services/admin.service'
 import { extractPlatform, formatDateTime, formatDateTimeTwo } from '@/utils'
+import pc from '@/assets/svg/admin/Device-Desktop.png'
+import phone from '@/assets/svg/admin/Device-Mobile.png'
 import phoneIcon from '@/assets/svg/admin_phone.svg'
 import emailIcon from '@/assets/svg/admin_gmail.svg'
 import GoogleIcon from '@/assets/svg/admin_google.svg'
@@ -18,15 +20,14 @@ import MailIcon from '@/assets/svg/admin_email.svg'
 import FacebookIcon from '@/assets/svg/admin_facebook.svg'
 import ToggleButton from '@/components/_buttons/ToggleButton'
 import ModalWrapper from '@/components/Modal'
-import UserFilter from '@/components/AdminPage/Modal/UserFilterModal/UserFilter'
+import UserFilter from '@/components/AdminPage/Filters/UserFilter/UserFilter'
 import EditUser from '@/components/AdminPage/Modal/UserEditModal/UserEditModal'
 import { setShowPageLoader } from '@/redux/slices/site'
 import DisplayState from '@/components/AdminPage/Users/DsiplayState/DisplayState'
-import filterIcon from '@/assets/icons/Filter-On.png'
+import x from '@/assets/icons/Filter-On.png'
 import sortAscending from '@/assets/icons/Sort-Ascending-On.png'
 import sortDescending from '@/assets/icons/Sort-Ascending-Off.png'
 import { User } from '@/types/user'
-
 export interface ModalState {
   onboarded: string
   joined: { start: string; end: string }
@@ -37,7 +38,9 @@ export interface ModalState {
 type SearchInput = {
   search: InputData<string>
 }
-const filterSvg = (
+export const filterIcon = x
+
+export const filterSvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="40"
@@ -53,7 +56,7 @@ const filterSvg = (
   </svg>
 )
 
-const searchSvg = (
+export const searchSvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="19"
@@ -67,7 +70,7 @@ const searchSvg = (
     />
   </svg>
 )
-const pencilSvg = (
+export const pencilSvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="25"
@@ -89,7 +92,7 @@ const pencilSvg = (
   </svg>
 )
 
-const deleteSvg = (
+export const deleteSvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="25"
@@ -119,6 +122,7 @@ const AdminDashboard: React.FC = () => {
 
   const [loginSort, setLoginSort] = useState<boolean>(false)
   const [joinedSort, setJoinedSort] = useState<boolean>(false)
+  const [NameSort, setNameSort] = useState<boolean>(false)
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
@@ -332,7 +336,6 @@ const AdminDashboard: React.FC = () => {
     setJoinedSort((prev) => !prev)
     setLoginSort(false)
   }
-  console.log(filteredUsers.slice(1, 3))
 
   useEffect(() => {
     if (hasNonEmptyValues(modalState)) {
@@ -395,7 +398,31 @@ const AdminDashboard: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '20.06%' }}>User</th>
+                  <th style={{ width: '20.06%' }}>
+                    <div className={styles.sortButtonWrapper}>
+                      User
+                      <button
+                        className={styles.sortButton}
+                        onClick={() => setNameSort(!NameSort)}
+                      >
+                        {NameSort ? (
+                          <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                          />
+                        ) : (
+                          <Image
+                            src={sortDescending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                          />
+                        )}
+                      </button>
+                    </div>
+                  </th>
                   <th style={{ width: '4.48%' }}>Contact</th>
                   <th style={{ width: '16.48%' }}>
                     <div className={styles.sortButtonWrapper}>
@@ -486,7 +513,11 @@ const AdminDashboard: React.FC = () => {
                           : new Date(b.createdAt).getTime() -
                               new Date(a.createdAt).getTime()
                       }
-
+                      if (NameSort) {
+                        return NameSort
+                          ? a.full_name.localeCompare(b.full_name) // Ascending order
+                          : b.full_name.localeCompare(a.full_name) // Descending order
+                      }
                       return 0
                     })
                     ?.map((user: any) => (
@@ -576,9 +607,29 @@ const AdminDashboard: React.FC = () => {
                               ''
                             )}
                             {` ` + formatDateTimeTwo(user?.last_login)}
-                            {user?._sessions[0]?.device
-                              ? ' | ' + user?._sessions[0]?.device.split(' ')[0]
-                              : ''}
+                            {user?._sessions[0]?.device ? (
+                              ' | ' +
+                                user?._sessions[0]?.device.split(' ')[0] ===
+                              'Desktop' ? (
+                                <Image
+                                  src={pc}
+                                  alt=""
+                                  width={25}
+                                  height={16}
+                                  style={{ marginLeft: '5px' }}
+                                />
+                              ) : (
+                                <Image
+                                  src={phone}
+                                  alt=""
+                                  width={14}
+                                  height={24}
+                                  style={{ marginLeft: '5px' }}
+                                />
+                              )
+                            ) : (
+                              ''
+                            )}
                           </div>
                         </td>
                         {/* login via */}
@@ -696,7 +747,11 @@ const AdminDashboard: React.FC = () => {
                         </td>
                         <td>
                           <div className={styles.accountStatus}>
-                            <ToggleButton isOn={user.is_account_activated} />
+                            <ToggleButton
+                              isOn={user.is_account_activated}
+                              data={user}
+                              handleToggle={() => fetchUsers()}
+                            />
                           </div>
                         </td>
                         <td>

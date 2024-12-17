@@ -1159,7 +1159,7 @@ const CommunityLayout: React.FC<Props> = ({
                     speed={2}
                     width="100%"
                     backgroundColor="#f3f3f3"
-                    foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
                     viewBox="0 0 229 282"
                   >
                     <rect x="16" y="10" width="47" height="12.25" rx="6.125" fill="#D9DBE9"/>
@@ -1199,7 +1199,6 @@ const CommunityLayout: React.FC<Props> = ({
                       className={` ${styles['location-dropdown']}`}
                     >
                       {visibilityData?.map((item: any, idx) => {
-                        console.log('asifs obj', item)
                         return (
                           <>
                             <DropdownOption
@@ -1220,7 +1219,7 @@ const CommunityLayout: React.FC<Props> = ({
                     speed={2}
                     width="100%"
                     backgroundColor="#f3f3f3"
-                    foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
                     viewBox="0 0 229 160"
                   >
                     <rect x="16" y="11" width="55" height="12.25" rx="6.125" fill="#D9DBE9"/>
@@ -1667,6 +1666,7 @@ const CommunityLayout: React.FC<Props> = ({
                 hobbyMembers
                 ?.slice(0, seeMoreMembers === 0 ? 3 : hobbyMembers.length)
                 .map((obj: any, idx) => (
+                  obj !== null &&
                   <div key={idx} className={styles['member']}>
                     <Link
                       href={`/profile/${obj?.profile_url}`}
@@ -1699,7 +1699,7 @@ const CommunityLayout: React.FC<Props> = ({
                     speed={2}
                     width="100%"
                     backgroundColor="#f3f3f3"
-                    foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
                     viewBox="0 0 292 154"
                   >
                     <rect x="16.5" y="7.5" width="23" height="23" rx="11.5" fill="#D9DBE9"                    stroke="#D9DBE9"/>
@@ -1769,7 +1769,7 @@ const CommunityLayout: React.FC<Props> = ({
                     speed={2}
                     width="100%"
                     backgroundColor="#f3f3f3"
-                    foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
                     viewBox="0 0 292 185"
                   >
                   <rect x="16.5" y="4" width="31" height="31" rx="3.5" fill="#D9DBE9" stroke="#D9DBE9"/>
@@ -1863,7 +1863,7 @@ const CommunityLayout: React.FC<Props> = ({
                       speed={2}
                       width="100%"
                       backgroundColor="#f3f3f3"
-                      foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
                       height={185}
                       viewBox="0 0 292 171"
                     >

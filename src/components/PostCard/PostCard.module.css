@@ -368,8 +368,7 @@
 }
 
 .reactplayer {
-  min-height: 376.31px;
-  height: fit-content;
+  max-height: 376.31px;
 }
 
 .reactplayer iframe, .reactplayer span {

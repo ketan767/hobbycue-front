@@ -7,7 +7,7 @@ import GoogleIcon from '@/assets/svg/admin_google.svg'
 import MailIcon from '@/assets/svg/admin_email.svg'
 import FacebookIcon from '@/assets/svg/admin_facebook.svg'
 import { ModalState } from '@/pages/admin/users'
-import MyDatePicker from '../../Users/DatePicker/DatePicker'
+import MyDatePicker from '../../Users/DatePicker'
 
 interface UserFilterProps {
   modalState: ModalState
@@ -31,8 +31,6 @@ const HobbiesFilter: React.FC<UserFilterProps> = ({
   setIsModalOpen,
   setApplyFilter,
 }) => {
-  const startDateRef = useRef<HTMLInputElement>(null)
-  const endDateRef = useRef<HTMLInputElement>(null)
   const [showStartDateCalender, setShowStartDateCalender] = useState(false)
   const [showEndDateCalender, setShowEndDateCalender] = useState(false)
   const handleOnboardedChange = (value: string) => {
@@ -81,7 +79,6 @@ const HobbiesFilter: React.FC<UserFilterProps> = ({
     })
     setIsModalOpen?.(false)
   }
-  console.log(modalState)
   return (
     <main className={styles.modal}>
       <div className={styles.modalHeader}>

@@ -7,7 +7,7 @@ import GoogleIcon from '@/assets/svg/admin_google.svg'
 import MailIcon from '@/assets/svg/admin_email.svg'
 import FacebookIcon from '@/assets/svg/admin_facebook.svg'
 import { ModalState } from '@/pages/admin/users'
-import MyDatePicker from '../../Users/DatePicker/DatePicker'
+import MyDatePicker from '../../Users/DatePicker'
 
 interface UserFilterProps {
   modalState: ModalState

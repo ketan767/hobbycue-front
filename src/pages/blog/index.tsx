@@ -32,6 +32,8 @@ type Blog = {
   author: Author
   status: string
   createdAt: string
+  title: string
+  tagline: string
 }
 
 type Props = {
@@ -46,6 +48,9 @@ export interface FormValues {
   status: string
   startDate: string
   endDate: string
+  title: string
+  tagline: string
+  search: string
 }
 
 type Author = {
@@ -73,15 +78,35 @@ const Explore: React.FC<Props> = ({ data }) => {
     status: '',
     startDate: 'Start Date',
     endDate: 'End Date',
+    search: '',
+    title: '',
+    tagline: '',
   })
 
   const filterBlogs = (data: Blog[], filters: FormValues): Blog[] => {
-    // If all filters are null or undefined, return an empty array
-    if (Object.values(filters).every((value) => !value)) {
-      return []
+    if (
+      Object.values(filters).every(
+        (value) => !value || value === 'Start Date' || value === 'End Date',
+      )
+    ) {
+      return data
     }
 
     return data.filter((item) => {
+      // Match for search
+      const searchMatch = filters.search
+        ? [
+            item.title?.toLowerCase(),
+            item.tagline?.toLowerCase(),
+            ...item.keywords.map((k) => k.toLowerCase()),
+          ].some((field) => field.includes(filters.search!.toLowerCase()))
+        : true
+
+      // If search exists, prioritize it and return results based on it
+      if (filters.search) {
+        return searchMatch
+      }
+
       // Match for hobbies
       const hobbyMatch = filters.hobby
         ? item._hobbies.some((h) =>
@@ -132,6 +157,10 @@ const Explore: React.FC<Props> = ({ data }) => {
       const dateMatch =
         startDate && endDate
           ? createdAt >= startDate && createdAt <= endDate
+          : startDate
+          ? createdAt >= startDate
+          : endDate
+          ? createdAt <= endDate
           : true
 
       // Combine all conditions with logical AND
@@ -147,6 +176,7 @@ const Explore: React.FC<Props> = ({ data }) => {
   }
 
   const filteredData = filterBlogs(data, formValues) || []
+
   console.warn('filtereddata', filteredData)
 
   return (
@@ -159,7 +189,7 @@ const Explore: React.FC<Props> = ({ data }) => {
       </Head>
       <div className={styles['main-container']}>
         <div className={styles['blog-container']}>
-          <div className={styles.filterContainer}>
+          <div className={`${styles.filterContainer} custom-scrollbar`}>
             <BlogFilter formValues={formValues} setFormValues={setFormValues} />
           </div>
 

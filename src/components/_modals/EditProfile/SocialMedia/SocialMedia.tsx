@@ -428,7 +428,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
         defaultSocialMediaURLs[socialMedia as SocialMediaOption]
       const isValidUrl =
         url !== defaultURL &&
-        url.startsWith(defaultURL) &&
+        url.includes(defaultURL.split("//")[1]) &&
         url.length > defaultURL.length
 
       if (!isValidUrl) {
@@ -458,7 +458,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                 ? 'twitter'
                 : `twitter${socialMediaCounts[socialMedia]}`
             break
-          case 'Youtube':
+          case 'YouTube':
             key =
               socialMediaCounts[socialMedia] === 1
                 ? 'youtube'
@@ -575,8 +575,8 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
       //   return console.log(err)
       // }
 
-      // if (err) return console.log(err)
-      if (res?.data.success) {
+      if (err) return console.log(err)
+      else if (res?.data.success) {
         window.location.reload()
         dispatch(closeModal())
       }

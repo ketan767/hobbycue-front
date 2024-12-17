@@ -58,6 +58,7 @@ const HobbiesRequest: React.FC = () => {
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const [showAdminActionModal, setShowAdminActionModal] = useState(false)
   const dispatch = useDispatch()
+  const [createdAtSort, setCreatedAtSort] = useState(false);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
@@ -93,7 +94,7 @@ const HobbiesRequest: React.FC = () => {
   })
 
   const handleSearch = async (event: React.FormEvent) => {
-    event.preventDefault(); // Prevent page reload
+    event.preventDefault(); 
     const searchValue = data.search.value.trim();
   
     if (!searchValue) {
@@ -102,8 +103,6 @@ const HobbiesRequest: React.FC = () => {
       setCount(0);
       return;
     }
-  
-    await fetchSearchResults();
   };
 
   const filterSvg = (
@@ -181,13 +180,13 @@ const HobbiesRequest: React.FC = () => {
     </svg>
   )
   console.warn({ searchResults })
-  const fullNumber = (user: any) => {
-    if (user?.phone?.prefix && user?.phone?.number) {
-      return user?.phone?.prefix + user?.phone?.number
-    } else {
-      return 'No number'
-    }
-  }
+  // const fullNumber = (user: any) => {
+  //   if (user?.phone?.prefix && user?.phone?.number) {
+  //     return user?.phone?.prefix + user?.phone?.number
+  //   } else {
+  //     return 'No number'
+  //   }
+  // }
 
   const fetchSearchResults = async () => {
     const searchValue = data.search.value.trim();
@@ -204,6 +203,10 @@ const HobbiesRequest: React.FC = () => {
       const totalPages = Math.ceil(res.data.data.no_of_requests / 50);
       setPageNumber(Array.from({ length: totalPages }, (_, i) => i + 1));
     }
+  };
+
+  const handleCreatedAtSort = () => {
+    setCreatedAtSort((prev) => !prev);
   };
 
   const FetchHobbyReq = async () => {
@@ -373,7 +376,14 @@ const HobbiesRequest: React.FC = () => {
   const CustomBackdrop: React.FC = () => {
     return <div className={styles['custom-backdrop']}></div>
   }
-
+  
+  const sortedResults = searchResults
+    ?.slice() 
+    ?.sort((a, b) => {
+      return createdAtSort
+        ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
 
 
   return (
@@ -444,7 +454,17 @@ const HobbiesRequest: React.FC = () => {
                   <th style={{ width: '8%', padding:'1px' }}>Genre/Style</th>
 
                   <th style={{ width: '12.163%' }}>Requested By</th>
-                  <th style={{ width: '12.163%' }}>On ▼</th>
+                  <th style={{ width: '12.163%', cursor:"pointer" }} onClick={handleCreatedAtSort}>On {" "}
+                  <span
+                  style={{
+                    display: "inline-block",
+                    transform: createdAtSort ? "rotate(180deg)" : "rotate(0deg)",
+                    transition: "transform 0.3s ease",
+                  }}
+                >
+                  ▼
+                </span>
+                  </th>
                   <th
                     style={{
                       width: '20%',
@@ -463,7 +483,7 @@ const HobbiesRequest: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {searchResults?.map((hobbyreq, index) => (
+                {sortedResults?.map((hobbyreq, index) => (
                   <tr key={index}>
                     <td>
                       <div className={styles.resultItem}>

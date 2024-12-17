@@ -183,7 +183,7 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
                 onBlur={() => setInputFocus(false)}
                 ref={inputRef}
                 maxRows={5}
-                style={{borderColor: inputFocus ? '#8064A2' : '#E0E0E0', marginLeft:"0"}}
+                style={{borderColor: inputFocus ? '#8064A2' : '#E0E0E0', marginLeft:"0", paddingRight:"80px",}}
               />
               <CustomTooltip title="Save">
               <button
@@ -205,6 +205,19 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
                     fill="#8064A2"
                   />
                 </svg>
+              </button>
+              </CustomTooltip>
+              <CustomTooltip title="Cancel">
+              <button
+                type="submit"
+                style={{right:"48px"}}
+                className={styles['submit-btn']}
+                onClick={() => setEditComment(false)}
+              >
+                <svg style={{transform:"rotate(45deg)"}} className={styles['submt-btn-svg']} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11.1429 6.85714H6.85714V11.1429C6.85714 11.6143 6.47143 12 6 12C5.52857 12 5.14286 11.6143 5.14286 11.1429V6.85714H0.857143C0.385714 6.85714 0 6.47143 0 6C0 5.52857 0.385714 5.14286 0.857143 5.14286H5.14286V0.857143C5.14286 0.385714 5.52857 0 6 0C6.47143 0 6.85714 0.385714 6.85714 0.857143V5.14286H11.1429C11.6143 5.14286 12 5.52857 12 6C12 6.47143 11.6143 6.85714 11.1429 6.85714Z" fill="#8064A2"/>
+                </svg>
+
               </button>
               </CustomTooltip>
             </form>

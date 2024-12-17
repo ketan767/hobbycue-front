@@ -67,18 +67,18 @@ const PostCardSkeletonLoading: React.FC<Props> = () => {
           {!isMobile?<ContentLoader
             speed={2}
             width="100%"
-            height={537}
-            viewBox="0 0 726 537"
+            height={500}
+            viewBox="0 0 726 500"
             backgroundColor="#f3f3f3"
-            foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
             className={styles['content-loader']}
           >
-            <rect x="12" y="12" rx="3" ry="3" width="40" height="40" />
-            <rect x="60" y="12" rx="9" ry="9" width="340" height="16" fill='#D9DBE9' />
-            <rect x="60" y="34" rx="9" ry="9" width="210" height="14" fill='#D9DBE9' />
-            <rect x="12" y="72" rx="9" ry="9" width="637" height="14" fill='#D9DBE9' />
-            <rect x="12" y="91" rx="9" ry="9" width="343" height="14" fill='#D9DBE9' />
-            <rect x="0" y="116" rx="0" ry="0" width="800" height="294" fill='#F7F5F9' />
+            <rect x="12" y="0" rx="3" ry="3" width="40" height="40" />
+            <rect x="60" y="0" rx="9" ry="9" width="340" height="16" fill='#D9DBE9' />
+            <rect x="60" y="22" rx="9" ry="9" width="210" height="14" fill='#D9DBE9' />
+            <rect x="12" y="52" rx="9" ry="9" width="637" height="14" fill='#D9DBE9' />
+            <rect x="12" y="72" rx="9" ry="9" width="343" height="14" fill='#D9DBE9' />
+            <rect x="0" y="96" rx="0" ry="0" width="800" height="294" fill='#F7F5F9' />
             </ContentLoader>
             :
           <ContentLoader
@@ -87,7 +87,7 @@ const PostCardSkeletonLoading: React.FC<Props> = () => {
             height="226"
             viewBox="0 0 400 auto"
             backgroundColor="#f3f3f3"
-            foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
           >
             <rect x="16.5" y="0.5" width="39" height="39" rx="7.5" fill="#F7F5F9" stroke="#D9DBE9"/>
             <rect x="64" width="54%" height="10.5" rx="5.25" fill="#D9DBE9"/>

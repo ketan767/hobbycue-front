@@ -72,12 +72,14 @@ export const CommunityDropdownOption: React.FC<Props> = (props) => {
     >
       <p
         className={
-          pencil
-            ? styles.editText
-            : active
-            ? styles.purpleText
-            : styles.normalText
+          [
+            pencil ? styles.editText : active ? styles.purpleText : styles.normalText,
+            display === 'Edit Location' || display === 'Edit Hobbies' ? styles.purpleText : ""
+          ]
+            .filter(Boolean) 
+            .join(" ")
         }
+        
       >
         {display}
       </p>

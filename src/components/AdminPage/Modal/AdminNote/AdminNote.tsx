@@ -7,6 +7,7 @@ import pending from '@/assets/icons/adminNote/Status-Pending.png'
 import reject from '@/assets/icons/adminNote/Status-Reject-Dismiss.png'
 import ticket from '@/assets/icons/adminNote/Status-Ticket.png'
 import Image, { StaticImageData } from 'next/image'
+import { AdminNoteModalData } from '@/pages/admin/claims'
 
 interface MenuItem {
   icon: StaticImageData
@@ -23,10 +24,20 @@ const menuItems: MenuItem[] = [
 
 interface PropTypes {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setAdminNoteModalData?: React.Dispatch<
+    React.SetStateAction<AdminNoteModalData>
+  >
   isModalOpen: boolean
+  pageName?: String
+  data?: any
 }
 
-const AdminNote: React.FC<PropTypes> = ({ setIsModalOpen, isModalOpen }) => {
+const AdminNote: React.FC<PropTypes> = ({
+  setIsModalOpen,
+  isModalOpen,
+  setAdminNoteModalData,
+  data,
+}) => {
   const [adminNotes, setAdminNotes] = useState<string>('')
   const [status, setStatus] = useState<string>('In Progress')
   const [emailUser, setEmailUser] = useState<boolean>(false)
@@ -40,7 +51,17 @@ const AdminNote: React.FC<PropTypes> = ({ setIsModalOpen, isModalOpen }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    setAdminNoteModalData?.({
+      adminNotes,
+      status,
+      emailUser,
+      userId: data?._id,
+    })
+
     console.log({ adminNotes, status, emailUser })
+
+    setIsModalOpen(false)
   }
 
   const handleOutsideClick = (e: MouseEvent) => {

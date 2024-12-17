@@ -1024,9 +1024,10 @@
   }
   .navigation-links ul li {
     padding: 8px 0px !important;
-    min-width: 60px !important;
-    max-width: 30px !important;
+    min-width: 50px !important;
+    max-width: 25px !important;
     width: 100%;
+    margin-left: 5px;
     height: auto;
   }
   .navigation-links ul li:first-of-type {
@@ -1041,7 +1042,7 @@
     transform: translateY(calc(0 * var(--navbar-height-desktop)));
     z-index: 2;
     background-color: white;
-    padding: 8px 0;
+    padding: 8px 0 0 0;
     /* position: relative; */
   }
   .community-header .top-margin-card {
