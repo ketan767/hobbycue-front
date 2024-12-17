@@ -94,7 +94,7 @@ const SearchLoader: FC<indexProps> = ({ showBox }) => {
               speed={2}
               width="100%"
               backgroundColor="#f3f3f3"
-              foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
               height={30}
             >
               <rect x="30%" y="12" width="106" height="16" rx={9} ry={9} />
@@ -109,7 +109,7 @@ const SearchLoader: FC<indexProps> = ({ showBox }) => {
                   speed={2}
                   width="100%"
                   backgroundColor="#f3f3f3"
-                  foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
                   height={50}
                 >
                   <rect x="24" y="16" width="106" height="16" rx={9} ry={9} />
@@ -122,7 +122,7 @@ const SearchLoader: FC<indexProps> = ({ showBox }) => {
                   speed={2}
                   width="100%"
                   backgroundColor="#f3f3f3"
-                  foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
                   height={100}
                 >
                   <rect x="0" y="24" width="106" height="16" rx={9} ry={9} />
@@ -137,7 +137,7 @@ const SearchLoader: FC<indexProps> = ({ showBox }) => {
                   speed={2}
                   width="100%"
                   backgroundColor="#f3f3f3"
-                  foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
                   height={100}
                 >
                   <rect x="0" y="24" width="106" height="16" rx={9} ry={9} />
@@ -152,7 +152,7 @@ const SearchLoader: FC<indexProps> = ({ showBox }) => {
                   speed={2}
                   width="100%"
                   backgroundColor="#f3f3f3"
-                  foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
                   height={100}
                 >
                   <rect x="0" y="24" width="106" height="16" rx={9} ry={9} />

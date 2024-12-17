@@ -19,6 +19,7 @@ type Props = {
   img?: string
   openDropdown?: boolean
   setOpenDropdown?: (val: boolean) => void
+  style ?: any
 }
 
 const InputSelect: React.FC<Props> = ({
@@ -34,6 +35,7 @@ const InputSelect: React.FC<Props> = ({
   img,
   openDropdown,
   setOpenDropdown,
+  style
 }) => {
   const [active, setactive] = useState(false)
   const toggle = () => {
@@ -88,7 +90,7 @@ const InputSelect: React.FC<Props> = ({
 
   return (
     <div
-      style={{ backgroundColor: `${notSelected && '#8064a2'}` }}
+      style={{ backgroundColor: `${notSelected && '#8064a2'}`, ...style }}
       className={`${styles.container} ${className ? className : ''}`}
     >
       <header className={styles.header} onClick={handleHeaderClick}>

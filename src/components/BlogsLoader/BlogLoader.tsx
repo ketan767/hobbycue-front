@@ -17,7 +17,7 @@ const BlogLoader: FC<PagesLoaderProps> = ({}) => {
         speed={2}
         width="100%"
         backgroundColor="#f3f3f3"
-        foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
         height={170}
       >
         <rect
@@ -78,11 +78,13 @@ const BlogLoader: FC<PagesLoaderProps> = ({}) => {
       </ContentLoader>
       </>
         ) : (
+          <div style={{marginTop: '8px', width: '100%'}}>
+
           <ContentLoader
         speed={2}
         width="100%"
         backgroundColor="#f3f3f3"
-        foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
         height={367}
         viewBox='0 0 360 auto'
       >
@@ -99,6 +101,7 @@ const BlogLoader: FC<PagesLoaderProps> = ({}) => {
         <rect x="37" y="91.22%" width="60" height="5.68%" rx="11" fill="#F7F5F9" />
         <rect x="100" y="91.22%" width="60" height="5.68%" rx="11" fill="#F7F5F9" />
       </ContentLoader>
+          </div>
         )
       }
     </div>
