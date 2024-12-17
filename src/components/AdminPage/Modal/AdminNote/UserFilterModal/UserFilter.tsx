@@ -1,13 +1,13 @@
 import React, { useRef, useState } from 'react'
 import Image from 'next/image'
 import ToggleButton from '@/components/_buttons/ToggleButton'
-import styles from './HobbiesFilter.module.css'
+import styles from './UserFilter.module.css'
 
 import GoogleIcon from '@/assets/svg/admin_google.svg'
 import MailIcon from '@/assets/svg/admin_email.svg'
 import FacebookIcon from '@/assets/svg/admin_facebook.svg'
 import { ModalState } from '@/pages/admin/users'
-import MyDatePicker from '../../Users/DatePicker'
+import MyDatePicker from '@/components/AdminPage/Users/DatePicker'
 
 interface UserFilterProps {
   modalState: ModalState
@@ -25,12 +25,14 @@ export const formatDate = (date: string | Date): string => {
   return new Date(date).toLocaleDateString(undefined, options)
 }
 
-const HobbiesFilter: React.FC<UserFilterProps> = ({
+const UserFilter: React.FC<UserFilterProps> = ({
   modalState,
   setModalState,
   setIsModalOpen,
   setApplyFilter,
 }) => {
+  const startDateRef = useRef<HTMLInputElement>(null)
+  const endDateRef = useRef<HTMLInputElement>(null)
   const [showStartDateCalender, setShowStartDateCalender] = useState(false)
   const [showEndDateCalender, setShowEndDateCalender] = useState(false)
   const handleOnboardedChange = (value: string) => {
@@ -79,6 +81,7 @@ const HobbiesFilter: React.FC<UserFilterProps> = ({
     })
     setIsModalOpen?.(false)
   }
+  console.log(modalState)
   return (
     <main className={styles.modal}>
       <div className={styles.modalHeader}>
@@ -248,4 +251,4 @@ const HobbiesFilter: React.FC<UserFilterProps> = ({
   )
 }
 
-export default HobbiesFilter
+export default UserFilter

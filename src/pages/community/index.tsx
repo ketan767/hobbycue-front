@@ -85,12 +85,8 @@ const CommunityHome: React.FC<Props> = ({}) => {
           ) : allPosts.length > 0 ? (
             allPosts.map((post: any) => {
               return (
-                <div ref={lastPostElementRef}>
-                  <PostCard
-                    key={post._id}
-                    postData={post}
-                    currentSection="posts"
-                  />
+                <div key={post._id} ref={lastPostElementRef}>
+                  <PostCard postData={post} currentSection="posts" />
                 </div>
               )
             })
