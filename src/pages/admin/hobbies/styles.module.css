@@ -177,7 +177,10 @@
   cursor: pointer;
 }
 
-
+.rotate-arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
 
 .searchButton {
   width: 40px;
