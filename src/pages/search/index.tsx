@@ -179,7 +179,6 @@ type hobby = {
   sub_category: { display: string }
   description: string
   level: number
-  level: number
 }
 type SearchResultsProps = {
   searchResults: User[]
