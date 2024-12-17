@@ -1,11 +1,16 @@
-import { useEffect, useState } from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux'
 import { searchUsers } from '../../../services/user.service'
 import styles from './styles.module.css'
 import Image from 'next/image'
 import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
-
 import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
@@ -20,23 +25,36 @@ import SearchFilter from '@/components/AdminPage/Filters/SearchPageFilter/Search
 type SearchInput = {
   search: InputData<string>
 }
-export interface ModalState {}
-
+export interface FilterStateValue {
+  keyword: String
+  user: any
+  filterValue: String
+}
+interface MyContextProps {
+  filterState: FilterStateValue
+  setFilterState: React.Dispatch<React.SetStateAction<FilterStateValue>>
+}
+export const SearchPageContext = createContext<MyContextProps | undefined>(
+  undefined,
+)
+// Custom hook to use the context safely
+export const useSearchPageContext = () => {
+  const context = useContext(SearchPageContext)
+  if (!context) {
+    throw new Error(
+      'useSearchPageContext must be used within a SearchPageProvider',
+    )
+  }
+  return context
+}
 const SearchHistory: React.FC = () => {
   const router = useRouter()
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalState, setModalState] = useState<ModalState>({
-    onboarded: '',
-    joined: { start: '', end: '' },
-    loginModes: [],
-    pageCount: { min: '', max: '' },
-    status: '',
-  })
   const [applyFilter, setApplyFilter] = useState<boolean>(false)
-  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState<boolean>(false)
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +75,13 @@ const SearchHistory: React.FC = () => {
     display: false,
     message: '',
   })
+
+  const [filterState, setFilterState] = useState<FilterStateValue>({
+    keyword: '',
+    user: '',
+    filterValue: '',
+  })
+
   const dispatch = useDispatch()
   const handleSearch = async (event: any) => {
     dispatch(setShowPageLoader(true))
@@ -76,30 +101,16 @@ const SearchHistory: React.FC = () => {
     }
   }
 
-  const fullNumber = (user: any) => {
-    if (user?.phone?.prefix && user?.phone?.number) {
-      return user?.phone?.prefix + user?.phone?.number
-    } else {
-      return 'No number'
-    }
-  }
-
-  const pagesLength = (user: any) => {
-    return user?._listings?.length || 0
-  }
-  const handleEdit = (profile_url: any) => {
-    router.push(`/admin/users/edit/${profile_url}`)
-  }
-
-  const fetchSearchResults = async () => {
+  const fetchSearchResults = useCallback(async () => {
+    setLoading(true)
     const searchValue = data.search.value.trim()
-    let searchCriteria = `search=${searchValue}&populate=user_id&sort=-createdAt`
+    let searchCriteria = `search=${searchValue}&populate=user_id&sort=-createdAt&limit=100&skip=3`
 
     const { res, err } = await getsearchHistory(searchCriteria)
     if (err) {
       console.log('An error', err)
     } else {
-      console.log('fetchUsers', res.data)
+      console.log('fetchUsers by search', res.data)
       setSearchResults(res.data.data.search_history)
 
       // Calculate total number of pages based on search results length
@@ -110,24 +121,43 @@ const SearchHistory: React.FC = () => {
       }
       setPageNumber(pages)
     }
-  }
-  console.log({ searchResults })
-  const fetchUsers = async () => {
-    const { res, err } = await getsearchHistory(`populate=user_id`)
+    setLoading(false)
+  }, [data.search.value])
+
+  const fetchUsers = useCallback(async () => {
+    setLoading(true)
+
+    const { res, err } = await getsearchHistory(
+      `${
+        filterState.user
+          ? `filter=${JSON.stringify({
+              'user_details.full_name': filterState.user?.full_name,
+            })}&`
+          : ''
+      }populate=user_id&limit=100&skip=3&&sort=-createdAt`,
+    )
     if (err) {
       console.log('An error', err)
     } else {
       console.log('fetchUsers', res.data)
       setSearchResults(res.data.data.search_history)
     }
-  }
+    setLoading(false)
+  }, [filterState.user])
+
   useEffect(() => {
     if (data.search.value) {
       fetchSearchResults()
-    } else if (page) {
+    } else {
       fetchUsers()
     }
-  }, [data.search.value, page])
+  }, [
+    data.search.value,
+    page,
+    filterState?.user,
+    fetchSearchResults,
+    fetchUsers,
+  ])
 
   const goToPreviousPage = () => {
     setPage(page - 1)
@@ -165,8 +195,16 @@ const SearchHistory: React.FC = () => {
     }
   }
 
+  const filteredResults = searchResults?.filter((x) => {
+    if (filterState.keyword) {
+      return x.search_input.includes(filterState.keyword)
+    }
+
+    return x
+  })
+  const contextValue = { filterState, setFilterState }
   return (
-    <>
+    <SearchPageContext.Provider value={contextValue}>
       <AdminLayout>
         <div className={styles.searchContainer}>
           <div className={styles.searchAndFilter}>
@@ -183,21 +221,7 @@ const SearchHistory: React.FC = () => {
                 {searchSvg}
               </button>
             </form>
-            {/* {isModalOpen ? (
-              <button
-                className={styles.filterBtn}
-                onClick={() => setIsModalOpen(!isModalOpen)}
-              >
-                <Image src={filterIcon} width={25} height={30} alt="filter" />
-              </button>
-            ) : (
-              <button
-                className={styles.filterBtn}
-                onClick={() => setIsModalOpen(!isModalOpen)}
-              >
-                {filterSvg}
-              </button>
-            )} */}
+
             <button
               className={styles.filterBtn}
               onClick={() => setIsModalOpen(!isModalOpen)}
@@ -206,8 +230,6 @@ const SearchHistory: React.FC = () => {
             </button>
             {isModalOpen && (
               <SearchFilter
-                modalState={modalState}
-                setModalState={setModalState}
                 setIsModalOpen={setIsModalOpen}
                 setApplyFilter={setApplyFilter}
               />
@@ -215,81 +237,85 @@ const SearchHistory: React.FC = () => {
           </div>
 
           <div className={styles.resultsContainer}>
-            <table className={styles.resultsTable}>
-              <thead>
-                <tr>
-                  <th>User</th>
-                  <th>Search key</th>
-                  <th>Time</th>
+            {!loading && (
+              <table className={styles.resultsTable}>
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Search key</th>
+                    <th>Time</th>
 
-                  <th>pages</th>
+                    <th>pages</th>
 
-                  <th style={{ textAlign: 'center' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {searchResults?.map((user, index) => (
-                  <tr key={index}>
-                    <td>
-                      <div className={styles.resultItem}>
-                        <div className={styles.avatarContainer}>
-                          {user?.user_id?.profile_image ? (
-                            <Image
-                              src={user?.user_id?.profile_image}
-                              alt={`${user?.user_id?.full_name}'s profile`}
-                              width={32}
-                              height={32}
-                              className={styles.avatarImage}
-                            />
-                          ) : (
-                            <Image
-                              className={styles['img']}
-                              src={DefaultProfile}
-                              alt="profile"
-                              width={32}
-                              height={32}
-                            />
-                          )}
-                        </div>
-                        <div
-                          className={styles.detailsContainer}
-                          title={
-                            user?.user_id?.full_name?.length > 60
-                              ? user?.user_id?.full_name.slice(0, 40)
-                              : ''
-                          }
-                        >
-                          <Link
-                            href={`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${user.user_id?.profile_url}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={styles.userName}
-                          >
-                            {user?.user_id?.full_name?.length > 60
-                              ? user?.user_id?.full_name.slice(0, 40)
-                              : user?.user_id?.full_name ?? 'anonymous user'}
-                          </Link>
-                        </div>
-                      </div>
-                    </td>
-                    <td className={styles.userName}>
-                      <div>{user?.search_input}</div>
-                    </td>
-                    <td className={styles.userName}>
-                      <div>{formatDateTime(user?.createdAt)}</div>
-                    </td>
-
-                    <td className={styles.userName}>
-                      <div>{user?.no_of_pages}</div>
-                    </td>
-
-                    <td>
-                      <div className={styles.actions}>{pencilSvg}</div>
-                    </td>
+                    <th style={{ textAlign: 'center' }}>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filteredResults?.map((user, index) => (
+                    <tr key={index}>
+                      <td>
+                        <div className={styles.resultItem}>
+                          <div className={styles.avatarContainer}>
+                            {user?.user_id?.profile_image ? (
+                              <Image
+                                src={user?.user_id?.profile_image}
+                                alt={`${user?.user_id?.full_name}'s profile`}
+                                width={32}
+                                height={32}
+                                className={styles.avatarImage}
+                              />
+                            ) : (
+                              <Image
+                                className={styles['img']}
+                                src={DefaultProfile}
+                                alt="profile"
+                                width={32}
+                                height={32}
+                              />
+                            )}
+                          </div>
+                          <div
+                            className={styles.detailsContainer}
+                            title={
+                              user?.user_id?.full_name?.length > 60
+                                ? user?.user_id?.full_name.slice(0, 40)
+                                : ''
+                            }
+                          >
+                            <Link
+                              href={`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${user.user_id?.profile_url}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={styles.userName}
+                            >
+                              {user?.user_id?.full_name?.length > 60
+                                ? user?.user_id?.full_name.slice(0, 40)
+                                : user?.user_id?.full_name ?? 'anonymous user'}
+                            </Link>
+                          </div>
+                        </div>
+                      </td>
+                      <td className={styles.userName}>
+                        <div>{user?.search_input.slice(0, 60)}</div>
+                      </td>
+                      <td className={styles.userName}>
+                        <div>{formatDateTime(user?.createdAt)}</div>
+                      </td>
+
+                      <td className={styles.userName}>
+                        <div>{user?.no_of_pages}</div>
+                      </td>
+
+                      <td>
+                        <div className={styles.actions}>{pencilSvg}</div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+
+            {loading && <p>Loading</p>}
           </div>
           <div className={styles.pagination}>
             {/* Previous Page Button */}
@@ -334,7 +360,7 @@ const SearchHistory: React.FC = () => {
           }}
         />
       }
-    </>
+    </SearchPageContext.Provider>
   )
 }
 

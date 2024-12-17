@@ -13,6 +13,7 @@ import Posts from '../../../../../assets/svg/Search/Posts.svg'
 import Classes from '../../../../../assets/svg/Search/classes.svg'
 import Rentals from '../../../../../assets/svg/Search/rentals.svg'
 import styles from './FilterDropDown.module.css'
+import { useSearchPageContext } from '@/pages/admin/searchHistory'
 const filters = [
   { key: 'all', label: 'All of HobbyCue', icon: hobbycue },
   { key: 'hobby', label: 'Hobbies', icon: Hobby },
@@ -27,14 +28,17 @@ const filters = [
   { key: 'blogs', label: 'Blogs', icon: Blogs },
 ]
 const FilterDropdown = () => {
+  const { setFilterState } = useSearchPageContext()
+
   const [isOpen, setIsOpen] = useState(false)
   const [activeFilter, setActiveFilter] = useState<String>('')
-  const [searchResults, setSearchResults] = useState(filters)
-  const [searchLoading, setSearchLoading] = useState(false)
 
   const handleFilterClick = (filterType: String) => {
     if (activeFilter === filterType) return
     setActiveFilter(filterType)
+    setFilterState((pre) => {
+      return { ...pre, filterValue: filterType }
+    })
     setIsOpen(false)
   }
 

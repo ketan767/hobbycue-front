@@ -4,11 +4,13 @@ import styles from './UserDropDown.module.css' // Import your custom button comp
 
 import { searchUsersAdvanced } from '@/services/user.service'
 import Image from 'next/image'
+import { useSearchPageContext } from '@/pages/admin/searchHistory'
 
 interface InviteSectionProps {}
 
 const UserDropdown: React.FC<InviteSectionProps> = ({}) => {
-  const [user, setUser] = useState('')
+  const { setFilterState } = useSearchPageContext()
+
   const [email, setEmail] = useState('')
   const [error, setError] = useState(false)
   const inviteBtnRef = useRef<HTMLButtonElement>(null)
@@ -16,8 +18,7 @@ const UserDropdown: React.FC<InviteSectionProps> = ({}) => {
   const [filtersUsersLoading, setFilteredUsersLoading] = useState(false)
   const [selectedUser, setSelectedUser] = useState<any>()
   const [showModal, setShowModal] = useState(false)
-  const [activeProfile, setActiveProfile] = useState()
-  const [selectedHobby, setSelectedHobby] = useState()
+
   const fetchUsers = async (query: string) => {
     setFilteredUsersLoading(true)
     try {
@@ -35,8 +36,11 @@ const UserDropdown: React.FC<InviteSectionProps> = ({}) => {
     }
   }
   const handleUserSelect = (selectedUser: any) => {
-    setEmail(selectedUser.display_name)
+    setEmail(selectedUser.full_name)
     setSelectedUser(selectedUser)
+    setFilterState((pre) => {
+      return { ...pre, user: selectedUser }
+    })
     setShowModal(false)
   }
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
