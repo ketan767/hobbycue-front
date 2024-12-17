@@ -1024,7 +1024,7 @@ export const CreatePost: React.FC<Props> = ({
                     setOpenDropdown={setOpenDropdown}
                   >
                     <>
-                      {hobbies.length > 0 && (
+                      {hobbies?.length > 0 && (
                         <>
                           {hobbies?.map((item: any, idx) => {
                             return (
