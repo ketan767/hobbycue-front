@@ -580,29 +580,26 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                       />
                     </td>
                     <td>
-                      <div
-                        onClick={() => handleAction(hobbyreq)}
-                        className={styles.actions}
-                      >
-                        {pencilSvg}
-                          <StatusDropdown
-                            status={hobbyreq?.status}
-                            onStatusChange={async (newStatus) => {
-                              console.log(newStatus, hobbyreq, 100);
-                              const { err, res } = await UpdateHobbyreq({
-                                user_id: hobbyreq?.user_id?._id,
-                                listing_id: hobbyreq?.listing_id?._id,
-                                hobby: hobbyreq?.hobby,
-                                description: hobbyreq?.description,
-                                status: newStatus?.status,
-                              })
-                              if (err) {
-                                console.log(err);
-                                
-                              }
-                            }}
-                          />
-                        
+                      <div className={styles.actions}>
+                        <div onClick={() => handleAction(hobbyreq)}>
+                          {pencilSvg}
+                        </div>
+                        <StatusDropdown
+                          status={hobbyreq?.status}
+                          onStatusChange={async (newStatus) => {
+                            console.log(newStatus, hobbyreq, 100);
+                            const { err, res } = await UpdateHobbyreq({
+                              user_id: hobbyreq?.user_id?._id,
+                              listing_id: hobbyreq?.listing_id?._id,
+                              hobby: hobbyreq?.hobby,
+                              description: hobbyreq?.description,
+                              status: newStatus?.status,
+                            });
+                            if (err) {
+                              console.log(err);
+                            }
+                          }}
+                        />
                       </div>
                     </td>
                   </tr>

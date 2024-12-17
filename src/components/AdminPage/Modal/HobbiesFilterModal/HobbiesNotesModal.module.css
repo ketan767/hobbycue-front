@@ -183,7 +183,7 @@
     width: 99px;
     height: 40px;
     padding: 12px 33.5px 12px 33.5px;
-  
+    cursor: pointer;
     border-radius: 8px;
     background: #8064a2;
     border: none;
@@ -207,5 +207,6 @@
   
   .checkbox {
     margin-right: 10px;
+    cursor: pointer;
   }
   
