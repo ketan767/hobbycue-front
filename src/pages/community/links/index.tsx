@@ -94,7 +94,7 @@ const CommunityLinks: React.FC<Props> = ({}) => {
     <>
       <CommunityPageLayout activeTab="links">
         <section className={styles['pages-container']}>
-          {!loading ? (
+          {loading ? (
             <>
               <LinksLoader />
               <LinksLoader />
