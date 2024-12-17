@@ -1687,6 +1687,7 @@ const CommunityLayout: React.FC<Props> = ({
                           inviteText={email}
                           invite={obj?.invite}
                           initialOpen={obj?.initialOpen}
+                          handleAddTrendingHobby={handleAddTrendingHobby}
                         />
                       ),
                     )}
