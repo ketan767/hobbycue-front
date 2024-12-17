@@ -81,10 +81,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   // const [isEditing, setIsEditing] = useState(false) // to check if the author is shown the editable interface
 
   const [hasChanged, setHasChanged] = useState(false)
-  // const [blog, setBlog] = useState(data?.blog_url || {})
 
-  const [quillInstance, setQuillInstance] = useState<any>(null)
-  console.log('asifs quillInstance', quillInstance)
   const titleRef = useRef<HTMLTextAreaElement | null>(null)
   const taglineRef = useRef<HTMLTextAreaElement | null>(null)
   const cameraInputRef = useRef<HTMLInputElement | null>(null)
@@ -132,12 +129,10 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     switch (type) {
       case 'title':
         if (value?.length > 100) return
-        // setBlog((prev: any) => ({ ...prev, title: value }))
         dispatch(setBlog({ ...blog, title: value }))
         break
       case 'tagline':
         if (value?.length > 100) return
-        // setBlog((prev: any) => ({ ...prev, tagline: value }))
         dispatch(setBlog({ ...blog, tagline: value }))
         break
       default:
@@ -686,6 +681,9 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   </div>
 
                   <ul className={styles['hobby-list']}>
+                    <div style={{height: "28px", display:"flex", justifyContent:"center", alignItems:"center"}}>
+                      <HobbyIconHexagon size={20} />
+                    </div>
                     {data?.blog_url?._hobbies?.map((item: any) => {
                       if (typeof item === 'string') return
                       return (

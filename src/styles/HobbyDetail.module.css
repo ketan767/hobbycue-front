@@ -485,6 +485,7 @@
     position: relative !important;
     top: 0;
     height: auto;
+    margin-top: 8px;
   }
   /* .keyword-container ul {
     display: none;

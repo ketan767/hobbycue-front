@@ -5,7 +5,7 @@
   mix-blend-mode: normal;
   border-radius: var(--spacing-8);
   max-height: 50rem;
-  height: calc(100vh - 6rem);
+  height: calc(100vh - 3rem);
 }
 
 .changedWidth {
@@ -28,12 +28,13 @@
   gap: 16px;
   padding: 0 var(--spacing-24);
   width: 100%;
+  height: calc(100% - 4rem) ;
 }
 
 .create-post-modal > section {
   flex-grow: 1;
   height: calc(100vh - 20rem);
-  max-height: 485px;
+  max-height: 585px;
   border-radius: 8px;
 }
 
