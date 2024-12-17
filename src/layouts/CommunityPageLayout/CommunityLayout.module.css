@@ -428,7 +428,7 @@
   object-fit: contain;
 }
 
-.active {
+.account-active {
   background: rgba(223, 216, 231, 1);
   border-radius: 4px;
   font-size: 14px;

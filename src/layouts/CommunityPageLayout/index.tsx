@@ -1066,6 +1066,15 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }, [email, showModal])
 
+  useEffect(() => {
+    const handleDropDownClose = () => {
+      setShowDropdown(false)
+    }
+
+    window.addEventListener('click', handleDropDownClose)
+    return () => window.removeEventListener('click', handleDropDownClose)
+  }, [])
+
   return (
     <>
       <PageGridLayout
@@ -1376,6 +1385,7 @@ const CommunityLayout: React.FC<Props> = ({
               <div className={styles['community-header-left']}>
                 <section
                   className={`content-box-wrapper ${styles['start-post-btn-container']}`}
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <div
                     style={{ position: 'relative' }}
@@ -1421,7 +1431,7 @@ const CommunityLayout: React.FC<Props> = ({
                         )}
                       </>
                     )}
-                    <ProfileSwitcherDownArrow />
+                    {isMobile && <ProfileSwitcherDownArrow />}
                   </div>
 
                   {showDropdown && (
@@ -1432,7 +1442,8 @@ const CommunityLayout: React.FC<Props> = ({
                             handleUpdateActiveProfile('user', user)
                           }
                           className={`${styles['dd-item']} ${
-                            activeProfile.type === 'user' && styles['active']
+                            activeProfile.type === 'user' &&
+                            styles['account-active']
                           }`}
                         >
                           {user?.profile_image ? (
