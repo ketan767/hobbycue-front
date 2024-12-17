@@ -96,6 +96,10 @@ const ListingHeader: React.FC<Props> = ({
   const [quantity, setQuantity] = useState(1)
   const [HighlightRed, SetHiglightRed] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const eventDateOpenRef = useRef<HTMLDivElement | null>(null)
+  const eventDateParentRef = useRef<HTMLDivElement | null>(null)
+  const eventDateOpenRefMob = useRef<HTMLDivElement | null>(null)
+  const eventDateParentRefMob = useRef<HTMLDivElement | null>(null)
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
@@ -613,6 +617,44 @@ const ListingHeader: React.FC<Props> = ({
 
     setInpSelectValues(data?.product_variant?.variations?.[0])
   }, [])
+
+  useEffect(() => {
+    if (
+      viewAs === 'print' &&
+      eventDateParentRef.current &&
+      eventDateOpenRef.current
+    ) {
+      if (showDays) {
+        eventDateParentRef.current.style.height =
+          eventDateOpenRef.current?.offsetHeight + 'px'
+      } else {
+        eventDateParentRef.current.style.height = 'auto'
+      }
+    } else if (eventDateParentRef.current && eventDateOpenRef.current) {
+      eventDateParentRef.current.style.height = 'auto'
+    }
+  }, [viewAs, showDays, eventDateOpenRef.current?.offsetHeight])
+
+  /**
+   * For Mobile
+   */
+  useEffect(() => {
+    if (
+      viewAs === 'print' &&
+      eventDateParentRefMob.current &&
+      eventDateOpenRefMob.current
+    ) {
+      if (showDays) {
+        eventDateParentRefMob.current.style.height =
+          eventDateOpenRefMob.current?.offsetHeight + 'px'
+      } else {
+        eventDateParentRefMob.current.style.height = 'auto'
+      }
+    } else if (eventDateParentRefMob.current && eventDateOpenRefMob.current) {
+      eventDateParentRefMob.current.style.height = 'auto'
+    }
+  }, [viewAs, showDays, eventDateOpenRefMob.current?.offsetHeight])
+
   console.warn('variendata', VarientData)
   const handleImageChange = (e: any) => {
     const images = [...e?.target?.files]
@@ -755,12 +797,13 @@ const ListingHeader: React.FC<Props> = ({
         <div className={styles.mobileViewAs}>
           <div>
             {viewAs === 'print' ? (
-              <FilledButton
-                className={styles.viewButtonPrint}
-                onClick={() => window.print()}
-              >
-                <PrintIcon /> Print
-              </FilledButton>
+              // <FilledButton
+              //   className={styles.viewButtonPrint}
+              //   onClick={() => window.print()}
+              // >
+              //   <PrintIcon /> Print
+              // </FilledButton>
+              <></>
             ) : (
               <div className={styles.viewingAs}>
                 You are viewing this page as a{' '}
@@ -849,13 +892,23 @@ const ListingHeader: React.FC<Props> = ({
             </div>
           )}
         </div>
-        <div className={styles['event-date-container-responsive']}>
+        <div
+          className={styles['event-date-container-responsive']}
+          style={{ maxHeight: viewAs === 'print' ? 'unset' : 24 }}
+        >
           {data?.type === listingTypes.PROGRAM && data?.event_date_time ? (
-            <div className={styles['eventDate-parent']}>
+            <div
+              className={styles['eventDate-parent']}
+              ref={eventDateParentRefMob}
+            >
               <div
                 className={
-                  styles.eventDate + ` ${showDays && styles['eventDate-open']}`
+                  styles.eventDate +
+                  ` ${showDays && styles['eventDate-open']} ${
+                    viewAs === 'print' ? styles.noBoxShadow : ''
+                  } `
                 }
+                ref={eventDateOpenRefMob}
               >
                 <Image className={styles['im']} src={Calendar} alt="calendar" />
                 <div className={styles['event-dates']}>
@@ -1126,12 +1179,19 @@ const ListingHeader: React.FC<Props> = ({
               <div className={styles['event-date-container']}>
                 {data?.type === listingTypes.PROGRAM &&
                 data?.event_date_time ? (
-                  <div className={styles['eventDate-parent']}>
+                  <div
+                    className={styles['eventDate-parent']}
+                    // style={{ height: eventDateOpenRef?.current?.offsetHeight }}
+                    ref={eventDateParentRef}
+                  >
                     <div
                       className={
                         styles.eventDate +
-                        ` ${showDays && styles['eventDate-open']}`
+                        ` ${showDays && styles['eventDate-open']} ${
+                          viewAs === 'print' ? styles.noBoxShadow : ''
+                        } `
                       }
+                      ref={eventDateOpenRef}
                     >
                       <Image
                         className={styles['im']}
@@ -1792,83 +1852,85 @@ const ListingHeader: React.FC<Props> = ({
           <></>
         )}
       </header>
-      <div className={styles['actions-container-mobile']}>
-        {listingLayoutMode === 'edit' && (
-          <div className={styles['publish-btn-container']}>
-            <FilledButton
-              className={
-                data.is_published ? styles.unpublishBtn : styles.publishBtn
-              }
-              onClick={handlePublish}
-            >
-              {data.is_published ? 'Unpublish' : 'Publish'}
-            </FilledButton>
-          </div>
-        )}
-        {/* Action Buttons */}
-        <div className={styles['action-btn-wrapper']}>
-          {/* Send Email Button  */}
-          <CustomTooltip title="Repost">
-            <div
-              onClick={(e) => handleRepost()}
-              className={styles['action-btn']}
-            >
-              <RepostIcon />
+      {viewAs !== 'print' && (
+        <div className={styles['actions-container-mobile']}>
+          {listingLayoutMode === 'edit' && (
+            <div className={styles['publish-btn-container']}>
+              <FilledButton
+                className={
+                  data.is_published ? styles.unpublishBtn : styles.publishBtn
+                }
+                onClick={handlePublish}
+              >
+                {data.is_published ? 'Unpublish' : 'Publish'}
+              </FilledButton>
             </div>
-          </CustomTooltip>
-
-          {/* Bookmark Button */}
-          <CustomTooltip title="Bookmark">
-            <div
-              onClick={showFeatureUnderDevelopment}
-              className={styles['action-btn']}
-            >
-              <BookmarkBorderRoundedIcon color="primary" />
-            </div>
-          </CustomTooltip>
-
-          {/* Share Button */}
-          <CustomTooltip title="Share">
-            <div
-              onClick={(e) => handleShare()}
-              className={styles['action-btn']}
-            >
-              <ShareIcon />
-            </div>
-          </CustomTooltip>
-
-          {/* More Options Button */}
-          <div
-            className={styles['action-btn-dropdown-wrapper']}
-            ref={mobileDropdownRef}
-          >
-            <CustomTooltip title="Click to view options">
+          )}
+          {/* Action Buttons */}
+          <div className={styles['action-btn-wrapper']}>
+            {/* Send Email Button  */}
+            <CustomTooltip title="Repost">
               <div
-                onClick={(e) => handleDropdown()}
+                onClick={(e) => handleRepost()}
                 className={styles['action-btn']}
               >
-                <MoreHorizRoundedIcon color="primary" />
+                <RepostIcon />
               </div>
             </CustomTooltip>
-            {listingLayoutMode === 'edit'
-              ? open && (
-                  <Dropdown
-                    showFeatureUnderDevelopment={showFeatureUnderDevelopment}
-                    userType={'edit'}
-                    handleClose={handleDropdown}
-                  />
-                )
-              : open && (
-                  <Dropdown
-                    userType={'anonymous'}
-                    handleClose={handleDropdown}
-                    showFeatureUnderDevelopment={showFeatureUnderDevelopment}
-                  />
-                )}
+
+            {/* Bookmark Button */}
+            <CustomTooltip title="Bookmark">
+              <div
+                onClick={showFeatureUnderDevelopment}
+                className={styles['action-btn']}
+              >
+                <BookmarkBorderRoundedIcon color="primary" />
+              </div>
+            </CustomTooltip>
+
+            {/* Share Button */}
+            <CustomTooltip title="Share">
+              <div
+                onClick={(e) => handleShare()}
+                className={styles['action-btn']}
+              >
+                <ShareIcon />
+              </div>
+            </CustomTooltip>
+
+            {/* More Options Button */}
+            <div
+              className={styles['action-btn-dropdown-wrapper']}
+              ref={mobileDropdownRef}
+            >
+              <CustomTooltip title="Click to view options">
+                <div
+                  onClick={(e) => handleDropdown()}
+                  className={styles['action-btn']}
+                >
+                  <MoreHorizRoundedIcon color="primary" />
+                </div>
+              </CustomTooltip>
+              {listingLayoutMode === 'edit'
+                ? open && (
+                    <Dropdown
+                      showFeatureUnderDevelopment={showFeatureUnderDevelopment}
+                      userType={'edit'}
+                      handleClose={handleDropdown}
+                    />
+                  )
+                : open && (
+                    <Dropdown
+                      userType={'anonymous'}
+                      handleClose={handleDropdown}
+                      showFeatureUnderDevelopment={showFeatureUnderDevelopment}
+                    />
+                  )}
+            </div>
+            {button}
           </div>
-          {button}
         </div>
-      </div>
+      )}
       {
         <CustomSnackbar
           message={snackbar.message}

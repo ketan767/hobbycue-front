@@ -446,7 +446,8 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'User-Contact-To-Owner' &&
                 activeModal !== 'ListingSupportModal' &&
                 activeModal !== 'SupportUserModal' &&
-                activeModal !== 'user-onboarding' && (
+                activeModal !== 'user-onboarding' &&
+                !showAddHobbyModal && (
                   <>
                     <header className={styles['header']}>
                       <Image

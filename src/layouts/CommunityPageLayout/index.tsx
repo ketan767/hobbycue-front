@@ -1199,7 +1199,6 @@ const CommunityLayout: React.FC<Props> = ({
                       className={` ${styles['location-dropdown']}`}
                     >
                       {visibilityData?.map((item: any, idx) => {
-                        console.log('asifs obj', item)
                         return (
                           <>
                             <DropdownOption
