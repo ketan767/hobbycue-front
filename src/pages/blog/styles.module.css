@@ -59,14 +59,15 @@
   margin: 0 auto;
 }
 .filterContainer {
+  padding-top: 12px;
   max-width: 229px;
   width: 100%;
   display: flex;
   justify-content: center;
-  
+
   height: 90vh;
   position: sticky;
-  top: calc(var(--navbar-height-desktop) + var(--spacing-12));
+  top: calc(var(--navbar-height-desktop)) ;
   margin-bottom: var(--spacing-12);
 }
 
