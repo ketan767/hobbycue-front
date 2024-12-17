@@ -179,6 +179,7 @@ type hobby = {
   sub_category: { display: string }
   description: string
   level: number
+  level: number
 }
 type SearchResultsProps = {
   searchResults: User[]
@@ -3720,10 +3721,12 @@ const Search: React.FC<Props> = ({ data, children }) => {
                 // href="/explore"
                 icon={<ExploreIcon />}
               />
-              <InterestedDiv
-                seeMoreWhatsNew={seeMoreWhatsNew}
-                setSeeMoreWhatsNew={setSeeMoreWhatsNew}
-              />
+              {noResultsFound && searchLoading === false && (
+                <InterestedDiv
+                  seeMoreWhatsNew={seeMoreWhatsNew}
+                  setSeeMoreWhatsNew={setSeeMoreWhatsNew}
+                />
+              )}
               <ExploreSidebarBtn
                 text="Help Center"
                 href="/help"
@@ -3734,10 +3737,12 @@ const Search: React.FC<Props> = ({ data, children }) => {
         ) : (
           <aside className={styles['aside-two']}>
             <ExploreMoreBtn text="Explore More" icon={<ExploreIcon />} />
-            <InterestedDiv
-              seeMoreWhatsNew={seeMoreWhatsNew}
-              setSeeMoreWhatsNew={setSeeMoreWhatsNew}
-            />
+            {noResultsFound && searchLoading === false && (
+              <InterestedDiv
+                seeMoreWhatsNew={seeMoreWhatsNew}
+                setSeeMoreWhatsNew={setSeeMoreWhatsNew}
+              />
+            )}
             <ExploreSidebarBtn
               text="Help Center"
               href="/help"
