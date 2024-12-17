@@ -34,9 +34,9 @@ const CommunityHome: React.FC<Props> = ({}) => {
       response?.data?.data.user.is_onboarded
     ) {
       dispatch(openModal({ type: 'user-onboarding-welcome', closable: false }))
-      document.body.style.overflow = 'hidden';
-      }
+      document.body.style.overflow = 'hidden'
     }
+  }
   useEffect(() => {
     const modalShown = localStorage.getItem('modal-shown-after-login')
     if (modalShown !== 'true') {
@@ -66,16 +66,19 @@ const CommunityHome: React.FC<Props> = ({}) => {
   return (
     <>
       <CommunityPageLayout activeTab="posts">
-        <section style={{padding:`${loading && "0"}`}} className={loading ? "":styles['posts-container']}>
-          {!loading ? (
+        <section
+          style={{ padding: `${loading && '0'}` }}
+          className={loading ? '' : styles['posts-container']}
+        >
+          {loading ? (
             <>
-              <div style={{paddingTop:"12px"}}>
+              <div style={{ paddingTop: '12px' }}>
                 <PostCardSkeletonLoading />
               </div>
-              <div style={{paddingTop:"12px"}}>
+              <div style={{ paddingTop: '12px' }}>
                 <PostCardSkeletonLoading />
               </div>
-              <div style={{paddingTop:"12px"}}>
+              <div style={{ paddingTop: '12px' }}>
                 <PostCardSkeletonLoading />
               </div>
             </>
