@@ -21,6 +21,9 @@ import {
 } from '@/services/user.service'
 import { updateUser } from '@/redux/slices/user'
 import PreLoader from '@/components/PreLoader'
+import ExploreSidebarBtn from './components/ExploreSidebarBtn'
+import QuestionIcon from '@/assets/icons/QuestionIcon'
+import ViewProfileBtn from './components/viewProfile/ViewProfileBtn'
 
 interface Preferences {
   [key: string]: any
@@ -66,8 +69,8 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
       preferred_location: 'All locations',
     },
     location_visibility: 'My City',
-    email_visibility: 'Everyone',
-    phone_visibility: 'Everyone',
+    email_visibility: 'No one',
+    phone_visibility: 'No one',
   })
   const [LocationOptions, setLocationOptions] = useState<string | any>([
     'All locations',
@@ -101,6 +104,8 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
           return genreName ? `${hobbyName} - ${genreName}` : hobbyName
         }),
       ]
+      console.log('Hobby options', Hobbyoptions)
+      console.log('User._hobbies', user._hobbies)
 
       setHobbyOptions(Hobbyoptions)
       setHobbyoptionsCommunity(HobbyoptionsComm)
@@ -110,7 +115,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
   }, [user])
 
   useEffect(() => {
-    if (user.preferences) {
+    if (user && user.preferences) {
       const updatedPreferences = {
         community_view: {
           preferred_hobby: {
@@ -144,6 +149,36 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
       }
 
       setPreferences(updatedPreferences)
+    } else if (user && user._hobbies && user._hobbies?.length>0) {
+      const updatedPreferences = {
+        community_view: {
+          preferred_hobby: {
+            hobby: null,
+            genre: null,
+          },
+          preferred_location: null,
+          all_locations: true,
+          all_hobbies: true,
+          my_hobbies: false,
+        },
+        create_post_pref: {
+          preferred_hobby: {
+            hobby: user._hobbies[0]?.hobby?._id
+              ? user._hobbies[0]?.hobby?._id
+              : null,
+            genre: user._hobbies[0]?.genre?._id
+              ? user._hobbies[0]?.genre?._id
+              : null,
+          },
+          preferred_location: null,
+        },
+        location_visibility: 'My City',
+        email_visibility: 'No one',
+        phone_visibility: 'No one',
+      }
+
+      setPreferences(updatedPreferences)
+      updatePreference(updatedPreferences)
     }
   }, [user])
 
@@ -252,7 +287,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
           </section>
         </aside>
       )}
-      <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
+      <PageGridLayout column={3} customStyles={styles['settingcontainer']}>
         <SettingsDropdownLayout>
           {isMobile ? null : (
             <SettingsSidebar active="visibility-notification" />
@@ -324,8 +359,13 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                         )
                       }
                       value={
-                        user?.preferences?.create_post_pref?.preferred_hobby
-                          ?.hobby?.display +
+                        (user?.preferences?.create_post_pref?.preferred_hobby
+                          ?.hobby?.display !== undefined
+                          ? user?.preferences?.create_post_pref?.preferred_hobby
+                              ?.hobby?.display
+                          : Hobbyoptions.length > 0
+                          ? Hobbyoptions[0]
+                          : '') +
                         (user?.preferences?.create_post_pref?.preferred_hobby
                           ?.genre?.display
                           ? ` - ${user?.preferences?.create_post_pref?.preferred_hobby?.genre?.display}`
@@ -465,8 +505,28 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                 </select>
               </div>
             </div>
+            {isMobile && (
+              <aside className={styles['aside-two']}>
+                <ViewProfileBtn />
+                <ExploreSidebarBtn
+                  text="Help Center"
+                  href="/help"
+                  icon={<QuestionIcon />}
+                />
+              </aside>
+            )}
           </div>
         </SettingsDropdownLayout>
+        {!isMobile && (
+          <aside className={styles['aside-two']}>
+            <ViewProfileBtn />
+            <ExploreSidebarBtn
+              text="Help Center"
+              href="/help"
+              icon={<QuestionIcon />}
+            />
+          </aside>
+        )}
       </PageGridLayout>
     </>
   )

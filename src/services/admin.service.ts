@@ -381,3 +381,52 @@ export const updateBrand = async (
     return { err: error, res: null }
   }
 }
+
+export const getTips = async (): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.get(`/tips`, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+export const updateTips = async (tip_id: string,data:any): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearerhobby_id ${token}` }
+  try {
+    const res = await axiosInstance.patch(`/tips/updateTips/${tip_id}`,data, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+
+export const getTestimonials = async (): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.get(`/testimonials`, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+export const updateTestimonials = async (testimonial_id: string,data:any): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearerhobby_id ${token}` }
+  try {
+    const res = await axiosInstance.patch(`/testimonials/updateTestimonials/${testimonial_id}`,data, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}

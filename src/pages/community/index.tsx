@@ -70,7 +70,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
           style={{ padding: `${loading && '0'}` }}
           className={loading ? '' : styles['posts-container']}
         >
-          {loading ? (
+          {!loading ? (
             <>
               <div style={{ paddingTop: '12px' }}>
                 <PostCardSkeletonLoading />

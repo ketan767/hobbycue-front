@@ -202,6 +202,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
   const [isChanged, setIsChanged] = useState(false)
 
   useEffect(() => {
+    console.log("}, [user])")
     if (!user.social_media_urls) return
 
     let arr = []
@@ -427,7 +428,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
         defaultSocialMediaURLs[socialMedia as SocialMediaOption]
       const isValidUrl =
         url !== defaultURL &&
-        url.startsWith(defaultURL) &&
+        url.includes(defaultURL.split("//")[1]) &&
         url.length > defaultURL.length
 
       if (!isValidUrl) {
@@ -457,7 +458,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                 ? 'twitter'
                 : `twitter${socialMediaCounts[socialMedia]}`
             break
-          case 'Youtube':
+          case 'YouTube':
             key =
               socialMediaCounts[socialMedia] === 1
                 ? 'youtube'
@@ -556,31 +557,30 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
         }
       }
     }
-    if (errorSaving === true) {
-      setSubmitBtnLoading(false)
-      setSnackbar({
-        display: true,
-        type: 'warning',
-        message: 'Please enter a valid URL',
-      })
-      return console.log('Invalid URL')
-    } else {
+    // if (errorSaving === true) {
+    //   setSubmitBtnLoading(false)
+    //   setSnackbar({
+    //     display: true,
+    //     type: 'warning',
+    //     message: 'Please enter a valid URL',
+    //   })
+    //   return console.log('Invalid URL')
+    // } else {
       const { err, res } = await updateMyProfileDetail({
         social_media_urls: reqBody,
       })
 
-      if (err) {
-        setSubmitBtnLoading(false)
-        return console.log(err)
-      }
+      // if (err) {
+      //   setSubmitBtnLoading(false)
+      //   return console.log(err)
+      // }
 
       if (err) return console.log(err)
-      if (res?.data.success) {
-        console.log('res', res)
+      else if (res?.data.success) {
         window.location.reload()
         dispatch(closeModal())
       }
-    }
+    // }
   }
   console.warn('dataaa', mediaData)
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
@@ -621,8 +621,6 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
             res.data.data as SocialMediaData1[],
           )
           setAllOptions(reorderedData)
-          console.log({ dayatsa: res?.data?.data })
-          console.log({ reorderedData })
         }
       })
       .catch((err) => {
@@ -634,7 +632,6 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
 
   const handleFullKeyDown = (e: React.KeyboardEvent) => {
     // if enter is pressed then it should submit the form
-    console.log(e.key)
     if (e.key === 'ENTER') {
       handleSubmit()
     }
@@ -719,7 +716,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
               className={styles.inputContainer}
               key={idx}
             >
-              <div style={{ width: '184px', height: '40px' }}>
+              <div id='social-media-dropdown' style={{ width: '184px', height: '40px' }}>
                 <DropdownComponent
                   key={idx}
                   options={allOptions}
@@ -739,7 +736,8 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                       url: defaultUrl,
                       error: false,
                     }
-                    setMediaData(updatedMediaData)
+                    console.log({ updatedMediaData })
+                    setMediaData(()=>updatedMediaData)
                   }}
                 />
               </div>
@@ -789,7 +787,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                       return prev
                     })
                   }}
-                  style={item?.error === true ? { borderColor: 'red' } : {}}
+                  // style={item?.error === true ? { borderColor: 'red' } : {}}
                 />
               </div>
               <Image

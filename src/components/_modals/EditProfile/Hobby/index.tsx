@@ -1157,6 +1157,22 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               : ''} */}
                             <Select
                               value={hobby?.level}
+                              MenuProps={{
+                                anchorOrigin: {
+                                  vertical: 'top',
+                                  horizontal: 'center',
+                                },
+                                transformOrigin: {
+                                  vertical: isMobile
+                                    ? userHobbies?.length > 5
+                                      ? 'bottom'
+                                      : 'top'
+                                    : userHobbies?.length > 8
+                                    ? 'bottom'
+                                    : 'top',
+                                  horizontal: 'center',
+                                },
+                              }}
                               className={styles['hobby-dropdown']}
                               onChange={(e) => {
                                 let val: any = e?.target?.value
@@ -1372,6 +1388,22 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                           ref={selectLevelRef}
                           value={levels[data.level - 1]?.name}
                           className={styles['hobby-dropdown']}
+                          MenuProps={{
+                            anchorOrigin: {
+                              vertical: 'top',
+                              horizontal: 'center',
+                            },
+                            transformOrigin: {
+                              vertical: isMobile
+                                ? userHobbies?.length > 5
+                                  ? 'bottom'
+                                  : 'top'
+                                : userHobbies?.length > 8
+                                ? 'bottom'
+                                : 'top',
+                              horizontal: 'center',
+                            },
+                          }}
                           onChange={(e) => {
                             console.log({ e })
                             let val: any = e?.target?.value

@@ -29,7 +29,9 @@ import SettingsDropdownLayout from '@/layouts/SettingsDropdownLayout'
 import { useMediaQuery } from '@mui/material'
 import { SnackbarState } from '@/components/_modals/ModalManager'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
-
+import ViewProfileBtn from '../visibility-notification/components/viewProfile/ViewProfileBtn'
+import ExploreSidebarBtn from '../visibility-notification/components/ExploreSidebarBtn'
+import QuestionIcon from '@/assets/icons/QuestionIcon'
 type Props = {}
 
 const LoginAndSecurity: React.FC<Props> = ({}) => {
@@ -178,7 +180,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
           </section>
         </aside>
       )}
-      <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
+      <PageGridLayout column={3} customStyles={styles['settingcontainer']}>
         <SettingsDropdownLayout>
           {isMobile ? null : <SettingsSidebar active="login-security" />}
           <div className={styles.container}>
@@ -332,6 +334,16 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
             </div>
           </div>
         </SettingsDropdownLayout>
+        {!isMobile && (
+          <aside className={styles['aside-two']}>
+            <ViewProfileBtn />
+            <ExploreSidebarBtn
+              text="Help Center"
+              href="/help"
+              icon={<QuestionIcon />}
+            />
+          </aside>
+        )}
       </PageGridLayout>
       <CustomSnackbar
         triggerOpen={snackbar.show}

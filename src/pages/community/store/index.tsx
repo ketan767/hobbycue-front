@@ -77,10 +77,10 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
         <section className={styles['store-container']}>
           {pagesLoading ? (
             <>
-              <PagesLoader />
-              <PagesLoader />
-              <PagesLoader />
-              <PagesLoader />
+              <PagesLoader component='store' />
+              <PagesLoader component='store' />
+              <PagesLoader component='store' />
+              <PagesLoader component='store' />
             </>
           ) : allPages?.length === 0 ? (
             <>

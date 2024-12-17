@@ -1,13 +1,13 @@
 .dropdown-container {
     display: flex;
     width: 202px;
-    padding: 12px 6.7px 12px 12px;
+    padding: 11px 6.7px 11px 12px;
     justify-content: space-between;
     align-items: center;
     border-radius: 0px 0px 4px 4px;
-    
     background: var(--White, #FFF);
     flex-wrap: wrap;
+    z-index: 999;
 }
 .pencil-container{
     border-top: 1px solid var(--Grey-Lighter, #EBEDF0);

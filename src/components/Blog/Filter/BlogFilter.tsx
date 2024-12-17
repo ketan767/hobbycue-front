@@ -22,6 +22,7 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
   const hobbyRef = useRef<HTMLParagraphElement | null>(null)
   const styleRef = useRef<HTMLParagraphElement | null>(null)
 
+  const [focusTarget, setFocusTarget] = useState<any>('')
   const [showCalender, setShowCalender] = useState(false)
   const [showStyle, setShowStyle] = useState(false)
   const [showHobby, setShowHobby] = useState(false)
@@ -49,32 +50,11 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
 
     setFormValues((prevValues) => ({
       ...prevValues,
-      keywords: value,
-    }))
-
-    if (!value.trim()) {
-      return
-    }
-
-    const searchQuery = value.toLowerCase()
-
-    const combinedData = [...allHobbiesList, ...allGenreList]
-
-    const filteredResults = combinedData.filter((item) =>
-      ['display', 'author', 'title', 'tagline', 'hobby'].some((field) =>
-        item[field]?.toLowerCase().includes(searchQuery),
-      ),
-    )
-
-    const uniqueResults = Array.from(
-      new Map(filteredResults.map((item) => [item.id, item])).values(),
-    )
-
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      searchResults: uniqueResults,
+      search: value,
     }))
   }
+
+  console.warn('formValues', formValues)
 
   const handleHobbyInputChange = async (e: any) => {
     const { name, value, type, checked } = e.target
@@ -244,6 +224,35 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
     }
   }, [])
 
+  useEffect(() => {
+    setShowCalender(false)
+  }, [formValues.startDate, formValues.endDate])
+
+  // Close calendar if clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const calendarElement = document.querySelector(
+        `.${styles.datePickerWrapper}`,
+      )
+      const datePickerContainer = document.querySelector(
+        `.${styles.datePickerContainer}`,
+      )
+      if (
+        calendarElement &&
+        datePickerContainer &&
+        !calendarElement.contains(event.target as Node) &&
+        !datePickerContainer.contains(event.target as Node)
+      ) {
+        setShowCalender(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   return (
     <section className={styles.blogsSection} ref={containerRef}>
       <h1 className={styles.blogsTitle}>Blogs</h1>
@@ -312,9 +321,9 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
           <input
             type="text"
             name="keywords"
-            placeholder="Title,Tagline,Keyword"
+            placeholder="Title, Tagline, Keyword"
             className={styles.formInput}
-            value={formValues.keywords}
+            value={formValues.search}
             onChange={handleChangeKeyword}
           />
         </div>
@@ -365,11 +374,28 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
             </label>
           </p>
         </div>
-
         <div className={styles.datePickerContainer}>
-          <p onClick={() => setShowCalender((pre) => !pre)}>
-            <span className={styles.showDate}>{formValues.startDate}</span>
-            <span className={styles.showDate}>{formValues.endDate}</span>
+          <p onClick={() => setShowCalender((prev) => !prev)}>
+            <span
+              className={styles.showDate}
+              onClick={(e) => {
+                e.stopPropagation()
+                setFocusTarget('startDate')
+                setShowCalender(true)
+              }}
+            >
+              {formValues.startDate}
+            </span>
+            <span
+              className={styles.showDate}
+              onClick={(e) => {
+                e.stopPropagation()
+                setFocusTarget('endDate')
+                setShowCalender(true)
+              }}
+            >
+              {formValues.endDate}
+            </span>
           </p>
 
           {showCalender && (
@@ -377,6 +403,8 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
               <CustomDateRangePicker
                 setFormValues={setFormValues}
                 setShowCalender={setShowCalender}
+                focusTarget={focusTarget}
+                formValues={formValues}
               />
             </div>
           )}

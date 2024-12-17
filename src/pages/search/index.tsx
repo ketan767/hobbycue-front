@@ -90,6 +90,8 @@ import { searchPosts } from '@/services/post.service'
 import { Inter } from 'next/font/google'
 import UserExplore from './explore/UserExplore'
 import PExplore from './explore/PExplore'
+import PostExplore from './explore/PostExplore'
+import UserHobbies from './searchComponents/user/UserHobbies'
 
 type Props = {
   data?: any
@@ -100,7 +102,7 @@ type User = {
   profile_image: string
   full_name: string
   tagline: string
-  primary_address: { city: string }
+  primary_address: { society: string; locality: string; city: string }
   profile_url: string
   _hobbies: any[]
 }
@@ -176,6 +178,7 @@ type hobby = {
   category: { display: string }
   sub_category: { display: string }
   description: string
+  level:number
 }
 type SearchResultsProps = {
   searchResults: User[]
@@ -424,6 +427,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const [exploreHobbyHoved, setExploreHobbyHoved] = useState<boolean>(false)
   const [exploreBlogHoved, setExploreBlogHoved] = useState<boolean>(false)
   const [currUserName, setCurrUserName] = useState<string>('')
+  const [currPostedBy, setCurrPostedBy] = useState<string>('')
 
   const [defaultPeopleCategory, setDefaultPeopleCategory] =
     useState<string>('People')
@@ -433,7 +437,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
     useState<string>('Program')
   const [defaultProductCategory, setDefaultProductCategory] =
     useState<string>('Product')
-  const [defaultProductClass, setDefaultClassCategory] =
+  const [defaultClassCategory, setDefaultClassCategory] =
     useState<string>('Classes')
   const [defaultRentalCategory, setDefaultRentalCategory] =
     useState<string>('Item Rental')
@@ -680,6 +684,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
       try {
         dispatch(setSearchLoading(true))
         let data = {}
+        data = { ...data, is_onboarded: true }
         if (name || hobby || location) {
           if (name) {
             data = { ...data, name: name }
@@ -1322,6 +1327,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
     if (isSearchingMore) return
     setIsSearchingMore(true)
     let data = {}
+    data = { ...data, is_onboarded: true }
     if (name || hobby || location) {
       if (name) {
         data = { ...data, name: name }
@@ -1755,6 +1761,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
     setOpenExploreRental(false)
     setOpenExplorePost(false)
     setCurrUserName('')
+    setCurrPostedBy('')
   }, [q, filter])
 
   return (
@@ -1845,16 +1852,33 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{hobby.display}</div>
                         <div className={styles.userTagline}>
-                          {`${
-                            hobby?.category?.display
-                              ? hobby.category.display
-                              : ''
-                          }${
-                            hobby?.sub_category?.display
-                              ? ' | ' + hobby.sub_category.display
-                              : ''
-                          }`}
-                          &nbsp;
+                          <span>
+                            {hobby?.level === 0
+                              ? 'Category'
+                              : hobby?.level === 1
+                              ? 'Sub-Category'
+                              : hobby?.level === 2
+                              ? 'Hobby Tag'
+                              : hobby?.level === 3
+                              ? 'Hobby'
+                              : hobby?.level === 5
+                              ? 'Genre/Style'
+                              : 'Hobby'}
+                          </span>
+                          {hobby?.level !== 0 && (
+                            <>
+                              {' | '}
+                              <span>
+                                {hobby?.category?.display}
+                                {hobby?.level > 1 && (
+                                  <>
+                                    ,{` `}
+                                    {hobby?.sub_category?.display}
+                                  </>
+                                )}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className={styles.hobbydescription}>
                           {hobby?.description}
@@ -1943,43 +1967,64 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {user?.tagline ? (
                             user?.tagline
                           ) : (
-                            <>
-                              <span>
-                                {`${
-                                  user?._hobbies[0]?.hobby?.display
-                                    ? user?._hobbies[0]?.hobby?.display
-                                    : ''
-                                }${
-                                  user?._hobbies[0]?.genre?.display
-                                    ? ' - ' + user?._hobbies[0]?.genre?.display
-                                    : ''
-                                }`}
-                                {user?._hobbies[1]?.hobby?.display ? ', ' : ''}
-                                {`${
-                                  user?._hobbies[1]?.hobby?.display
-                                    ? user?._hobbies[1]?.hobby?.display
-                                    : ''
-                                }${
-                                  user?._hobbies[1]?.genre?.display
-                                    ? ' - ' + user?._hobbies[1]?.genre?.display
-                                    : ''
-                                }`}
-                                {user?._hobbies[2]?.hobby?.display ? ', ' : ''}
-                                {`${
-                                  user?._hobbies[2]?.hobby?.display
-                                    ? user?._hobbies[2]?.hobby?.display
-                                    : ''
-                                }${
-                                  user?._hobbies[2]?.genre?.display
-                                    ? ' - ' + user?._hobbies[2]?.genre?.display
-                                    : ''
-                                }`}
-                              </span>
-                            </>
+                            <UserHobbies user={user} />
                           )}
                         </div>
                         <div className={styles.userLocation}>
+                          {user.primary_address?.society}
+                          {user.primary_address?.society &&
+                          user.primary_address?.locality
+                            ? ', '
+                            : ''}
+                          {user.primary_address?.locality}
+                          {user.primary_address?.city &&
+                          user.primary_address?.locality
+                            ? ', '
+                            : ''}
                           {user.primary_address?.city || '\u00a0'}
+                          {user?.tagline &&
+                          user.primary_address?.city &&
+                          user?._hobbies?.length > 0
+                            ? ' | '
+                            : ''}
+                          {/* {user?.tagline && <UserHobbies user={user}/>} */}
+                          {user?.tagline && (
+                            <span className={styles.truncate}>
+                              {`${
+                                user?._hobbies[0]?.hobby?.display
+                                  ? user?._hobbies[0]?.hobby?.display
+                                  : ''
+                              }${
+                                user?._hobbies[0]?.genre?.display
+                                  ? ' - ' + user?._hobbies[0]?.genre?.display
+                                  : ''
+                              }`}
+                              {user?._hobbies[1]?.hobby?.display ? ', ' : ''}
+                              {`${
+                                user?._hobbies[1]?.hobby?.display
+                                  ? user?._hobbies[1]?.hobby?.display
+                                  : ''
+                              }${
+                                user?._hobbies[1]?.genre?.display
+                                  ? ' - ' + user?._hobbies[1]?.genre?.display
+                                  : ''
+                              }`}
+                              {user?._hobbies[2]?.hobby?.display ? ', ' : ''}
+                              {`${
+                                user?._hobbies[2]?.hobby?.display
+                                  ? user?._hobbies[2]?.hobby?.display
+                                  : ''
+                              }${
+                                user?._hobbies[2]?.genre?.display
+                                  ? ' - ' + user?._hobbies[2]?.genre?.display
+                                  : ''
+                              }${
+                                user?._hobbies?.length > 3
+                                  ? ' (+' + (user?._hobbies?.length - 3) + ')'
+                                  : ''
+                              }`}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -2035,6 +2080,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   className={`${styles.userExploreContainer} ${
                     openExploreUser ? styles.visible : styles.hidden
                   }`}
+                >
+                  <UserExplore
+                    currUserName={currUserName}
+                    setCurrUserName={setCurrUserName}
+                  />
+                </div>
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    hasNoMoreUsers
+                      ? `${styles.visible} ${styles.singlePageExplore}`
+                      : styles.hidden
+                  } ${!filter ? styles.hidden : ''}`}
                 >
                   <UserExplore
                     currUserName={currUserName}
@@ -2109,6 +2166,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                                 }${
                                   page?._hobbies[2]?.genre?.display
                                     ? ' - ' + page?._hobbies[2]?.genre?.display
+                                    : ''
+                                }${
+                                  page?._hobbies?.length > 3
+                                    ? ' (+' + (page?._hobbies?.length - 3) + ')'
                                     : ''
                                 }`}
                               </span>
@@ -2185,6 +2246,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   className={`${styles.userExploreContainer} ${
                     openExplorePeople ? styles.visible : styles.hidden
                   }`}
+                >
+                  <PExplore
+                    categoryValue={defaultPeopleCategory}
+                    setCategoryValue={setDefaultPeopleCategory}
+                  />
+                </div>
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    hasNoMorePersonPages
+                      ? `${styles.visible} ${styles.singlePageExplore}`
+                      : styles.hidden
+                  } ${!filter ? styles.hidden : ''}`}
                 >
                   <PExplore
                     categoryValue={defaultPeopleCategory}
@@ -2321,6 +2394,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     setCategoryValue={setDefaultPlaceCategory}
                   />
                 </div>
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    hasNoMorePlacePages
+                      ? `${styles.visible} ${styles.singlePageExplore}`
+                      : styles.hidden
+                  } ${!filter ? styles.hidden : ''}`}
+                >
+                  <PExplore
+                    categoryValue={defaultPlaceCategory}
+                    setCategoryValue={setDefaultPlaceCategory}
+                  />
+                </div>
               </div>
             </section>
           )}
@@ -2367,13 +2452,19 @@ const MainContent: React.FC<SearchResultsProps> = ({
                                     ? page?._address?.society
                                     : ''
                                 }`}
-                                {page?._address?.locality ? ', ' : ''}
+                                {page?._address?.society &&
+                                page?._address?.locality
+                                  ? ', '
+                                  : ''}
                                 {`${
                                   page?._address?.locality
                                     ? page?._address?.locality
                                     : ''
                                 }`}
-                                {page?._address?.city ? ', ' : ''}
+                                {page?._address?.locality &&
+                                page?._address?.city
+                                  ? ', '
+                                  : ''}
                                 {`${
                                   page?._address?.city
                                     ? page?._address?.city
@@ -2383,7 +2474,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             </>
                           )}
                         </div>
-                        <div className={styles.blogAuthor}>
+                        <div className={styles.programDetails}>
                           <div className={styles.address}>
                             {page?.page_type?.map(
                               (pt: string, index: number) => {
@@ -2395,13 +2486,13 @@ const MainContent: React.FC<SearchResultsProps> = ({
                                 : '') || '\u00a0'}
                           </div>
 
-                          <div>
+                          <>
                             {page?.event_date_time &&
                               page?.event_date_time.length !== 0 && (
-                                <>
+                                <span>
                                   {' | '}
                                   {formatDateRange(page?.event_date_time[0])}
-                                  {!isMobile && (
+                                  {/* {!isMobile && (
                                     <>
                                       {', '}
                                       {page?.event_date_time[0]?.from_time +
@@ -2419,10 +2510,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                                         page?.event_date_time[0]?.to_time
                                       )}
                                     </>
-                                  )}
-                                </>
+                                  )} */}
+                                </span>
                               )}
-                          </div>
+                          </>
                         </div>
                       </div>
                     </div>
@@ -2433,6 +2524,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreProgramPages ? <SearchLoader /> : ''}
                   </div>
                 )}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    hasNoMoreProgramPages && filter
+                      ? `${styles.visible} ${styles.singlePageExplore}`
+                      : styles.hidden
+                  } `}
+                >
+                  <PExplore
+                    categoryValue={defaultProgramCategory}
+                    setCategoryValue={setDefaultProgramCategory}
+                  />
+                </div>
                 {showAllEvent
                   ? undefined
                   : (EventResults.length > 3 ? (
@@ -2482,7 +2585,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 <div
                   className={`${styles.userExploreContainer} ${
                     openExploreProgram ? styles.visible : styles.hidden
-                  }`}
+                  } `}
                 >
                   <PExplore
                     categoryValue={defaultProgramCategory}
@@ -2567,6 +2670,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
                                       ? ' - ' +
                                         page?._hobbies[2]?.genre?.display
                                       : ''
+                                  }${
+                                    page?._hobbies?.length > 3
+                                      ? ' (+' +
+                                        (page?._hobbies?.length - 3) +
+                                        ')'
+                                      : ''
                                   }`}
                                 </span>
                               </>
@@ -2596,12 +2705,6 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   {showAllProducts
                     ? undefined
                     : (ProductResults.length > 3 ? (
-                        // <button
-                        //   onClick={toggleShowAllproducts}
-                        //   className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
-                        // >
-                        //   View More
-                        // </button>
                         <div className={styles['view-more-btn-container']}>
                           <button
                             onClick={toggleShowAllproducts}
@@ -2657,6 +2760,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       setCategoryValue={setDefaultProductCategory}
                     />
                   </div>
+                  <div
+                    className={`${styles.userExploreContainer} ${
+                      hasNoMoreProductPages
+                        ? `${styles.visible} ${styles.singlePageExplore}`
+                        : styles.hidden
+                    } ${!filter ? styles.hidden : ''}`}
+                  >
+                    <PExplore
+                      categoryValue={defaultProductCategory}
+                      setCategoryValue={setDefaultProductCategory}
+                    />
+                  </div>
                 </div>
               </section>
             )}
@@ -2704,13 +2819,19 @@ const MainContent: React.FC<SearchResultsProps> = ({
                                       ? page?._address?.society
                                       : ''
                                   }`}
-                                  {page?._address?.locality ? ', ' : ''}
+                                  {page?._address?.society &&
+                                  page?._address?.locality
+                                    ? ', '
+                                    : ''}
                                   {`${
                                     page?._address?.locality
                                       ? page?._address?.locality
                                       : ''
                                   }`}
-                                  {page?._address?.city ? ', ' : ''}
+                                  {page?._address?.locality &&
+                                  page?._address?.city
+                                    ? ', '
+                                    : ''}
                                   {`${
                                     page?._address?.city
                                       ? page?._address?.city
@@ -2732,34 +2853,15 @@ const MainContent: React.FC<SearchResultsProps> = ({
                                   : '') || '\u00a0'}
                             </div>
 
-                            <div>
+                            <>
                               {page?.event_date_time &&
                                 page?.event_date_time.length !== 0 && (
-                                  <>
+                                  <span>
                                     {' | '}
                                     {formatDateRange(page?.event_date_time[0])}
-                                    {!isMobile && (
-                                      <>
-                                        {', '}
-                                        {page?.event_date_time[0]?.from_time +
-                                          ' - '}
-                                        {page?.event_weekdays?.length > 0 ? (
-                                          <>
-                                            ...
-                                            <span
-                                              className={styles['purpleText']}
-                                            >
-                                              more
-                                            </span>
-                                          </>
-                                        ) : (
-                                          page?.event_date_time[0]?.to_time
-                                        )}
-                                      </>
-                                    )}
-                                  </>
+                                  </span>
                                 )}
-                            </div>
+                            </>
                           </div>
                         </div>
                       </div>
@@ -2811,6 +2913,24 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       ) : (
                         ''
                       )) || ''}
+                  <div
+                    className={`${styles.userExploreContainer} ${
+                      openExploreClass ? styles.visible : styles.hidden
+                    }`}
+                  >
+                    <PExplore
+                      categoryValue={defaultClassCategory}
+                      setCategoryValue={setDefaultClassCategory}
+                    />
+                  </div>
+                  {/* <div
+                  className={`${styles.userExploreContainer} ${hasNoMoreProgramPages ? `${styles.visible} ${styles.singlePageExplore}`:styles.hidden} ${!filter ? styles.hidden : ''}`}
+                >
+                  <PExplore
+                    categoryValue={defaultProgramCategory}
+                    setCategoryValue={setDefaultProgramCategory}
+                  />
+                </div> */}
                 </div>
               </section>
             )}
@@ -2907,20 +3027,72 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     ),
                   )}
-                  <div className={styles['view-more-btn-container']}>
-                    {showAllRentals
-                      ? undefined
-                      : (RentalResults.length > 3 ? (
+                  {showAllRentals
+                    ? undefined
+                    : (RentalResults.length > 3 ? (
+                        <div className={styles['view-more-btn-container']}>
                           <button
                             onClick={toggleShowAllrentals}
-                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                            className={`${styles['view-more-btn']}`}
                           >
                             View More
                           </button>
-                        ) : (
-                          ''
-                        )) || ''}
+                          <button
+                            onClick={() =>
+                              setOpenExploreRental(!openExploreRental)
+                            }
+                            onMouseEnter={() => setExploreRentalHoved(true)}
+                            onMouseLeave={() => setExploreRentalHoved(false)}
+                            className={`${styles['explore-btn']}`}
+                          >
+                            Explore{' '}
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreRental
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                            {!exploreRentalHoved && (
+                              <Image
+                                src={Dropdown}
+                                width={16}
+                                height={16}
+                                alt="Dropdown"
+                                className={`${styles.arrow} ${
+                                  openExploreRental
+                                    ? `${styles.arrowRotated}`
+                                    : ''
+                                }`}
+                              />
+                            )}
+                          </button>
+                        </div>
+                      ) : (
+                        ''
+                      )) || ''}
+                  <div
+                    className={`${styles.userExploreContainer} ${
+                      openExploreRental ? styles.visible : styles.hidden
+                    }`}
+                  >
+                    <PExplore
+                      categoryValue={defaultRentalCategory}
+                      setCategoryValue={setDefaultRentalCategory}
+                    />
                   </div>
+                  {/* <div
+                  className={`${styles.userExploreContainer} ${hasNoMoreProgramPages ? `${styles.visible} ${styles.singlePageExplore}`:styles.hidden} ${!filter ? styles.hidden : ''}`}
+                >
+                  <PExplore
+                    categoryValue={defaultProgramCategory}
+                    setCategoryValue={setDefaultProgramCategory}
+                  />
+                </div> */}
                 </div>
               </section>
             )}
@@ -3032,19 +3204,70 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePostsPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllPosts
-                    ? undefined
-                    : (PostsResults.length > 3 ? (
+                {showAllPosts
+                  ? undefined
+                  : (PostsResults.length > 3 ? (
+                      // toggleShowAllposts
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllposts}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
+                        <button
+                          onClick={() => setOpenExplorePost(!openExplorePost)}
+                          onMouseEnter={() => setExplorePostHoved(true)}
+                          onMouseLeave={() => setExplorePostHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          Explore{' '}
+                          <Image
+                            src={DropdownWhite}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrow} ${
+                              openExplorePost ? `${styles.arrowRotated}` : ''
+                            }`}
+                          />
+                          {!explorePostHoved && (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePost ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExplorePost ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PostExplore
+                    currPostedBy={currPostedBy}
+                    setCurrPostedBy={setCurrPostedBy}
+                  />
+                </div>
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    hasNoMorePostsPages
+                      ? `${styles.visible} ${styles.singlePageExplore}`
+                      : styles.hidden
+                  } ${!filter ? styles.hidden : ''}`}
+                >
+                  <PostExplore
+                    currPostedBy={currPostedBy}
+                    setCurrPostedBy={setCurrPostedBy}
+                  />
                 </div>
               </div>
             </section>

@@ -37,7 +37,7 @@ const index: FC<indexProps> = ({}) => {
         setSnackbar({
           display: true,
           type: 'success',
-          message: 'Brand updated successfully',
+          message: 'Page updated successfully',
         })
         setIsEditing(false)
       }

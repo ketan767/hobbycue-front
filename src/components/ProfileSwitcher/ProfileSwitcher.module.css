@@ -41,12 +41,11 @@
   line-height: 20px;
   color: #6d747a;
   -webkit-line-clamp: 2;
-  
   display: -webkit-box;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   overflow: hidden;
-  /* width: 100%; */
+  width: 100%;
   /* white-space: break-spaces; */
 }
 .profile-switcher svg {

@@ -34,6 +34,7 @@ interface Props {
   error?: any
   hasLink?: boolean
   onStatusChange?: (isChanged: boolean) => void
+  forWhichComponent?: string
 }
 
 const CustomEditor: React.FC<Props> = ({
@@ -45,6 +46,7 @@ const CustomEditor: React.FC<Props> = ({
   error,
   hasLink,
   onStatusChange,
+  forWhichComponent,
 }) => {
   const editorRef = useRef(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -60,13 +62,20 @@ const CustomEditor: React.FC<Props> = ({
   )
   const onReady = () => {
     if (image && !imageIconAdded) {
-      const toolbar = document.querySelector('.ql-toolbar.ql-snow')
-      const img = document.createElement('img')
-      img.src = '/image.svg'
-      img.addEventListener('click', openInput)
-      toolbar?.append(img)
+      const toolbar = document.querySelector('.ql-toolbar.ql-snow');
+      // Check if an <img> already exists inside the toolbar
+      const existingImg = toolbar?.querySelector('img');
+      
+      if (!existingImg) {  // Only append the new image if no img exists
+        const img = document.createElement('img');
+        img.src = '/image.svg';
+        img.addEventListener('click', openInput);
+        toolbar?.append(img);
+        setImageIconAdded(true);
+      }
     }
-  }
+  };
+  
 
   useEffect(() => {
     if (editorRef.current === undefined) return
@@ -125,7 +134,7 @@ const CustomEditor: React.FC<Props> = ({
 
   return (
     <>
-    <style>{`
+    {/* <style>{`
           .ql-editor.ql-indent-1{
             padding-left:4px;
           }
@@ -153,7 +162,7 @@ const CustomEditor: React.FC<Props> = ({
             scrollbar-width: thin;
             scrollbar-color: #777 #f1f1f1;
           }
-      `}</style>
+      `}</style> */}
       <ReactQuill
         theme="snow"
         ref={editorRef}
@@ -170,10 +179,10 @@ const CustomEditor: React.FC<Props> = ({
 
           setData((prev: any) => ({ ...prev, content: updatedValue }))
         }}
-        className={`${styles.quill} ${error ? styles['quill-error'] : ''} ${
+        className={` ${error ? styles['quill-error'] : ''} ${
           hasLink ? styles['quill-has-link'] : ''
         }`}
-        style={{maxHeight: '100%'}}
+        style={forWhichComponent === "createPost" ? {maxHeight: '100%'}:{}}
         placeholder="Start something interesting..."
         modules={{
           toolbar: {
@@ -199,7 +208,7 @@ const CustomEditor: React.FC<Props> = ({
 
                 // 'emoji',
               ],
-              [{ list: 'ordered' }, { list: 'bullet' }, 'link'],
+              [{ list: 'ordered' }, { list: 'bullet' }], ['link'],
             ],
           },
           // 'emoji-toolbar': true,
@@ -207,6 +216,48 @@ const CustomEditor: React.FC<Props> = ({
           // 'emoji-shortname': true,
         }}
       />
+
+      <style>{`
+          .ql-container.ql-snow {
+            border:none !important;
+          }
+          .ql-editor.ql-indent-1{
+            padding-left:4px;
+          }
+          .ql-editor ul, 
+          .ql-editor ol {
+            font-family:'Poppins';
+            padding-left: 4px; 
+            font-size:14px;
+            text-align:left; 
+          }
+
+          .ql-editor a {
+            font-family:'Poppins';
+            color: rgb(128, 100, 162);  
+            text-decoration: none !important;
+            font-size:14px;
+            text-align:left;
+          }
+          .ql-editor p {
+            font-family:'Poppins';
+            font-size:14px;
+            text-align:left;
+          }
+          .ql-editor {
+            min-height: 100px;
+          }
+          ${
+            forWhichComponent === "createPost" && 
+            `
+              .ql-editor {
+                scrollbar-width: thin;
+                scrollbar-color: #777 #f1f1f1;
+              }
+            `
+          }
+          
+      `}</style>
 
       <input
         type="file"

@@ -46,6 +46,7 @@ import { updateActiveProfile } from '@/redux/slices/user'
 import defaultImg from '@/assets/svg/default-images/default-user-icon.svg'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import ReactPlayer from 'react-player'
+import useGetDefaultHobby from './components/hobby/useDefaultHobby'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -389,7 +390,7 @@ export const CreatePost: React.FC<Props> = ({
     DropdownListItem[]
   >([])
   const [visibilityData, setVisibilityData] = useState(['public'])
-
+  const defaultFirstHobby = useGetDefaultHobby()
   useEffect(() => {
     console.log('metaData', metaData)
   }, [metaData])
@@ -808,22 +809,8 @@ export const CreatePost: React.FC<Props> = ({
       }
       setSelectedHobbies(existingHobbies)
     } else {
-      const firstHobby =
-        activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
-          ?.hobby?.display
-      const firstGenre =
-        activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
-          ?.genre?.display
-      const firstHobbyId = activeProfile?.data?.preferences?.create_post_pref
-        ?.preferred_hobby?.hobby?._id
-        ? activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
-            ?.hobby?._id
-        : undefined
-      const firstGenreId = activeProfile?.data?.preferences?.create_post_pref
-        ?.preferred_hobby?.genre?._id
-        ? activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
-            ?.genre?._id
-        : undefined
+      const { firstHobby, firstGenre, firstHobbyId, firstGenreId } =
+        defaultFirstHobby()
 
       const preferredLocation =
         user?.preferences?.create_post_pref?.preferred_location?.city?.split(
@@ -874,6 +861,7 @@ export const CreatePost: React.FC<Props> = ({
     setData((prev: any) => ({ ...prev, visibility: value }))
   }
 
+  const isReelBreakpoint = useMediaQuery('(max-width:600px)')
   const isMobile = useMediaQuery('(max-width:1100px)')
   if (confirmationModal) {
     return (
@@ -962,7 +950,7 @@ export const CreatePost: React.FC<Props> = ({
               )}
 
               <aside>
-                <div className={styles1.z20}>
+                <div className={styles1.z20} style={{ display: 'flex', flexDirection:"row", gap: "16px" }}>
                   <CreatePostProfileSwitcher
                     data={data}
                     setData={setData}
@@ -970,6 +958,22 @@ export const CreatePost: React.FC<Props> = ({
                     classForShowDropdown={styles['full-width-all']}
                     className={styles['profile-switcher-parent']}
                   />
+                  {
+                    !isMobile && (
+                      <FilledButton
+                    disabled={submitBtnLoading}
+                    onClick={handleSubmit}
+                    className={styles['create-post-btn2']}
+                    loading={submitBtnLoading}
+                  >
+                    {submitBtnLoading ? (
+                      <CircularProgress color="inherit" size={'16px'} />
+                    ) : (
+                      'Post'
+                    )}
+                  </FilledButton>
+                    )
+                  }
                 </div>
                 <section
                   className={styles1.z10}
@@ -1031,6 +1035,7 @@ export const CreatePost: React.FC<Props> = ({
                     optionsContainerUnactiveClass={
                       styles['optionsContainerUnactiveClass']
                     }
+                    style={!isMobile ? { width: '354px' } : {}}
                     className={styles['input-select']}
                     openDropdown={openDropdown}
                     setOpenDropdown={setOpenDropdown}
@@ -1166,6 +1171,7 @@ export const CreatePost: React.FC<Props> = ({
                       optionsContainerUnactiveClass={
                         styles['optionsContainerUnactiveClass']
                       }
+                      style={{ width: '229px', marginLeft: '62px' }}
                       // inputProps={{ 'aria-label': 'Without label' }}
                       // className={` ${styles['visibility-dropdown']}`}
                     >
@@ -1217,10 +1223,11 @@ export const CreatePost: React.FC<Props> = ({
               </aside>
             </div>
             <section
-              className={styles['editor-container'] + ' btnOutlinePurple'}
+              className={styles['editor-container'] + ` btnOutlinePurple ${!isMobile ? "custom-scrollbar-two" : styles['no-scroll']}`}
               ref={editBoxRef}
             >
               <CustomEditor
+                forWhichComponent="createPost"
                 value={data?.content}
                 onChange={(value) => {
                   setData((prev) => {
@@ -1283,6 +1290,7 @@ export const CreatePost: React.FC<Props> = ({
                       />
                     </div>
                   ) : isInstagramReelLink(url) ? (
+                    !isReelBreakpoint ? (
                       <div onClick={()=>window.open(url,"_blank")}  
                       style={{background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"16px", cursor:"pointer", maxWidth:"637.4"}}>
                       <div style={{width:"230.63px", height:"376.31px", display:"flex", alignItems:"center"}}>
@@ -1316,6 +1324,57 @@ export const CreatePost: React.FC<Props> = ({
                         </p>
                       </div>
                     </div>
+                    ) : (
+                      <div
+                        onClick={() => window.open(url, '_blank')}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'between',
+                          alignItems: 'center',
+                          gap: '8px',
+                          cursor: 'pointer',
+                          flexDirection:"column"
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: 'calc(100%)',
+                          }}
+                          >
+                          <img
+                            style={{
+                              cursor: 'pointer',
+                            }}
+                            width= '100%'
+                            onClick={() => window.open(url, '_blank')}
+                            src={
+                              (typeof metaData?.image === 'string' &&
+                                metaData.image) ||
+                              (typeof metaData?.icon === 'string' &&
+                                metaData.icon) ||
+                              defaultImg
+                            }
+                            alt=""
+                          />
+                        </div>
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '16px',
+                            fontSize: '15px',
+                            justifyContent: 'start',
+                          }}
+                        >
+                          <p style={{ fontWeight: '500' }}>
+                            {metaData?.title}
+                          </p>
+                          <p style={{ color: '#333' }}>
+                            {metaData?.description?.split(':')[0]}
+                          </p>
+                        </div>
+                      </div>
+                    )
                   ) : (
                     <div className={styles['show-metadata']}>
                       <svg
@@ -1392,8 +1451,9 @@ export const CreatePost: React.FC<Props> = ({
                 </>
               )}
             </section>
-
-            <FilledButton
+            {
+              isMobile && (
+                <FilledButton
               disabled={submitBtnLoading}
               onClick={handleSubmit}
               className={styles['create-post-btn']}
@@ -1405,6 +1465,8 @@ export const CreatePost: React.FC<Props> = ({
                 'Post'
               )}
             </FilledButton>
+              )
+            }
           </div>
         </div>
       </div>

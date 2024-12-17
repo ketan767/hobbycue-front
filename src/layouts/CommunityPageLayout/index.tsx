@@ -60,6 +60,7 @@ import {
   TrendingHobbiesByUser,
 } from '@/services/user.service'
 import AddHobbyImg from '@/assets/image/AddHobbyImg.png'
+import ContentLoader from 'react-content-loader'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -1092,7 +1093,9 @@ const CommunityLayout: React.FC<Props> = ({
               </header>
               {/* <span className={styles['divider']}></span> */}
               <section>
-                <ul>
+                {
+                  activeProfile.data?._hobbies?.length > 0 ? (
+                    <ul>
                   <li
                     onClick={() => handleHobbyClick('All Hobbies', undefined)}
                     className={
@@ -1150,7 +1153,25 @@ const CommunityLayout: React.FC<Props> = ({
                         See less{' '}
                       </p>
                     ))}
-                </ul>
+                    </ul>
+                  ) : (
+                    <ContentLoader
+                    speed={2}
+                    width="100%"
+                    backgroundColor="#f3f3f3"
+                foregroundColor="#ecebeb"
+                    viewBox="0 0 229 282"
+                  >
+                    <rect x="16" y="10" width="47" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    <rect x="16" y="49" width="77" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    <rect x="16" y="89" width="57" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    <rect x="16" y="129" width="32" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    <rect x="16" y="169" width="111" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    <rect x="16" y="209" width="91" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    <rect x="81" y="250" width="67" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                  </ContentLoader>
+                  )
+                }
               </section>
             </section>
 
@@ -1167,29 +1188,50 @@ const CommunityLayout: React.FC<Props> = ({
                 {/* <Image src={EditIcon} alt="Edit" /> */}
               </header>
               {/* <span className={styles['divider']}></span> */}
-              {visibilityData?.length > 0 && (
-                <InputSelect
-                  onChange={(e: any) => updateFilterLocation(e.target.value)}
-                  value={selectedLocation}
-                  // inputProps={{ 'aria-label': 'Without label' }}
-                  className={` ${styles['location-dropdown']}`}
-                >
-                  {visibilityData?.map((item: any, idx) => {
-                    console.log('asifs obj', item)
-                    return (
-                      <>
-                        <DropdownOption
-                          className={styles['location-dropdown-container']}
-                          {...item}
-                          key={idx}
-                          currentValue={selectedLocation}
-                          onChange={(val: any) => updateFilterLocation(val)}
-                        />
-                      </>
-                    )
-                  })}
-                </InputSelect>
-              )}
+              {
+                visibilityData?.length > 0 ? (
+                  <>
+                  {visibilityData?.length > 0 && (
+                    <InputSelect
+                      onChange={(e: any) => updateFilterLocation(e.target.value)}
+                      value={selectedLocation}
+                      // inputProps={{ 'aria-label': 'Without label' }}
+                      className={` ${styles['location-dropdown']}`}
+                    >
+                      {visibilityData?.map((item: any, idx) => {
+                        return (
+                          <>
+                            <DropdownOption
+                              className={styles['location-dropdown-container']}
+                              {...item}
+                              key={idx}
+                              currentValue={selectedLocation}
+                              onChange={(val: any) => updateFilterLocation(val)}
+                            />
+                          </>
+                        )
+                      })}
+                    </InputSelect>
+                  )}
+                  </>
+                ) : (
+                    <ContentLoader
+                    speed={2}
+                    width="100%"
+                    backgroundColor="#f3f3f3"
+                foregroundColor="#ecebeb"
+                    viewBox="0 0 229 160"
+                  >
+                    <rect x="16" y="11" width="55" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    <rect x="197" y="52" width="16" height="16" rx="8" fill="#D9DBE9"/>
+                    <rect x="16" y="51" width="95" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    <rect x="197" y="92" width="16" height="16" rx="8" fill="#D9DBE9"/>
+                    <rect x="16" y="91" width="93" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    <rect x="197" y="132" width="16" height="16" rx="8" fill="#D9DBE9"/>
+                    <rect x="16" y="131" width="102" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                  </ContentLoader>
+                  )
+              }
             </section>
           </aside>
         )}
@@ -1618,9 +1660,13 @@ const CommunityLayout: React.FC<Props> = ({
               className={styles['desktop-members-conatiner']}
             >
               <header>Hobby Members</header>
-              {hobbyMembers
+              {
+                hobbyMembers.length > 0 ? (
+                <>{
+                hobbyMembers
                 ?.slice(0, seeMoreMembers === 0 ? 3 : hobbyMembers.length)
                 .map((obj: any, idx) => (
+                  obj !== null &&
                   <div key={idx} className={styles['member']}>
                     <Link
                       href={`/profile/${obj?.profile_url}`}
@@ -1635,17 +1681,41 @@ const CommunityLayout: React.FC<Props> = ({
                       <p>{obj?.full_name}</p>
                     </Link>
                   </div>
-                ))}
-              {hobbyMembers.length > 3 && (
-                <div
-                  onClick={() => {
-                    setSeeMoreMembers((prev) => prev + 1)
-                  }}
-                  className={styles['see-all']}
-                >
-                  <p>See more</p>
-                </div>
-              )}
+                ))
+              }
+                {hobbyMembers.length > 3 && (
+                  <div
+                    onClick={() => {
+                      setSeeMoreMembers((prev) => prev + 1)
+                    }}
+                    className={styles['see-all']}
+                  >
+                    <p>See more</p>
+                  </div>
+                )}
+                </>
+                ) : (
+                  <ContentLoader
+                    speed={2}
+                    width="100%"
+                    backgroundColor="#f3f3f3"
+                foregroundColor="#ecebeb"
+                    viewBox="0 0 292 154"
+                  >
+                    <rect x="16.5" y="7.5" width="23" height="23" rx="11.5" fill="#D9DBE9"                    stroke="#D9DBE9"/>
+                    <rect x="48" y="12.875" width="88" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    <rect x="186.754" y="9.5" width="88.7451" height="19" rx="3.5" fill="#D9DBE9"                     stroke="#D9DBE9"/>
+                    <rect x="16.5" y="45.5" width="23" height="23" rx="11.5" fill="#D9DBE9"                     stroke="#D9DBE9"/>
+                    <rect x="48" y="50.875" width="88" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    <rect x="16.5" y="83.5" width="23" height="23" rx="11.5" fill="#D9DBE9"                     stroke="#D9DBE9"/>
+                    <rect x="48" y="88.875" width="54" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    <rect x="112" y="121" width="66" height="12.25" rx="6.125" fill="#D9DBE9"/>
+
+                  </ContentLoader>
+                )
+                
+              }
+              
               {/* {hobbyMembers.length === 0 && (
                 <div className={styles['see-all']}>
                   <p>Loading...</p>
@@ -1657,38 +1727,61 @@ const CommunityLayout: React.FC<Props> = ({
               className={styles['desktop-members-conatiner']}
             >
               <header>What's New</header>
-              {whatsNew
-                ?.slice(0, SeeMorewhatsNew ? 3 : whatsNew.length)
-                .map((obj: any, idx) => (
-                  <div key={idx} className={styles['member']}>
-                    <Link
-                      href={`/${pageType(obj?.type)}/${obj.page_url}`}
-                      className={styles['img-name-listing']}
-                    >
-                      {obj?.profile_image ? (
-                        <img src={obj.profile_image} />
-                      ) : (
-                        <div
-                          className={
-                            getClassName(obj?.type) + ` ${styles['defaultImg']}`
-                          }
-                        ></div>
-                      )}
 
-                      <p>{obj?.title}</p>
-                    </Link>
+              {
+                whatsNew.length > 0 ? (
+                <>
+                {whatsNew
+                  ?.slice(0, SeeMorewhatsNew ? 3 : whatsNew.length)
+                  .map((obj: any, idx) => (
+                    <div key={idx} className={styles['member']}>
+                      <Link
+                        href={`/${pageType(obj?.type)}/${obj.page_url}`}
+                        className={styles['img-name-listing']}
+                      >
+                        {obj?.profile_image ? (
+                          <img src={obj.profile_image} />
+                        ) : (
+                          <div
+                            className={
+                              getClassName(obj?.type) + ` ${styles['defaultImg']}`
+                            }
+                          ></div>
+                        )}
+  
+                        <p>{obj?.title}</p>
+                      </Link>
+                    </div>
+                  ))}
+                {whatsNew.length > 3 && (
+                  <div
+                    onClick={() => {
+                      setSeeMoreWhatsNew((prev) => !prev)
+                    }}
+                    className={styles['see-all']}
+                  >
+                    <p>{SeeMorewhatsNew ? 'See more' : 'See less'}</p>
                   </div>
-                ))}
-              {whatsNew.length > 3 && (
-                <div
-                  onClick={() => {
-                    setSeeMoreWhatsNew((prev) => !prev)
-                  }}
-                  className={styles['see-all']}
-                >
-                  <p>{SeeMorewhatsNew ? 'See more' : 'See less'}</p>
-                </div>
-              )}
+                )}
+                </>
+                ) : 
+                  <ContentLoader
+                    speed={2}
+                    width="100%"
+                    backgroundColor="#f3f3f3"
+                foregroundColor="#ecebeb"
+                    viewBox="0 0 292 185"
+                  >
+                  <rect x="16.5" y="4" width="31" height="31" rx="3.5" fill="#D9DBE9" stroke="#D9DBE9"/>
+                  <rect x="56" y="13" width="127" height="13" rx="6.5" fill="#D9DBE9"/>
+                  <rect x="16.5" y="55" width="31" height="31" rx="3.5" fill="#D9DBE9" stroke="#D9DBE9"/>
+                  <rect x="56" y="64.5" width="125" height="12" rx="6" fill="#D9DBE9"/>
+                  <rect x="16.5" y="106" width="31" height="31" rx="3.5" fill="#D9DBE9" stroke="#D9DBE9"/                 >
+                  <rect x="56" y="115.5" width="127" height="12" rx="6" fill="#D9DBE9"/>
+                  <rect x="112" y="156.5" width="66" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                  </ContentLoader>
+              }
+
             </section>
 
             <section
@@ -1699,10 +1792,13 @@ const CommunityLayout: React.FC<Props> = ({
               </header>
               {/* <span className={styles['divider']}></span> */}
               <section>
-                <ul>
-                  {trendingHobbies
-                    ?.slice(0, seeMoreTrendHobbies ? 3 : trendingHobbies.length)
-                    .map((hobby: any) => {
+                {
+                  trendingHobbies.length > 0 ? (
+                    <>
+                    <ul>
+                      {trendingHobbies
+                        ?.slice(0, seeMoreTrendHobbies ? 3 : trendingHobbies.length)
+                        .map((hobby: any) => {
                       if (hobby.profile_image) {
                       }
                       return (
@@ -1749,9 +1845,9 @@ const CommunityLayout: React.FC<Props> = ({
                           />
                         </li>
                       )
-                    })}
-                </ul>
-                {trendingHobbies.length > 3 && (
+                        })}
+                    </ul>
+                    {trendingHobbies.length > 3 && (
                   <div
                     onClick={() => {
                       setSeeMoreTrendHobbies((prev) => !prev)
@@ -1760,7 +1856,30 @@ const CommunityLayout: React.FC<Props> = ({
                   >
                     <p>{seeMoreTrendHobbies ? 'See more' : 'See less'}</p>
                   </div>
-                )}
+                    )}
+                    </>
+                  ) : (
+                    <ContentLoader
+                      speed={2}
+                      width="100%"
+                      backgroundColor="#f3f3f3"
+                foregroundColor="#ecebeb"
+                      height={185}
+                      viewBox="0 0 292 171"
+                    >
+                    <path d="M32.5 3L46.7894 11.25V27.75L32.5 36L18.2106 27.75V11.25L32.5 3Z"                       fill="#D9DBE9"/>
+                    <rect x="57" y="13.375" width="30" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    <rect x="256.004" y="9.5" width="19.9954" height="20" rx="9.99768" fill="#D9DBE9"/>
+                    <path d="M32.5 47L46.7894 55.25V71.75L32.5 80L18.2106 71.75V55.25L32.5 47Z"                       fill="#D9DBE9"/>
+                    <rect x="57" y="57.375" width="80" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    <rect x="256.004" y="53.5" width="19.9954" height="20" rx="9.99768" fill="#D9DBE9"/>
+                    <path d="M32.5 91L46.7894 99.25V115.75L32.5 124L18.2106 115.75V99.25L32.5 91Z"                      fill="#D9DBE9"/>
+                    <rect x="57" y="101.375" width="67" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    <rect x="256.004" y="97.5" width="19.9954" height="20" rx="9.99768" fill="#D9DBE9"/>
+                    <rect x="112" y="139" width="66" height="12.25" rx="6.125" fill="#D9DBE9"/>
+                    </ContentLoader>
+                  )
+                }
               </section>
             </section>
             {isMobile ? null : (

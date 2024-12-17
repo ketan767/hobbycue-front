@@ -510,6 +510,44 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     }
   }, [])
 
+  const notIncludesFilters = (): boolean => {
+    return (
+      !router.asPath.includes('page-type') &&
+      !router.asPath.includes('category') &&
+      !router.asPath.includes('hobby') &&
+      !router.asPath.includes('keyword') &&
+      !router.asPath.includes('location')
+    )
+  }
+
+  useEffect(() => {
+    if (
+      router.asPath.includes('page-type=People') ||
+      (notIncludesFilters() && router.pathname.includes('/people'))
+    ) {
+      dispatch(setPageType('People'))
+      dispatch(setCategory(''))
+    } else if (
+      router.asPath.includes('page-type=Place') ||
+      (notIncludesFilters() && router.pathname.includes('/places'))
+    ) {
+      dispatch(setPageType('Place'))
+      dispatch(setCategory(''))
+    } else if (
+      router.asPath.includes('page-type=Program') ||
+      (notIncludesFilters() && router.pathname.includes('/programs'))
+    ) {
+      dispatch(setPageType('Program'))
+      dispatch(setCategory(''))
+    } else if (
+      router.asPath.includes('page-type=Product') ||
+      (notIncludesFilters() && router.pathname.includes('/products'))
+    ) {
+      dispatch(setPageType('Product'))
+      dispatch(setCategory(''))
+    }
+  }, [router.pathname, router.asPath])
+
   return (
     <div className={`${styles.searchContainer}`}>
       <div className={`${styles.innerContainer}`}>

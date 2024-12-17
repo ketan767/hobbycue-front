@@ -516,6 +516,6 @@
     z-index: 3;
   }
   .profile-img-wrapper .edit-btn {
-    left: 0;
+    left: 40px;
   }
 }

@@ -96,6 +96,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   const [initialLabel, setInitialLabel] = useState('')
   const [isChanged, setIsChanged] = useState(false)
 
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
+
   useEffect(() => {
     dispatch(setHasChanges(false))
   }, [])
@@ -1015,6 +1017,25 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     console.warn({ currentData, initialData })
   }, [data, initialData, addressLabel, initialLabel])
 
+  useEffect(() => {
+    if (confirmationModal) setShowAutoAddress(false)
+  }, [confirmationModal])
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        (inputRef.current &&
+          !inputRef.current.contains(event.target as Node)) ||
+        (dropdownRef.current &&
+          !dropdownRef.current.contains(event.target as Node))
+      ) {
+        setShowAutoAddress(false)
+      }
+    }
+    window.addEventListener('click', handleOutsideClick)
+    return () => window.removeEventListener('click', handleOutsideClick)
+  }, [])
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -1099,6 +1120,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                     getLocation()
                     inputRef?.current?.focus()
                   }}
+                  onFocus={() => setShowAutoAddress(false)}
                   tabIndex={0}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
@@ -1114,7 +1136,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               </div>
               <div>
                 {ShowAutoAddress && (
-                  <div className={styles['dropdown']}>
+                  <div className={styles['dropdown']} ref={dropdownRef}>
                     {suggestions.map((suggestion, index) => (
                       <p
                         onClick={() =>

@@ -630,7 +630,8 @@ const PostCard: React.FC<Props> = (props) => {
           ) : (
             <>
               {has_link && props.currentSection !== 'links' && (
-                <div
+                <div 
+                  style={{width: '100%', height: "auto"}}
                   className={
                     !linkLoading
                       ? isVideoLink(url)
@@ -647,9 +648,8 @@ const PostCard: React.FC<Props> = (props) => {
                         <div className={styles.videoPlayer}>
                           <ReactPlayer
                             className={styles.reactplayer}
+                            style={{maxHeight: "376.31px"}}
                             width="100%"
-                            // height="410px"
-                            height="100%"
                             url={url}
                             controls={true}
                           />

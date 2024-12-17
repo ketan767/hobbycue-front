@@ -59,14 +59,15 @@
   margin: 0 auto;
 }
 .filterContainer {
+  padding-top: 12px;
   max-width: 229px;
   width: 100%;
   display: flex;
   justify-content: center;
-  
+
   height: 90vh;
   position: sticky;
-  top: calc(var(--navbar-height-desktop) + var(--spacing-12));
+  top: calc(var(--navbar-height-desktop)) ;
   margin-bottom: var(--spacing-12);
 }
 
@@ -305,6 +306,13 @@
   text-align: left;
   margin-bottom: 11px;
   color: #6d747a;
+  max-width: inherit;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: unset;
 }
 
 .date-and-hobbies {
@@ -444,7 +452,7 @@
 .blogContent img,
 .ql-editor img {
   display: block;
-  margin: 11px auto;
+
 }
 
 .ql-editor figcaption,
@@ -555,6 +563,14 @@
   letter-spacing: 0em;
   text-align: left;
   color: #6d747a;
+  
+  max-width: inherit;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: unset;
 }
 .header-user > .title > p:last-child {
   font-size: 14px;
@@ -643,6 +659,13 @@
   .author-name {
     font-size: 16px;
     margin-bottom: 0;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .profile-title{
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
   }
 
   .blogContent {
@@ -712,6 +735,9 @@
   .cover-image {
     height: 109.33px;
     margin-bottom: 8px;
+    width: 100vw;
+    border-radius: 0;
+    transform: translateX(-16px);
   }
 
   .gridContainer {
