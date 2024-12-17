@@ -95,6 +95,8 @@ const PagesLoader: FC<PagesLoaderProps> = ({component}) => {
               speed={2}
               width="100%"
               height="265"
+              backgroundColor="#f3f3f3"
+                foregroundColor="#ecebeb"
               viewBox="0 0 313 auto"
             >
               <rect x="0" y="0" width="160" height="160" fill="#D9DBE9" />
@@ -259,6 +261,8 @@ const PagesLoader: FC<PagesLoaderProps> = ({component}) => {
               width="100%"
               height="288"
               viewBox="0 0 360 auto"
+              backgroundColor="#f3f3f3"
+                foregroundColor="#ecebeb"
             >
               <rect
                 x="0.5"

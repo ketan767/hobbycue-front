@@ -52,7 +52,7 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
 
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(profile)
-  const [pageData, setPageData] = useState(data.pageData)
+  const [pageData, setPageData] = useState(data?.pageData)
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [displayAbout, setDisplayAbout] = useState(false)
   const [displayOther, setDisplayOther] = useState(false)

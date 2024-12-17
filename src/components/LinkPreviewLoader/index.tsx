@@ -17,7 +17,7 @@ const LinkPreviewLoader: React.FC<Props> = () => {
               width="100%"
               height={100}
               backgroundColor="#f3f3f3"
-              foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
               className={styles['content-loader']}
             >
               <rect x="" y="" rx="3" ry="3" width="100" height="100" />
@@ -31,7 +31,7 @@ const LinkPreviewLoader: React.FC<Props> = () => {
               width="100%"
               height={100}
               backgroundColor="#f3f3f3"
-              foregroundColor="#ecebeb"
+                foregroundColor="#ecebeb"
             >
               <rect x="" y="10" rx="3" ry="3" width="100" height="100" />
               <rect x="112" y="12" rx="7" ry="5" width="60%" height="14" />

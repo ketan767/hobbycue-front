@@ -950,7 +950,7 @@ export const CreatePost: React.FC<Props> = ({
               )}
 
               <aside>
-                <div className={styles1.z20}>
+                <div className={styles1.z20} style={{ display: 'flex', flexDirection:"row", gap: "16px" }}>
                   <CreatePostProfileSwitcher
                     data={data}
                     setData={setData}
@@ -958,6 +958,22 @@ export const CreatePost: React.FC<Props> = ({
                     classForShowDropdown={styles['full-width-all']}
                     className={styles['profile-switcher-parent']}
                   />
+                  {
+                    !isMobile && (
+                      <FilledButton
+                    disabled={submitBtnLoading}
+                    onClick={handleSubmit}
+                    className={styles['create-post-btn2']}
+                    loading={submitBtnLoading}
+                  >
+                    {submitBtnLoading ? (
+                      <CircularProgress color="inherit" size={'16px'} />
+                    ) : (
+                      'Post'
+                    )}
+                  </FilledButton>
+                    )
+                  }
                 </div>
                 <section
                   className={styles1.z10}
@@ -1019,6 +1035,7 @@ export const CreatePost: React.FC<Props> = ({
                     optionsContainerUnactiveClass={
                       styles['optionsContainerUnactiveClass']
                     }
+                    style={!isMobile ? { width: '354px' } : {}}
                     className={styles['input-select']}
                     openDropdown={openDropdown}
                     setOpenDropdown={setOpenDropdown}
@@ -1154,6 +1171,7 @@ export const CreatePost: React.FC<Props> = ({
                       optionsContainerUnactiveClass={
                         styles['optionsContainerUnactiveClass']
                       }
+                      style={{ width: '229px', marginLeft: '62px' }}
                       // inputProps={{ 'aria-label': 'Without label' }}
                       // className={` ${styles['visibility-dropdown']}`}
                     >
@@ -1205,7 +1223,7 @@ export const CreatePost: React.FC<Props> = ({
               </aside>
             </div>
             <section
-              className={styles['editor-container'] + ' btnOutlinePurple custom-scrollbar-two'}
+              className={styles['editor-container'] + ` btnOutlinePurple ${!isMobile ? "custom-scrollbar-two" : styles['no-scroll']}`}
               ref={editBoxRef}
             >
               <CustomEditor
@@ -1433,8 +1451,9 @@ export const CreatePost: React.FC<Props> = ({
                 </>
               )}
             </section>
-
-            <FilledButton
+            {
+              isMobile && (
+                <FilledButton
               disabled={submitBtnLoading}
               onClick={handleSubmit}
               className={styles['create-post-btn']}
@@ -1446,6 +1465,8 @@ export const CreatePost: React.FC<Props> = ({
                 'Post'
               )}
             </FilledButton>
+              )
+            }
           </div>
         </div>
       </div>

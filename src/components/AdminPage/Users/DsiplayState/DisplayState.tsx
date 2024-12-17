@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './DisplayState.module.css'
 import { ModalState } from '@/pages/admin/users'
-import { formatDate } from '../../Modal/UserFilterModal/UserFilter'
+import { formatDate } from '../../Filters/UserFilter/UserFilter'
 import { format } from 'path'
 
 interface Props {

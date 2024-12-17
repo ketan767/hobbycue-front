@@ -8,14 +8,13 @@
     max-width: 328px;
     min-height: 292px;
     width: 100%;
-    padding: 16px 0px;
+    padding: 10px ; 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 16px;
     border-radius: 8px;
-    padding: 10px;
     box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.1);
   }
   

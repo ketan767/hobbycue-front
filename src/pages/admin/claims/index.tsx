@@ -1,18 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useDispatch, useSelector } from 'react-redux'
-import { getAllUserDetail, searchUsers } from '../../../services/user.service'
+import { useDispatch } from 'react-redux'
+import { searchUsers } from '../../../services/user.service'
 import styles from './styles.module.css'
 import Image from 'next/image'
-import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
-import { ClaimRequest, forgotPassword } from '@/services/auth.service'
-import {
-  closeModal,
-  openModal,
-  updateForgotPasswordEmail,
-} from '@/redux/slices/modal'
-import { RootState } from '@/redux/store'
-import AdminNavbar from '@/components/AdminNavbar/AdminNavbar'
+
 import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
@@ -21,11 +13,8 @@ import {
   UpdateClaim,
   deleteUserByAdmin,
   getClaimRequests,
-  getHobbyRequests,
 } from '@/services/admin.service'
-import { formatDateTime, pageType } from '@/utils'
-import StatusDropdown from '@/components/_formElements/StatusDropdown'
-import HandleAdminAction from '@/components/_modals/AdminModals/ActionModal'
+import { pageType } from '@/utils'
 import AdminActionModal from '@/components/_modals/AdminModals/ActionModal'
 import selectIcon from '@/assets/svg/select_icon.svg'
 import InProgressIcon from '@/assets/svg/In_progress_icon.svg'
@@ -35,6 +24,12 @@ import { setShowPageLoader } from '@/redux/slices/site'
 import AdminNote from '@/components/AdminPage/Modal/AdminNote/AdminNote'
 type SearchInput = {
   search: InputData<string>
+}
+export interface AdminNoteModalData {
+  adminNotes: String
+  status: String
+  emailUser: boolean
+  userId: string
 }
 
 const filterSvg = (
@@ -106,7 +101,7 @@ const deleteSvg = (
     />
   </svg>
 )
-const ClaimsPage: React.FC = () => {
+const ClaimsPage: React.FC<{}> = () => {
   const router = useRouter()
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
@@ -141,6 +136,34 @@ const ClaimsPage: React.FC = () => {
     title: '',
   })
   const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
+
+  const [adminNoteModalData, setAdminNoteModalData] =
+    useState<AdminNoteModalData>({
+      adminNotes: 'Admin Note',
+      status: 'Inprogress',
+      emailUser: false,
+      userId: '',
+    })
+  const [isEditAdminNote, setEditAdminNote] = useState<boolean>(false)
+  const [singleData, setSingleData] = useState({})
+  const buttonRef = useRef<HTMLButtonElement>(null)
+
+  // Handle click events
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      buttonRef.current &&
+      !buttonRef.current.contains(event.target as Node)
+    ) {
+      setEditAdminNote(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
   const dispatch = useDispatch()
   const handleSearch = async (event: any) => {
     dispatch(setShowPageLoader(true))
@@ -281,8 +304,17 @@ const ClaimsPage: React.FC = () => {
       pageUrl: hobbyreq?.pageUrl,
       status: hobbyreq?.status,
     })
+
+    setSingleData(hobbyreq)
     setAdminNoteModal(true)
   }
+  const handleEditAdminNoteData = (e: any, x: any) => {
+    setAdminNoteModalData((pre) => {
+      return { ...pre, adminNotes: e.target.value, userId: x._id }
+    })
+  }
+
+  console.log(adminNoteModalData)
 
   if (showAdminActionModal) {
     return (
@@ -301,7 +333,6 @@ const ClaimsPage: React.FC = () => {
     <>
       <AdminLayout>
         <div className={styles.searchContainer}>
-          {/* <div className={styles.admintitle}>Admin Search</div> */}
           <div className={styles.searchAndFilter}>
             <form onSubmit={handleSearch} className={styles.searchForm}>
               <input
@@ -323,21 +354,14 @@ const ClaimsPage: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '20.06%' }}>Name</th>
-                  <th style={{ width: '20%' }}>Page</th>
-
-                  <th style={{ width: '32.163%' }}>Relation to Page</th>
-                  <th
-                    style={{
-                      width: '22.54%',
-                      paddingRight: '16px',
-                      textAlign: 'center',
-                    }}
-                  >
+                  <th>Name</th>
+                  <th>Page</th>
+                  <th>Relation to Page</th>
+                  <th style={{ paddingRight: '16px', textAlign: 'center' }}>
                     Web Link
                   </th>
-
-                  <th style={{ width: '15.252%', paddingRight: '16px' }}>
+                  <th style={{ paddingRight: '16px' }}>Admin Note</th>
+                  <th style={{ paddingRight: '16px', textAlign: 'center' }}>
                     Action
                   </th>
                 </tr>
@@ -370,27 +394,52 @@ const ClaimsPage: React.FC = () => {
                         {hobbyreq?.pageUrl}
                       </Link>
                     </td>
-
                     <td className={styles.lastLoggedIn}>
-                      {hobbyreq?.HowRelated.slice(0, 60) + '...'}
+                      {hobbyreq?.HowRelated.slice(0, 60)}
                     </td>
-
                     <td className={styles.pagesLength}>{hobbyreq?.link}</td>
+                    <td>
+                      <div className={styles.adminNote}>
+                        {isEditAdminNote &&
+                        hobbyreq._id === adminNoteModalData.userId ? (
+                          <input
+                            type="text"
+                            value={
+                              adminNoteModalData.adminNotes?.toString() || ''
+                            }
+                            onChange={(e: any) =>
+                              handleEditAdminNoteData(e, hobbyreq)
+                            }
+                          />
+                        ) : (
+                          <span
+                            onClick={() => {
+                              setEditAdminNote(true)
+                              setAdminNoteModalData((pre) => {
+                                return { ...pre, userId: hobbyreq._id }
+                              })
+                            }}
+                            ref={buttonRef}
+                          >
+                            {adminNoteModalData.adminNotes}
+                          </span>
+                        )}
+                      </div>
+                    </td>
                     <td>
                       <div
                         onClick={() => handleAction(hobbyreq)}
                         className={styles.actions}
                       >
                         {pencilSvg}
-
                         <div>
-                          {hobbyreq?.status == 'accepted' ? (
+                          {hobbyreq?.status === 'accepted' ? (
                             <Image src={AcceptedIcon} alt="" />
-                          ) : hobbyreq?.status == 'rejected' ? (
+                          ) : hobbyreq?.status === 'rejected' ? (
                             <Image src={RejectedIcon} alt="" />
-                          ) : hobbyreq?.status == 'in_progress' ? (
+                          ) : hobbyreq?.status === 'in_progress' ? (
                             <Image src={InProgressIcon} alt="" />
-                          ) : hobbyreq?.status == 'New' ? (
+                          ) : hobbyreq?.status === 'New' ? (
                             <Image src={selectIcon} alt="" />
                           ) : (
                             ''
@@ -404,8 +453,6 @@ const ClaimsPage: React.FC = () => {
             </table>
           </div>
           <div className={styles.pagination}>
-            {/* Previous Page Button */}
-
             <button
               disabled={page <= 1}
               className="admin-next-btn"
@@ -413,7 +460,6 @@ const ClaimsPage: React.FC = () => {
             >
               Previous
             </button>
-
             <button
               disabled={searchResults.length !== pagelimit}
               className="admin-next-btn"
@@ -450,6 +496,9 @@ const ClaimsPage: React.FC = () => {
       }
 
       <AdminNote
+        data={singleData}
+        pageName={'Claim'}
+        setAdminNoteModalData={setAdminNoteModalData}
         setIsModalOpen={setAdminNoteModal}
         isModalOpen={adminNoteModal}
       />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
-import styles from './DatrePicker.module.css'
+import styles from './DatePicker.module.css'
 import 'react-datepicker/dist/react-datepicker.css'
 
 interface Props {
