@@ -385,9 +385,8 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
       description: hobbyreq?.description,
       status: hobbyreq?.status,
     })
-    console.log('Hobby data received')
+    
     setSingleData(hobbyreq)
-    console.log(hobbyData, 10000)
     setAdminNoteModal(true)
 
     //setShowAdminActionModal(true)

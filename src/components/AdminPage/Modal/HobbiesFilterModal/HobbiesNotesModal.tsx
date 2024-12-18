@@ -72,7 +72,6 @@ const HobbiesNotesModal: React.FC<PropTypes> = ({
         userId: data?._id,
       };
 
-    console.log({ adminNotes, status, emailUser })
     if (pageName === 'HobbyRequest') {
         try {
           
