@@ -85,6 +85,8 @@ import PExplore from './explore/PExplore'
 import PostExplore from './explore/PostExplore'
 import UserHobbies from './searchComponents/user/UserHobbies'
 import FilterDropdown from './responsive/FilterDropdown'
+import { Bookmark } from '@mui/icons-material'
+import BookmarkOnCards from './ui_components/bookmark/Bookmark'
 
 type Props = {
   data?: any
@@ -498,6 +500,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
   //   },
   //   [searchLoading, hasMore, currentPage, dispatch],
   // )
+
+
+  const [hoveredHobbyIndex,setHoveredHobbyIndex]=useState<number>(-1)
+  const [hoveredUserIndex,setHoveredUserIndex]=useState<number>(-1)
+  const [hoveredPeopleIndex,setHoveredPeopleIndex]=useState<number>(-1)
+  const [hoveredPlaceIndex,setHoveredPlaceIndex]=useState<number>(-1)
+  const [hoveredProgramIndex,setHoveredProgramIndex]=useState<number>(-1)
+  const [hoveredProductIndex,setHoveredProductIndex]=useState<number>(-1)
+  const [hoveredClassIndex,setHoveredClassIndex]=useState<number>(-1)
+  const [hoveredRentalIndex,setHoveredRentalIndex]=useState<number>(-1)
+  const [hoveredPostIndex,setHoveredPostIndex]=useState<number>(-1)
+  const [hoveredBlogIndex,setHoveredBlogIndex]=useState<number>(-1)
 
   useEffect(() => {
     if (showAll === true) {
@@ -1809,7 +1823,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       //     : null
 
                       // }
+                      onMouseEnter={()=>setHoveredHobbyIndex(index)}
+                      onMouseLeave={()=>setHoveredHobbyIndex(-1)}
                     >
+                      {hoveredHobbyIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
                       <div className={styles.hobbyAvtar}>
                         {/* Render the image */}
                         {hobby.profile_image ? (
@@ -1942,7 +1959,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToProfile(user.profile_url)}
+                       onMouseEnter={()=>setHoveredUserIndex(index)}
+                      onMouseLeave={()=>setHoveredUserIndex(-1)}
                     >
+                      {hoveredUserIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                       <div className={styles.userAvatar}>
                         {user?.profile_image ? (
                           <img
@@ -2117,7 +2138,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToPeoplePage(page.page_url)}
+                            onMouseEnter={()=>setHoveredPeopleIndex(index)}
+                      onMouseLeave={()=>setHoveredPeopleIndex(-1)}
                     >
+                      {hoveredPeopleIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
                           <img
@@ -2289,7 +2314,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToPlacePage(page.page_url)}
+                            onMouseEnter={()=>setHoveredPlaceIndex(index)}
+                      onMouseLeave={()=>setHoveredPlaceIndex(-1)}
                     >
+                      {hoveredPlaceIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
                           <img
@@ -2435,7 +2464,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToProgramPage(page.page_url)}
+                            onMouseEnter={()=>setHoveredProgramIndex(index)}
+                      onMouseLeave={()=>setHoveredProgramIndex(-1)}
                     >
+                      {hoveredProgramIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
                           <img
@@ -2629,7 +2662,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         className={styles.peopleItem}
                         key={index}
                         onClick={() => navigateToProductPage(page.page_url)}
+                              onMouseEnter={()=>setHoveredProductIndex(index)}
+                      onMouseLeave={()=>setHoveredProductIndex(-1)}
                       >
+                      {hoveredProductIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                         <div className={styles.peopleAvatar}>
                           {page.profile_image ? (
                             <img
@@ -2814,7 +2851,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         className={styles.peopleItem}
                         key={index}
                         onClick={() => navigateToProgramPage(page.page_url)}
+                              onMouseEnter={()=>setHoveredClassIndex(index)}
+                      onMouseLeave={()=>setHoveredClassIndex(-1)}
                       >
+                      {hoveredClassIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                         <div className={styles.peopleAvatar}>
                           {page.profile_image ? (
                             <img
@@ -2981,7 +3022,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         className={styles.peopleItem}
                         key={index}
                         onClick={() => navigateToProductPage(page.page_url)}
+                              onMouseEnter={()=>setHoveredRentalIndex(index)}
+                      onMouseLeave={()=>setHoveredRentalIndex(-1)}
                       >
+                      {hoveredRentalIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                         <div className={styles.peopleAvatar}>
                           {page.profile_image ? (
                             <img
@@ -3147,7 +3192,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToPosts(page._id)}
+                            onMouseEnter={()=>setHoveredPostIndex(index)}
+                      onMouseLeave={()=>setHoveredPostIndex(-1)}
                     >
+                      {hoveredPostIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                       <div
                         className={
                           page?.author_type === 'User'
@@ -3327,7 +3376,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToBlog(page.url)}
+                            onMouseEnter={()=>setHoveredBlogIndex(index)}
+                      onMouseLeave={()=>setHoveredBlogIndex(-1)}
                     >
+                      {hoveredBlogIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                       <div className={styles.peopleAvatar}>
                         {page.cover_pic ? (
                           <img

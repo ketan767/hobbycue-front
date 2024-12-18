@@ -96,6 +96,7 @@
 }
 
 .peopleItem {
+  position: relative;
   display: flex;
   width: 100%;
   padding: 13px 24px;
@@ -104,6 +105,7 @@
   border-bottom: 1px solid var(--grey-light, #ced4da);
   align-items: center;
   cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
 .userAvatar {
@@ -904,6 +906,11 @@
 }
 .mt-4px {
   margin-top: 4px;
+}
+.bookmark {
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 
 @media screen and (max-width: 1100px) {
