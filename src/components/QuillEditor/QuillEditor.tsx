@@ -42,7 +42,10 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
                   'image',
                   base64Image,
                 )
-                quillInstance.setSelection((range?.index || 0) + 1) // Move cursor after the image
+                quillInstance.setSelection({
+                  index: (range?.index || 0) + 1,
+                  length: 0,
+                })
               }
             }
             reader.readAsDataURL(file)
