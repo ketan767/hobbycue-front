@@ -63,8 +63,8 @@ type Props = {
   clockIcon?: JSX.Element
   isMobile?: boolean
   style?: React.CSSProperties
-  hoverCardIndex: number
-  setHoveredCardIndex: (num: number) => void
+  hoverCardIndex?: number
+  setHoveredCardIndex?: (num: number) => void
 }
 const inter = Inter({
   subsets: ['latin'],
@@ -92,8 +92,12 @@ const ListingCardProduct: React.FC<Props> = ({
         href={`/${pageType(data?.type)}/${data?.page_url}`}
         className={styles.container}
         style={style}
-        onMouseEnter={() => setHoveredCardIndex(data._id)}
-        onMouseLeave={() => setHoveredCardIndex(-1)}
+        onMouseEnter={() => {
+          if (setHoveredCardIndex) setHoveredCardIndex(data._id)
+        }}
+        onMouseLeave={() => {
+          if (setHoveredCardIndex) setHoveredCardIndex(-1)
+        }}
       >
         {itsMe && router.pathname.endsWith(`/[profile_url]/pages`) ? (
           <div

@@ -22,11 +22,17 @@ type Props = {
   data: any
   column?: any
   style?: React.CSSProperties
-  hoverCardIndex:number
-  setHoveredCardIndex:(num:number) => void
+  hoverCardIndex?: number
+  setHoveredCardIndex?: (num: number) => void
 }
 
-const ListingCard: React.FC<Props> = ({ data, style, column,hoverCardIndex,setHoveredCardIndex }) => {
+const ListingCard: React.FC<Props> = ({
+  data,
+  style,
+  column,
+  hoverCardIndex,
+  setHoveredCardIndex,
+}) => {
   const { user } = useSelector((state: RootState) => state.user)
   const type = getListingTypeName(data?.type)
   const router = useRouter()
@@ -147,8 +153,12 @@ const ListingCard: React.FC<Props> = ({ data, style, column,hoverCardIndex,setHo
         href={`/${pageType(data?.type)}/${data?.page_url}`}
         className={styles.container}
         style={style}
-        onMouseEnter={()=>setHoveredCardIndex(data._id)}
-        onMouseLeave={()=>setHoveredCardIndex(-1)}
+        onMouseEnter={() => {
+          if (setHoveredCardIndex) setHoveredCardIndex(data._id)
+        }}
+        onMouseLeave={() => {
+          if (setHoveredCardIndex) setHoveredCardIndex(-1)
+        }}
       >
         {itsMe && router.pathname.endsWith(`/[profile_url]/pages`) ? (
           <div
@@ -165,7 +175,13 @@ const ListingCard: React.FC<Props> = ({ data, style, column,hoverCardIndex,setHo
         )}
 
         <div className={styles.imgContainer}>
-          {hoverCardIndex===data._id?<div className={styles['bookmark']}><ListingBookmark /></div>:<></>}
+          {hoverCardIndex === data._id ? (
+            <div className={styles['bookmark']}>
+              <ListingBookmark />
+            </div>
+          ) : (
+            <></>
+          )}
           {data?.cover_image ? (
             <>
               <div
