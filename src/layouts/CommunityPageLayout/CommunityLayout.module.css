@@ -421,9 +421,85 @@
   gap: 12px;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
-.start-post-btn-container :hover {
+.start-post-btn-container img {
+  object-fit: contain;
+}
+
+.account-active {
+  background: rgba(223, 216, 231, 1);
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  color: rgba(var(--primary-100-rgb));
+}
+
+.profile-switcher-dropdown {
+  position: absolute;
+  top: 55px;
+  left: 16px;
+  background-color: #fff;
+  width: 229px;
+  max-width: 229px;
+  max-height: 242px;
+  padding: 8px;
+  gap: 0px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 12px 0px rgba(147, 156, 163, 0.4);
+  z-index: 50;
+  overflow-y: auto;
+  overflow-x: hidden;
+  animation: fadeDown 0.3s ease forwards;
+}
+
+.profile-switcher-dropdown > ul {
+  list-style: none;
+}
+
+.profile-switcher-dropdown > ul > li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+}
+
+.profile-switcher-dropdown > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 209px;
+  height: 24px;
+  padding: 6px;
+  margin: 8px auto 0;
+  border: 1px solid rgba(128, 100, 162, 1);
+  font-size: 12px;
+  color: rgba(128, 100, 162, 1);
+  background-color: #ffffff;
+  gap: 10px;
+  border-radius: 100px;
+  opacity: 0px;
+}
+
+.sidemenu-name{
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 20px;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+}
+
+
+.start-post-btn:hover {
   background-color: #8064a2;
   color: white;
   transition: 0.3s;
@@ -1116,6 +1192,7 @@
   .img-listing {
     display: block !important;
     width: 45px;
+    min-width: 45px;
     height: 40px;
     border-radius: 4px;
     border: 1px solid rgb(var(--primary-100-rgb));
