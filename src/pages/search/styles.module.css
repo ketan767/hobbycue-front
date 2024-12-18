@@ -312,6 +312,9 @@
   font-weight: 600;
   border: 1px solid var(--Purple-1, #8064a2);
 }
+.view-more-btn:disabled {
+  opacity: 50%;
+}
 .explore-btn {
   background-color: white;
   color: #8064a2;

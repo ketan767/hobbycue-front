@@ -2052,14 +2052,39 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreUsers ? <SearchLoader /> : ''}
                   </div>
                 )}
-                {showAllUsers
-                  ? undefined
-                  : (userPages ? (
-                      <div className={styles['view-more-btn-container']}>
-                        <button
-                          onClick={toggleShowAllusers}
-                          className={`${styles['view-more-btn']} ${
-                            userPages.length <= 3 ? styles.btnDisabled : ''
+                {showAllUsers ? undefined : (
+                  <div className={styles['view-more-btn-container']}>
+                    <button
+                      onClick={toggleShowAllusers}
+                      className={`${styles['view-more-btn']}`}
+                      disabled={userPages?.length <= 3}
+                    >
+                      View More
+                    </button>
+                    <button
+                      onClick={() => setOpenExploreUser(!openExploreUser)}
+                      onMouseEnter={() => setExploreUserHoved(true)}
+                      onMouseLeave={() => setExploreUserHoved(false)}
+                      className={`${styles['explore-btn']}`}
+                    >
+                      Explore{' '}
+                      <Image
+                        src={DropdownWhite}
+                        width={16}
+                        height={16}
+                        alt="Dropdown"
+                        className={`${styles.arrow} ${
+                          openExploreUser ? `${styles.arrowRotated}` : ''
+                        }`}
+                      />
+                      {!exploreUserHoved && (
+                        <Image
+                          src={Dropdown}
+                          width={16}
+                          height={16}
+                          alt="Dropdown"
+                          className={`${styles.arrow} ${
+                            openExploreUser ? `${styles.arrowRotated}` : ''
                           }`}
                           disabled={userPages.length <= 3}
                         >
@@ -2223,14 +2248,39 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePersonPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                {showAllPeople
-                  ? undefined
-                  : (peopleResults ? (
-                      <div className={styles['view-more-btn-container']}>
-                        <button
-                          onClick={toggleShowAllpeople}
-                          className={`${styles['view-more-btn']} ${
-                            peopleResults.length <= 3 ? styles.btnDisabled : ''
+                {showAllPeople ? undefined : (
+                  <div className={styles['view-more-btn-container']}>
+                    <button
+                      onClick={toggleShowAllpeople}
+                      className={`${styles['view-more-btn']}`}
+                      disabled={peopleResults?.length <= 3}
+                    >
+                      View More
+                    </button>
+                    <button
+                      onClick={() => setOpenExplorePeople(!openExplorePeople)}
+                      onMouseEnter={() => setExplorePeopleHoved(true)}
+                      onMouseLeave={() => setExplorePeopleHoved(false)}
+                      className={`${styles['explore-btn']}`}
+                    >
+                      Explore{' '}
+                      <Image
+                        src={DropdownWhite}
+                        width={16}
+                        height={16}
+                        alt="Dropdown"
+                        className={`${styles.arrow} ${
+                          openExplorePeople ? `${styles.arrowRotated}` : ''
+                        }`}
+                      />
+                      {!explorePeopleHoved && (
+                        <Image
+                          src={Dropdown}
+                          width={16}
+                          height={16}
+                          alt="Dropdown"
+                          className={`${styles.arrow} ${
+                            openExplorePeople ? `${styles.arrowRotated}` : ''
                           }`}
                           disabled={peopleResults.length <= 3}
                         >
@@ -2379,14 +2429,39 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePlacePages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                {showAllPlace
-                  ? undefined
-                  : (placeResults ? (
-                      <div className={styles['view-more-btn-container']}>
-                        <button
-                          onClick={toggleShowAllplace}
-                          className={`${styles['view-more-btn']} ${
-                            placeResults.length <= 3 ? styles.btnDisabled : ''
+                {showAllPlace ? undefined : (
+                  <div className={styles['view-more-btn-container']}>
+                    <button
+                      onClick={toggleShowAllplace}
+                      className={`${styles['view-more-btn']}`}
+                      disabled={placeResults?.length <= 3}
+                    >
+                      View More
+                    </button>
+                    <button
+                      onClick={() => setOpenExplorePlace(!openExplorePlace)}
+                      onMouseEnter={() => setExplorePlaceHoved(true)}
+                      onMouseLeave={() => setExplorePlaceHoved(false)}
+                      className={`${styles['explore-btn']}`}
+                    >
+                      Explore{' '}
+                      <Image
+                        src={DropdownWhite}
+                        width={16}
+                        height={16}
+                        alt="Dropdown"
+                        className={`${styles.arrow} ${
+                          openExplorePlace ? `${styles.arrowRotated}` : ''
+                        }`}
+                      />
+                      {!explorePlaceHoved && (
+                        <Image
+                          src={Dropdown}
+                          width={16}
+                          height={16}
+                          alt="Dropdown"
+                          className={`${styles.arrow} ${
+                            openExplorePlace ? `${styles.arrowRotated}` : ''
                           }`}
                           disabled={placeResults.length <= 3}
                         >
@@ -2581,14 +2656,39 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     setCategoryValue={setDefaultProgramCategory}
                   />
                 </div>
-                {showAllEvent
-                  ? undefined
-                  : (EventResults ? (
-                      <div className={styles['view-more-btn-container']}>
-                        <button
-                          onClick={toggleShowAllevent}
-                          className={`${styles['view-more-btn']} ${
-                            EventResults.length <= 3 ? styles.btnDisabled : ''
+                {showAllEvent ? undefined : (
+                  <div className={styles['view-more-btn-container']}>
+                    <button
+                      onClick={toggleShowAllevent}
+                      className={`${styles['view-more-btn']}`}
+                      disabled={EventResults?.length <= 3}
+                    >
+                      View More
+                    </button>
+                    <button
+                      onClick={() => setOpenExploreProgram(!openExploreProgram)}
+                      onMouseEnter={() => setExploreProgramHoved(true)}
+                      onMouseLeave={() => setExploreProgramHoved(false)}
+                      className={`${styles['explore-btn']}`}
+                    >
+                      Explore{' '}
+                      <Image
+                        src={DropdownWhite}
+                        width={16}
+                        height={16}
+                        alt="Dropdown"
+                        className={`${styles.arrow} ${
+                          openExploreProgram ? `${styles.arrowRotated}` : ''
+                        }`}
+                      />
+                      {!exploreProgramHoved && (
+                        <Image
+                          src={Dropdown}
+                          width={16}
+                          height={16}
+                          alt="Dropdown"
+                          className={`${styles.arrow} ${
+                            openExploreProgram ? `${styles.arrowRotated}` : ''
                           }`}
                           disabled={EventResults.length <= 3}
                         >
@@ -2757,16 +2857,41 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       {!hasNoMoreProductPages ? <SearchLoader /> : ''}
                     </div>
                   )}
-                  {showAllProducts
-                    ? undefined
-                    : (ProductResults ? (
-                        <div className={styles['view-more-btn-container']}>
-                          <button
-                            onClick={toggleShowAllproducts}
-                            className={`${styles['view-more-btn']} ${
-                              ProductResults.length <= 3
-                                ? styles.btnDisabled
-                                : ''
+                  {showAllProducts ? undefined : (
+                    <div className={styles['view-more-btn-container']}>
+                      <button
+                        onClick={toggleShowAllproducts}
+                        className={`${styles['view-more-btn']}`}
+                        disabled={ProductResults?.length <= 3}
+                      >
+                        View More
+                      </button>
+                      <button
+                        onClick={() =>
+                          setOpenExploreProduct(!openExploreProduct)
+                        }
+                        onMouseEnter={() => setExploreProductHoved(true)}
+                        onMouseLeave={() => setExploreProductHoved(false)}
+                        className={`${styles['explore-btn']}`}
+                      >
+                        Explore{' '}
+                        <Image
+                          src={DropdownWhite}
+                          width={16}
+                          height={16}
+                          alt="Dropdown"
+                          className={`${styles.arrow} ${
+                            openExploreProduct ? `${styles.arrowRotated}` : ''
+                          }`}
+                        />
+                        {!exploreProductHoved && (
+                          <Image
+                            src={Dropdown}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrow} ${
+                              openExploreProduct ? `${styles.arrowRotated}` : ''
                             }`}
                             disabled={ProductResults.length <= 3}
                           >
@@ -2932,16 +3057,39 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     ),
                   )}
-                  {showAllClasses
-                    ? undefined
-                    : (ClassesResults ? (
-                        <div className={styles['view-more-btn-container']}>
-                          <button
-                            onClick={toggleShowAllclasses}
-                            className={`${styles['view-more-btn']} ${
-                              ClassesResults.length <= 3
-                                ? styles.btnDisabled
-                                : ''
+                  {showAllClasses ? undefined : (
+                    <div className={styles['view-more-btn-container']}>
+                      <button
+                        onClick={toggleShowAllclasses}
+                        className={`${styles['view-more-btn']}`}
+                        disabled={ClassesResults?.length <= 3}
+                      >
+                        View More
+                      </button>
+                      <button
+                        onClick={() => setOpenExploreClass(!openExploreClass)}
+                        onMouseEnter={() => setExploreClassHoved(true)}
+                        onMouseLeave={() => setExploreClassHoved(false)}
+                        className={`${styles['explore-btn']}`}
+                      >
+                        Explore{' '}
+                        <Image
+                          src={DropdownWhite}
+                          width={16}
+                          height={16}
+                          alt="Dropdown"
+                          className={`${styles.arrow} ${
+                            openExploreClass ? `${styles.arrowRotated}` : ''
+                          }`}
+                        />
+                        {!exploreClassHoved && (
+                          <Image
+                            src={Dropdown}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrow} ${
+                              openExploreClass ? `${styles.arrowRotated}` : ''
                             }`}
                             disabled={ClassesResults.length <= 3}
                           >
@@ -3104,16 +3252,39 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     ),
                   )}
-                  {showAllRentals
-                    ? undefined
-                    : (RentalResults ? (
-                        <div className={styles['view-more-btn-container']}>
-                          <button
-                            onClick={toggleShowAllrentals}
-                            className={`${styles['view-more-btn']} ${
-                              RentalResults.length <= 3
-                                ? styles.btnDisabled
-                                : ''
+                  {showAllRentals ? undefined : (
+                    <div className={styles['view-more-btn-container']}>
+                      <button
+                        onClick={toggleShowAllrentals}
+                        className={`${styles['view-more-btn']}`}
+                        disabled={RentalResults?.length <= 3}
+                      >
+                        View More
+                      </button>
+                      <button
+                        onClick={() => setOpenExploreRental(!openExploreRental)}
+                        onMouseEnter={() => setExploreRentalHoved(true)}
+                        onMouseLeave={() => setExploreRentalHoved(false)}
+                        className={`${styles['explore-btn']}`}
+                      >
+                        Explore{' '}
+                        <Image
+                          src={DropdownWhite}
+                          width={16}
+                          height={16}
+                          alt="Dropdown"
+                          className={`${styles.arrow} ${
+                            openExploreRental ? `${styles.arrowRotated}` : ''
+                          }`}
+                        />
+                        {!exploreRentalHoved && (
+                          <Image
+                            src={Dropdown}
+                            width={16}
+                            height={16}
+                            alt="Dropdown"
+                            className={`${styles.arrow} ${
+                              openExploreRental ? `${styles.arrowRotated}` : ''
                             }`}
                             disabled={RentalResults.length <= 3}
                           >
@@ -3291,15 +3462,40 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePostsPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                {showAllPosts
-                  ? undefined
-                  : (PostsResults ? (
-                      // toggleShowAllposts
-                      <div className={styles['view-more-btn-container']}>
-                        <button
-                          onClick={toggleShowAllposts}
-                          className={`${styles['view-more-btn']} ${
-                            PostsResults.length <= 3 ? styles.btnDisabled : ''
+                {showAllPosts ? undefined : (
+                  // toggleShowAllposts
+                  <div className={styles['view-more-btn-container']}>
+                    <button
+                      onClick={toggleShowAllposts}
+                      className={`${styles['view-more-btn']}`}
+                      disabled={PostsResults?.length <= 3}
+                    >
+                      View More
+                    </button>
+                    <button
+                      onClick={() => setOpenExplorePost(!openExplorePost)}
+                      onMouseEnter={() => setExplorePostHoved(true)}
+                      onMouseLeave={() => setExplorePostHoved(false)}
+                      className={`${styles['explore-btn']}`}
+                    >
+                      Explore{' '}
+                      <Image
+                        src={DropdownWhite}
+                        width={16}
+                        height={16}
+                        alt="Dropdown"
+                        className={`${styles.arrow} ${
+                          openExplorePost ? `${styles.arrowRotated}` : ''
+                        }`}
+                      />
+                      {!explorePostHoved && (
+                        <Image
+                          src={Dropdown}
+                          width={16}
+                          height={16}
+                          alt="Dropdown"
+                          className={`${styles.arrow} ${
+                            openExplorePost ? `${styles.arrowRotated}` : ''
                           }`}
                           disabled={PostsResults.length <= 3}
                         >
