@@ -1903,17 +1903,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           onMouseLeave={() => setExploreHobbyHoved(false)}
                           className={`${styles['explore-btn']}`}
                         >
-                          Explore{' '}
-                          <Image
-                            src={DropdownWhite}
-                            width={16}
-                            height={16}
-                            alt="Dropdown"
-                            className={`${styles.arrowRight}`}
-                          />
-                          {!exploreHobbyHoved && (
+                          <span>Explore</span>
+                          {!exploreHobbyHoved ? (
                             <Image
                               src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrowRight}`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
                               width={16}
                               height={16}
                               alt="Dropdown"
@@ -2049,19 +2050,21 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           onMouseLeave={() => setExploreUserHoved(false)}
                           className={`${styles['explore-btn']}`}
                         >
-                          Explore{' '}
-                          <Image
-                            src={DropdownWhite}
-                            width={16}
-                            height={16}
-                            alt="Dropdown"
-                            className={`${styles.arrow} ${
-                              openExploreUser ? `${styles.arrowRotated}` : ''
-                            }`}
-                          />
-                          {!exploreUserHoved && (
+                          <span>Explore</span>
+
+                          {!exploreUserHoved ? (
                             <Image
                               src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreUser ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
                               width={16}
                               height={16}
                               alt="Dropdown"
@@ -2216,19 +2219,22 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           onMouseLeave={() => setExplorePeopleHoved(false)}
                           className={`${styles['explore-btn']}`}
                         >
-                          Explore{' '}
-                          <Image
-                            src={DropdownWhite}
-                            width={16}
-                            height={16}
-                            alt="Dropdown"
-                            className={`${styles.arrow} ${
-                              openExplorePeople ? `${styles.arrowRotated}` : ''
-                            }`}
-                          />
-                          {!explorePeopleHoved && (
+                          <span>Explore</span>
+                          {!explorePeopleHoved ? (
                             <Image
                               src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePeople
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
                               width={16}
                               height={16}
                               alt="Dropdown"
@@ -2363,19 +2369,20 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           onMouseLeave={() => setExplorePlaceHoved(false)}
                           className={`${styles['explore-btn']}`}
                         >
-                          Explore{' '}
-                          <Image
-                            src={DropdownWhite}
-                            width={16}
-                            height={16}
-                            alt="Dropdown"
-                            className={`${styles.arrow} ${
-                              openExplorePlace ? `${styles.arrowRotated}` : ''
-                            }`}
-                          />
-                          {!explorePlaceHoved && (
+                          <span>Explore</span>
+                          {!explorePlaceHoved ? (
                             <Image
                               src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePlace ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
                               width={16}
                               height={16}
                               alt="Dropdown"
@@ -2562,19 +2569,22 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           onMouseLeave={() => setExploreProgramHoved(false)}
                           className={`${styles['explore-btn']}`}
                         >
-                          Explore{' '}
-                          <Image
-                            src={DropdownWhite}
-                            width={16}
-                            height={16}
-                            alt="Dropdown"
-                            className={`${styles.arrow} ${
-                              openExploreProgram ? `${styles.arrowRotated}` : ''
-                            }`}
-                          />
-                          {!exploreProgramHoved && (
+                          <span>Explore</span>
+                          {!exploreProgramHoved ? (
                             <Image
                               src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreProgram
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
                               width={16}
                               height={16}
                               alt="Dropdown"
@@ -2733,21 +2743,22 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             onMouseLeave={() => setExploreProductHoved(false)}
                             className={`${styles['explore-btn']}`}
                           >
-                            Explore{' '}
-                            <Image
-                              src={DropdownWhite}
-                              width={16}
-                              height={16}
-                              alt="Dropdown"
-                              className={`${styles.arrow} ${
-                                openExploreProduct
-                                  ? `${styles.arrowRotated}`
-                                  : ''
-                              }`}
-                            />
-                            {!exploreProductHoved && (
+                            <span>Explore</span>
+                            {!exploreProductHoved ? (
                               <Image
                                 src={Dropdown}
+                                width={16}
+                                height={16}
+                                alt="Dropdown"
+                                className={`${styles.arrow} ${
+                                  openExploreProduct
+                                    ? `${styles.arrowRotated}`
+                                    : ''
+                                }`}
+                              />
+                            ) : (
+                              <Image
+                                src={DropdownWhite}
                                 width={16}
                                 height={16}
                                 alt="Dropdown"
@@ -2903,19 +2914,22 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             onMouseLeave={() => setExploreClassHoved(false)}
                             className={`${styles['explore-btn']}`}
                           >
-                            Explore{' '}
-                            <Image
-                              src={DropdownWhite}
-                              width={16}
-                              height={16}
-                              alt="Dropdown"
-                              className={`${styles.arrow} ${
-                                openExploreClass ? `${styles.arrowRotated}` : ''
-                              }`}
-                            />
-                            {!exploreClassHoved && (
+                            <span>Explore</span>
+                            {!exploreClassHoved ? (
                               <Image
                                 src={Dropdown}
+                                width={16}
+                                height={16}
+                                alt="Dropdown"
+                                className={`${styles.arrow} ${
+                                  openExploreClass
+                                    ? `${styles.arrowRotated}`
+                                    : ''
+                                }`}
+                              />
+                            ) : (
+                              <Image
+                                src={DropdownWhite}
                                 width={16}
                                 height={16}
                                 alt="Dropdown"
@@ -3068,21 +3082,22 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             onMouseLeave={() => setExploreRentalHoved(false)}
                             className={`${styles['explore-btn']}`}
                           >
-                            Explore{' '}
-                            <Image
-                              src={DropdownWhite}
-                              width={16}
-                              height={16}
-                              alt="Dropdown"
-                              className={`${styles.arrow} ${
-                                openExploreRental
-                                  ? `${styles.arrowRotated}`
-                                  : ''
-                              }`}
-                            />
-                            {!exploreRentalHoved && (
+                            <span>Explore</span>
+                            {!exploreRentalHoved ? (
                               <Image
                                 src={Dropdown}
+                                width={16}
+                                height={16}
+                                alt="Dropdown"
+                                className={`${styles.arrow} ${
+                                  openExploreRental
+                                    ? `${styles.arrowRotated}`
+                                    : ''
+                                }`}
+                              />
+                            ) : (
+                              <Image
+                                src={DropdownWhite}
                                 width={16}
                                 height={16}
                                 alt="Dropdown"
@@ -3247,19 +3262,20 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           onMouseLeave={() => setExplorePostHoved(false)}
                           className={`${styles['explore-btn']}`}
                         >
-                          Explore{' '}
-                          <Image
-                            src={DropdownWhite}
-                            width={16}
-                            height={16}
-                            alt="Dropdown"
-                            className={`${styles.arrow} ${
-                              openExplorePost ? `${styles.arrowRotated}` : ''
-                            }`}
-                          />
-                          {!explorePostHoved && (
+                          <span>Explore</span>
+                          {!explorePostHoved ? (
                             <Image
                               src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePost ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
                               width={16}
                               height={16}
                               alt="Dropdown"
@@ -3370,17 +3386,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           onMouseLeave={() => setExploreBlogHoved(false)}
                           className={`${styles['explore-btn']}`}
                         >
-                          Explore{' '}
-                          <Image
-                            src={DropdownWhite}
-                            width={16}
-                            height={16}
-                            alt="Dropdown"
-                            className={`${styles.arrowRight}`}
-                          />
-                          {!exploreBlogHoved && (
+                          <span>Explore</span>
+                          {!exploreBlogHoved ? (
                             <Image
                               src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrowRight}`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
                               width={16}
                               height={16}
                               alt="Dropdown"
