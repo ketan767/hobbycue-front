@@ -10,9 +10,15 @@
   min-width: 380px;
   position: relative;
 }
-
 .imgContainer {
+  position: relative;
   align-self: stretch;
+}
+.bookmark {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 2;
 }
 .background {
   /* position: absolute;

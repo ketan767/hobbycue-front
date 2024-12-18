@@ -17,6 +17,7 @@ import { useRouter } from 'next/router'
 import RedCartIcon from '@/assets/icons/RedCartIcon'
 import HobbyIconHexagon from '@/assets/icons/HobbyIconHexagon'
 import { Inter } from 'next/font/google'
+import ListingBookmark from './icon/ListingBookmark'
 export const rupeesIcon = (
   <svg
     width="14"
@@ -62,10 +63,12 @@ type Props = {
   clockIcon?: JSX.Element
   isMobile?: boolean
   style?: React.CSSProperties
+  hoverCardIndex: number
+  setHoveredCardIndex: (num: number) => void
 }
 const inter = Inter({
-  subsets: ['latin'], 
-  weight: ['400','500','600', '700'], 
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
 })
 
 const ListingCardProduct: React.FC<Props> = ({
@@ -75,6 +78,8 @@ const ListingCardProduct: React.FC<Props> = ({
   clockIcon,
   isMobile,
   style,
+  hoverCardIndex,
+  setHoveredCardIndex,
 }) => {
   const router = useRouter()
   const { user } = useSelector((state: RootState) => state.user)
@@ -87,6 +92,8 @@ const ListingCardProduct: React.FC<Props> = ({
         href={`/${pageType(data?.type)}/${data?.page_url}`}
         className={styles.container}
         style={style}
+        onMouseEnter={() => setHoveredCardIndex(data._id)}
+        onMouseLeave={() => setHoveredCardIndex(-1)}
       >
         {itsMe && router.pathname.endsWith(`/[profile_url]/pages`) ? (
           <div
@@ -104,6 +111,13 @@ const ListingCardProduct: React.FC<Props> = ({
 
         <div className={styles.content}>
           <div className={styles.contentHead}>
+            {hoverCardIndex === data._id ? (
+              <div className={styles['bookmark']}>
+                <ListingBookmark />
+              </div>
+            ) : (
+              <></>
+            )}
             {data?.profile_image ? (
               <div className={styles.contentImageContainer}>
                 <img
@@ -231,7 +245,9 @@ const ListingCardProduct: React.FC<Props> = ({
                 )}
               </div> */}
               <div className="">
-                <button className={styles.cta_button}>{data?.cta_text || "Buy Now"}</button>
+                <button className={styles.cta_button}>
+                  {data?.cta_text || 'Buy Now'}
+                </button>
               </div>
             </div>
           </div>
