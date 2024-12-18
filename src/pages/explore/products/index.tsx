@@ -33,6 +33,8 @@ const Products: React.FC<Props> = ({ data: initialData }) => {
   const [ShowAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const { isSearching } = useSelector((state: RootState) => state.explore)
+  const [hoverCardIndex, setHoveredCardIndex] = useState<number>(-1)
+
   const dispatch = useDispatch()
 
   const locationDropdownRef = useRef<HTMLDivElement>(null)
@@ -186,6 +188,8 @@ const Products: React.FC<Props> = ({ data: initialData }) => {
                 key={el._id}
                 data={el}
                 style={{ minWidth: 271, maxWidth: 700 }}
+                hoverCardIndex={hoverCardIndex}
+                setHoveredCardIndex={setHoveredCardIndex}
               />
             ))}
             <>{loading && <PagesLoader />}</>
