@@ -1,3 +1,4 @@
+import AddHobbyImg from '@/assets/image/AddHobbyImg.png'
 import { FC, useState, useRef, useEffect } from 'react'
 import styles from './CommunityLayout.module.css'
 import { useRouter } from 'next/router'
@@ -17,6 +18,7 @@ interface PanelDropdownListProps {
   inviteTextChangeFunc?: (arg0: any) => void
   inviteText?: string
   initialOpen?: boolean
+  handleAddTrendingHobby?: (arg0: any) => void
 }
 
 const PanelDropdownList: FC<PanelDropdownListProps> = ({
@@ -29,6 +31,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   inviteText,
   inviteTextChangeFunc,
   initialOpen,
+  handleAddTrendingHobby,
 }) => {
   const [open, setOpen] = useState(initialOpen ?? false)
   const router = useRouter()
@@ -190,9 +193,16 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                         <p>{obj?.display}</p>
                       </div>
                     ) : null}
+                    <img
+                      src={AddHobbyImg.src}
+                      height={20}
+                      width={20}
+                      alt="Add"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => handleAddTrendingHobby?.(obj)}
+                    />
                   </div>
                 ))}
-
             {type === 'members' &&
               options
                 .slice(0, seeMore ? 3 : options.length)
@@ -278,7 +288,8 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                   </p>
                 </div>
               </div>
-            )} :
+            )}{' '}
+            :
           </div>
         </>
       )}

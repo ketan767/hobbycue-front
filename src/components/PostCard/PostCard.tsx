@@ -1,7 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import styles from './PostCard.module.css'
-import { dateFormat, isInstagramReelLink, isVideoLink, isHobbycuePageLink, pageType } from '@/utils'
+import {
+  dateFormat,
+  isInstagramReelLink,
+  isVideoLink,
+  isHobbycuePageLink,
+  pageType,
+} from '@/utils'
 import Link from 'next/link'
 import BarsIcon from '../../assets/svg/vertical-bars.svg'
 import PostVotes from './Votes'
@@ -139,7 +145,6 @@ const PostCard: React.FC<Props> = (props) => {
   }, [])
 
   useEffect(() => {
-
     if (has_link) {
       const regex =
         /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
@@ -213,7 +218,9 @@ const PostCard: React.FC<Props> = (props) => {
     }
   }, [])
 
-  useEffect(() => { console.log({comments}) }, [comments])
+  useEffect(() => {
+    console.log({ comments })
+  }, [comments])
 
   const handleDeletePost = async (postid: any) => {
     const { err, res } = await deletePost(postid)
@@ -539,8 +546,14 @@ const PostCard: React.FC<Props> = (props) => {
                   </li>
                   <li
                     onClick={() => {
-                      showFeatureUnderDevelopment()
-                      setOptionsActive(false)
+                      dispatch(
+                        openModal({
+                          type: 'update-post',
+                          closable: true,
+                          propData: postData,
+                        }),
+                      )
+                      setOpenAction(false)
                     }}
                   >
                     Edit
@@ -630,8 +643,8 @@ const PostCard: React.FC<Props> = (props) => {
           ) : (
             <>
               {has_link && props.currentSection !== 'links' && (
-                <div 
-                  style={{width: '100%', height: "auto"}}
+                <div
+                  style={{ width: '100%', height: 'auto' }}
                   className={
                     !linkLoading
                       ? isVideoLink(url)
@@ -654,8 +667,7 @@ const PostCard: React.FC<Props> = (props) => {
                             controls={true}
                           />
                         </div>
-                      ) : 
-                      isInstagramReelLink(url) ? (
+                      ) : isInstagramReelLink(url) ? (
                         isReelBreakpoint ? (
                           <div
                             onClick={() => window.open(url, '_blank')}
@@ -665,19 +677,19 @@ const PostCard: React.FC<Props> = (props) => {
                               alignItems: 'center',
                               gap: '8px',
                               cursor: 'pointer',
-                              flexDirection:"column"
+                              flexDirection: 'column',
                             }}
                           >
                             <div
                               style={{
                                 width: 'calc(100vw - 24px)',
                               }}
-                              >
+                            >
                               <img
                                 style={{
                                   cursor: 'pointer',
                                 }}
-                                width= '100%'
+                                width="100%"
                                 onClick={() => window.open(url, '_blank')}
                                 src={
                                   (typeof metaData?.image === 'string' &&
@@ -716,7 +728,9 @@ const PostCard: React.FC<Props> = (props) => {
                               alignItems: 'center',
                               gap: '16px',
                               cursor: 'pointer',
-                              ...(isMobile ? { padding: '0' } : { padding: '0 16px' }),
+                              ...(isMobile
+                                ? { padding: '0' }
+                                : { padding: '0 16px' }),
                             }}
                           >
                             <div
@@ -750,7 +764,7 @@ const PostCard: React.FC<Props> = (props) => {
                                 fontSize: '15px',
                                 justifyContent: 'start',
                                 height: '376.31px',
-                                width: "calc(100% - 230.63px)"
+                                width: 'calc(100% - 230.63px)',
                               }}
                             >
                               <p style={{ fontWeight: '500' }}>
@@ -763,45 +777,45 @@ const PostCard: React.FC<Props> = (props) => {
                           </div>
                         )
                       ) : (
-                      // isHobbycuePageLink(url) ? (
-                      //   <>
-                      //     <div className={styles['posts-meta-data-container']}>
-                      //       <a href={url} target="_blank">
-                      //         <div className={styles['posts-meta-img']}>
-                      //           <img
-                      //             src={
-                      //               (typeof metaData?.image === 'string' &&
-                      //                 metaData.image) ||
-                      //               (typeof metaData?.icon === 'string' &&
-                      //                 metaData.icon) ||
-                      //               defaultImg
-                      //             }
-                      //             alt="link-image"
-                      //             width={80}
-                      //             height={80}
-                      //           />
-                      //         </div>
-                      //       </a>
-                      //       <div className={styles['posts-meta-content']}>
-                      //         <a
-                      //           href={url}
-                      //           target="_blank"
-                      //           className={styles.contentHead}
-                      //         >
-                      //           {metaData?.title}
-                      //         </a>
+                        // isHobbycuePageLink(url) ? (
+                        //   <>
+                        //     <div className={styles['posts-meta-data-container']}>
+                        //       <a href={url} target="_blank">
+                        //         <div className={styles['posts-meta-img']}>
+                        //           <img
+                        //             src={
+                        //               (typeof metaData?.image === 'string' &&
+                        //                 metaData.image) ||
+                        //               (typeof metaData?.icon === 'string' &&
+                        //                 metaData.icon) ||
+                        //               defaultImg
+                        //             }
+                        //             alt="link-image"
+                        //             width={80}
+                        //             height={80}
+                        //           />
+                        //         </div>
+                        //       </a>
+                        //       <div className={styles['posts-meta-content']}>
+                        //         <a
+                        //           href={url}
+                        //           target="_blank"
+                        //           className={styles.contentHead}
+                        //         >
+                        //           {metaData?.title}
+                        //         </a>
 
-                      //         <a
-                      //           href={url}
-                      //           target="_blank"
-                      //           className={styles.contentUrl}
-                      //         >
-                      //           {metaData?.description}
-                      //         </a>
-                      //       </div>
-                      //     </div>
-                      //   </>
-                      // ) : (
+                        //         <a
+                        //           href={url}
+                        //           target="_blank"
+                        //           className={styles.contentUrl}
+                        //         >
+                        //           {metaData?.description}
+                        //         </a>
+                        //       </div>
+                        //     </div>
+                        //   </>
+                        // ) : (
                         <>
                           <div className={styles['posts-meta-data-container']}>
                             <a href={url} target="_blank">
@@ -995,45 +1009,53 @@ const PostCard: React.FC<Props> = (props) => {
                 updatePost={updatePost}
               />
               {/* Comment Icon */}
-              <div style={{display:"flex", justifyContent:"center", alignItems:"center", gap:"12px", flexDirection:"row"}}>
-              <CustomizedTooltips title="Comments">
-                <svg
-                  onClick={() => setShowComments(!showComments)}
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <g clipPath="url(#clip0_18724_19460)">
-                    <path
-                      d="M6.21582 18.685H6.16653L6.13254 18.7207L2.33082 22.7125V4.1C2.33082 3.00316 3.18456 2.115 4.21582 2.115H20.2158C21.2471 2.115 22.1008 3.00316 22.1008 4.1V16.7C22.1008 17.7968 21.2471 18.685 20.2158 18.685H6.21582ZM20.2158 16.815H20.3308V16.7V4.1V3.985H20.2158H4.21582H4.10082V4.1V18.8V19.0875L4.2991 18.8793L6.26511 16.815H20.2158Z"
-                      fill="#8064A2"
-                      stroke="white"
-                      stroke-width="0.23"
-                    />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_18724_19460">
-                      <rect
-                        width="24"
-                        height="24"
-                        fill="white"
-                        transform="translate(0.21582)"
-                      />
-                    </clipPath>
-                  </defs>
-                </svg>
-              </CustomizedTooltips>
-              <p
+              <div
                 style={{
-                  color: '#6D747A',
-                  fontSize: '14px',
-                  fontWeight: '500',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '12px',
+                  flexDirection: 'row',
                 }}
               >
-                {comments.length > 0 ? comments.length : ''}
-              </p>
+                <CustomizedTooltips title="Comments">
+                  <svg
+                    onClick={() => setShowComments(!showComments)}
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g clipPath="url(#clip0_18724_19460)">
+                      <path
+                        d="M6.21582 18.685H6.16653L6.13254 18.7207L2.33082 22.7125V4.1C2.33082 3.00316 3.18456 2.115 4.21582 2.115H20.2158C21.2471 2.115 22.1008 3.00316 22.1008 4.1V16.7C22.1008 17.7968 21.2471 18.685 20.2158 18.685H6.21582ZM20.2158 16.815H20.3308V16.7V4.1V3.985H20.2158H4.21582H4.10082V4.1V18.8V19.0875L4.2991 18.8793L6.26511 16.815H20.2158Z"
+                        fill="#8064A2"
+                        stroke="white"
+                        stroke-width="0.23"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_18724_19460">
+                        <rect
+                          width="24"
+                          height="24"
+                          fill="white"
+                          transform="translate(0.21582)"
+                        />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </CustomizedTooltips>
+                <p
+                  style={{
+                    color: '#6D747A',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                  }}
+                >
+                  {comments.length > 0 ? comments.length : ''}
+                </p>
               </div>
               {/* Share Icon */}
               <CustomizedTooltips title="Share">

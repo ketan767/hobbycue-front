@@ -204,47 +204,48 @@ export const Navbar: React.FC<Props> = ({}) => {
   const searchResult = () => {
     const val = data.search.value.trim()
     if (val) {
-      if (filter === 'users') {
-        router.push({ pathname: '/search', query: { q: val, filter: 'users' } })
-      } else if (filter === 'people') {
-        router.push({
-          pathname: '/search',
-          query: { q: val, filter: 'people' },
-        })
-      } else if (filter === 'places') {
-        router.push({
-          pathname: '/search',
-          query: { q: val, filter: 'places' },
-        })
-      } else if (filter === 'programs') {
-        router.push({
-          pathname: '/search',
-          query: { q: val, filter: 'programs' },
-        })
-      } else if (filter === 'products') {
-        router.push({
-          pathname: '/search',
-          query: { q: val, filter: 'products' },
-        })
-      } else if (filter === 'posts') {
-        router.push({ pathname: '/search', query: { q: val, filter: 'posts' } })
-      } else if (filter === 'blogs') {
-        router.push({ pathname: '/search', query: { q: val, filter: 'blogs' } })
-      } else if (filter === 'hobby') {
-        router.push({ pathname: '/search', query: { q: val, filter: 'hobby' } })
-      } else if (filter === 'classes') {
-        router.push({
-          pathname: '/search',
-          query: { q: val, filter: 'classes' },
-        })
-      } else if (filter === 'rentals') {
-        router.push({
-          pathname: '/search',
-          query: { q: val, filter: 'rentals' },
-        })
-      } else {
-        router.push({ pathname: '/search', query: { q: val } })
-      }
+      // if (filter === 'users') {
+      //   router.push({ pathname: '/search', query: { q: val, filter: 'users' } })
+      // } else if (filter === 'people') {
+      //   router.push({
+      //     pathname: '/search',
+      //     query: { q: val, filter: 'people' },
+      //   })
+      // } else if (filter === 'places') {
+      //   router.push({
+      //     pathname: '/search',
+      //     query: { q: val, filter: 'places' },
+      //   })
+      // } else if (filter === 'programs') {
+      //   router.push({
+      //     pathname: '/search',
+      //     query: { q: val, filter: 'programs' },
+      //   })
+      // } else if (filter === 'products') {
+      //   router.push({
+      //     pathname: '/search',
+      //     query: { q: val, filter: 'products' },
+      //   })
+      // } else if (filter === 'posts') {
+      //   router.push({ pathname: '/search', query: { q: val, filter: 'posts' } })
+      // } else if (filter === 'blogs') {
+      //   router.push({ pathname: '/search', query: { q: val, filter: 'blogs' } })
+      // } else if (filter === 'hobby') {
+      //   router.push({ pathname: '/search', query: { q: val, filter: 'hobby' } })
+      // } else if (filter === 'classes') {
+      //   router.push({
+      //     pathname: '/search',
+      //     query: { q: val, filter: 'classes' },
+      //   })
+      // } else if (filter === 'rentals') {
+      //   router.push({
+      //     pathname: '/search',
+      //     query: { q: val, filter: 'rentals' },
+      //   })
+      // } else {
+      //   router.push({ pathname: '/search', query: { q: val } })
+      // }
+      router.push({ pathname: '/search', query: { q: val } })
     } else {
       router.push('/search')
     }

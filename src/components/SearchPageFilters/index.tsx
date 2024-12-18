@@ -136,6 +136,12 @@ const SearchPageFilter = () => {
     showAllRentals,
   ])
 
+  useEffect(() => {
+     if (!filter) {
+      setActiveFilter('all')
+      dispatch(showAllTrue())
+    }
+  }, [q, filter])
   const handleFilterClick = (filterType: any) => {
     if (isExplore) return
     if (activeFilter === filterType) {

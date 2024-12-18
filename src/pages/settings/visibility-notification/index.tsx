@@ -80,6 +80,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
     string | any
   >(['All Hobbies', 'My Hobbies'])
   const [hobbiesAdded, setHobbiesAdded] = useState<boolean>(false)
+  const [preferencesUpdated, setPreferencesUpdated] = useState<boolean>(false)
   useEffect(() => {
     if (user._addresses && !hobbiesAdded) {
       const LocationOptions = [
@@ -115,7 +116,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
   }, [user])
 
   useEffect(() => {
-    if (user && user.preferences) {
+    if (user && user.preferences && !preferencesUpdated) {
       const updatedPreferences = {
         community_view: {
           preferred_hobby: {
@@ -132,55 +133,31 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
         },
         create_post_pref: {
           preferred_hobby: {
-            hobby:
-              user.preferences.create_post_pref.preferred_hobby?.hobby?._id ||
-              null,
-            genre:
-              user.preferences.create_post_pref.preferred_hobby?.genre?._id ||
-              null,
+            hobby: user.preferences.create_post_pref.preferred_hobby?.hobby?._id
+              ? user.preferences.create_post_pref.preferred_hobby?.hobby?._id
+              : user._hobbies[0]?.hobby?._id
+              ? user._hobbies[0]?.hobby?._id
+              : null,
+            genre: user.preferences.create_post_pref.preferred_hobby?.hobby?._id
+              ? user.preferences.create_post_pref.preferred_hobby?.genre?._id ||
+                null
+              : user._hobbies[0]?.genre?._id
+              ? user._hobbies[0]?.genre?._id
+              : null,
           },
           preferred_location:
             user.preferences.create_post_pref.preferred_location?._id ||
             'All locations',
         },
         location_visibility: user.preferences.location_visibility || 'My City',
-        email_visibility: user.preferences.email_visibility || 'Everyone',
-        phone_visibility: user.preferences.phone_visibility || 'Everyone',
+        email_visibility: user.preferences.email_visibility || 'No one',
+        phone_visibility: user.preferences.phone_visibility || 'No one',
       }
-
-      setPreferences(updatedPreferences)
-    } else if (user && user._hobbies && user._hobbies?.length>0) {
-      const updatedPreferences = {
-        community_view: {
-          preferred_hobby: {
-            hobby: null,
-            genre: null,
-          },
-          preferred_location: null,
-          all_locations: true,
-          all_hobbies: true,
-          my_hobbies: false,
-        },
-        create_post_pref: {
-          preferred_hobby: {
-            hobby: user._hobbies[0]?.hobby?._id
-              ? user._hobbies[0]?.hobby?._id
-              : null,
-            genre: user._hobbies[0]?.genre?._id
-              ? user._hobbies[0]?.genre?._id
-              : null,
-          },
-          preferred_location: null,
-        },
-        location_visibility: 'My City',
-        email_visibility: 'No one',
-        phone_visibility: 'No one',
-      }
-
       setPreferences(updatedPreferences)
       updatePreference(updatedPreferences)
+      setPreferencesUpdated(true)
     }
-  }, [user])
+  }, [user, user.preferences])
 
   const updatePreference = async (preferences: any) => {
     console.log(preferences)
