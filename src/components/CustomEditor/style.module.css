@@ -1,6 +1,13 @@
 .hidden {
   display: none;
 }
+.border{
+  border: 1px solid var(--Grey-Lighter, #EBEDF0);
+  margin-bottom: 8px;
+  /* border-radius: 8px; */
+  box-sizing: content-box;
+  border-top: transparent;
+}
 .quill {
   display: flex;
   flex-direction: column-reverse;
