@@ -39,7 +39,6 @@ const Explore: React.FC<Props> = ({ data: initialData, isBlog }) => {
   const locationDropdownRef = useRef<HTMLDivElement>(null)
 
   const fetchMoreData = useCallback(async () => {
-    console.log('Fetching more data ')
     let queryString = `sort=-createdAt&is_published=true&populate=_hobbies,_address,product_variant,seller&page=${
       page + 1
     }&limit=20`
