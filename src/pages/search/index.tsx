@@ -78,20 +78,15 @@ import ExploreIcon from '@/assets/icons/ExploreIcon'
 import QuestionIcon from '@/assets/icons/QuestionIcon'
 import InterestedDiv from './InterestedDiv'
 import DoubleDownArrow from '@/assets/icons/DoubleDownArrow'
-import hobbycue from '../../assets/svg/Search/hobbycue.svg'
-import People from '../../assets/svg/Search/People.svg'
-import UserSvg from '../../assets/svg/Search/User.svg'
-import Hobby from '../../assets/svg/Search/Hobbies.svg'
-import Place from '../../assets/svg/Search/Place.svg'
-import Program from '../../assets/svg/Search/Program.svg'
-import Product from '../../assets/svg/Search/Product.svg'
-import Blogs from '../../assets/svg/Search/blogs.svg'
 import { searchPosts } from '@/services/post.service'
 import { Inter } from 'next/font/google'
 import UserExplore from './explore/UserExplore'
 import PExplore from './explore/PExplore'
 import PostExplore from './explore/PostExplore'
 import UserHobbies from './searchComponents/user/UserHobbies'
+import FilterDropdown from './responsive/FilterDropdown'
+import { Bookmark } from '@mui/icons-material'
+import BookmarkOnCards from './ui_components/bookmark/Bookmark'
 
 type Props = {
   data?: any
@@ -505,6 +500,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
   //   },
   //   [searchLoading, hasMore, currentPage, dispatch],
   // )
+
+
+  const [hoveredHobbyIndex,setHoveredHobbyIndex]=useState<number>(-1)
+  const [hoveredUserIndex,setHoveredUserIndex]=useState<number>(-1)
+  const [hoveredPeopleIndex,setHoveredPeopleIndex]=useState<number>(-1)
+  const [hoveredPlaceIndex,setHoveredPlaceIndex]=useState<number>(-1)
+  const [hoveredProgramIndex,setHoveredProgramIndex]=useState<number>(-1)
+  const [hoveredProductIndex,setHoveredProductIndex]=useState<number>(-1)
+  const [hoveredClassIndex,setHoveredClassIndex]=useState<number>(-1)
+  const [hoveredRentalIndex,setHoveredRentalIndex]=useState<number>(-1)
+  const [hoveredPostIndex,setHoveredPostIndex]=useState<number>(-1)
+  const [hoveredBlogIndex,setHoveredBlogIndex]=useState<number>(-1)
 
   useEffect(() => {
     if (showAll === true) {
@@ -1816,7 +1823,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       //     : null
 
                       // }
+                      onMouseEnter={()=>setHoveredHobbyIndex(index)}
+                      onMouseLeave={()=>setHoveredHobbyIndex(-1)}
                     >
+                      {hoveredHobbyIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
                       <div className={styles.hobbyAvtar}>
                         {/* Render the image */}
                         {hobby.profile_image ? (
@@ -1891,41 +1901,48 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreHobbies ? <SearchLoader /> : ''}
                   </div>
                 )}
-                {showAllhobbies ? undefined : (
-                  <div className={styles['view-more-btn-container']}>
-                    <button
-                      onClick={toggleShowAllhobbies}
-                      className={`${styles['view-more-btn']}`}
-                      disabled={hobbyResults?.length <= 3}
-                    >
-                      View More
-                    </button>
-                    <button
-                      onClick={() => router.push('/hobby')}
-                      onMouseEnter={() => setExploreHobbyHoved(true)}
-                      onMouseLeave={() => setExploreHobbyHoved(false)}
-                      className={`${styles['explore-btn']}`}
-                    >
-                      Explore{' '}
-                      <Image
-                        src={DropdownWhite}
-                        width={16}
-                        height={16}
-                        alt="Dropdown"
-                        className={`${styles.arrowRight}`}
-                      />
-                      {!exploreHobbyHoved && (
-                        <Image
-                          src={Dropdown}
-                          width={16}
-                          height={16}
-                          alt="Dropdown"
-                          className={`${styles.arrowRight}`}
-                        />
-                      )}
-                    </button>
-                  </div>
-                )}
+                {showAllhobbies
+                  ? undefined
+                  : (hobbyResults ? (
+                      <div className={styles['view-more-btn-container']}>
+                        <button
+                          onClick={toggleShowAllhobbies}
+                          className={`${styles['view-more-btn']} ${
+                            hobbyResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={hobbyResults.length <= 3}
+                        >
+                          View More
+                        </button>
+                        <button
+                          onClick={() => router.push('/hobby')}
+                          onMouseEnter={() => setExploreHobbyHoved(true)}
+                          onMouseLeave={() => setExploreHobbyHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!exploreHobbyHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrowRight}`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrowRight}`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
               </div>
             </section>
           )}
@@ -1942,7 +1959,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToProfile(user.profile_url)}
+                       onMouseEnter={()=>setHoveredUserIndex(index)}
+                      onMouseLeave={()=>setHoveredUserIndex(-1)}
                     >
+                      {hoveredUserIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                       <div className={styles.userAvatar}>
                         {user?.profile_image ? (
                           <img
@@ -2031,45 +2052,53 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreUsers ? <SearchLoader /> : ''}
                   </div>
                 )}
-                {showAllUsers ? undefined : (
-                  <div className={styles['view-more-btn-container']}>
-                    <button
-                      onClick={toggleShowAllusers}
-                      className={`${styles['view-more-btn']}`}
-                      disabled={userPages?.length <= 3}
-                    >
-                      View More
-                    </button>
-                    <button
-                      onClick={() => setOpenExploreUser(!openExploreUser)}
-                      onMouseEnter={() => setExploreUserHoved(true)}
-                      onMouseLeave={() => setExploreUserHoved(false)}
-                      className={`${styles['explore-btn']}`}
-                    >
-                      Explore{' '}
-                      <Image
-                        src={DropdownWhite}
-                        width={16}
-                        height={16}
-                        alt="Dropdown"
-                        className={`${styles.arrow} ${
-                          openExploreUser ? `${styles.arrowRotated}` : ''
-                        }`}
-                      />
-                      {!exploreUserHoved && (
-                        <Image
-                          src={Dropdown}
-                          width={16}
-                          height={16}
-                          alt="Dropdown"
-                          className={`${styles.arrow} ${
-                            openExploreUser ? `${styles.arrowRotated}` : ''
+               {showAllUsers
+                  ? undefined
+                  : (userPages ? (
+                      <div className={styles['view-more-btn-container']}>
+                        <button
+                          onClick={toggleShowAllusers}
+                          className={`${styles['view-more-btn']} ${
+                            userPages.length <= 3 ? styles.btnDisabled : ''
                           }`}
-                        />
-                      )}
-                    </button>
-                  </div>
-                )}
+                          disabled={userPages.length <= 3}
+                        >
+                          View More
+                        </button>
+                        <button
+                          onClick={() => setOpenExploreUser(!openExploreUser)}
+                          onMouseEnter={() => setExploreUserHoved(true)}
+                          onMouseLeave={() => setExploreUserHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+
+                          {!exploreUserHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreUser ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreUser ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
                 <div
                   className={`${styles.userExploreContainer} ${
                     openExploreUser ? styles.visible : styles.hidden
@@ -2109,7 +2138,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToPeoplePage(page.page_url)}
+                            onMouseEnter={()=>setHoveredPeopleIndex(index)}
+                      onMouseLeave={()=>setHoveredPeopleIndex(-1)}
                     >
+                      {hoveredPeopleIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
                           <img
@@ -2190,45 +2223,58 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePersonPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                {showAllPeople ? undefined : (
-                  <div className={styles['view-more-btn-container']}>
-                    <button
-                      onClick={toggleShowAllpeople}
-                      className={`${styles['view-more-btn']}`}
-                      disabled={peopleResults?.length <= 3}
-                    >
-                      View More
-                    </button>
-                    <button
-                      onClick={() => setOpenExplorePeople(!openExplorePeople)}
-                      onMouseEnter={() => setExplorePeopleHoved(true)}
-                      onMouseLeave={() => setExplorePeopleHoved(false)}
-                      className={`${styles['explore-btn']}`}
-                    >
-                      Explore{' '}
-                      <Image
-                        src={DropdownWhite}
-                        width={16}
-                        height={16}
-                        alt="Dropdown"
-                        className={`${styles.arrow} ${
-                          openExplorePeople ? `${styles.arrowRotated}` : ''
-                        }`}
-                      />
-                      {!explorePeopleHoved && (
-                        <Image
-                          src={Dropdown}
-                          width={16}
-                          height={16}
-                          alt="Dropdown"
-                          className={`${styles.arrow} ${
-                            openExplorePeople ? `${styles.arrowRotated}` : ''
+                  {showAllPeople
+                  ? undefined
+                  : (peopleResults ? (
+                      <div className={styles['view-more-btn-container']}>
+                        <button
+                          onClick={toggleShowAllpeople}
+                          className={`${styles['view-more-btn']} ${
+                            peopleResults.length <= 3 ? styles.btnDisabled : ''
                           }`}
-                        />
-                      )}
-                    </button>
-                  </div>
-                )}
+                          disabled={peopleResults.length <= 3}
+                        >
+                          View More
+                        </button>
+                        <button
+                          onClick={() =>
+                            setOpenExplorePeople(!openExplorePeople)
+                          }
+                          onMouseEnter={() => setExplorePeopleHoved(true)}
+                          onMouseLeave={() => setExplorePeopleHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!explorePeopleHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePeople
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePeople
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
                 <div
                   className={`${styles.userExploreContainer} ${
                     openExplorePeople ? styles.visible : styles.hidden
@@ -2268,7 +2314,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToPlacePage(page.page_url)}
+                            onMouseEnter={()=>setHoveredPlaceIndex(index)}
+                      onMouseLeave={()=>setHoveredPlaceIndex(-1)}
                     >
+                      {hoveredPlaceIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
                           <img
@@ -2329,45 +2379,52 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePlacePages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                {showAllPlace ? undefined : (
-                  <div className={styles['view-more-btn-container']}>
-                    <button
-                      onClick={toggleShowAllplace}
-                      className={`${styles['view-more-btn']}`}
-                      disabled={placeResults?.length <= 3}
-                    >
-                      View More
-                    </button>
-                    <button
-                      onClick={() => setOpenExplorePlace(!openExplorePlace)}
-                      onMouseEnter={() => setExplorePlaceHoved(true)}
-                      onMouseLeave={() => setExplorePlaceHoved(false)}
-                      className={`${styles['explore-btn']}`}
-                    >
-                      Explore{' '}
-                      <Image
-                        src={DropdownWhite}
-                        width={16}
-                        height={16}
-                        alt="Dropdown"
-                        className={`${styles.arrow} ${
-                          openExplorePlace ? `${styles.arrowRotated}` : ''
-                        }`}
-                      />
-                      {!explorePlaceHoved && (
-                        <Image
-                          src={Dropdown}
-                          width={16}
-                          height={16}
-                          alt="Dropdown"
-                          className={`${styles.arrow} ${
-                            openExplorePlace ? `${styles.arrowRotated}` : ''
+                   {showAllPlace
+                  ? undefined
+                  : (placeResults ? (
+                      <div className={styles['view-more-btn-container']}>
+                        <button
+                          onClick={toggleShowAllplace}
+                          className={`${styles['view-more-btn']} ${
+                            placeResults.length <= 3 ? styles.btnDisabled : ''
                           }`}
-                        />
-                      )}
-                    </button>
-                  </div>
-                )}
+                          disabled={placeResults.length <= 3}
+                        >
+                          View More
+                        </button>
+                        <button
+                          onClick={() => setOpenExplorePlace(!openExplorePlace)}
+                          onMouseEnter={() => setExplorePlaceHoved(true)}
+                          onMouseLeave={() => setExplorePlaceHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!explorePlaceHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePlace ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePlace ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
                 <div
                   className={`${styles.userExploreContainer} ${
                     openExplorePlace ? styles.visible : styles.hidden
@@ -2407,7 +2464,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToProgramPage(page.page_url)}
+                            onMouseEnter={()=>setHoveredProgramIndex(index)}
+                      onMouseLeave={()=>setHoveredProgramIndex(-1)}
                     >
+                      {hoveredProgramIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
                           <img
@@ -2520,45 +2581,58 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     setCategoryValue={setDefaultProgramCategory}
                   />
                 </div>
-                {showAllEvent ? undefined : (
-                  <div className={styles['view-more-btn-container']}>
-                    <button
-                      onClick={toggleShowAllevent}
-                      className={`${styles['view-more-btn']}`}
-                      disabled={EventResults?.length <= 3}
-                    >
-                      View More
-                    </button>
-                    <button
-                      onClick={() => setOpenExploreProgram(!openExploreProgram)}
-                      onMouseEnter={() => setExploreProgramHoved(true)}
-                      onMouseLeave={() => setExploreProgramHoved(false)}
-                      className={`${styles['explore-btn']}`}
-                    >
-                      Explore{' '}
-                      <Image
-                        src={DropdownWhite}
-                        width={16}
-                        height={16}
-                        alt="Dropdown"
-                        className={`${styles.arrow} ${
-                          openExploreProgram ? `${styles.arrowRotated}` : ''
-                        }`}
-                      />
-                      {!exploreProgramHoved && (
-                        <Image
-                          src={Dropdown}
-                          width={16}
-                          height={16}
-                          alt="Dropdown"
-                          className={`${styles.arrow} ${
-                            openExploreProgram ? `${styles.arrowRotated}` : ''
+                  {showAllEvent
+                  ? undefined
+                  : (EventResults ? (
+                      <div className={styles['view-more-btn-container']}>
+                        <button
+                          onClick={toggleShowAllevent}
+                          className={`${styles['view-more-btn']} ${
+                            EventResults.length <= 3 ? styles.btnDisabled : ''
                           }`}
-                        />
-                      )}
-                    </button>
-                  </div>
-                )}
+                          disabled={EventResults.length <= 3}
+                        >
+                          View More
+                        </button>
+                        <button
+                          onClick={() =>
+                            setOpenExploreProgram(!openExploreProgram)
+                          }
+                          onMouseEnter={() => setExploreProgramHoved(true)}
+                          onMouseLeave={() => setExploreProgramHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!exploreProgramHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreProgram
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreProgram
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
                 <div
                   className={`${styles.userExploreContainer} ${
                     openExploreProgram ? styles.visible : styles.hidden
@@ -2588,7 +2662,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         className={styles.peopleItem}
                         key={index}
                         onClick={() => navigateToProductPage(page.page_url)}
+                              onMouseEnter={()=>setHoveredProductIndex(index)}
+                      onMouseLeave={()=>setHoveredProductIndex(-1)}
                       >
+                      {hoveredProductIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                         <div className={styles.peopleAvatar}>
                           {page.profile_image ? (
                             <img
@@ -2679,47 +2757,60 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       {!hasNoMoreProductPages ? <SearchLoader /> : ''}
                     </div>
                   )}
-                  {showAllProducts ? undefined : (
-                    <div className={styles['view-more-btn-container']}>
-                      <button
-                        onClick={toggleShowAllproducts}
-                        className={`${styles['view-more-btn']}`}
-                        disabled={ProductResults?.length <= 3}
-                      >
-                        View More
-                      </button>
-                      <button
-                        onClick={() =>
-                          setOpenExploreProduct(!openExploreProduct)
-                        }
-                        onMouseEnter={() => setExploreProductHoved(true)}
-                        onMouseLeave={() => setExploreProductHoved(false)}
-                        className={`${styles['explore-btn']}`}
-                      >
-                        Explore{' '}
-                        <Image
-                          src={DropdownWhite}
-                          width={16}
-                          height={16}
-                          alt="Dropdown"
-                          className={`${styles.arrow} ${
-                            openExploreProduct ? `${styles.arrowRotated}` : ''
-                          }`}
-                        />
-                        {!exploreProductHoved && (
-                          <Image
-                            src={Dropdown}
-                            width={16}
-                            height={16}
-                            alt="Dropdown"
-                            className={`${styles.arrow} ${
-                              openExploreProduct ? `${styles.arrowRotated}` : ''
+                    {showAllProducts
+                    ? undefined
+                    : (ProductResults ? (
+                        <div className={styles['view-more-btn-container']}>
+                          <button
+                            onClick={toggleShowAllproducts}
+                            className={`${styles['view-more-btn']} ${
+                              ProductResults.length <= 3
+                                ? styles.btnDisabled
+                                : ''
                             }`}
-                          />
-                        )}
-                      </button>
-                    </div>
-                  )}
+                            disabled={ProductResults.length <= 3}
+                          >
+                            View More
+                          </button>
+                          <button
+                            onClick={() =>
+                              setOpenExploreProduct(!openExploreProduct)
+                            }
+                            onMouseEnter={() => setExploreProductHoved(true)}
+                            onMouseLeave={() => setExploreProductHoved(false)}
+                            className={`${styles['explore-btn']}`}
+                          >
+                            <span>Explore</span>
+                            {!exploreProductHoved ? (
+                              <Image
+                                src={Dropdown}
+                                width={16}
+                                height={16}
+                                alt="Dropdown"
+                                className={`${styles.arrow} ${
+                                  openExploreProduct
+                                    ? `${styles.arrowRotated}`
+                                    : ''
+                                }`}
+                              />
+                            ) : (
+                              <Image
+                                src={DropdownWhite}
+                                width={16}
+                                height={16}
+                                alt="Dropdown"
+                                className={`${styles.arrow} ${
+                                  openExploreProduct
+                                    ? `${styles.arrowRotated}`
+                                    : ''
+                                }`}
+                              />
+                            )}
+                          </button>
+                        </div>
+                      ) : (
+                        ''
+                      )) || ''}
                   <div
                     className={`${styles.userExploreContainer} ${
                       openExploreProduct ? styles.visible : styles.hidden
@@ -2760,7 +2851,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         className={styles.peopleItem}
                         key={index}
                         onClick={() => navigateToProgramPage(page.page_url)}
+                              onMouseEnter={()=>setHoveredClassIndex(index)}
+                      onMouseLeave={()=>setHoveredClassIndex(-1)}
                       >
+                      {hoveredClassIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                         <div className={styles.peopleAvatar}>
                           {page.profile_image ? (
                             <img
@@ -2837,45 +2932,60 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     ),
                   )}
-                  {showAllClasses ? undefined : (
-                    <div className={styles['view-more-btn-container']}>
-                      <button
-                        onClick={toggleShowAllclasses}
-                        className={`${styles['view-more-btn']}`}
-                        disabled={ClassesResults?.length <= 3}
-                      >
-                        View More
-                      </button>
-                      <button
-                        onClick={() => setOpenExploreClass(!openExploreClass)}
-                        onMouseEnter={() => setExploreClassHoved(true)}
-                        onMouseLeave={() => setExploreClassHoved(false)}
-                        className={`${styles['explore-btn']}`}
-                      >
-                        Explore{' '}
-                        <Image
-                          src={DropdownWhite}
-                          width={16}
-                          height={16}
-                          alt="Dropdown"
-                          className={`${styles.arrow} ${
-                            openExploreClass ? `${styles.arrowRotated}` : ''
-                          }`}
-                        />
-                        {!exploreClassHoved && (
-                          <Image
-                            src={Dropdown}
-                            width={16}
-                            height={16}
-                            alt="Dropdown"
-                            className={`${styles.arrow} ${
-                              openExploreClass ? `${styles.arrowRotated}` : ''
+                   {showAllClasses
+                    ? undefined
+                    : (ClassesResults ? (
+                        <div className={styles['view-more-btn-container']}>
+                          <button
+                            onClick={toggleShowAllclasses}
+                            className={`${styles['view-more-btn']} ${
+                              ClassesResults.length <= 3
+                                ? styles.btnDisabled
+                                : ''
                             }`}
-                          />
-                        )}
-                      </button>
-                    </div>
-                  )}
+                            disabled={ClassesResults.length <= 3}
+                          >
+                            View More
+                          </button>
+                          <button
+                            onClick={() =>
+                              setOpenExploreClass(!openExploreClass)
+                            }
+                            onMouseEnter={() => setExploreClassHoved(true)}
+                            onMouseLeave={() => setExploreClassHoved(false)}
+                            className={`${styles['explore-btn']}`}
+                          >
+                            <span>Explore</span>
+                            {!exploreClassHoved ? (
+                              <Image
+                                src={Dropdown}
+                                width={16}
+                                height={16}
+                                alt="Dropdown"
+                                className={`${styles.arrow} ${
+                                  openExploreClass
+                                    ? `${styles.arrowRotated}`
+                                    : ''
+                                }`}
+                              />
+                            ) : (
+                              <Image
+                                src={DropdownWhite}
+                                width={16}
+                                height={16}
+                                alt="Dropdown"
+                                className={`${styles.arrow} ${
+                                  openExploreClass
+                                    ? `${styles.arrowRotated}`
+                                    : ''
+                                }`}
+                              />
+                            )}
+                          </button>
+                        </div>
+                      ) : (
+                        ''
+                      )) || ''}
                   <div
                     className={`${styles.userExploreContainer} ${
                       openExploreClass ? styles.visible : styles.hidden
@@ -2912,7 +3022,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         className={styles.peopleItem}
                         key={index}
                         onClick={() => navigateToProductPage(page.page_url)}
+                              onMouseEnter={()=>setHoveredRentalIndex(index)}
+                      onMouseLeave={()=>setHoveredRentalIndex(-1)}
                       >
+                      {hoveredRentalIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                         <div className={styles.peopleAvatar}>
                           {page.profile_image ? (
                             <img
@@ -2990,45 +3104,60 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     ),
                   )}
-                  {showAllRentals ? undefined : (
-                    <div className={styles['view-more-btn-container']}>
-                      <button
-                        onClick={toggleShowAllrentals}
-                        className={`${styles['view-more-btn']}`}
-                        disabled={RentalResults?.length <= 3}
-                      >
-                        View More
-                      </button>
-                      <button
-                        onClick={() => setOpenExploreRental(!openExploreRental)}
-                        onMouseEnter={() => setExploreRentalHoved(true)}
-                        onMouseLeave={() => setExploreRentalHoved(false)}
-                        className={`${styles['explore-btn']}`}
-                      >
-                        Explore{' '}
-                        <Image
-                          src={DropdownWhite}
-                          width={16}
-                          height={16}
-                          alt="Dropdown"
-                          className={`${styles.arrow} ${
-                            openExploreRental ? `${styles.arrowRotated}` : ''
-                          }`}
-                        />
-                        {!exploreRentalHoved && (
-                          <Image
-                            src={Dropdown}
-                            width={16}
-                            height={16}
-                            alt="Dropdown"
-                            className={`${styles.arrow} ${
-                              openExploreRental ? `${styles.arrowRotated}` : ''
+                    {showAllRentals
+                    ? undefined
+                    : (RentalResults ? (
+                        <div className={styles['view-more-btn-container']}>
+                          <button
+                            onClick={toggleShowAllrentals}
+                            className={`${styles['view-more-btn']} ${
+                              RentalResults.length <= 3
+                                ? styles.btnDisabled
+                                : ''
                             }`}
-                          />
-                        )}
-                      </button>
-                    </div>
-                  )}
+                            disabled={RentalResults.length <= 3}
+                          >
+                            View More
+                          </button>
+                          <button
+                            onClick={() =>
+                              setOpenExploreRental(!openExploreRental)
+                            }
+                            onMouseEnter={() => setExploreRentalHoved(true)}
+                            onMouseLeave={() => setExploreRentalHoved(false)}
+                            className={`${styles['explore-btn']}`}
+                          >
+                            <span>Explore</span>
+                            {!exploreRentalHoved ? (
+                              <Image
+                                src={Dropdown}
+                                width={16}
+                                height={16}
+                                alt="Dropdown"
+                                className={`${styles.arrow} ${
+                                  openExploreRental
+                                    ? `${styles.arrowRotated}`
+                                    : ''
+                                }`}
+                              />
+                            ) : (
+                              <Image
+                                src={DropdownWhite}
+                                width={16}
+                                height={16}
+                                alt="Dropdown"
+                                className={`${styles.arrow} ${
+                                  openExploreRental
+                                    ? `${styles.arrowRotated}`
+                                    : ''
+                                }`}
+                              />
+                            )}
+                          </button>
+                        </div>
+                      ) : (
+                        ''
+                      )) || ''}
                   <div
                     className={`${styles.userExploreContainer} ${
                       openExploreRental ? styles.visible : styles.hidden
@@ -3063,7 +3192,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToPosts(page._id)}
+                            onMouseEnter={()=>setHoveredPostIndex(index)}
+                      onMouseLeave={()=>setHoveredPostIndex(-1)}
                     >
+                      {hoveredPostIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                       <div
                         className={
                           page?.author_type === 'User'
@@ -3158,46 +3291,53 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePostsPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                {showAllPosts ? undefined : (
-                  // toggleShowAllposts
-                  <div className={styles['view-more-btn-container']}>
-                    <button
-                      onClick={toggleShowAllposts}
-                      className={`${styles['view-more-btn']}`}
-                      disabled={PostsResults?.length <= 3}
-                    >
-                      View More
-                    </button>
-                    <button
-                      onClick={() => setOpenExplorePost(!openExplorePost)}
-                      onMouseEnter={() => setExplorePostHoved(true)}
-                      onMouseLeave={() => setExplorePostHoved(false)}
-                      className={`${styles['explore-btn']}`}
-                    >
-                      Explore{' '}
-                      <Image
-                        src={DropdownWhite}
-                        width={16}
-                        height={16}
-                        alt="Dropdown"
-                        className={`${styles.arrow} ${
-                          openExplorePost ? `${styles.arrowRotated}` : ''
-                        }`}
-                      />
-                      {!explorePostHoved && (
-                        <Image
-                          src={Dropdown}
-                          width={16}
-                          height={16}
-                          alt="Dropdown"
-                          className={`${styles.arrow} ${
-                            openExplorePost ? `${styles.arrowRotated}` : ''
+                 {showAllPosts
+                  ? undefined
+                  : (PostsResults ? (
+                      // toggleShowAllposts
+                      <div className={styles['view-more-btn-container']}>
+                        <button
+                          onClick={toggleShowAllposts}
+                          className={`${styles['view-more-btn']} ${
+                            PostsResults.length <= 3 ? styles.btnDisabled : ''
                           }`}
-                        />
-                      )}
-                    </button>
-                  </div>
-                )}
+                          disabled={PostsResults.length <= 3}
+                        >
+                          View More
+                        </button>
+                        <button
+                          onClick={() => setOpenExplorePost(!openExplorePost)}
+                          onMouseEnter={() => setExplorePostHoved(true)}
+                          onMouseLeave={() => setExplorePostHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!explorePostHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePost ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePost ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
                 <div
                   className={`${styles.userExploreContainer} ${
                     openExplorePost ? styles.visible : styles.hidden
@@ -3236,7 +3376,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToBlog(page.url)}
+                            onMouseEnter={()=>setHoveredBlogIndex(index)}
+                      onMouseLeave={()=>setHoveredBlogIndex(-1)}
                     >
+                      {hoveredBlogIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+
                       <div className={styles.peopleAvatar}>
                         {page.cover_pic ? (
                           <img
@@ -3276,41 +3420,48 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreBlogsPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                {showAllBlogs ? undefined : (
-                  <div className={styles['view-more-btn-container']}>
-                    <button
-                      onClick={toggleShowAllblogs}
-                      className={`${styles['view-more-btn']}`}
-                      disabled={BlogsResults?.length <= 3}
-                    >
-                      View More
-                    </button>
-                    <button
-                      onClick={() => router.push('/blog')}
-                      onMouseEnter={() => setExploreBlogHoved(true)}
-                      onMouseLeave={() => setExploreBlogHoved(false)}
-                      className={`${styles['explore-btn']}`}
-                    >
-                      Explore{' '}
-                      <Image
-                        src={DropdownWhite}
-                        width={16}
-                        height={16}
-                        alt="Dropdown"
-                        className={`${styles.arrowRight}`}
-                      />
-                      {!exploreBlogHoved && (
-                        <Image
-                          src={Dropdown}
-                          width={16}
-                          height={16}
-                          alt="Dropdown"
-                          className={`${styles.arrowRight}`}
-                        />
-                      )}
-                    </button>
-                  </div>
-                )}
+                {showAllBlogs
+                  ? undefined
+                  : (BlogsResults ? (
+                      <div className={styles['view-more-btn-container']}>
+                        <button
+                          onClick={toggleShowAllblogs}
+                          className={`${styles['view-more-btn']} ${
+                            BlogsResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={BlogsResults.length <= 3}
+                        >
+                          View More
+                        </button>
+                        <button
+                          onClick={() => router.push('/blog')}
+                          onMouseEnter={() => setExploreBlogHoved(true)}
+                          onMouseLeave={() => setExploreBlogHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!exploreBlogHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrowRight}`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrowRight}`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
               </div>
             </section>
           )}
@@ -3324,236 +3475,6 @@ const MainContent: React.FC<SearchResultsProps> = ({
         </div>
       )}
     </main>
-  )
-}
-
-const FilterDropdown: React.FC<Props> = () => {
-  const router = useRouter()
-  const { q, filter } = router.query
-  const [activeFilter, setActiveFilter] = useState('all')
-  const dispatch = useDispatch()
-  const isExplore = useSelector((state: RootState) => state.search.explore)
-  // const showAll = useSelector((state: any) => state.search.showAll)
-  // const showAllUsers = useSelector((state: any) => state.search.showAllUsers)
-  // const showAllhobbies = useSelector(
-  //   (state: any) => state.search.showAllhobbies,
-  // )
-  // const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
-  // const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
-  // const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
-  // const showAllProducts = useSelector(!
-  //   (state: any) => state.search.showAllProducts,
-  // )
-  // const showAllPosts = useSelector((state: any) => state.search.showAllPosts)
-  // const showAllBlogs = useSelector((state: any) => state.search.showAllBlogs)
-
-  const showAll = !filter || filter === 'all' || filter === ''
-  const showAllUsers = filter === 'users'
-  const showAllPeople = filter === 'people'
-  const showAllPlace = filter === 'places'
-  const showAllEvent = filter === 'programs'
-  const showAllProducts = filter === 'products'
-  const showAllPosts = filter === 'posts'
-  const showAllBlogs = filter === 'blogs'
-  const showAllHobbies = filter === 'hobby'
-
-  useEffect(() => {
-    if (showAll) {
-      setActiveFilter('all')
-    }
-  }, [showAll])
-  useEffect(() => {
-    if (showAllUsers) {
-      setActiveFilter('users')
-    }
-  }, [showAllUsers])
-  useEffect(() => {
-    if (showAllHobbies) {
-      setActiveFilter('hobby')
-    }
-  }, [showAllHobbies])
-  useEffect(() => {
-    if (showAllPeople) {
-      setActiveFilter('people')
-    }
-  }, [showAllPeople])
-  useEffect(() => {
-    if (showAllPlace) {
-      setActiveFilter('places')
-    }
-  }, [showAllPlace])
-  useEffect(() => {
-    if (showAllEvent) {
-      setActiveFilter('events')
-    }
-  }, [showAllEvent])
-  useEffect(() => {
-    if (showAllProducts) {
-      setActiveFilter('products')
-    }
-  }, [showAllProducts])
-  useEffect(() => {
-    if (showAllPosts) {
-      setActiveFilter('posts')
-    }
-  }, [showAllPosts])
-  useEffect(() => {
-    if (showAllBlogs) {
-      setActiveFilter('blogs')
-    }
-  }, [showAllBlogs])
-
-  useEffect(() => {
-    if (showAll === true) {
-      setActiveFilter('all')
-    } else if (showAllUsers === true) {
-      setActiveFilter('users')
-    } else if (showAllHobbies === true) {
-      setActiveFilter('hobby')
-    } else if (showAllPeople === true) {
-      setActiveFilter('people')
-    } else if (showAllPlace === true) {
-      setActiveFilter('places')
-    } else if (showAllEvent === true) {
-      setActiveFilter('events')
-    } else if (showAllProducts === true) {
-      setActiveFilter('products')
-    } else if (showAllBlogs === true) {
-      setActiveFilter('blogs')
-    } else if (showAllPosts === true) {
-      setActiveFilter('posts')
-    }
-  }, [
-    showAll,
-    showAllEvent,
-    showAllPeople,
-    showAllPlace,
-    showAllProducts,
-    showAllUsers,
-    showAllHobbies,
-    showAllBlogs,
-    showAllPosts,
-  ])
-
-  const handleFilterClick = (filterType: any) => {
-    if (activeFilter === filterType) {
-      setActiveFilter('all')
-      dispatch(showAllTrue())
-    } else {
-      setActiveFilter(filterType)
-      switch (filterType) {
-        case 'all':
-          dispatch(showAllTrue())
-          break
-        case 'users':
-          dispatch(toggleShowAllUsers())
-          break
-        case 'hobby':
-          dispatch(toggleShowAllHobbies())
-          break
-        case 'people':
-          dispatch(toggleShowAllPeople())
-          break
-        case 'places':
-          dispatch(toggleShowAllPlace())
-          break
-        case 'events':
-          dispatch(toggleShowAllEvent())
-          break
-        case 'products':
-          dispatch(toggleShowAllProducts())
-          break
-        case 'posts':
-          dispatch(toggleShowAllPosts())
-          break
-        case 'blogs':
-          dispatch(toggleShowAllBlogs())
-          break
-        default:
-          break
-      }
-    }
-    if (filterType === 'all') {
-      const { filter, ...rest } = router.query
-      router.push({
-        pathname: '/search',
-        query: {
-          ...rest,
-        },
-      })
-    } else {
-      router.push({
-        pathname: '/search',
-        query: {
-          ...router.query,
-          filter: filterType,
-        },
-      })
-    }
-  }
-
-  return (
-    <Select
-      disabled={isExplore}
-      className={styles.filterDropdown}
-      value={activeFilter}
-    >
-      <MenuItem
-        onClick={() => handleFilterClick('all')}
-        value="all"
-        // style={{ display: 'flex', alignItems: 'center', gap: 16 }}
-      >
-        <div className={styles.responsiveMenuItem}>
-          <Image src={hobbycue} alt="hobbycue" />
-          <span>All of HobbyCue</span>
-        </div>
-      </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('users')} value="users">
-        <div className={styles.responsiveMenuItem}>
-          <Image src={UserSvg} alt="User" />
-          <span>Users</span>
-        </div>
-      </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('hobby')} value="hobby">
-        <div className={styles.responsiveMenuItem}>
-          <Image src={Hobby} alt="hobby" />
-          <span>Hobbies</span>
-        </div>
-      </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('people')} value="people">
-        <div className={styles.responsiveMenuItem}>
-          <Image src={People} alt="People" />
-          <span>People Pages</span>
-        </div>
-      </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('places')} value="places">
-        <div className={styles.responsiveMenuItem}>
-          <Image src={Place} alt="Place" />
-          <span>Places</span>
-        </div>
-      </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('events')} value="events">
-        <div className={styles.responsiveMenuItem}>
-          <Image src={Program} alt="Program" />
-          <span>Programs</span>
-        </div>
-      </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('products')} value="products">
-        <div className={styles.responsiveMenuItem}>
-          <Image src={Product} alt="Product" />
-          <span>Products</span>
-        </div>
-      </MenuItem>
-      {/* <MenuItem onClick={() => handleFilterClick('posts')} value="posts">
-        Posts
-      </MenuItem> */}
-      <MenuItem onClick={() => handleFilterClick('blogs')} value="blogs">
-        <div className={styles.responsiveMenuItem}>
-          <Image src={Blogs} alt="Blogs" />
-          <span>Blogs</span>
-        </div>
-      </MenuItem>
-    </Select>
   )
 }
 

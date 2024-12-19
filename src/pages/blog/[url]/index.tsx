@@ -31,7 +31,7 @@ import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import { updatePhotoEditModalData } from '@/redux/slices/site'
 import CameraIcon from '@/assets/icons/CameraIcon'
 import BlogContainer from '@/components/Blog/BlogContainer'
-import QuillEditor from '@/pages/brand/QuillEditor'
+import QuillEditor from '@/components/QuillEditor/QuillEditor'
 import dynamic from 'next/dynamic'
 import FilledButton from '@/components/_buttons/FilledButton'
 
@@ -681,7 +681,14 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   </div>
 
                   <ul className={styles['hobby-list']}>
-                    <div style={{height: "28px", display:"flex", justifyContent:"center", alignItems:"center"}}>
+                    <div
+                      style={{
+                        height: '28px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
                       <HobbyIconHexagon size={20} />
                     </div>
                     {data?.blog_url?._hobbies?.map((item: any) => {
