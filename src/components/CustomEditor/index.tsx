@@ -182,7 +182,10 @@ const CustomEditor: React.FC<Props> = ({
         className={`${styles['border']} ${error ? styles['quill-error'] : ''} ${
           hasLink ? styles['quill-has-link'] : ''
         }`}
-        style={forWhichComponent === "createPost" ? {maxHeight: '100%'}:{}}
+        style={{
+          ...(forWhichComponent === "createPost" ? { maxHeight: "100%" } : {}),
+          ...(hasLink ? {maxHeight: "420px"} : { height: "490px" })
+        }}        
         placeholder="Start something interesting..."
         modules={{
           toolbar: {
@@ -218,6 +221,17 @@ const CustomEditor: React.FC<Props> = ({
       />
 
       <style>{`
+          ${
+            !hasLink &&
+            `
+            .ql-editor.ql-blank {
+                min-height: calc(100vh - 18rem) !important;
+            }
+            .ql-container {
+                height: calc(100vh - 18rem) !important;
+            }
+            `
+          }
           .ql-toolbar.ql-snow {
             border-radius: 8px 8px 0 0 !important;
           }
