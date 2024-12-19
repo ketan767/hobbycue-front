@@ -839,6 +839,10 @@
 }
 
 @media screen and (max-width: 1100px) {
+  .parentSection {
+    padding-top: 0.1px;
+  }
+  
   .whatsNewImg img {
     height: 32px;
     width: 32px;

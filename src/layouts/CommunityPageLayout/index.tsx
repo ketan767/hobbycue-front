@@ -1711,7 +1711,7 @@ const CommunityLayout: React.FC<Props> = ({
           <section
             className={`${styles['children-wrapper']} ${
               singlePostPage ? styles['single-post-children-wrapper'] : ''
-            } `}
+            } gray-bg ${styles.parentSection}`}
           >
             {/* {children} */}
             {/* It might have key issue here */}

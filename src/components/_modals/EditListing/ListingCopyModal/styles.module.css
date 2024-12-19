@@ -203,6 +203,7 @@ line-height: 22px; /* 157.143% */
     background: var(--Base-White, #fff);
     padding: var(--spacing-16) var(--spacing-16);
     /* box-shadow: 0px -6px 15px 0px rgba(0, 0, 0, 0.06); */
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     /* position: fixed; */
     bottom: 0;
     /* width: 100%; */
