@@ -96,11 +96,11 @@ const HobbyPageLayout: React.FC<Props> = ({
     if (scrollValue >= 308) setShowSmallHeader(true)
     else setShowSmallHeader(false)
   }
-  console.log('setmem', members)
+  // console.log('setmem', members)
   const getMembers = async () => {
     setLoading(true)
     const { err, res } = await getHobbyMembers(`${data._id}`)
-    console.log('mem', res?.data)
+    // console.log('mem', res?.data)
     if (err) return console.log(err)
     if (res?.data) {
       if (res?.data?.users) {
@@ -152,7 +152,6 @@ const HobbyPageLayout: React.FC<Props> = ({
   const toggleMembers = () => {
     setSeeAll(!seeAll)
   }
-  console.log('dataonhobbbypage', data)
   const handleMemberClick = (user: any) => {
     if (isLoggedIn) {
       router.push(`/profile/${user.profile_url}`)
