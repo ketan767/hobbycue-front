@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 
 import styles from '@/styles/HobbyDetail.module.css'
@@ -29,6 +29,11 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
   const { hobby } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(hobby)
+  const [hasNoDataPerma, setHasNoDataPerma] = useState(false) // Tracks if there are more listings to load
+  const [hasMore, setHasMore] = useState(true) // Tracks if there are more listings to load
+  const [page, setPage] = useState(1) // Tracks the current page
+  const [loading, setLoading] = useState(false) // Indicates if more data is being loaded
+
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
@@ -40,11 +45,11 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   }, [isMobile])
 
   const [loadingPosts, setLoadingPosts] = useState(false)
-  const [posts, setPosts] = useState([])
+  const [posts, setPosts] = useState<any[]>([])
 
   const getPost = async () => {
     setLoadingPosts(true)
-    const queryParam = `hobbyId=${data._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`
+    const queryParam = `hobbyId=${data._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3&page=1&limit=5`
     // const queryParam =
     //   data?.level === 5
     //     ? `_genre=${data._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`
@@ -58,7 +63,38 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
     }
     setLoadingPosts(false)
   }
-  console.log('post', posts)
+  const fetchMoreData = useCallback(async () => {
+    console.log('Fetching more data ')
+    console.log('Page no: ', page)
+
+    const queryParam = `hobbyId=${
+      data._id
+    }&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3&page=${
+      page + 1
+    }&limit=5`
+    // const queryParam =
+    //   data?.level === 5
+    //     ? `_genre=${data._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`
+    //     : `_hobby=${data._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`
+
+    if (loading || !hasMore) return
+
+    setLoading(true)
+    const { err, res } = await getAllHobbyPosts(queryParam)
+
+    if (err || !res?.data?.data?.posts?.length) {
+      setHasMore(false)
+      setHasNoDataPerma(true)
+    }
+    if (res.data.success) {
+      // setPosts((prevPosts: any[]) => [...prevPosts, ...res.data.data.posts])
+      setPosts((prevPosts) => prevPosts.concat(res.data.data.posts));
+
+      setPage((prevPage) => prevPage + 1)
+    }
+    setLoading(false)
+  }, [page, loading, hasMore])
+
   useEffect(() => {
     getPost()
   }, [])
@@ -89,6 +125,23 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 1000
+      ) {
+        if (!hasNoDataPerma) {
+          setHasMore(true)
+        }
+        fetchMoreData()
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [fetchMoreData])
 
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
@@ -189,15 +242,22 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
                 )
               )}
               {isLoggedIn ? (
-                posts.map((post: any) => {
-                  return (
-                    <PostCard
-                      key={post._id}
-                      postData={post}
-                      currentSection="posts"
-                    />
-                  )
-                })
+                <>
+                  {posts.map((post: any) => {
+                    return (
+                      <PostCard
+                        key={post._id}
+                        postData={post}
+                        currentSection="posts"
+                      />
+                    )
+                  })}
+                  <>
+                    <>{loading && <PostCardSkeletonLoading />}</>
+                    <>{loading && <PostCardSkeletonLoading />}</>
+                    <>{loading && <PostCardSkeletonLoading />}</>
+                  </>
+                </>
               ) : (
                 <div className={styles['no-posts-container']}>
                   <p
@@ -241,6 +301,11 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
               {posts.map((post: any) => {
                 return <PostCard key={post._id} postData={post} />
               })}
+              <>
+                <>{loading && <PostCardSkeletonLoading />}</>
+                <>{loading && <PostCardSkeletonLoading />}</>
+                <>{loading && <PostCardSkeletonLoading />}</>
+              </>
             </section>
           </main>
         </HobbyPageLayout>

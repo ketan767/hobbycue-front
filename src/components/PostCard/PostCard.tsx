@@ -219,7 +219,7 @@ const PostCard: React.FC<Props> = (props) => {
   }, [])
 
   useEffect(() => {
-    console.log({ comments })
+    // console.log({ comments })
   }, [comments])
 
   const handleDeletePost = async (postid: any) => {
