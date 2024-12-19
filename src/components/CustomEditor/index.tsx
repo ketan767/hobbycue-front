@@ -179,7 +179,7 @@ const CustomEditor: React.FC<Props> = ({
 
           setData((prev: any) => ({ ...prev, content: updatedValue }))
         }}
-        className={` ${error ? styles['quill-error'] : ''} ${
+        className={`${styles['border']} ${error ? styles['quill-error'] : ''} ${
           hasLink ? styles['quill-has-link'] : ''
         }`}
         style={forWhichComponent === "createPost" ? {maxHeight: '100%'}:{}}
@@ -218,6 +218,9 @@ const CustomEditor: React.FC<Props> = ({
       />
 
       <style>{`
+          .ql-toolbar.ql-snow {
+            border-radius: 8px 8px 0 0 !important;
+          }
           .ql-container.ql-snow {
             border:none !important;
           }
@@ -246,6 +249,10 @@ const CustomEditor: React.FC<Props> = ({
           }
           .ql-editor {
             min-height: 100px;
+          }
+          .ql-container{
+            border: 2px solid #000 !important;
+            border-radius: 5px;
           }
           ${
             forWhichComponent === "createPost" && 
