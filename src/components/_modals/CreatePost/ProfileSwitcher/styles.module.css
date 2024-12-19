@@ -13,7 +13,7 @@
   background: #ffffff;
   border: 1px solid #ebedf0;
   border-radius: 8px;
-  max-width: calc(100% - 116px) !important;
+  width: calc(100% - 116px) !important;
   z-index: 10;
 }
 .default-img[data-profile-type='user'] {
@@ -162,5 +162,8 @@
     border-radius: var(--spacing-4);
     width: var(--spacing-24) !important;
     height: var(--spacing-24);
+  }
+  .profile-switcher {
+    width: 100% !important;
   }
 }
