@@ -31,8 +31,6 @@ const UserFilter: React.FC<UserFilterProps> = ({
   setIsModalOpen,
   setApplyFilter,
 }) => {
-  const startDateRef = useRef<HTMLInputElement>(null)
-  const endDateRef = useRef<HTMLInputElement>(null)
   const [showStartDateCalender, setShowStartDateCalender] = useState(false)
   const [showEndDateCalender, setShowEndDateCalender] = useState(false)
   const handleOnboardedChange = (value: string) => {
@@ -142,7 +140,7 @@ const UserFilter: React.FC<UserFilterProps> = ({
               />
             )}
 
-            <span>-</span>
+            <span style={{ color: '#6D747A', margin: '0 4px' }}>-</span>
             <button
               className={styles.dateButton}
               onClick={() => setShowEndDateCalender((pre) => !pre)}
@@ -188,8 +186,8 @@ const UserFilter: React.FC<UserFilterProps> = ({
                   className={styles.checkboxLabel}
                 >
                   <Image
-                    width={20}
-                    height={20}
+                    width={24}
+                    height={24}
                     src={mode.icon}
                     alt={`${mode.name} Icon`}
                   />
@@ -210,7 +208,7 @@ const UserFilter: React.FC<UserFilterProps> = ({
               value={modalState.pageCount.min || ''}
               onChange={(e) => handlePageCountChange('min', e.target.value)}
             />
-            <span className={styles.rangeSeparator}>-</span>
+
             <input
               type="text"
               placeholder="Max"

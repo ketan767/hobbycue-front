@@ -7,7 +7,7 @@
   max-width: 328px;
   min-height: 292px;
   width: 100%;
-  padding: 16px 0px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -38,6 +38,7 @@
 }
 .applyButton {
   display: flex;
+  width: 64px;
   height: 30px;
   padding: 12px 24px;
   justify-content: center;
@@ -54,6 +55,7 @@
 }
 .clearButton {
   display: flex;
+  width: 64px;
   height: 30px;
   padding: 12px 24px;
   justify-content: center;
@@ -111,21 +113,34 @@
   display: flex;
   border: none;
   justify-content: space-around;
+  align-items: center;
 }
 .radioGroup {
   display: flex;
   align-items: center;
 }
 .checkboxGroup {
-  margin-bottom: 8px;
+  margin-bottom: 0px;
 }
 .checkboxGroup {
   display: flex;
 }
 
+.radioInput {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #0096c8;
+  color: #0096c8;
+}
+.radioInput :checked {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #0096c8;
+}
 .radioInput,
 .checkboxInput {
   margin-right: 8px;
+  cursor: pointer;
 }
 
 .radioLabel,
@@ -141,6 +156,7 @@
   display: flex;
   align-items: center;
   position: relative;
+  cursor: pointer;
 }
 .hiddenDateInput {
   display: none;
@@ -153,6 +169,7 @@
 .dateButton {
   width: 105px;
   background: none;
+  height: 32px;
   border: none;
   border-radius: 4px;
   padding: 8px 12px;
@@ -164,6 +181,7 @@
   font-family: Poppins;
   font-style: normal;
   font-weight: 400;
+  cursor: pointer;
 }
 
 .dateInput {
@@ -180,9 +198,11 @@
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 .textInput {
-  width: 50%;
+  width: 90.5px;
+  height: 32px;
   padding: 6px 8px;
   border-radius: 8px;
   border: 1px solid var(--Grey-Lighter, #ebedf0);
@@ -192,6 +212,7 @@
   font-style: normal;
   font-weight: 400;
   outline: none;
+  cursor: pointer;
 }
 
 .rangeSeparator {
