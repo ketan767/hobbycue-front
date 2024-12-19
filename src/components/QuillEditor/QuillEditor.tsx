@@ -1,11 +1,8 @@
-// components/QuillEditor.tsx
 import dynamic from 'next/dynamic'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import 'react-quill/dist/quill.snow.css'
 import styles from './QillEditor.module.css'
-
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
-
+import ReactQuill, { Quill } from 'react-quill'
 interface QuillEditorProps {
   value: string
   onChange: (content: string) => void
@@ -14,12 +11,56 @@ interface QuillEditorProps {
 const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
   const [editorValue, setEditorValue] = useState<string>(value)
 
+  // Use ReactQuill's specific ref type
+  const quillRef = useRef<ReactQuill>(null)
+
   const handleEditorChange = (content: string) => {
     setEditorValue(content)
     onChange(content)
   }
 
-  // Define a custom toolbar with a code block option
+  useEffect(() => {
+    // Ensure the Quill instance is correctly accessed
+    const quillInstance = quillRef.current?.getEditor()
+    if (!quillInstance) return
+
+    const handlePaste = async (e: ClipboardEvent) => {
+      const clipboardItems = Array.from(e.clipboardData?.items || [])
+      for (const item of clipboardItems) {
+        if (item.type.startsWith('image/')) {
+          e.preventDefault()
+
+          const file = item.getAsFile()
+          if (file) {
+            const reader = new FileReader()
+            reader.onload = (event) => {
+              const base64Image = event.target?.result
+              if (base64Image && typeof base64Image === 'string') {
+                const range = quillInstance.getSelection()
+                quillInstance.insertEmbed(
+                  range?.index || 0,
+                  'image',
+                  base64Image,
+                )
+                quillInstance.setSelection({
+                  index: (range?.index || 0) + 1,
+                  length: 0,
+                })
+              }
+            }
+            reader.readAsDataURL(file)
+          }
+          break
+        }
+      }
+    }
+
+    quillInstance.root.addEventListener('paste', handlePaste)
+    return () => {
+      quillInstance.root.removeEventListener('paste', handlePaste)
+    }
+  }, [])
+
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }, { font: [] }],
@@ -32,14 +73,33 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
     ],
   }
 
+  const formats = [
+    'header',
+    'font',
+    'list',
+    'bullet',
+    'indent',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'color',
+    'background',
+    'align',
+    'image',
+    'link',
+  ]
+
   return (
     <div className={styles.container}>
       <ReactQuill
+        ref={quillRef}
         value={editorValue}
         onChange={handleEditorChange}
         modules={modules}
+        formats={formats}
         theme="snow"
-        className={`${styles.quill} ${styles.qlContainer}  react-quill`}
+        className={`${styles.quill} ${styles.qlContainer} blog-quill`}
       />
       <style>
         {`
@@ -48,6 +108,10 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
             border-left:none;
             border-right:none;
             border-bottom:none;
+            position: sticky;
+            top: 80px;
+            z-index: 2;
+            background: #fff
           }
           .ql-container.ql-snow {
             width: 100%;
@@ -77,7 +141,13 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
             text-align:justify;
           }
           .ql-editor p {
-            text-align:justify;
+              color: var(--Grey-Darkest, #08090a);
+              font-family: Cambria;
+              font-size: 16px !important;
+              font-style: normal;
+              font-weight: 400;
+              line-height: 24px;
+              margin-bottom: 11px;
           }
           @media screen and (max-width:1100px) {
             .ql-editor{
@@ -94,7 +164,6 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
               height:100px;   
             }
           }
-          
         `}
       </style>
     </div>

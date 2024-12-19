@@ -455,8 +455,8 @@
 
 .ql-editor figure,
 .blogContent figure,
-.blogContent img,
-.ql-editor img {
+.blogContent 
+.ql-editor {
   display: block;
 
 }

@@ -112,12 +112,24 @@ const BlogEditor: React.FC<Props> = ({
                 { list: 'bullet' },
                 { header: '1' },
                 { header: '2' },
+                { align: [] },
               ],
+
               ['link', 'image'],
             ],
           },
         }}
       />
+      <style>
+        {`
+          .ql-toolbar.ql-snow {
+            
+            z-index: 1;
+            position: sticky;
+            top: 200px
+          }
+             `}
+      </style>
     </div>
   )
 }
