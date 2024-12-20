@@ -134,7 +134,7 @@ const SearchHistory: React.FC = () => {
               'user_details.full_name': filterState.user?.full_name,
             })}&`
           : ''
-      }populate=user_id&limit=100&skip=3&&sort=-createdAt`,
+      }populate=user_id&limit=100&skip=0&&sort=-createdAt`,
     )
     if (err) {
       console.log('An error', err)
@@ -146,6 +146,11 @@ const SearchHistory: React.FC = () => {
   }, [filterState.user])
 
   useEffect(() => {
+    if (filterState?.user) {
+      setData((prev) => ({ ...prev, search: { value: '', error: null } }))
+      fetchUsers()
+    }
+
     if (data.search.value) {
       fetchSearchResults()
     } else {

@@ -22,6 +22,11 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
     setIsModalOpen?.(false)
   }
   const handleClear = () => {
+    setFilterState({
+      keyword: '',
+      user: '',
+      filterValue: '',
+    })
     setIsModalOpen?.(false)
   }
 
