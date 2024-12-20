@@ -18,16 +18,10 @@
 }
 
 .modalContent {
-  border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   position: relative;
   transform: translateY(-100%);
   transition: transform 0.3s ease-in-out;
-  padding: 20px;
-  max-height: 90vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: thin;
 }
 
 .slideIn {
@@ -39,19 +33,20 @@
 }
 
 .mainContainer {
-  width: 719px;
+  width: 526px;
+  height: 282px;
   position: relative;
   overflow: visible;
-  background-color: white;
   border-radius: 4px;
+  background-color: white;
 }
 
 .header {
-  width: 98%;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 5px;
+  padding: 10px 30px 10px 30px;
   margin: 0 auto;
 }
 
@@ -66,15 +61,19 @@
 }
 
 .formContainer {
-  padding: 20px;
+  width: 100%;
+  height: 100%;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* background-color: aqua; */
 }
 
 .form {
+  padding: 10px 30px 10px 30px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .notesSection {
@@ -96,7 +95,7 @@
 .textarea {
   all: unset;
   resize: none;
-  height: 100px;
+  height: 60px;
   border: 1px solid #ddd;
   border-radius: 4px;
   padding: 10px;
@@ -198,7 +197,7 @@
 }
 
 .emailContainer {
-  padding-top: 20px;
+  height: 50px;
   width: 200px;
   display: flex;
   align-items: center;

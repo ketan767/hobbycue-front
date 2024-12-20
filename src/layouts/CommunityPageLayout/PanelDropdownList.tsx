@@ -291,8 +291,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                   </p>
                 </div>
               </div>
-            )}{' '}
-            
+            )}
           </div>
         </>
       )}

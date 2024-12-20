@@ -15,14 +15,17 @@ import { GetServerSideProps } from 'next'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import post, {
   appendPosts,
+  appendPostsWithLink,
   setFilters,
   setIsPinCode,
+  updateBlogs,
   updateCurrentPage,
   updateHasMore,
   updateLoading,
   updatePages,
   updatePagesLoading,
   updatePosts,
+  updatePostsWithLink,
 } from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
@@ -63,6 +66,7 @@ import {
 import AddHobbyImg from '@/assets/image/AddHobbyImg.png'
 import ContentLoader from 'react-content-loader'
 import ProfileSwitcherDownArrow from '@/assets/icons/ProfileSwitcherDownArrow'
+import { getAllBlogs } from '@/services/blog.services'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -293,6 +297,9 @@ const CommunityLayout: React.FC<Props> = ({
   }, [selectedHobby, selectedGenre])
 
   const fetchPosts = async (page = 1) => {
+    console.log('Fetching posts......')
+    console.log('selectedHobby......', selectedHobby)
+    if (selectedHobby === undefined) return
     if (showPageLoader) {
       dispatch(setShowPageLoader(false))
     }
@@ -372,7 +379,16 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
     if (page === 1) dispatch(updateLoading(true))
+    // console.log('activeTab: ', activeTab)
+    // console.log('params.toString(): ', params.toString())
+
     const { err, res } = await getAllHobbyPosts(params.toString())
+    const params2 = params
+    params2.append('has_link', 'true')
+
+    const { err: linksPostsErr, res: linksPostsRes } = await getAllHobbyPosts(
+      params2.toString(),
+    )
     if (err) return console.log(err)
     if (res?.data?.success) {
       let posts = res.data.data.posts.map((post: any) => {
@@ -384,6 +400,17 @@ const CommunityLayout: React.FC<Props> = ({
         dispatch(updatePosts(posts))
       } else {
         dispatch(appendPosts(posts))
+      }
+      if (linksPostsRes?.data?.success) {
+        let posts = linksPostsRes.data.data.posts.map((post: any) => {
+          let content = post.content.replace(/<img .*?>/g, '')
+          return { ...post, content }
+        })
+        if (page === 1) {
+          dispatch(updatePostsWithLink(posts))
+        } else {
+          dispatch(appendPostsWithLink(posts))
+        }
       }
 
       dispatch(updateHasMore(posts.length === 10))
@@ -400,7 +427,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   useEffect(() => {
     if (post_pagination !== 1) {
-      console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#2')
+      // console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#2')
 
       fetchPosts(post_pagination)
     }
@@ -542,13 +569,13 @@ const CommunityLayout: React.FC<Props> = ({
                 hobb?.genre?._id === preferredGenreId &&
                 index > 2
               ) {
-                console.log('preferredGenreId is called')
+                // console.log('preferredGenreId is called')
                 dispatch(setFilters({ seeMoreHobbies: true }))
               }
             } else if (preferredHobbyId) {
               if (hobb?.genre?._id) {
               } else if (hobb?.hobby?._id === preferredHobbyId && index > 2) {
-                console.log('preferredHobbyId is called')
+                // console.log('preferredHobbyId is called')
                 dispatch(setFilters({ seeMoreHobbies: true }))
               }
             }
@@ -562,10 +589,10 @@ const CommunityLayout: React.FC<Props> = ({
       }
 
       if (!user.preferences.community_view.all_locations) {
-        console.log(
-          '###########################2',
-          user.preferences.community_view.preferred_location.city.split(' ')[0],
-        )
+        // console.log(
+        //   '###########################2',
+        //   user.preferences.community_view.preferred_location.city.split(' ')[0],
+        // )
 
         setSelectedLocation(
           user.preferences.community_view.preferred_location.city.split(' ')[0],
@@ -578,6 +605,47 @@ const CommunityLayout: React.FC<Props> = ({
     dispatch(updateListingModalData(activeProfile.data))
   }, [activeProfile.type])
 
+  function filterBlogsByHobbyDisplayNames(
+    blogs: any,
+    hobbyId: any,
+    genreId: any,
+  ) {
+    return blogs.filter((blog: any) =>
+      blog._hobbies.some((hobby: any) => {
+        if (genreId) {
+          return hobby.genre?._id === genreId && hobby.hobby._id === hobbyId
+        }
+        return hobby.hobby._id === hobbyId
+      }),
+    )
+  }
+  const fetchBlogs = async () => {
+    if (selectedHobby === undefined || !activeProfile?.data?._hobbies) return
+    const params = new URLSearchParams(
+      `populate=_hobbies,author&status=Published`,
+    )
+
+    const { err, res } = await getAllBlogs(`${params}`)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      let filteredBlogs = []
+      if (selectedHobby === 'All Hobbies') {
+        filteredBlogs = res.data.data.blog
+      } else if (selectedHobby === 'My Hobbies') {
+        filteredBlogs = res.data.data.blog
+      } else {
+        filteredBlogs = filterBlogsByHobbyDisplayNames(
+          res.data.data.blog,
+          selectedHobby,
+          selectedGenre,
+        )
+      }
+      console.log('filteredBlogs', filteredBlogs)
+      dispatch(updateBlogs(filteredBlogs))
+      dispatch(updatePagesLoading(false))
+    }
+  }
+
   useEffect(() => {
     if (!user?.preferences?.community_view) return
     if (
@@ -585,9 +653,12 @@ const CommunityLayout: React.FC<Props> = ({
       (activeTab === 'links' || activeTab === 'posts')
     ) {
       if (selectedLocation !== '') {
-        console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT', activeProfile.data)
+        // console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT', activeProfile.data)
         fetchPosts()
       }
+    }
+    if (activeProfile.data !== null && activeTab === 'blogs') {
+      if (selectedLocation !== '') fetchBlogs()
     }
   }, [
     selectedHobby,
@@ -605,6 +676,12 @@ const CommunityLayout: React.FC<Props> = ({
 
   const fetchHobby = async () => {
     // const query = `fields=display,sub_category&show=true&search=${selectedHobby}`
+    if (
+      selectedHobby === undefined ||
+      selectedHobby === 'My Hobbies' ||
+      selectedHobby === 'All Hobbies'
+    )
+      return
     const params = new URLSearchParams()
     params.set('_id', selectedHobby)
     const { err, res } = await getAllHobbies(
@@ -612,7 +689,7 @@ const CommunityLayout: React.FC<Props> = ({
     )
     // const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
-    console.log('res', res.data)
+    // console.log('res', res.data)
     if (res?.data && res?.data?.hobbies) {
       const hobby = res.data.hobbies[0]
       if (hobby !== undefined) {
@@ -622,7 +699,7 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    console.log('filters.genre', filters.genre)
+    // console.log('filters.genre', filters.genre)
     if (filters.genre) {
       if (filters.genre === 'No genre') {
         setSelectedGenre(undefined)
@@ -709,7 +786,7 @@ const CommunityLayout: React.FC<Props> = ({
                     : 'All Locations',
               }),
             )
-            console.log('###########################4', 'All Locations')
+            // console.log('###########################4', 'All Locations')
 
             setSelectedLocation(
               user?.preferences?.community_view?.preferred_location?.city?.split(
@@ -720,7 +797,7 @@ const CommunityLayout: React.FC<Props> = ({
                   )[0]
                 : 'All Locations',
             )
-            console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#5')
+            // console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#5')
             fetchPosts(1)
           }
           setVisibilityData(visibilityArr)
@@ -788,7 +865,7 @@ const CommunityLayout: React.FC<Props> = ({
                 : 'All Locations',
           }),
         )
-        console.log('###########################5', 'All Locations')
+        // console.log('###########################5', 'All Locations')
 
         setSelectedLocation(
           user?.preferences?.community_view?.preferred_location?.city?.split(
@@ -809,15 +886,15 @@ const CommunityLayout: React.FC<Props> = ({
       dispatch(openModal({ type: 'auth', closable: true }))
       return
     }
-    console.log('Location-------->', selectedLocation)
-    console.log('selectedLocation === val ------->', selectedLocation === val)
-    console.log('val----->', val)
+    // console.log('Location-------->', selectedLocation)
+    // console.log('selectedLocation === val ------->', selectedLocation === val)
+    // console.log('val----->', val)
     dispatch(
       setFilters({
         location: selectedLocation === val ? 'All Locations' : val,
       }),
     )
-    console.log('###########################6', val)
+    // console.log('###########################6', val)
     setSelectedLocation((prev: any) => {
       if (prev === val) {
         return 'All Locations'
@@ -987,7 +1064,7 @@ const CommunityLayout: React.FC<Props> = ({
         name: query,
       }
       const { res, err } = await searchUsersAdvanced(searchCriteria)
-      console.log('Data : ', res.data)
+      // console.log('Data : ', res.data)
 
       setFilteredUsers(res.data)
       setFilteredUsersLoading(false)
@@ -1199,7 +1276,7 @@ const CommunityLayout: React.FC<Props> = ({
                     speed={2}
                     width="100%"
                     backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
+                    foregroundColor="#ecebeb"
                     viewBox="0 0 229 282"
                   >
                     <rect
@@ -1302,25 +1379,73 @@ const CommunityLayout: React.FC<Props> = ({
                       })}
                     </InputSelect>
                   )}
-                  </>
-                ) : (
-                    <ContentLoader
-                    speed={2}
-                    width="100%"
-                    backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
-                    viewBox="0 0 229 160"
-                  >
-                    <rect x="16" y="11" width="55" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="197" y="52" width="16" height="16" rx="8" fill="#D9DBE9"/>
-                    <rect x="16" y="51" width="95" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="197" y="92" width="16" height="16" rx="8" fill="#D9DBE9"/>
-                    <rect x="16" y="91" width="93" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="197" y="132" width="16" height="16" rx="8" fill="#D9DBE9"/>
-                    <rect x="16" y="131" width="102" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                  </ContentLoader>
-                  )
-              }
+                </>
+              ) : (
+                <ContentLoader
+                  speed={2}
+                  width="100%"
+                  backgroundColor="#f3f3f3"
+                  foregroundColor="#ecebeb"
+                  viewBox="0 0 229 160"
+                >
+                  <rect
+                    x="16"
+                    y="11"
+                    width="55"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="197"
+                    y="52"
+                    width="16"
+                    height="16"
+                    rx="8"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16"
+                    y="51"
+                    width="95"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="197"
+                    y="92"
+                    width="16"
+                    height="16"
+                    rx="8"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16"
+                    y="91"
+                    width="93"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="197"
+                    y="132"
+                    width="16"
+                    height="16"
+                    rx="8"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16"
+                    y="131"
+                    width="102"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                </ContentLoader>
+              )}
             </section>
           </aside>
         )}
@@ -1467,8 +1592,8 @@ const CommunityLayout: React.FC<Props> = ({
 
                       <button
                         onClick={() => {
-                          // handleClose()
-                          // router.push('/add-listing')
+                          setShowDropdown(false)
+                          router.push('/add-listing')
                         }}
                       >
                         <Image src={addIcon} alt="" />
@@ -1849,28 +1974,29 @@ const CommunityLayout: React.FC<Props> = ({
               className={styles['desktop-members-conatiner']}
             >
               <header>Hobby Members</header>
-              {
-                hobbyMembers.length > 0 ? (
-                <>{
-                hobbyMembers
-                ?.slice(0, seeMoreMembers === 0 ? 3 : hobbyMembers.length)
-                .map((obj: any, idx) => (
-                  obj !== null &&
-                  <div key={idx} className={styles['member']}>
-                    <Link
-                      href={`/profile/${obj?.profile_url}`}
-                      className={styles['img-name']}
-                    >
-                      {obj?.profile_image ? (
-                        <img src={obj?.profile_image} />
-                      ) : (
-                        <Image src={defaultUserIcon} alt="" />
-                      )}
+              {hobbyMembers.length > 0 ? (
+                <>
+                  {hobbyMembers
+                    ?.slice(0, seeMoreMembers === 0 ? 3 : hobbyMembers.length)
+                    .map(
+                      (obj: any, idx) =>
+                        obj !== null && (
+                          <div key={idx} className={styles['member']}>
+                            <Link
+                              href={`/profile/${obj?.profile_url}`}
+                              className={styles['img-name']}
+                            >
+                              {obj?.profile_image ? (
+                                <img src={obj?.profile_image} />
+                              ) : (
+                                <Image src={defaultUserIcon} alt="" />
+                              )}
 
-                          <p>{obj?.full_name}</p>
-                        </Link>
-                      </div>
-                    ))}
+                              <p>{obj?.full_name}</p>
+                            </Link>
+                          </div>
+                        ),
+                    )}
                   {hobbyMembers.length > 3 && (
                     <div
                       onClick={() => {
@@ -1882,28 +2008,85 @@ const CommunityLayout: React.FC<Props> = ({
                     </div>
                   )}
                 </>
-                ) : (
-                  <ContentLoader
-                    speed={2}
-                    width="100%"
-                    backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
-                    viewBox="0 0 292 154"
-                  >
-                    <rect x="16.5" y="7.5" width="23" height="23" rx="11.5" fill="#D9DBE9"                    stroke="#D9DBE9"/>
-                    <rect x="48" y="12.875" width="88" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="186.754" y="9.5" width="88.7451" height="19" rx="3.5" fill="#D9DBE9"                     stroke="#D9DBE9"/>
-                    <rect x="16.5" y="45.5" width="23" height="23" rx="11.5" fill="#D9DBE9"                     stroke="#D9DBE9"/>
-                    <rect x="48" y="50.875" width="88" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="16.5" y="83.5" width="23" height="23" rx="11.5" fill="#D9DBE9"                     stroke="#D9DBE9"/>
-                    <rect x="48" y="88.875" width="54" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="112" y="121" width="66" height="12.25" rx="6.125" fill="#D9DBE9"/>
+              ) : (
+                <ContentLoader
+                  speed={2}
+                  width="100%"
+                  backgroundColor="#f3f3f3"
+                  foregroundColor="#ecebeb"
+                  viewBox="0 0 292 154"
+                >
+                  <rect
+                    x="16.5"
+                    y="7.5"
+                    width="23"
+                    height="23"
+                    rx="11.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="48"
+                    y="12.875"
+                    width="88"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="186.754"
+                    y="9.5"
+                    width="88.7451"
+                    height="19"
+                    rx="3.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="16.5"
+                    y="45.5"
+                    width="23"
+                    height="23"
+                    rx="11.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="48"
+                    y="50.875"
+                    width="88"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16.5"
+                    y="83.5"
+                    width="23"
+                    height="23"
+                    rx="11.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="48"
+                    y="88.875"
+                    width="54"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="112"
+                    y="121"
+                    width="66"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                </ContentLoader>
+              )}
 
-                  </ContentLoader>
-                )
-                
-              }
-              
               {/* {hobbyMembers.length === 0 && (
                 <div className={styles['see-all']}>
                   <p>Loading...</p>
@@ -1952,24 +2135,75 @@ const CommunityLayout: React.FC<Props> = ({
                     </div>
                   )}
                 </>
-                ) : 
-                  <ContentLoader
-                    speed={2}
-                    width="100%"
-                    backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
-                    viewBox="0 0 292 185"
-                  >
-                  <rect x="16.5" y="4" width="31" height="31" rx="3.5" fill="#D9DBE9" stroke="#D9DBE9"/>
-                  <rect x="56" y="13" width="127" height="13" rx="6.5" fill="#D9DBE9"/>
-                  <rect x="16.5" y="55" width="31" height="31" rx="3.5" fill="#D9DBE9" stroke="#D9DBE9"/>
-                  <rect x="56" y="64.5" width="125" height="12" rx="6" fill="#D9DBE9"/>
-                  <rect x="16.5" y="106" width="31" height="31" rx="3.5" fill="#D9DBE9" stroke="#D9DBE9"/                 >
-                  <rect x="56" y="115.5" width="127" height="12" rx="6" fill="#D9DBE9"/>
-                  <rect x="112" y="156.5" width="66" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                  </ContentLoader>
-              }
-
+              ) : (
+                <ContentLoader
+                  speed={2}
+                  width="100%"
+                  backgroundColor="#f3f3f3"
+                  foregroundColor="#ecebeb"
+                  viewBox="0 0 292 185"
+                >
+                  <rect
+                    x="16.5"
+                    y="4"
+                    width="31"
+                    height="31"
+                    rx="3.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="56"
+                    y="13"
+                    width="127"
+                    height="13"
+                    rx="6.5"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16.5"
+                    y="55"
+                    width="31"
+                    height="31"
+                    rx="3.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="56"
+                    y="64.5"
+                    width="125"
+                    height="12"
+                    rx="6"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16.5"
+                    y="106"
+                    width="31"
+                    height="31"
+                    rx="3.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="56"
+                    y="115.5"
+                    width="127"
+                    height="12"
+                    rx="6"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="112"
+                    y="156.5"
+                    width="66"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                </ContentLoader>
+              )}
             </section>
 
             <section
@@ -2047,29 +2281,86 @@ const CommunityLayout: React.FC<Props> = ({
                         <p>{seeMoreTrendHobbies ? 'See more' : 'See less'}</p>
                       </div>
                     )}
-                    </>
-                  ) : (
-                    <ContentLoader
-                      speed={2}
-                      width="100%"
-                      backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
-                      height={185}
-                      viewBox="0 0 292 171"
-                    >
-                    <path d="M32.5 3L46.7894 11.25V27.75L32.5 36L18.2106 27.75V11.25L32.5 3Z"                       fill="#D9DBE9"/>
-                    <rect x="57" y="13.375" width="30" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="256.004" y="9.5" width="19.9954" height="20" rx="9.99768" fill="#D9DBE9"/>
-                    <path d="M32.5 47L46.7894 55.25V71.75L32.5 80L18.2106 71.75V55.25L32.5 47Z"                       fill="#D9DBE9"/>
-                    <rect x="57" y="57.375" width="80" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="256.004" y="53.5" width="19.9954" height="20" rx="9.99768" fill="#D9DBE9"/>
-                    <path d="M32.5 91L46.7894 99.25V115.75L32.5 124L18.2106 115.75V99.25L32.5 91Z"                      fill="#D9DBE9"/>
-                    <rect x="57" y="101.375" width="67" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="256.004" y="97.5" width="19.9954" height="20" rx="9.99768" fill="#D9DBE9"/>
-                    <rect x="112" y="139" width="66" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    </ContentLoader>
-                  )
-                }
+                  </>
+                ) : (
+                  <ContentLoader
+                    speed={2}
+                    width="100%"
+                    backgroundColor="#f3f3f3"
+                    foregroundColor="#ecebeb"
+                    height={185}
+                    viewBox="0 0 292 171"
+                  >
+                    <path
+                      d="M32.5 3L46.7894 11.25V27.75L32.5 36L18.2106 27.75V11.25L32.5 3Z"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="57"
+                      y="13.375"
+                      width="30"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="256.004"
+                      y="9.5"
+                      width="19.9954"
+                      height="20"
+                      rx="9.99768"
+                      fill="#D9DBE9"
+                    />
+                    <path
+                      d="M32.5 47L46.7894 55.25V71.75L32.5 80L18.2106 71.75V55.25L32.5 47Z"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="57"
+                      y="57.375"
+                      width="80"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="256.004"
+                      y="53.5"
+                      width="19.9954"
+                      height="20"
+                      rx="9.99768"
+                      fill="#D9DBE9"
+                    />
+                    <path
+                      d="M32.5 91L46.7894 99.25V115.75L32.5 124L18.2106 115.75V99.25L32.5 91Z"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="57"
+                      y="101.375"
+                      width="67"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="256.004"
+                      y="97.5"
+                      width="19.9954"
+                      height="20"
+                      rx="9.99768"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="112"
+                      y="139"
+                      width="66"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                  </ContentLoader>
+                )}
               </section>
             </section>
             {isMobile ? null : (
