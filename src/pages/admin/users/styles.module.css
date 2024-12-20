@@ -94,12 +94,12 @@
 .searchForm {
   display: flex;
   gap: 0;
-  width: 418.354px;
+  width: 457.354px;
   height: 40px;
 }
 
 .searchInput {
-  padding: 10px;
+  padding: 9px;
   height: 40px;
   font-family: Poppins;
   font-size: 12px;
@@ -130,7 +130,28 @@
   border: 1px solid #0096c8;
   border-right: none;
 }
+.searchButton {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0px 8px 8px 0px;
+  background: var(--Blue1, #0096c8);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: all 0.3s;
+}
+.searchButton svg {
+  width: 15px;
+  height: 14px;
+}
 
+.searchButton:hover {
+  background-color: #0056b3;
+  transition: all 0.3s;
+}
 .filterBtn {
   background: transparent;
   display: flex;
@@ -147,25 +168,6 @@
   padding: 8px;
 }
 
-.searchButton {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 0px 8px 8px 0px;
-  background: var(--Blue1, #0096c8);
-  cursor: pointer;
-  border: none;
-  outline: none;
-  transition: all 0.3s;
-}
-
-.searchButton:hover {
-  background-color: #0056b3;
-  transition: all 0.3s;
-}
-
 /* Results table styles */
 
 .resultsContainer {
@@ -175,7 +177,7 @@
 
 .resultsTable {
   width: 100%;
-  min-height: 300px;
+  min-height: 100px;
   border-collapse: collapse;
   border-radius: 8px;
 }
@@ -198,6 +200,7 @@
 }
 .resultsTable tbody {
   border: 1px solid var(--Grey-Lighter, #ebedf0);
+  height: auto;
 }
 
 .resultsTable tbody td {
@@ -212,7 +215,7 @@
 }
 
 .resultsTable th {
-  padding: 12px 8px 12px 24px;
+  padding: 11px 8px 11px 24px;
   border-bottom: 1px solid var(--Grey-Lighter, #ebedf0);
   background: var(--Blue1, #0096c8);
   color: var(--Base-White, var(--background-white, #fff));
@@ -221,7 +224,7 @@
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
-  line-height: 18px;
+  line-height: 15px;
 }
 
 .resultsTable th:first-of-type {
@@ -253,18 +256,20 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  justify-content: start;
 }
 .sortButton {
   background: none;
   border: none;
 }
-.sortButton img {
-  transform: rotate(180deg);
-}
 
 /* Avatar styles */
 .avatarImage {
   border-radius: 50%;
+  border: 1px solid #0096c8;
+  height: 32px;
+  width: 32px;
+  margin: auto;
 }
 
 /* User details container styles */
@@ -276,23 +281,34 @@
 .avatarContainer {
   margin-left: 24px;
   margin-right: 10px;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
 }
 
 .detailsContainer {
   display: flex;
   flex-direction: column;
 }
+.avatarName {
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
 
+  /* 142.857% */
+}
 .userName {
   color: var(--Grey-Darkest, #08090a);
   font-feature-settings: 'clig' off, 'liga' off;
   font-family: 'Poppins';
   font-size: 14px;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 20px;
+
   /* 142.857% */
 }
 
@@ -315,10 +331,13 @@
   color: #000000;
 }
 .loginIcon {
+  width: auto;
+
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 3px;
+  padding: 2px 5px;
 }
 
 .lastLoggedIn {
@@ -355,9 +374,10 @@
   cursor: pointer;
 }
 .pagination {
-  width: 180px;
+  width: 280px;
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
+  gap: 20px;
   padding: 10px 12px;
   margin-left: auto;
 }
