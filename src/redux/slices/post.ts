@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface PostState {
   allPosts: object[];
+  allPostsWithLink: object[];
   post_pagination: number;
   currentPage: number;
   hasMore: boolean;
@@ -22,6 +23,7 @@ interface PostState {
 
 const initialState: PostState = {
   allPosts: [],
+  allPostsWithLink: [],
   post_pagination: 1,
   hasMore: true,
   currentPage: 1,
@@ -52,6 +54,12 @@ const postSlice = createSlice({
     },
     appendPosts: (state, { payload }) => {
       state.allPosts = [...state.allPosts, ...payload];
+    },
+    updatePostsWithLink: (state, { payload }) => {
+      state.allPostsWithLink = payload;
+    },
+    appendPostsWithLink: (state, { payload }) => {
+      state.allPostsWithLink = [...state.allPostsWithLink, ...payload];
     },
     updatePages: (state, { payload }) => {
       state.allPages = payload;
@@ -90,6 +98,8 @@ export const {
   setIsPinCode,
   updatePosts,
   appendPosts,
+  updatePostsWithLink,
+  appendPostsWithLink,
   updatePages,
   updateHasMore,
   updateBlogs,
