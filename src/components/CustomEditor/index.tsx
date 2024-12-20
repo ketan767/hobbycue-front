@@ -48,7 +48,7 @@ const CustomEditor: React.FC<Props> = ({
   onStatusChange,
   forWhichComponent,
 }) => {
-  const editorRef = useRef(null)
+  const editorRef = useRef<ReactQuill>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const inputVideoRef = useRef<HTMLInputElement>(null)
   const [imageIconAdded, setImageIconAdded] = useState(false)
@@ -62,20 +62,20 @@ const CustomEditor: React.FC<Props> = ({
   )
   const onReady = () => {
     if (image && !imageIconAdded) {
-      const toolbar = document.querySelector('.ql-toolbar.ql-snow');
+      const toolbar = document.querySelector('.ql-toolbar.ql-snow')
       // Check if an <img> already exists inside the toolbar
-      const existingImg = toolbar?.querySelector('img');
-      
-      if (!existingImg) {  // Only append the new image if no img exists
-        const img = document.createElement('img');
-        img.src = '/image.svg';
-        img.addEventListener('click', openInput);
-        toolbar?.append(img);
-        setImageIconAdded(true);
+      const existingImg = toolbar?.querySelector('img')
+
+      if (!existingImg) {
+        // Only append the new image if no img exists
+        const img = document.createElement('img')
+        img.src = '/image.svg'
+        img.addEventListener('click', openInput)
+        toolbar?.append(img)
+        setImageIconAdded(true)
       }
     }
-  };
-  
+  }
 
   useEffect(() => {
     if (editorRef.current === undefined) return
@@ -124,6 +124,30 @@ const CustomEditor: React.FC<Props> = ({
     }
   }
 
+  useEffect(() => {
+    const handlePaste = async (event: ClipboardEvent) => {
+      if (event.clipboardData?.files.length) {
+        const imageFile = event.clipboardData.files[0]
+
+        if (imageFile.type.startsWith('image/')) {
+          event.preventDefault()
+          handleImageUpload(imageFile, false)
+        }
+      }
+    }
+
+    const editorElement = editorRef.current?.getEditor()?.root
+    if (editorElement) {
+      editorElement.addEventListener('paste', handlePaste)
+    }
+
+    return () => {
+      if (editorElement) {
+        editorElement.removeEventListener('paste', handlePaste)
+      }
+    }
+  }, [editorRef, handleImageUpload])
+
   const openInput = () => {
     inputRef.current?.click()
   }
@@ -134,7 +158,7 @@ const CustomEditor: React.FC<Props> = ({
 
   return (
     <>
-    {/* <style>{`
+      {/* <style>{`
           .ql-editor.ql-indent-1{
             padding-left:4px;
           }
@@ -211,7 +235,8 @@ const CustomEditor: React.FC<Props> = ({
 
                 // 'emoji',
               ],
-              [{ list: 'ordered' }, { list: 'bullet' }], ['link'],
+              [{ list: 'ordered' }, { list: 'bullet' }],
+              ['link'],
             ],
           },
           // 'emoji-toolbar': true,
@@ -269,7 +294,7 @@ const CustomEditor: React.FC<Props> = ({
             border-radius: 5px;
           }
           ${
-            forWhichComponent === "createPost" && 
+            forWhichComponent === 'createPost' &&
             `
               .ql-editor {
                 scrollbar-width: thin;
@@ -290,7 +315,6 @@ const CustomEditor: React.FC<Props> = ({
       />
 
       {error && <p className={styles['error-text']}>{error}</p>}
-      
     </>
   )
 }

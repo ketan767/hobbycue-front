@@ -35,6 +35,49 @@ const BlogEditor: React.FC<Props> = ({
   const inputVideoRef = useRef<HTMLInputElement>(null)
   const [imageIconAdded, setImageIconAdded] = useState(false)
   const [content, setContent] = useState('')
+
+  useEffect(() => {
+    // Ensure the Quill instance is correctly accessed
+    const quillInstance = quillRef.current?.getEditor()
+    if (!quillInstance) return
+
+    const handlePaste = async (e: ClipboardEvent) => {
+      const clipboardItems = Array.from(e.clipboardData?.items || [])
+      for (const item of clipboardItems) {
+        if (item.type.startsWith('image/')) {
+          e.preventDefault()
+
+          const file = item.getAsFile()
+          if (file) {
+            const reader = new FileReader()
+            reader.onload = (event) => {
+              const base64Image = event.target?.result
+              if (base64Image && typeof base64Image === 'string') {
+                const range = quillInstance.getSelection()
+                quillInstance.insertEmbed(
+                  range?.index || 0,
+                  'image',
+                  base64Image,
+                )
+                quillInstance.setSelection({
+                  index: (range?.index || 0) + 1,
+                  length: 0,
+                })
+              }
+            }
+            reader.readAsDataURL(file)
+          }
+          break
+        }
+      }
+    }
+
+    quillInstance.root.addEventListener('paste', handlePaste)
+    return () => {
+      quillInstance.root.removeEventListener('paste', handlePaste)
+    }
+  }, [])
+
   useEffect(() => {
     if (quillRef.current) {
       const quill = quillRef.current.getEditor()
