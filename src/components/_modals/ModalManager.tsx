@@ -478,7 +478,7 @@ const ModalManager: React.FC = () => {
               )}
               {activeModal === 'create-post' && <CreatePost {...props} />}
               {activeModal === 'update-post' && (
-                <CreatePost propData={propData} />
+                <CreatePost {...props} propData={propData} />
               )}
               {activeModal === 'upload-image' && (
                 <UploadImageModal {...props} />
