@@ -23,6 +23,7 @@ import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { changePassword } from '@/services/auth.service'
 import PasswordAnalyzer from '@/components/PasswordAnalyzer/PasswordAnalyzer'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import CloseIcon from '@/assets/icons/CloseIcon'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -201,6 +202,9 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>Change Password</h4>
+          <button onClick={handleClose} style={{ backgroundColor: 'transparent', display: 'flex', border: 'none' }}>
+            <CloseIcon />
+          </button>
         </header>
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
