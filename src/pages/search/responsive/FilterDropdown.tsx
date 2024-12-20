@@ -232,7 +232,7 @@ const FilterDropdown: React.FC<Props> = () => {
       <MenuItem onClick={() => handleFilterClick('users')} value="users">
         <div className={styles.responsiveMenuItem}>
           <Image src={UserSvg} alt="User" />
-          <span>Users</span>
+          <span>User Profiles</span>
         </div>
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('hobby')} value="hobby">
@@ -253,16 +253,16 @@ const FilterDropdown: React.FC<Props> = () => {
           <span>Places</span>
         </div>
       </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('events')} value="events">
-        <div className={styles.responsiveMenuItem}>
-          <Image src={Program} alt="Program" />
-          <span>Programs</span>
-        </div>
-      </MenuItem>
       <MenuItem onClick={() => handleFilterClick('products')} value="products">
         <div className={styles.responsiveMenuItem}>
           <Image src={Product} alt="Product" />
           <span>Products</span>
+        </div>
+      </MenuItem>
+      <MenuItem onClick={() => handleFilterClick('events')} value="events">
+        <div className={styles.responsiveMenuItem}>
+          <Image src={Program} alt="Program" />
+          <span>Programs</span>
         </div>
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('classes')} value="classes">
