@@ -333,7 +333,8 @@ select:-webkit-autofill {
   max-width: 100% !important;
   min-height: 100vh;
   border-radius: 0 !important;
-  border-inline: 0;
+  border: 0 !important;
+  border-top: 1px solid #ccc !important;
   border-bottom: 1px solid #ccc !important;
 }
 
@@ -346,6 +347,14 @@ select:-webkit-autofill {
   border-radius: 8px 8px 0 0 !important;
   border: 0;
   /* border-bottom: 1px solid #ccc; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.blog-quill .ql-toolbar:after {
+  content: none !important;
 }
 
 .ck.ck-content.ck-editor__editable ul,

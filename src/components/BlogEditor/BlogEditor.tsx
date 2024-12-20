@@ -134,7 +134,7 @@ const BlogEditor: React.FC<Props> = ({
   }, [])
 
   return (
-    <div className={`${error ? 'quill-error' : ''}`}>
+    // <div className={`${error ? 'quill-error' : ''}`}>
       <ReactQuill
         ref={quillRef}
         theme="snow"
@@ -163,17 +163,6 @@ const BlogEditor: React.FC<Props> = ({
           },
         }}
       />
-      <style>
-        {`
-          .ql-toolbar.ql-snow {
-            
-            z-index: 1;
-            position: sticky;
-            top: 200px
-          }
-             `}
-      </style>
-    </div>
   )
 }
 
