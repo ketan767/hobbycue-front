@@ -1467,8 +1467,8 @@ const CommunityLayout: React.FC<Props> = ({
 
                       <button
                         onClick={() => {
-                          // handleClose()
-                          // router.push('/add-listing')
+                          setShowDropdown(false)
+                          router.push('/add-listing')
                         }}
                       >
                         <Image src={addIcon} alt="" />
