@@ -137,7 +137,7 @@ const SearchPageFilter = () => {
   ])
 
   useEffect(() => {
-     if (!filter) {
+    if (!filter) {
       setActiveFilter('all')
       dispatch(showAllTrue())
     }
@@ -284,17 +284,6 @@ const SearchPageFilter = () => {
             Places
           </div>
           <div
-            className={getFilterItemClass('events')}
-            onClick={() => {
-              dispatch(setCategory('Program'))
-              handleFilterClick('programs')
-            }}
-          >
-            <Image src={Program} alt="Program" />
-            Programs
-          </div>
-
-          <div
             className={getFilterItemClass('products')}
             onClick={() => {
               dispatch(setCategory('Product'))
@@ -304,6 +293,16 @@ const SearchPageFilter = () => {
           >
             <Image src={Product} alt="Product" />
             Products
+          </div>
+          <div
+            className={getFilterItemClass('events')}
+            onClick={() => {
+              dispatch(setCategory('Program'))
+              handleFilterClick('programs')
+            }}
+          >
+            <Image src={Program} alt="Program" />
+            Programs
           </div>
           <div
             className={getFilterItemClass('classes')}

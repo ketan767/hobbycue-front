@@ -19,6 +19,7 @@ const EditUser: React.FC<UserEditProps> = ({
 }) => {
   const profile_url = id
   const [user, setUser] = useState<any>(null)
+  const [errors, setErrors] = useState<any>({})
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -94,52 +95,131 @@ const EditUser: React.FC<UserEditProps> = ({
             {/* full name */}
 
             <div className={styles.inputbox}>
-              <label>Full Name</label>
+              <label htmlFor="fullName">Full Name</label>
               <input
+                id="fullName"
                 type="text"
                 autoComplete="new"
                 value={user?.full_name}
-                onChange={(e) =>
-                  setUser({ ...user, full_name: e.target.value })
-                }
+                onChange={(e) => {
+                  const value = e.target.value
+                  setUser({ ...user, full_name: value })
+
+                  if (!value.trim()) {
+                    setErrors({
+                      ...errors,
+                      full_name: 'Full Name is required.',
+                    })
+                  } else if (value.length < 2) {
+                    setErrors({
+                      ...errors,
+                      full_name:
+                        'Full Name must be at least 2 characters long.',
+                    })
+                  } else if (value.length > 50) {
+                    setErrors({
+                      ...errors,
+                      full_name: 'Full Name must not exceed 50 characters.',
+                    })
+                  } else {
+                    const { full_name, ...rest } = errors // Remove the error if valid
+                    setErrors(rest)
+                  }
+                }}
               />
+              {errors.full_name && (
+                <p className={styles.error}>{errors.full_name}</p>
+              )}
             </div>
 
             {/* email */}
 
             <div className={styles.inputbox}>
-              <label>Email</label>
+              <label htmlFor="email">Email</label>
               <input
+                id="email"
                 type="text"
                 autoComplete="new"
                 value={user?.email}
-                onChange={(e) => setUser({ ...user, email: e.target.value })}
+                onChange={(e) => {
+                  const value = e.target.value
+                  setUser({ ...user, email: value })
+
+                  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+                  if (value && !emailRegex.test(value)) {
+                    setErrors({ ...errors, email: 'Invalid email format.' })
+                  } else {
+                    const { email, ...rest } = errors // Remove the email error if valid
+                    setErrors(rest)
+                  }
+                }}
               />
+              {errors.email && <p className={styles.error}>{errors.email}</p>}
             </div>
           </div>
           <div className={styles.twoColumnGrid}>
             {/* display name */}
-
             <div className={styles.inputbox}>
-              <label>Display Name</label>
+              <label htmlFor="displayName">Display Name</label>
               <input
+                id="displayName"
                 type="text"
                 autoComplete="new"
                 value={user?.display}
-                onChange={(e) => setUser({ ...user, display: e.target.value })}
+                onChange={(e) => {
+                  const value = e.target.value
+                  setUser({ ...user, display: value })
+
+                  if (value && value.length < 3) {
+                    setErrors({
+                      ...errors,
+                      display:
+                        'Display Name must be at least 3 characters long.',
+                    })
+                  } else if (value && value.length > 30) {
+                    setErrors({
+                      ...errors,
+                      display: 'Display Name must not exceed 30 characters.',
+                    })
+                  } else {
+                    const { display, ...rest } = errors // Remove the error if valid
+                    setErrors(rest)
+                  }
+                }}
               />
+              {errors.display && (
+                <p className={styles.error}>{errors.display}</p>
+              )}
             </div>
+
             {/* profile url */}
             <div className={styles.inputbox}>
-              <label>Profile Url</label>
+              <label htmlFor="profileUrl">Profile URL</label>
               <input
+                id="profileUrl"
                 type="text"
                 autoComplete="new"
                 value={user?.profile_url}
-                onChange={(e) =>
-                  setUser({ ...user, profile_url: e.target.value })
-                }
+                onChange={(e) => {
+                  const value = e.target.value
+                  setUser({ ...user, profile_url: value })
+
+                  // Regular Expression for Basic URL Validation
+                  const urlRegex =
+                    /^(https?:\/\/)?([\w\-]+(\.[\w\-]+)+)([^\s]*)?$/
+
+                  if (value && !urlRegex.test(value)) {
+                    setErrors({ ...errors, profile_url: 'Invalid URL format.' })
+                  } else {
+                    const { profile_url, ...rest } = errors // Remove the error if valid
+                    setErrors(rest)
+                  }
+                }}
               />
+              {errors.profile_url && (
+                <p className={styles.error}>{errors.profile_url}</p>
+              )}
             </div>
           </div>
 
@@ -160,26 +240,44 @@ const EditUser: React.FC<UserEditProps> = ({
 
             {/* public email */}
             <div className={styles.inputbox}>
-              <label>Public Email</label>
+              <label htmlFor="publicEmail">Public Email</label>
               <input
+                id="publicEmail"
                 type="text"
                 autoComplete="new"
                 value={user?.public_email}
-                onChange={(e) =>
-                  setUser({ ...user, public_email: e.target.value })
-                }
+                onChange={(e) => {
+                  const value = e.target.value
+                  setUser({ ...user, public_email: value })
+
+                  // Regular Expression for Email Validation
+                  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+                  if (value && !emailRegex.test(value)) {
+                    setErrors({
+                      ...errors,
+                      public_email: 'Invalid email format.',
+                    })
+                  } else {
+                    const { public_email, ...rest } = errors // Remove the error if valid
+                    setErrors(rest)
+                  }
+                }}
               />
+              {errors.public_email && (
+                <p className={styles.error}>{errors.public_email}</p>
+              )}
             </div>
           </div>
 
           <div className={styles.twoColumnGrid}>
             {/* phone */}
             <div className={styles.inputPhoneBox}>
-              <label>Phone</label>
+              <label htmlFor="phone">Phone</label>
               <div className={styles.phoneWrapper}>
                 <select
-                  name=""
-                  id=""
+                  name="phonePrefix"
+                  id="phonePrefix"
                   className={styles.prefix}
                   onChange={(e) =>
                     setUser({
@@ -200,23 +298,38 @@ const EditUser: React.FC<UserEditProps> = ({
 
                 <input
                   className={styles.phoneInput}
+                  id="phoneNumber"
                   type="text"
                   maxLength={10}
-                  minLength={10}
                   autoComplete="new"
                   value={user?.phone.number}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const value = e.target.value
                     setUser({
                       ...user,
-                      phone: { ...user.phone, number: e.target.value },
+                      phone: { ...user.phone, number: value },
                     })
-                  }
+
+                    const phoneRegex = /^[0-9]{10}$/
+
+                    if (value && !phoneRegex.test(value)) {
+                      setErrors({
+                        ...errors,
+                        phone: 'Phone number must be exactly 10 digits.',
+                      })
+                    } else {
+                      const { phone, ...rest } = errors // Remove the error if valid
+                      setErrors(rest)
+                    }
+                  }}
                 />
               </div>
+              {errors.phone && <p className={styles.error}>{errors.phone}</p>}
             </div>
+
             {/* whatsapp */}
             <div className={styles.inputPhoneBox}>
-              <label>Whatsapp</label>
+              <label htmlFor="whatsappNumber">WhatsApp</label>
               <div className={styles.phoneWrapper}>
                 <select
                   className={styles.prefix}
@@ -239,6 +352,7 @@ const EditUser: React.FC<UserEditProps> = ({
                   <option value="+88">+88</option>
                   <option value="+89">+89</option>
                 </select>
+
                 <input
                   type="text"
                   className={styles.phoneInput}
@@ -246,49 +360,123 @@ const EditUser: React.FC<UserEditProps> = ({
                   maxLength={10}
                   autoComplete="new"
                   value={user?.whatsapp_number.number}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const value = e.target.value
                     setUser({
                       ...user,
                       whatsapp_number: {
                         ...user?.whatsapp_number,
-                        number: e.target.value,
+                        number: value,
                       },
                     })
-                  }
+
+                    const phoneRegex = /^[0-9]{10}$/
+
+                    if (value && !phoneRegex.test(value)) {
+                      setErrors({
+                        ...errors,
+                        whatsapp_number:
+                          'WhatsApp number must be exactly 10 digits.',
+                      })
+                    } else {
+                      const { whatsapp_number, ...rest } = errors // Remove the error if valid
+                      setErrors(rest)
+                    }
+                  }}
                 />
               </div>
+              {errors.whatsapp_number && (
+                <p className={styles.error}>{errors.whatsapp_number}</p>
+              )}
             </div>
           </div>
 
           {/* tag line */}
           <div className={styles.inputbox}>
-            <label>Tagline</label>
+            <label htmlFor="tagline">Tagline</label>
             <input
+              id="tagline"
               type="text"
               autoComplete="new"
               value={user?.tagline}
-              onChange={(e) => setUser({ ...user, tagline: e.target.value })}
+              onChange={(e) => {
+                const value = e.target.value
+                setUser({ ...user, tagline: value })
+
+                // Basic length validation for tagline (optional)
+                if (value && value.length > 100) {
+                  setErrors({
+                    ...errors,
+                    tagline: 'Tagline cannot be longer than 100 characters.',
+                  })
+                } else {
+                  const { tagline, ...rest } = errors // Remove the error if valid
+                  setErrors(rest)
+                }
+              }}
             />
+            {errors.tagline && <p className={styles.error}>{errors.tagline}</p>}
           </div>
 
           {/* about */}
           <div className={styles.inputbox}>
-            <label>About</label>
+            <label htmlFor="about">About</label>
             <textarea
+              id="about"
               value={user?.about}
-              onChange={(e) => setUser({ ...user, about: e.target.value })}
+              onChange={(e) => {
+                const value = e.target.value
+                setUser({ ...user, about: value })
+
+                // Optional: Ensure a minimum length, if required
+                if (value && value.length < 20) {
+                  setErrors({
+                    ...errors,
+                    about: 'About text must be at least 20 characters.',
+                  })
+                } else if (value && value.length > 300) {
+                  setErrors({
+                    ...errors,
+                    about: 'About text cannot be longer than 300 characters.',
+                  })
+                } else {
+                  const { about, ...rest } = errors // Remove the error if valid
+                  setErrors(rest)
+                }
+              }}
             />
+            {errors.about && <p className={styles.error}>{errors.about}</p>}
           </div>
+
           {/* website */}
           <div className={styles.inputbox}>
-            <label>Website</label>
+            <label htmlFor="website">Website</label>
             <input
+              id="website"
               type="text"
               autoComplete="new"
               value={user?.website}
-              onChange={(e) => setUser({ ...user, website: e.target.value })}
+              onChange={(e) => {
+                const value = e.target.value
+                setUser({ ...user, website: value })
+
+                // URL validation
+                const urlPattern =
+                  /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/
+                if (value && !urlPattern.test(value)) {
+                  setErrors({
+                    ...errors,
+                    website: 'Please enter a valid website URL.',
+                  })
+                } else {
+                  const { website, ...rest } = errors // Remove the error if valid
+                  setErrors(rest)
+                }
+              }}
             />
+            {errors.website && <p className={styles.error}>{errors.website}</p>}
           </div>
+
           {/* address */}
           <div>
             <h2 className={styles.h2}>Primary Address</h2>
@@ -369,15 +557,28 @@ const EditUser: React.FC<UserEditProps> = ({
                   type="text"
                   autoComplete="new"
                   value={user?.primary_address?.pin_code}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const value = e.target.value
                     setUser({
                       ...user,
                       primary_address: {
                         ...user?.primary_address,
-                        pin_code: e.target.value,
+                        pin_code: value,
                       },
                     })
-                  }
+
+                    // Validate pin code (e.g., for 6-digit format)
+                    const pinCodePattern = /^\d{6}$/
+                    if (value && !pinCodePattern.test(value)) {
+                      setErrors({
+                        ...errors,
+                        pin_code: 'Please enter a valid 6-digit pin code.',
+                      })
+                    } else {
+                      const { pin_code, ...rest } = errors
+                      setErrors(rest)
+                    }
+                  }}
                 />
               </div>
             </section>
@@ -417,7 +618,13 @@ const EditUser: React.FC<UserEditProps> = ({
                 />
               </div>
             </section>
+
+            {/* Show error messages for address validation */}
+            {errors.pin_code && (
+              <p className={styles.error}>{errors.pin_code}</p>
+            )}
           </div>
+
           {/* onboard */}
           <div className={styles.inputbox}>
             <label>Is Onboarded:</label>
@@ -430,15 +637,23 @@ const EditUser: React.FC<UserEditProps> = ({
               <option value={'true'}>Yes</option>
               <option value={'false'}>No</option>
             </select>
-            <div
-              className={styles.completeAction}
-            >{`Completed modals: ${user?.completed_onboarding_steps}`}</div>
+
+            {/* Error message if not selected */}
+            {user.is_onboarded === null && (
+              <p className={styles.error}>
+                Please select whether the user is onboarded.
+              </p>
+            )}
+
+            <div className={styles.completeAction}>
+              {`Completed modals: ${user?.completed_onboarding_steps}`}
+            </div>
           </div>
 
           <div className={styles.twoColumnGrid}>
             {/* accountActive */}
             <div className={styles.inputbox}>
-              <label>Is Account activated:</label>
+              <label>Is Account Activated:</label>
               <select
                 value={user.is_account_activated.toString()} // Convert boolean to string explicitly
                 onChange={(e) => {
@@ -451,12 +666,20 @@ const EditUser: React.FC<UserEditProps> = ({
                 <option value={'true'}>Yes</option>
                 <option value={'false'}>No</option>
               </select>
+
+              {/* Validation message */}
+              {user.is_account_activated === null && (
+                <p className={styles.error}>
+                  Please select if the account is activated.
+                </p>
+              )}
             </div>
+
             {/* accountVerified */}
             <div className={styles.inputbox}>
-              <label>Is Account verified:</label>
+              <label>Is Account Verified:</label>
               <select
-                value={user.verified.toString()}
+                value={user.verified.toString()} // Convert boolean to string explicitly
                 onChange={(e) => {
                   setUser({
                     ...user,
@@ -467,6 +690,13 @@ const EditUser: React.FC<UserEditProps> = ({
                 <option value={'true'}>Yes</option>
                 <option value={'false'}>No</option>
               </select>
+
+              {/* Validation message */}
+              {user.verified === null && (
+                <p className={styles.error}>
+                  Please select if the account is verified.
+                </p>
+              )}
             </div>
           </div>
 

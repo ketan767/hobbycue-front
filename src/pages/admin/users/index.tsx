@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux'
 import { getAllUserDetail, searchUsers } from '../../../services/user.service'
@@ -23,11 +23,12 @@ import ModalWrapper from '@/components/Modal'
 import UserFilter from '@/components/AdminPage/Filters/UserFilter/UserFilter'
 import EditUser from '@/components/AdminPage/Modal/UserEditModal/UserEditModal'
 import { setShowPageLoader } from '@/redux/slices/site'
-import DisplayState from '@/components/AdminPage/Users/DsiplayState/DisplayState'
+import DisplayState from '@/components/AdminPage/Users/DisplayState/DisplayState'
 import x from '@/assets/icons/Filter-On.png'
 import sortAscending from '@/assets/icons/Sort-Ascending-On.png'
 import sortDescending from '@/assets/icons/Sort-Ascending-Off.png'
 import { User } from '@/types/user'
+import { Data } from '@react-google-maps/api'
 export interface ModalState {
   onboarded: string
   joined: { start: string; end: string }
@@ -110,7 +111,6 @@ export const deleteSvg = (
 )
 
 const AdminDashboard: React.FC = () => {
-  const router = useRouter()
   const dispatch = useDispatch()
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
@@ -119,14 +119,23 @@ const AdminDashboard: React.FC = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [searchResults, setSearchResults] = useState<User[]>([])
   const [pageNumber, setPageNumber] = useState<number>(0)
-
-  const [loginSort, setLoginSort] = useState<boolean>(false)
-  const [joinedSort, setJoinedSort] = useState<boolean>(false)
-  const [NameSort, setNameSort] = useState<boolean>(false)
-
+  const [loginSort, setLoginSort] = useState<boolean>(true)
+  const [joinedSort, setJoinedSort] = useState<boolean>(true)
+  const [NameSort, setNameSort] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [isError, setIsError] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<String>('')
+  const [isSearching, setIsSearching] = useState<boolean>(false)
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
-    setData((prev) => ({ ...prev, search: { value, error: null } }))
+    const isValid = /^[a-zA-Z\s]*$/.test(value)
+    setData((prev) => ({
+      ...prev,
+      search: {
+        value: isValid ? value : '',
+        error: isValid ? null : 'Only text is allowed',
+      },
+    }))
   }
   const [page, setPage] = useState(1)
   const [pagelimit, setPagelimit] = useState(25)
@@ -180,54 +189,69 @@ const AdminDashboard: React.FC = () => {
     // router.push(`/admin/users/edit/${profile_url}`)
   }
 
-  const fetchSearchResults = async () => {
-    console.log('auto search')
-
+  const fetchSearchResults = useCallback(async () => {
+    setIsSearching(true)
+    setLoading(true)
+    dispatch(setShowPageLoader(true))
     const searchValue = data.search.value.trim()
     let searchCriteria = {
       name: searchValue,
     }
-
     const { res, err } = await searchUsers(searchCriteria)
-
+    console.log(res)
     if (err) {
       console.log('An error', err)
-      setPageNumber(0)
+      setPageNumber(1)
+      setIsError(true)
+      setErrorMessage('No users found')
     } else {
       setSearchResults(res.data)
-
-      // Calculate total number of pages based on search results length
-      const totalPages = Math.ceil(res.data.length / 50)
-      const pages = []
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i)
-      }
-      setPageNumber(res?.data?.length > 0 ? res?.data?.length : 0)
+      setIsError(false)
+      setLoading(false)
+      setPageNumber(res?.data?.length > 0 ? res?.data?.length : 1)
     }
-  }
+    dispatch(setShowPageLoader(false))
+    setLoading(false)
+  }, [data.search.value, dispatch])
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
+    setIsSearching(false)
+
     dispatch(setShowPageLoader(true))
     setPageNumber(0)
+
+    setLoading(true)
     const { res, err } = await getAllUserDetail(
       `limit=${pagelimit}&sort=-last_login&page=${page}&populate=sessions`,
     )
     if (err) {
       console.log('An error', err)
       dispatch(setShowPageLoader(false))
+      setIsError(true)
+      setErrorMessage('No users found')
     } else {
       // console.log('fetchUsers', res.data)
+      setIsError(false)
+      setLoading(false)
       setSearchResults(res.data.data.users)
       dispatch(setShowPageLoader(false))
     }
-  }
+    setLoading(false)
+  }, [dispatch, pagelimit, page])
   useEffect(() => {
-    if (data.search.value.length > 0) {
+    if (data.search.value.trim()) {
       fetchSearchResults()
     } else if (page) {
       fetchUsers()
     }
-  }, [data.search.value, page, pagelimit])
+  }, [
+    data.search.value,
+    page,
+    pagelimit,
+    isSearching,
+    fetchSearchResults,
+    fetchUsers,
+  ])
   const filterUsers = (users: User[], criteria: ModalState) => {
     const { onboarded, joined, loginModes, pageCount, status } = criteria
 
@@ -309,7 +333,7 @@ const AdminDashboard: React.FC = () => {
         display: true,
         message: 'User deleted successfully',
       })
-      window.location.reload()
+      isSearching ? fetchSearchResults() : fetchUsers()
     } else {
       setSnackbar({
         type: 'warning',
@@ -317,6 +341,8 @@ const AdminDashboard: React.FC = () => {
         message: 'Some error occured',
       })
     }
+
+    setDeleteData({ open: false, _id: undefined })
   }
   const hasNonEmptyValues = (state: ModalState) => {
     return !Object.entries(state).every(
@@ -330,11 +356,17 @@ const AdminDashboard: React.FC = () => {
   const handleLoginSort = () => {
     setLoginSort((prev) => !prev)
     setJoinedSort(false)
+    setNameSort(false)
   }
-
+  const handleNameSort = () => {
+    setNameSort((prev) => !prev)
+    setLoginSort(false)
+    setJoinedSort(false)
+  }
   const handleJoinedSort = () => {
     setJoinedSort((prev) => !prev)
     setLoginSort(false)
+    setNameSort(false)
   }
 
   useEffect(() => {
@@ -350,6 +382,14 @@ const AdminDashboard: React.FC = () => {
       <AdminLayout>
         <div className={styles.searchContainer}>
           {/* <div className={styles.admintitle}>Admin Search</div> */}
+          {data.search.error && (
+            <div
+              className={styles.error}
+              style={{ color: 'red', margin: '0px' }}
+            >
+              {data.search.error}
+            </div>
+          )}
           <div className={styles.searchAndFilter}>
             <form onSubmit={handleSearch} className={styles.searchForm}>
               <input
@@ -373,7 +413,7 @@ const AdminDashboard: React.FC = () => {
                 className={styles.filterBtn}
                 onClick={() => setIsModalOpen(!isModalOpen)}
               >
-                <Image src={filterIcon} width={25} height={30} alt="filter" />
+                <Image src={filterIcon} width={40} height={40} alt="filter" />
               </button>
             ) : (
               <button
@@ -403,7 +443,7 @@ const AdminDashboard: React.FC = () => {
                       User
                       <button
                         className={styles.sortButton}
-                        onClick={() => setNameSort(!NameSort)}
+                        onClick={handleNameSort}
                       >
                         {NameSort ? (
                           <Image
@@ -414,19 +454,23 @@ const AdminDashboard: React.FC = () => {
                           />
                         ) : (
                           <Image
-                            src={sortDescending}
+                            src={sortAscending}
                             width={15}
                             height={15}
                             alt="sort"
+                            style={{ transform: 'rotate(180deg)' }}
                           />
                         )}
                       </button>
                     </div>
                   </th>
-                  <th style={{ width: '4.48%' }}>Contact</th>
+                  <th style={{ width: '6.48%' }}>
+                    <span style={{ marginLeft: '-10px' }}>Contact</span>
+                  </th>
                   <th style={{ width: '16.48%' }}>
                     <div className={styles.sortButtonWrapper}>
-                      Last Login
+                      <span style={{ marginLeft: '-10px' }}>Last Login</span>
+
                       <button
                         className={styles.sortButton}
                         onClick={handleLoginSort}
@@ -440,17 +484,18 @@ const AdminDashboard: React.FC = () => {
                           />
                         ) : (
                           <Image
-                            src={sortDescending}
+                            src={sortAscending}
                             width={15}
                             height={15}
                             alt="sort"
+                            style={{ transform: 'rotate(180deg)' }}
                           />
                         )}
                       </button>
                     </div>
                   </th>
 
-                  <th style={{ width: '6.163%' }}>Modes</th>
+                  <th style={{ width: '.163%' }}>Modes</th>
                   <th
                     style={{
                       width: '12.54%',
@@ -458,7 +503,7 @@ const AdminDashboard: React.FC = () => {
                     }}
                   >
                     <div className={styles.sortButtonWrapper}>
-                      Joined
+                      <span style={{ marginLeft: '-15px' }}>Joined</span>
                       <button
                         className={styles.sortButton}
                         onClick={handleJoinedSort}
@@ -472,10 +517,11 @@ const AdminDashboard: React.FC = () => {
                           />
                         ) : (
                           <Image
-                            src={sortDescending}
+                            src={sortAscending}
                             width={15}
                             height={15}
                             alt="sort"
+                            style={{ transform: 'rotate(180deg)' }}
                           />
                         )}
                       </button>
@@ -495,9 +541,15 @@ const AdminDashboard: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredUsers?.length > 0 &&
+                {!loading &&
+                  filteredUsers?.length > 0 &&
                   filteredUsers
                     ?.sort((a, b) => {
+                      if (NameSort) {
+                        return NameSort
+                          ? a.full_name.localeCompare(b.full_name) // Ascending order
+                          : b.full_name.localeCompare(a.full_name) // Descending order
+                      }
                       if (loginSort) {
                         return loginSort
                           ? new Date(a.last_login).getTime() -
@@ -513,11 +565,7 @@ const AdminDashboard: React.FC = () => {
                           : new Date(b.createdAt).getTime() -
                               new Date(a.createdAt).getTime()
                       }
-                      if (NameSort) {
-                        return NameSort
-                          ? a.full_name.localeCompare(b.full_name) // Ascending order
-                          : b.full_name.localeCompare(a.full_name) // Descending order
-                      }
+
                       return 0
                     })
                     ?.map((user: any) => (
@@ -545,8 +593,8 @@ const AdminDashboard: React.FC = () => {
                                     className={styles['img']}
                                     src={DefaultProfile}
                                     alt="profile"
-                                    width={40}
-                                    height={40}
+                                    width={32}
+                                    height={32}
                                   />
                                 )}
                               </div>
@@ -558,7 +606,9 @@ const AdminDashboard: React.FC = () => {
                                     : ''
                                 }
                               >
-                                {user?.full_name?.slice(0, 25)}
+                                <h6 className={styles.avatarName}>
+                                  {user?.full_name?.slice(0, 25)}
+                                </h6>
                               </div>
                             </div>
                           </Link>
@@ -572,12 +622,22 @@ const AdminDashboard: React.FC = () => {
                                   user.phone.prefix + user.phone.number
                                 }`}
                               >
-                                <Image alt={user?.full_name} src={phoneIcon} />
+                                <Image
+                                  alt={user?.full_name}
+                                  src={phoneIcon}
+                                  width={24}
+                                  height={24}
+                                />
                               </Link>
                             )}
                             {user?.email && (
                               <Link href={`mailto:${user.public_email}`}>
-                                <Image alt={user?.full_name} src={MailIcon} />
+                                <Image
+                                  alt={user?.full_name}
+                                  src={MailIcon}
+                                  width={24}
+                                  height={24}
+                                />
                               </Link>
                             )}
                           </div>
@@ -590,18 +650,24 @@ const AdminDashboard: React.FC = () => {
                                 src={GoogleIcon}
                                 alt="Google Icon"
                                 className={styles.icon}
+                                width={24}
+                                height={24}
                               />
                             ) : user?.last_loggedIn_via === 'facebook' ? (
                               <Image
                                 src={FacebookIcon}
                                 alt="Facebook Icon"
                                 className={styles.icon}
+                                width={24}
+                                height={24}
                               />
                             ) : user?.last_loggedIn_via === 'mail' ? (
                               <Image
                                 src={emailIcon}
                                 alt="Mail Icon"
                                 className={styles.icon}
+                                width={24}
+                                height={24}
                               />
                             ) : (
                               ''
@@ -634,103 +700,37 @@ const AdminDashboard: React.FC = () => {
                         </td>
                         {/* login via */}
                         <td className={styles.LoginType}>
-                          <div className={styles.loginIcon}>
-                            {user.facebook.id &&
-                              user.google.id &&
-                              user.is_password && (
-                                <>
-                                  <Image
-                                    src={GoogleIcon}
-                                    alt="Google Icon"
-                                    className={styles.icon}
-                                  />
-                                  <Image
-                                    src={FacebookIcon}
-                                    alt="Facebook Icon"
-                                    className={styles.icon}
-                                  />
-                                  <Image
-                                    src={MailIcon}
-                                    alt="Mail Icon"
-                                    className={styles.icon}
-                                  />
-                                </>
-                              )}
-                            {user.facebook.id &&
-                              user.google.id &&
-                              !user.is_password && (
-                                <>
-                                  <Image
-                                    src={GoogleIcon}
-                                    alt="Google Icon"
-                                    className={styles.icon}
-                                  />
-                                  <Image
-                                    src={FacebookIcon}
-                                    alt="Facebook Icon"
-                                    className={styles.icon}
-                                  />
-                                </>
-                              )}
-                            {user.facebook.id &&
-                              !user.google.id &&
-                              user.is_password && (
-                                <>
-                                  <Image
-                                    src={FacebookIcon}
-                                    alt="Facebook Icon"
-                                    className={styles.icon}
-                                  />
-                                  <Image
-                                    src={MailIcon}
-                                    alt="Mail Icon"
-                                    className={styles.icon}
-                                  />
-                                </>
-                              )}
-                            {!user.facebook.id &&
-                              user.google.id &&
-                              user.is_password && (
-                                <>
-                                  <Image
-                                    src={GoogleIcon}
-                                    alt="Google Icon"
-                                    className={styles.icon}
-                                  />
-                                  <Image
-                                    src={MailIcon}
-                                    alt="Mail Icon"
-                                    className={styles.icon}
-                                  />
-                                </>
-                              )}
-                            {user.facebook.id &&
-                              !user.google.id &&
-                              !user.is_password && (
-                                <Image
-                                  src={FacebookIcon}
-                                  alt="Facebook Icon"
-                                  className={styles.icon}
-                                />
-                              )}
-                            {!user.facebook.id &&
-                              user.google.id &&
-                              !user.is_password && (
-                                <Image
-                                  src={GoogleIcon}
-                                  alt="Google Icon"
-                                  className={styles.icon}
-                                />
-                              )}
-                            {!user.facebook.id &&
-                              !user.google.id &&
-                              user.is_password && (
-                                <Image
-                                  src={MailIcon}
-                                  alt="Mail Icon"
-                                  className={styles.icon}
-                                />
-                              )}
+                          <div
+                            className={styles.loginIcon}
+                            style={{ paddingLeft: '10px' }}
+                          >
+                            {user.facebook.id && (
+                              <Image
+                                src={FacebookIcon}
+                                alt="Facebook Icon"
+                                className={styles.icon}
+                                width={24}
+                                height={24}
+                              />
+                            )}
+                            {user.google.id && (
+                              <Image
+                                src={GoogleIcon}
+                                alt="Google Icon"
+                                className={styles.icon}
+                                width={24}
+                                height={24}
+                              />
+                            )}
+                            {user.is_password && (
+                              <Image
+                                src={emailIcon}
+                                alt="Mail Icon"
+                                className={styles.icon}
+                                width={24}
+                                height={24}
+                              />
+                            )}
                           </div>
                         </td>
                         <td className={styles.userName}>
@@ -750,7 +750,11 @@ const AdminDashboard: React.FC = () => {
                             <ToggleButton
                               isOn={user.is_account_activated}
                               data={user}
-                              handleToggle={() => fetchUsers()}
+                              handleToggle={() =>
+                                isSearching
+                                  ? fetchSearchResults()
+                                  : fetchUsers()
+                              }
                             />
                           </div>
                         </td>
@@ -767,9 +771,19 @@ const AdminDashboard: React.FC = () => {
                       </tr>
                     ))}
 
-                {filteredUsers?.length === 0 && (
+                {loading && (
                   <p style={{ display: 'inline', margin: 'auto' }}>
                     Loading...
+                  </p>
+                )}
+                {!loading && filteredUsers.length === 0 && (
+                  <p style={{ display: 'inline', margin: 'auto' }}>
+                    No user found
+                  </p>
+                )}
+                {!loading && isError && (
+                  <p style={{ display: 'inline', margin: 'auto' }}>
+                    {errorMessage}
                   </p>
                 )}
               </tbody>
@@ -784,7 +798,7 @@ const AdminDashboard: React.FC = () => {
                 className="admin-next-btn"
                 onClick={goToPreviousPage}
               >
-                Previous
+                Prev
               </button>
 
               <button
@@ -809,26 +823,6 @@ const AdminDashboard: React.FC = () => {
               fetchUsers={fetchUsers}
             />
           </ModalWrapper>
-          {/* 
-          {isEditModalOpen && (
-            <Modal
-              open
-              onClose={() => {
-                setIsEditModalOpen(false)
-              }}
-              slots={{ backdrop: CustomBackdrop }}
-              disableEscapeKeyDown
-              closeAfterTransition
-            >
-              <Fade>
-                <EditUser
-                  id={userId}
-                  setIsEditModalOpen={setIsEditModalOpen}
-                  fetchUsers={fetchUsers}
-                />
-              </Fade>
-            </Modal>
-          )} */}
         </div>
       </AdminLayout>
       {deleteData.open && (

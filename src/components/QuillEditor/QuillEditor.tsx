@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import 'react-quill/dist/quill.snow.css'
 import styles from './QillEditor.module.css'
 import ReactQuill, { Quill } from 'react-quill'
+import { uploadEditorImage } from '@/services/blog.services'
 interface QuillEditorProps {
   value: string
   onChange: (content: string) => void
@@ -20,7 +21,6 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
   }
 
   useEffect(() => {
-    // Ensure the Quill instance is correctly accessed
     const quillInstance = quillRef.current?.getEditor()
     if (!quillInstance) return
 
@@ -61,11 +61,67 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (quillRef.current) {
+      const quill = quillRef.current.getEditor()
+      const processedImages = new Set()
+      let timeoutId: NodeJS.Timeout | null = null
+
+      const handleTextChange = async () => {
+        if (timeoutId) clearTimeout(timeoutId)
+
+        timeoutId = setTimeout(async () => {
+          const editorContent = quill.root.innerHTML
+
+          const base64ImageRegex =
+            /<img src="data:image\/[^;]+;base64,[^"]+"[^>]*>/g
+          const matches = editorContent.match(base64ImageRegex)
+
+          if (matches) {
+            for (const base64ImageTag of matches) {
+              const base64SrcRegex = /src="([^"]+)"/
+              const base64Src = base64ImageTag.match(base64SrcRegex)?.[1]
+
+              // Skip if the image has already been processed
+              if (base64Src && !processedImages.has(base64Src)) {
+                try {
+                  const { res } = await uploadEditorImage(base64Src)
+
+                  if (res?.data.success) {
+                    const imageUrl = res.data.data.url
+
+                    const newContent = editorContent.replace(
+                      base64ImageTag,
+                      `<img src="${imageUrl}" alt="Uploaded Image"/>`,
+                    )
+
+                    quill.root.innerHTML = newContent
+                    processedImages.add(base64Src)
+                  }
+                } catch (error) {
+                  console.error('Image upload failed:', error)
+                }
+              }
+            }
+          }
+        }, 300)
+      }
+
+      quill.on('text-change', handleTextChange)
+
+      return () => {
+        quill.off('text-change', handleTextChange)
+        if (timeoutId) clearTimeout(timeoutId)
+      }
+    }
+  }, [])
+
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }, { font: [] }],
       [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ indent: '-1' }, { indent: '+1' }],
+      [{ indent: '-1' }],
+      [{ indent: '+1' }],
       ['header', 'bold', 'italic', 'underline', 'strike'],
       [{ color: [] }, { background: [] }],
       [{ align: [] }],

@@ -362,7 +362,7 @@
 }
 
 .videoPlayer {
-  min-height: 376.31px;
+  height: 376.31px;
   height: fit-content;
   overflow: hidden;
 }

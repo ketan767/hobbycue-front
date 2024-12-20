@@ -154,6 +154,10 @@
   padding: 18px 24px;
 }
 
+.blogContent p:has(+ ul) {
+   margin-bottom: 0px;
+ }
+
 .blogContent > p > a > img {
   aspect-ratio: auto !important;
   width: auto;
@@ -171,6 +175,7 @@
 
 .blogContent img {
   max-width: 100%;
+  margin: auto;
 }
 
 .blogContent ol,
@@ -199,10 +204,10 @@
 .blogContent p {
   color: var(--Grey-Darkest, #08090a);
   font-family: Cambria;
-  font-size: 16px !important;
+  font-size: 18px !important;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px;
+  line-height: 26px;
   margin-bottom: 11px;
 }
 
@@ -492,29 +497,29 @@
   text-decoration: none !important;
 }
 .ql-editor p {
-  color: var(--Grey-Darkest, #08090a);
-  font-family: Cambria;
-  font-size: 16px !important;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
-  margin-bottom: 11px;
+  color: var(--Grey-Darkest, #08090a) !important;
+  font-family: Cambria !important;
+  font-size: 18px !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: 26px !important;
+  margin-bottom: 11px !important;
 }
 .ql-editor h2 {
-  color: var(--Grey-Darkest, #08090a);
-  font-family: Poppins;
+  color: var(--Grey-Darkest, #08090a) !important;
+  font-family: Poppins !important;
   font-size: 16px !important;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 24px;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  line-height: 24px !important;
 }
 .ql-editor h1 {
-  color: #000;
-  font-family: Poppins;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 32px;
+  color: #000 !important;
+  font-family: Poppins !important;
+  font-size: 24px !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  line-height: 32px !important;
 }
 
 .iframe-container {

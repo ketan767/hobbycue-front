@@ -252,6 +252,10 @@
 .Addressinputbox input:focus-visible {
   outline: 1px solid #8064a2;
 }
+.error {
+  color: red;
+  font-size: 12px;
+}
 @media (max-width: 768px) {
   .twoColumnGrid {
     grid-template-columns: 1fr;
