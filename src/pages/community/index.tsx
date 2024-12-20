@@ -72,13 +72,13 @@ const CommunityHome: React.FC<Props> = ({}) => {
         >
           {loading ? (
             <>
-              <div style={{ paddingTop: '12px' }}>
+              <div style={{ marginTop: '12px' }}>
                 <PostCardSkeletonLoading />
               </div>
-              <div style={{ paddingTop: '12px' }}>
+              <div style={{ marginTop: '12px' }}>
                 <PostCardSkeletonLoading />
               </div>
-              <div style={{ paddingTop: '12px' }}>
+              <div style={{ marginTop: '12px' }}>
                 <PostCardSkeletonLoading />
               </div>
             </>

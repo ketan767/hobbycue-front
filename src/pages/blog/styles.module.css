@@ -154,6 +154,16 @@
   padding: 18px 24px;
 }
 
+.blogContent p:has(+ ul) {
+   margin-bottom: 0px;
+ }
+
+.blogContent > p > a > img {
+  aspect-ratio: auto !important;
+  width: auto;
+  height: auto;
+}
+
 .profileAndComment {
   padding-inline: 24px;
 }
@@ -449,8 +459,8 @@
 
 .ql-editor figure,
 .blogContent figure,
-.blogContent img,
-.ql-editor img {
+.blogContent 
+.ql-editor {
   display: block;
 
 }

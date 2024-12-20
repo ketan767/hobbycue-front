@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 import { AuthState } from '@/redux/slices/user'
 import { log } from 'console'
 import { logout } from '@/helper'
+import { useNavigate } from 'react-router-dom'
 
 interface AdminNavbarProps {}
 
@@ -547,18 +548,32 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
     Icon: FC<IconProps>
     name: string
   }) => {
+    const [loading, setLoading] = useState(false)
+    const router = useRouter()
+
+    const handleClick = (
+      e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    ) => {
+      e.preventDefault()
+      setLoading(true)
+      router.push(url)
+      setTimeout(() => setLoading(false), 500)
+    }
+
     return (
-      <Link
+      <a
         href={url}
+        onClick={handleClick}
         className={
-          styles['nav-item'] + ` ${pathname === url && styles['active']}`
+          styles['nav-item'] + ` ${router.pathname === url && styles['active']}`
         }
       >
         <span>
-          <Icon active={pathname === url} />
+          <Icon active={router.pathname === url} />
         </span>
         {admin_nav && <p className={styles['nav-item-para']}>{name}</p>}
-      </Link>
+        {loading && <span className={styles.loader}></span>} {/* Loader */}
+      </a>
     )
   }
 
@@ -594,10 +609,7 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
             </span>
 
             {admin_nav && (
-              <p>
-                {user?.activeProfile?.data?.full_name.slice(0, 12) ||
-                  'Hobbycue Admin'}
-              </p>
+              <p>{user?.activeProfile?.data?.full_name || 'Hobbycue Admin'}</p>
             )}
             {admin_nav && (
               <li
@@ -654,11 +666,37 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
           </div>
         </div>
 
-        <div className={`${styles.navItemWrapper} custom-scrollbar`}>
-          {adminNavData.map(({ url, name, Icon }) => (
-            <NavItem key={url} url={url} name={name} Icon={Icon} />
-          ))}
-        </div>
+        <NavItem url="/admin/users" name="Users" Icon={UserIcon} />
+        <NavItem url="/admin/posts" name="Posts" Icon={PostIcon} />
+        <NavItem
+          url="/admin/communities"
+          name="Communities"
+          Icon={Communities}
+        />
+        <NavItem url="/admin/locations" name="Locations" Icon={Location} />
+        <NavItem url="/admin/hobbies" name="Hobbies" Icon={UserHobbies} />
+        <NavItem url="/admin/pages" name="Pages" Icon={PageIcon} />
+        <NavItem url="/admin/activity" name="Activity" Icon={Activity} />
+        <NavItem url="/admin/searchHistory" name="Searches" Icon={Searches} />
+        <NavItem url="/admin/claims" name="Claims" Icon={Claims} />
+        <NavItem url="/admin/reports" name="Reports" Icon={Reports} />
+        <NavItem url="/admin/supports" name="Support" Icon={Supports} />
+        <NavItem url="/admin/contactUs" name="Contact Us" Icon={ContactUs} />
+        <NavItem url="/admin/tickets" name="Tickets" Icon={Tickets} />
+        <NavItem url="/admin/relations" name="Relation" Icon={Relations} />
+        <NavItem url="/admin/blogs" name="Blogs" Icon={Blogs} />
+        <NavItem url="/admin/sellers-kyc" name="Seller KYC" Icon={SellerKYC} />
+        <NavItem
+          url="/admin/list-of-values"
+          name="List Values"
+          Icon={ListValues}
+        />
+        <NavItem
+          url="/admin/static-pages"
+          name="Static Pages"
+          Icon={Static_Pages}
+        />
+        <NavItem url="/admin/releases" name="Releases" Icon={Releases} />
       </div>
     </nav>
   )

@@ -1,43 +1,26 @@
-import React, { useCallback, useRef, useState, useEffect, Ref } from 'react'
-import { CKEditor } from '@ckeditor/ckeditor5-react'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-// import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline'
-import styles from '@/pages/blog/styles.module.css'
 import dynamic from 'next/dynamic'
-import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload'
-import { uploadImage } from '@/services/post.service'
-import ReactQuill, { Quill } from 'react-quill'
-// @ts-ignore
-import quillEmoji from 'quill-emoji'
+import { useEffect, useRef, useState } from 'react'
 import 'react-quill/dist/quill.snow.css'
-import 'quill-emoji/dist/quill-emoji.css'
-import { useDispatch } from 'react-redux'
+import styles from './QillEditor.module.css'
+import ReactQuill, { Quill } from 'react-quill'
 import { uploadEditorImage } from '@/services/blog.services'
-
-interface Props {
+interface QuillEditorProps {
   value: string
-  onChange: (value: string) => void
-  placeholder: any
-  error?: any
-  elementRef?: any
-  onFocus?: any
+  onChange: (content: string) => void
 }
 
-const BlogEditor: React.FC<Props> = ({
-  value,
-  onChange,
-  placeholder,
-  error,
-  onFocus,
-  elementRef,
-}) => {
+const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
+  const [editorValue, setEditorValue] = useState<string>(value)
+
+  // Use ReactQuill's specific ref type
   const quillRef = useRef<ReactQuill>(null)
-  const inputVideoRef = useRef<HTMLInputElement>(null)
-  const [imageIconAdded, setImageIconAdded] = useState(false)
-  const [content, setContent] = useState('')
+
+  const handleEditorChange = (content: string) => {
+    setEditorValue(content)
+    onChange(content)
+  }
 
   useEffect(() => {
-    // Ensure the Quill instance is correctly accessed
     const quillInstance = quillRef.current?.getEditor()
     if (!quillInstance) return
 
@@ -133,48 +116,114 @@ const BlogEditor: React.FC<Props> = ({
     }
   }, [])
 
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, false] }, { font: [] }],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ indent: '-1' }],
+      [{ indent: '+1' }],
+      ['header', 'bold', 'italic', 'underline', 'strike'],
+      [{ color: [] }, { background: [] }],
+      [{ align: [] }],
+      ['image', 'link'],
+    ],
+  }
+
+  const formats = [
+    'header',
+    'font',
+    'list',
+    'bullet',
+    'indent',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'color',
+    'background',
+    'align',
+    'image',
+    'link',
+  ]
+
   return (
-    <div className={`${error ? 'quill-error' : ''}`}>
+    <div className={styles.container}>
       <ReactQuill
         ref={quillRef}
+        value={editorValue}
+        onChange={handleEditorChange}
+        modules={modules}
+        formats={formats}
         theme="snow"
-        value={value}
-        onChange={onChange}
-        onFocus={onFocus}
-        // onBlur={() => handleEditBlog('content')}
-        className={`${styles.quill} ${styles['ql-editor']} blog-quill`}
-        placeholder={'Text'}
-        modules={{
-          toolbar: {
-            container: [
-              [
-                'bold',
-                'italic',
-                'underline',
-                { list: 'ordered' },
-                { list: 'bullet' },
-                { header: '1' },
-                { header: '2' },
-                { align: [] },
-              ],
-
-              ['link', 'image'],
-            ],
-          },
-        }}
+        className={`${styles.quill} ${styles.qlContainer} blog-quill`}
       />
       <style>
         {`
           .ql-toolbar.ql-snow {
-            
-            z-index: 1;
+            width: 100%;
+            border-left:none;
+            border-right:none;
+            border-bottom:none;
             position: sticky;
-            top: 200px
+            top: 80px;
+            z-index: 2;
+            background: #fff
           }
-             `}
+          .ql-container.ql-snow {
+            width: 100%;
+            max-width: 100%;
+            border:none;
+          }
+          .ql-editor{
+            border: none !important;
+            width: 100%;
+            max-width: 100%;
+            border-top:1px solid #ccc;
+            padding-right:16px;
+            margin-inline: auto;
+          }
+          .ql-editor.ql-indent-1{
+            padding-left:4px;
+          }
+          .ql-editor ul, 
+          .ql-editor ol {
+            padding-left: 4px;  
+            text-align:justify; 
+          }
+
+          .ql-editor a {
+            color: rgb(128, 100, 162);  
+            text-decoration: none !important;
+            text-align:justify;
+          }
+          .ql-editor p {
+              color: var(--Grey-Darkest, #08090a);
+              font-family: Cambria;
+              font-size: 16px !important;
+              font-style: normal;
+              font-weight: 400;
+              line-height: 24px;
+              margin-bottom: 11px;
+          }
+          @media screen and (max-width:1100px) {
+            .ql-editor{
+              width:99vw;
+              max-width: 115%;
+            }
+            .ql-toolbar.ql-snow {
+              width: 100%;
+              border-left:none;
+              border-right:none;
+              border-bottom:none;
+              padding:8px;
+              flex-wrap: wrap;
+              height:100px;   
+            }
+          }
+        `}
       </style>
     </div>
   )
 }
 
-export default BlogEditor
+export default QuillEditor
