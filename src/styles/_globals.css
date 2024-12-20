@@ -9,12 +9,12 @@
 }
 
 .truncateTwoLines {
-  display: -webkit-box;          /* Required for multiline truncation */
+  display: -webkit-box; /* Required for multiline truncation */
   -webkit-box-orient: vertical; /* Specifies the box's orientation */
-  overflow: hidden;             /* Hides any overflowing text */
-  text-overflow: ellipsis;      /* Adds ellipsis (...) at the end of the visible text */
-  line-clamp: 2;                /* Limits the text to 2 lines */
-  -webkit-line-clamp: 2;        /* Required for multiline truncation */
+  overflow: hidden; /* Hides any overflowing text */
+  text-overflow: ellipsis; /* Adds ellipsis (...) at the end of the visible text */
+  line-clamp: 2; /* Limits the text to 2 lines */
+  -webkit-line-clamp: 2; /* Required for multiline truncation */
 }
 
 html {
@@ -262,7 +262,7 @@ select:-webkit-autofill {
   background-size: cover;
 }
 .ql-toolbar.ql-snow + .ql-container.ql-snow {
-  border: 1px solid #ebedf0 ;
+  border: 1px solid #ebedf0;
   border-bottom: 0;
   /* border-radius: 8px 8px 0 0; */
   border-color: #ebedf0;
@@ -271,7 +271,7 @@ select:-webkit-autofill {
 .ql-toolbar.ql-snow {
   display: flex;
   align-items: center;
-  border-radius: 8px 8px 0 0 ;
+  border-radius: 8px 8px 0 0;
   border-color: 1px solid #ebedf0 !important;
   height: 48px;
 }
@@ -292,7 +292,6 @@ select:-webkit-autofill {
   padding: 0 !important;
 }
 .ql-toolbar.ql-snow .ql-formats:nth-child(3) {
-  
   padding: 0 !important;
   width: 30px;
   margin-left: auto;
@@ -444,13 +443,16 @@ select:-webkit-autofill {
 }
 
 .admin-next-btn {
+  width: 80px;
+  height: 40px;
   border-radius: 8px;
-  padding: 5px 10px;
+  padding: 12px 24px;
   background-color: #0056b3;
   color: white;
   font-size: 16px;
   line-height: 16px;
   font-weight: 500;
+  border: none;
 }
 
 @media screen and (max-width: 1100px) {

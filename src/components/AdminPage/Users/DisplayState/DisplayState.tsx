@@ -15,7 +15,7 @@ const DisplayState: React.FC<Props> = ({ modalState }) => {
         // For 'onboarded', display 'Onb'
         return (
           <div key={key} className={styles.stateItem}>
-            <strong>Onb:</strong> {value}{' '}
+            <strong>Onb:</strong> {value.slice(0, 1).toUpperCase()}{' '}
           </div>
         )
       } else if (key === 'joined' && typeof value === 'object' && value) {

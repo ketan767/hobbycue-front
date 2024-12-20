@@ -517,6 +517,27 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
       />
     </svg>
   )
+  const adminNavData = [
+    { url: '/admin/users', name: 'Users', Icon: UserIcon },
+    { url: '/admin/posts', name: 'Posts', Icon: PostIcon },
+    { url: '/admin/communities', name: 'Communities', Icon: Communities },
+    { url: '/admin/locations', name: 'Locations', Icon: Location },
+    { url: '/admin/hobbies', name: 'Hobbies', Icon: UserHobbies },
+    { url: '/admin/pages', name: 'Pages', Icon: PageIcon },
+    { url: '/admin/activity', name: 'Activity', Icon: Activity },
+    { url: '/admin/searchHistory', name: 'Searches', Icon: Searches },
+    { url: '/admin/claims', name: 'Claims', Icon: Claims },
+    { url: '/admin/reports', name: 'Reports', Icon: Reports },
+    { url: '/admin/supports', name: 'Support', Icon: Supports },
+    { url: '/admin/contactUs', name: 'Contact Us', Icon: ContactUs },
+    { url: '/admin/tickets', name: 'Tickets', Icon: Tickets },
+    { url: '/admin/relations', name: 'Relation', Icon: Relations },
+    { url: '/admin/blogs', name: 'Blogs', Icon: Blogs },
+    { url: '/admin/sellers-kyc', name: 'Seller KYC', Icon: SellerKYC },
+    { url: '/admin/list-of-values', name: 'List Values', Icon: ListValues },
+    { url: '/admin/static-pages', name: 'Static Pages', Icon: Static_Pages },
+    { url: '/admin/releases', name: 'Releases', Icon: Releases },
+  ]
 
   const NavItem = ({
     url,
@@ -568,7 +589,7 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
       >
         <ArrowRight />
       </div>
-      <div className={`${styles.navlist} custom-scrollbar`}>
+      <div className={`${styles.navlist} `}>
         {/* <ProfileSwitcher /> */}
 
         <div className={styles['profile-switcher']}>
@@ -588,7 +609,10 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
             </span>
 
             {admin_nav && (
-              <p>{user?.activeProfile?.data?.full_name || 'Hobbycue Admin'}</p>
+              <p>
+                {user?.activeProfile?.data?.full_name.slice(0, 12) ||
+                  'Hobbycue Admin'}
+              </p>
             )}
             {admin_nav && (
               <li
@@ -645,37 +669,11 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
           </div>
         </div>
 
-        <NavItem url="/admin/users" name="Users" Icon={UserIcon} />
-        <NavItem url="/admin/posts" name="Posts" Icon={PostIcon} />
-        <NavItem
-          url="/admin/communities"
-          name="Communities"
-          Icon={Communities}
-        />
-        <NavItem url="/admin/locations" name="Locations" Icon={Location} />
-        <NavItem url="/admin/hobbies" name="Hobbies" Icon={UserHobbies} />
-        <NavItem url="/admin/pages" name="Pages" Icon={PageIcon} />
-        <NavItem url="/admin/activity" name="Activity" Icon={Activity} />
-        <NavItem url="/admin/searchHistory" name="Searches" Icon={Searches} />
-        <NavItem url="/admin/claims" name="Claims" Icon={Claims} />
-        <NavItem url="/admin/reports" name="Reports" Icon={Reports} />
-        <NavItem url="/admin/supports" name="Support" Icon={Supports} />
-        <NavItem url="/admin/contactUs" name="Contact Us" Icon={ContactUs} />
-        <NavItem url="/admin/tickets" name="Tickets" Icon={Tickets} />
-        <NavItem url="/admin/relations" name="Relation" Icon={Relations} />
-        <NavItem url="/admin/blogs" name="Blogs" Icon={Blogs} />
-        <NavItem url="/admin/sellers-kyc" name="Seller KYC" Icon={SellerKYC} />
-        <NavItem
-          url="/admin/list-of-values"
-          name="List Values"
-          Icon={ListValues}
-        />
-        <NavItem
-          url="/admin/static-pages"
-          name="Static Pages"
-          Icon={Static_Pages}
-        />
-        <NavItem url="/admin/releases" name="Releases" Icon={Releases} />
+        <div className={`${styles.navItemWrapper} custom-scrollbar`}>
+          {adminNavData.map(({ url, name, Icon }) => (
+            <NavItem key={url} url={url} name={name} Icon={Icon} />
+          ))}
+        </div>
       </div>
     </nav>
   )

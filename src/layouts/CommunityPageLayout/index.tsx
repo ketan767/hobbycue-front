@@ -400,7 +400,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   useEffect(() => {
     if (post_pagination !== 1) {
-      console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#2')
+      // console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#2')
 
       fetchPosts(post_pagination)
     }
@@ -542,13 +542,13 @@ const CommunityLayout: React.FC<Props> = ({
                 hobb?.genre?._id === preferredGenreId &&
                 index > 2
               ) {
-                console.log('preferredGenreId is called')
+                // console.log('preferredGenreId is called')
                 dispatch(setFilters({ seeMoreHobbies: true }))
               }
             } else if (preferredHobbyId) {
               if (hobb?.genre?._id) {
               } else if (hobb?.hobby?._id === preferredHobbyId && index > 2) {
-                console.log('preferredHobbyId is called')
+                // console.log('preferredHobbyId is called')
                 dispatch(setFilters({ seeMoreHobbies: true }))
               }
             }
@@ -562,10 +562,10 @@ const CommunityLayout: React.FC<Props> = ({
       }
 
       if (!user.preferences.community_view.all_locations) {
-        console.log(
-          '###########################2',
-          user.preferences.community_view.preferred_location.city.split(' ')[0],
-        )
+        // console.log(
+        //   '###########################2',
+        //   user.preferences.community_view.preferred_location.city.split(' ')[0],
+        // )
 
         setSelectedLocation(
           user.preferences.community_view.preferred_location.city.split(' ')[0],
@@ -585,7 +585,7 @@ const CommunityLayout: React.FC<Props> = ({
       (activeTab === 'links' || activeTab === 'posts')
     ) {
       if (selectedLocation !== '') {
-        console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT', activeProfile.data)
+        // console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT', activeProfile.data)
         fetchPosts()
       }
     }
@@ -612,7 +612,7 @@ const CommunityLayout: React.FC<Props> = ({
     )
     // const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
-    console.log('res', res.data)
+    // console.log('res', res.data)
     if (res?.data && res?.data?.hobbies) {
       const hobby = res.data.hobbies[0]
       if (hobby !== undefined) {
@@ -622,7 +622,7 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    console.log('filters.genre', filters.genre)
+    // console.log('filters.genre', filters.genre)
     if (filters.genre) {
       if (filters.genre === 'No genre') {
         setSelectedGenre(undefined)
@@ -709,7 +709,7 @@ const CommunityLayout: React.FC<Props> = ({
                     : 'All Locations',
               }),
             )
-            console.log('###########################4', 'All Locations')
+            // console.log('###########################4', 'All Locations')
 
             setSelectedLocation(
               user?.preferences?.community_view?.preferred_location?.city?.split(
@@ -720,7 +720,7 @@ const CommunityLayout: React.FC<Props> = ({
                   )[0]
                 : 'All Locations',
             )
-            console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#5')
+            // console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#5')
             fetchPosts(1)
           }
           setVisibilityData(visibilityArr)
@@ -788,7 +788,7 @@ const CommunityLayout: React.FC<Props> = ({
                 : 'All Locations',
           }),
         )
-        console.log('###########################5', 'All Locations')
+        // console.log('###########################5', 'All Locations')
 
         setSelectedLocation(
           user?.preferences?.community_view?.preferred_location?.city?.split(
@@ -809,15 +809,15 @@ const CommunityLayout: React.FC<Props> = ({
       dispatch(openModal({ type: 'auth', closable: true }))
       return
     }
-    console.log('Location-------->', selectedLocation)
-    console.log('selectedLocation === val ------->', selectedLocation === val)
-    console.log('val----->', val)
+    // console.log('Location-------->', selectedLocation)
+    // console.log('selectedLocation === val ------->', selectedLocation === val)
+    // console.log('val----->', val)
     dispatch(
       setFilters({
         location: selectedLocation === val ? 'All Locations' : val,
       }),
     )
-    console.log('###########################6', val)
+    // console.log('###########################6', val)
     setSelectedLocation((prev: any) => {
       if (prev === val) {
         return 'All Locations'
@@ -987,7 +987,7 @@ const CommunityLayout: React.FC<Props> = ({
         name: query,
       }
       const { res, err } = await searchUsersAdvanced(searchCriteria)
-      console.log('Data : ', res.data)
+      // console.log('Data : ', res.data)
 
       setFilteredUsers(res.data)
       setFilteredUsersLoading(false)
