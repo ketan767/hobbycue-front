@@ -87,6 +87,7 @@ import UserHobbies from './searchComponents/user/UserHobbies'
 import FilterDropdown from './responsive/FilterDropdown'
 import { Bookmark } from '@mui/icons-material'
 import BookmarkOnCards from './ui_components/bookmark/Bookmark'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   data?: any
@@ -187,6 +188,13 @@ type SearchResultsProps = {
   RentalResults: ProductData[]
   BlogsResults: BlogData[]
   PostsResults: PostData[]
+  setSnackbar: React.Dispatch<
+    React.SetStateAction<{
+      type: string
+      display: boolean
+      message: string
+    }>
+  >
 }
 
 type PropsExploreSidebarBtn = {
@@ -306,6 +314,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   RentalResults,
   PostsResults,
   BlogsResults,
+  setSnackbar,
 }) => {
   // const showAll = useSelector((state: RootState) => state.search.showAll)
   // const showAllUsers = useSelector(
@@ -501,17 +510,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
   //   [searchLoading, hasMore, currentPage, dispatch],
   // )
 
-
-  const [hoveredHobbyIndex,setHoveredHobbyIndex]=useState<number>(-1)
-  const [hoveredUserIndex,setHoveredUserIndex]=useState<number>(-1)
-  const [hoveredPeopleIndex,setHoveredPeopleIndex]=useState<number>(-1)
-  const [hoveredPlaceIndex,setHoveredPlaceIndex]=useState<number>(-1)
-  const [hoveredProgramIndex,setHoveredProgramIndex]=useState<number>(-1)
-  const [hoveredProductIndex,setHoveredProductIndex]=useState<number>(-1)
-  const [hoveredClassIndex,setHoveredClassIndex]=useState<number>(-1)
-  const [hoveredRentalIndex,setHoveredRentalIndex]=useState<number>(-1)
-  const [hoveredPostIndex,setHoveredPostIndex]=useState<number>(-1)
-  const [hoveredBlogIndex,setHoveredBlogIndex]=useState<number>(-1)
+  const [hoveredHobbyIndex, setHoveredHobbyIndex] = useState<number>(-1)
+  const [hoveredUserIndex, setHoveredUserIndex] = useState<number>(-1)
+  const [hoveredPeopleIndex, setHoveredPeopleIndex] = useState<number>(-1)
+  const [hoveredPlaceIndex, setHoveredPlaceIndex] = useState<number>(-1)
+  const [hoveredProgramIndex, setHoveredProgramIndex] = useState<number>(-1)
+  const [hoveredProductIndex, setHoveredProductIndex] = useState<number>(-1)
+  const [hoveredClassIndex, setHoveredClassIndex] = useState<number>(-1)
+  const [hoveredRentalIndex, setHoveredRentalIndex] = useState<number>(-1)
+  const [hoveredPostIndex, setHoveredPostIndex] = useState<number>(-1)
+  const [hoveredBlogIndex, setHoveredBlogIndex] = useState<number>(-1)
 
   useEffect(() => {
     if (showAll === true) {
@@ -1823,10 +1831,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       //     : null
 
                       // }
-                      onMouseEnter={()=>setHoveredHobbyIndex(index)}
-                      onMouseLeave={()=>setHoveredHobbyIndex(-1)}
+                      onMouseEnter={() => setHoveredHobbyIndex(index)}
+                      onMouseLeave={() => setHoveredHobbyIndex(-1)}
                     >
-                      {hoveredHobbyIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+                      {hoveredHobbyIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
                       <div className={styles.hobbyAvtar}>
                         {/* Render the image */}
                         {hobby.profile_image ? (
@@ -1959,10 +1973,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToProfile(user.profile_url)}
-                       onMouseEnter={()=>setHoveredUserIndex(index)}
-                      onMouseLeave={()=>setHoveredUserIndex(-1)}
+                      onMouseEnter={() => setHoveredUserIndex(index)}
+                      onMouseLeave={() => setHoveredUserIndex(-1)}
                     >
-                      {hoveredUserIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+                      {hoveredUserIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
 
                       <div className={styles.userAvatar}>
                         {user?.profile_image ? (
@@ -2052,7 +2072,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreUsers ? <SearchLoader /> : ''}
                   </div>
                 )}
-               {showAllUsers
+                {showAllUsers
                   ? undefined
                   : (userPages ? (
                       <div className={styles['view-more-btn-container']}>
@@ -2138,10 +2158,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToPeoplePage(page.page_url)}
-                            onMouseEnter={()=>setHoveredPeopleIndex(index)}
-                      onMouseLeave={()=>setHoveredPeopleIndex(-1)}
+                      onMouseEnter={() => setHoveredPeopleIndex(index)}
+                      onMouseLeave={() => setHoveredPeopleIndex(-1)}
                     >
-                      {hoveredPeopleIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+                      {hoveredPeopleIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
 
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
@@ -2223,7 +2249,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePersonPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                  {showAllPeople
+                {showAllPeople
                   ? undefined
                   : (peopleResults ? (
                       <div className={styles['view-more-btn-container']}>
@@ -2314,10 +2340,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToPlacePage(page.page_url)}
-                            onMouseEnter={()=>setHoveredPlaceIndex(index)}
-                      onMouseLeave={()=>setHoveredPlaceIndex(-1)}
+                      onMouseEnter={() => setHoveredPlaceIndex(index)}
+                      onMouseLeave={() => setHoveredPlaceIndex(-1)}
                     >
-                      {hoveredPlaceIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+                      {hoveredPlaceIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
 
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
@@ -2379,7 +2411,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePlacePages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                   {showAllPlace
+                {showAllPlace
                   ? undefined
                   : (placeResults ? (
                       <div className={styles['view-more-btn-container']}>
@@ -2464,10 +2496,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToProgramPage(page.page_url)}
-                            onMouseEnter={()=>setHoveredProgramIndex(index)}
-                      onMouseLeave={()=>setHoveredProgramIndex(-1)}
+                      onMouseEnter={() => setHoveredProgramIndex(index)}
+                      onMouseLeave={() => setHoveredProgramIndex(-1)}
                     >
-                      {hoveredProgramIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+                      {hoveredProgramIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
 
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
@@ -2581,7 +2619,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     setCategoryValue={setDefaultProgramCategory}
                   />
                 </div>
-                  {showAllEvent
+                {showAllEvent
                   ? undefined
                   : (EventResults ? (
                       <div className={styles['view-more-btn-container']}>
@@ -2662,10 +2700,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         className={styles.peopleItem}
                         key={index}
                         onClick={() => navigateToProductPage(page.page_url)}
-                              onMouseEnter={()=>setHoveredProductIndex(index)}
-                      onMouseLeave={()=>setHoveredProductIndex(-1)}
+                        onMouseEnter={() => setHoveredProductIndex(index)}
+                        onMouseLeave={() => setHoveredProductIndex(-1)}
                       >
-                      {hoveredProductIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+                        {hoveredProductIndex === index ? (
+                          <div className={styles['bookmark']}>
+                            <BookmarkOnCards setSnackbar={setSnackbar} />
+                          </div>
+                        ) : (
+                          <></>
+                        )}
 
                         <div className={styles.peopleAvatar}>
                           {page.profile_image ? (
@@ -2757,7 +2801,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       {!hasNoMoreProductPages ? <SearchLoader /> : ''}
                     </div>
                   )}
-                    {showAllProducts
+                  {showAllProducts
                     ? undefined
                     : (ProductResults ? (
                         <div className={styles['view-more-btn-container']}>
@@ -2851,10 +2895,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         className={styles.peopleItem}
                         key={index}
                         onClick={() => navigateToProgramPage(page.page_url)}
-                              onMouseEnter={()=>setHoveredClassIndex(index)}
-                      onMouseLeave={()=>setHoveredClassIndex(-1)}
+                        onMouseEnter={() => setHoveredClassIndex(index)}
+                        onMouseLeave={() => setHoveredClassIndex(-1)}
                       >
-                      {hoveredClassIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+                        {hoveredClassIndex === index ? (
+                          <div className={styles['bookmark']}>
+                            <BookmarkOnCards setSnackbar={setSnackbar} />
+                          </div>
+                        ) : (
+                          <></>
+                        )}
 
                         <div className={styles.peopleAvatar}>
                           {page.profile_image ? (
@@ -2932,7 +2982,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     ),
                   )}
-                   {showAllClasses
+                  {showAllClasses
                     ? undefined
                     : (ClassesResults ? (
                         <div className={styles['view-more-btn-container']}>
@@ -3022,10 +3072,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         className={styles.peopleItem}
                         key={index}
                         onClick={() => navigateToProductPage(page.page_url)}
-                              onMouseEnter={()=>setHoveredRentalIndex(index)}
-                      onMouseLeave={()=>setHoveredRentalIndex(-1)}
+                        onMouseEnter={() => setHoveredRentalIndex(index)}
+                        onMouseLeave={() => setHoveredRentalIndex(-1)}
                       >
-                      {hoveredRentalIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+                        {hoveredRentalIndex === index ? (
+                          <div className={styles['bookmark']}>
+                            <BookmarkOnCards setSnackbar={setSnackbar} />
+                          </div>
+                        ) : (
+                          <></>
+                        )}
 
                         <div className={styles.peopleAvatar}>
                           {page.profile_image ? (
@@ -3104,7 +3160,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     ),
                   )}
-                    {showAllRentals
+                  {showAllRentals
                     ? undefined
                     : (RentalResults ? (
                         <div className={styles['view-more-btn-container']}>
@@ -3192,10 +3248,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToPosts(page._id)}
-                            onMouseEnter={()=>setHoveredPostIndex(index)}
-                      onMouseLeave={()=>setHoveredPostIndex(-1)}
+                      onMouseEnter={() => setHoveredPostIndex(index)}
+                      onMouseLeave={() => setHoveredPostIndex(-1)}
                     >
-                      {hoveredPostIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+                      {hoveredPostIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
 
                       <div
                         className={
@@ -3291,7 +3353,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePostsPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                 {showAllPosts
+                {showAllPosts
                   ? undefined
                   : (PostsResults ? (
                       // toggleShowAllposts
@@ -3376,10 +3438,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToBlog(page.url)}
-                            onMouseEnter={()=>setHoveredBlogIndex(index)}
-                      onMouseLeave={()=>setHoveredBlogIndex(-1)}
+                      onMouseEnter={() => setHoveredBlogIndex(index)}
+                      onMouseLeave={() => setHoveredBlogIndex(-1)}
                     >
-                      {hoveredBlogIndex===index ? <div className={styles['bookmark']}><BookmarkOnCards /></div> :<></>}
+                      {hoveredBlogIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
 
                       <div className={styles.peopleAvatar}>
                         {page.cover_pic ? (
@@ -3529,6 +3597,12 @@ const Search: React.FC<Props> = ({ data, children }) => {
     (state: RootState) => state.search.hobbiesSearchResults.data,
   )
 
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 1100)
@@ -3626,7 +3700,18 @@ const Search: React.FC<Props> = ({ data, children }) => {
             RentalResults={RentalSearch || []}
             PostsResults={PostsSearch || []}
             BlogsResults={BlogsSearch || []}
+            setSnackbar={setSnackbar}
           />
+          {
+            <CustomSnackbar
+              message={snackbar.message}
+              triggerOpen={snackbar.display}
+              type={snackbar.type === 'success' ? 'success' : 'error'}
+              closeSnackbar={() => {
+                setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+              }}
+            />
+          }
         </main>
         {isMobile ? (
           <div
