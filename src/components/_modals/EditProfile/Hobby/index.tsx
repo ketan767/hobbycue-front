@@ -4,6 +4,7 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
   updateUserHobbyLevel,
+  updateUserpreferences,
 } from '@/services/user.service'
 import { CircularProgress, useMediaQuery } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
@@ -721,7 +722,62 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
   }
 
-  const handleDeleteHobby = async (id: string) => {
+  const updatePreference = async (preferences: any) => {
+    try {
+      const { res, err } = await updateUserpreferences({ preferences })
+      if (err) {
+        console.error('Error updating preferences:', err)
+      } else {
+        console.log('Preferences updated successfully:', res.data)
+        const user = await getMyProfileDetail()
+        dispatch(updateUser(user.res?.data?.data.user))
+        //window.location.reload();
+      }
+    } catch (error) {
+      console.error('Unexpected error:', error)
+    }
+  }
+
+  const handleDeleteHobby = async (id: string, hobby: any, index: number) => {
+    if (
+      hobby.hobby._id ===
+        user?.preferences?.create_post_pref?.preferred_hobby?.hobby?._id &&
+      (hobby.genre?.id
+        ? hobby.genre?.id ===
+          user?.preferences?.create_post_pref?.preferred_hobby?.genre?._id
+        : true)
+    ) {
+      const indexToUse = index === 0 ? 1 : 0
+      const updatedPreferences = {
+        community_view: {
+          preferred_hobby: {
+            hobby:
+              user.preferences.community_view.preferred_hobby?.hobby?._id ||
+              null,
+            genre:
+              user.preferences.community_view.preferred_hobby?.genre?._id ||
+              null,
+          },
+          preferred_location:
+            user?.preferences.community_view.preferred_location?._id ||
+            'All locations',
+        },
+        create_post_pref: {
+          preferred_hobby: {
+            hobby: user._hobbies[indexToUse]?.hobby?._id,
+            genre: user._hobbies[indexToUse]?.genre?._id || null,
+          },
+          preferred_location:
+            user.preferences.create_post_pref.preferred_location?._id ||
+            'All locations',
+        },
+        location_visibility: user.preferences.location_visibility || 'My City',
+        email_visibility: user.preferences.email_visibility || 'No one',
+        phone_visibility: user.preferences.phone_visibility || 'No one',
+      }
+      updatePreference(updatedPreferences)
+    }
+
     const { err, res } = await deleteUserHobby(id)
 
     if (err) {
@@ -1134,7 +1190,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                     </tr>
                   </thead>
                   <tbody style={{ display: 'inline-table' }}>
-                    {userHobbies?.map((hobby: any) => {
+                    {userHobbies?.map((hobby: any, index: number) => {
                       return (
                         <tr key={hobby._id}>
                           <td>
@@ -1223,10 +1279,12 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               viewBox="0 0 24 24"
                               fill="none"
                               className={styles['delete-hobby-btn']}
-                              onClick={() => handleDeleteHobby(hobby._id)}
+                              onClick={() =>
+                                handleDeleteHobby(hobby._id, hobby, index)
+                              }
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
-                                  handleDeleteHobby(hobby._id)
+                                  handleDeleteHobby(hobby._id, hobby, index)
                                 }
                               }}
                             >

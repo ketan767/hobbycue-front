@@ -3,10 +3,8 @@ import { withAuth } from '@/navigation/withAuth'
 import styles from '@/styles/Community.module.css'
 import { useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
-import { getAllPosts } from '@/services/post.service'
 import {
   updatePages,
-  updatePosts,
   updatePagesLoading,
 } from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
@@ -38,28 +36,9 @@ const CommunityPages: React.FC<Props> = ({}) => {
     const { err, res } = await getListingPages(`${params}`)
     if (err) return console.log(err)
     if (res?.data.success) {
-      const hobbyDisplayNames = activeProfile.data._hobbies.map(
-        (hobby: any) => hobby.hobby.display,
-      )
-
-      const filteredListings = filterListingsByHobbyDisplayNames(
-        res.data.data.listings,
-        hobbyDisplayNames,
-      )
-      store.dispatch(updatePages(filteredListings))
+      store.dispatch(updatePages(res.data.data.listings))
     }
     store.dispatch(updatePagesLoading(false))
-  }
-
-  function filterListingsByHobbyDisplayNames(
-    listings: any,
-    hobbyDisplayNames: any,
-  ) {
-    return listings.filter((listing: any) =>
-      listing._hobbies.some((hobby: any) =>
-        hobbyDisplayNames.includes(hobby.hobby.display),
-      ),
-    )
   }
 
   useEffect(() => {
