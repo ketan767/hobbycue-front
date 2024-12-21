@@ -119,6 +119,7 @@ const CommunityLayout: React.FC<Props> = ({
   const dispatch = useDispatch()
   const membersContainerRef = useRef<HTMLElement>(null)
   const whatsNewContainerRef = useRef<HTMLElement>(null)
+  const trendingContainerRef = useRef<HTMLElement>(null)
   const inviteBtnRef = useRef<HTMLButtonElement>(null)
   const { activeProfile, user, isLoggedIn, listing } = useSelector(
     (state: RootState) => state.user,
@@ -170,6 +171,8 @@ const CommunityLayout: React.FC<Props> = ({
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const [trendingHobbies, setTrendingHobbies] = useState([])
   const [seeMoreMembers, setSeeMoreMembers] = useState(0)
+  const [seeLessMembers, setSeeLessMembers] = useState(false)
+  const [clickedSeeLess, setClickedSeeLess] = useState(false)
   const [seeMoreTrendHobbies, setSeeMoreTrendHobbies] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [hobbyMembers, setHobbymembers] = useState<HobbyMember[]>([])
@@ -437,6 +440,9 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }, [post_pagination, router.asPath])
 
+  /**
+   * Fetch Hobby Members
+   */
   const fetchHobbyMembers = async (hobbies?: HobbyEntry[]) => {
     try {
       if (!hobbies || hobbies.length === 0) {
@@ -487,13 +493,18 @@ const CommunityLayout: React.FC<Props> = ({
         `${ids}?page=${seeMoreMembers}&limit=20`,
       )
 
+      if (res.data.users?.length === 0) {
+        setSeeLessMembers(true)
+      }
+
       if (res.data) {
         setHobbymembers((prevMembers) => {
           const existingMemberIds = new Set(
             prevMembers.map((member) => member?.profile_url),
           )
           const newMembers = res.data.users.filter(
-            (user: any) => !existingMemberIds.has(user?.profile_url),
+            (user: any) =>
+              !existingMemberIds.has(user?.profile_url) && user !== null,
           )
           return [...prevMembers, ...newMembers]
         })
@@ -949,7 +960,11 @@ const CommunityLayout: React.FC<Props> = ({
 
   useEffect(() => {
     if (membersContainerRef.current) {
-      const requiredHeight = hobbyMembers.length * 38 + 84
+      if (clickedSeeLess) {
+        membersContainerRef.current.style.height = '198px'
+        return
+      }
+      let requiredHeight = hobbyMembers.length * 38 + 44 + 40
       if (hobbyMembers.length <= 2) {
         membersContainerRef.current.style.height = 'auto'
       } else if (seeMoreMembers === 0) {
@@ -958,7 +973,7 @@ const CommunityLayout: React.FC<Props> = ({
         membersContainerRef.current.style.height = requiredHeight + 'px'
       }
     }
-  }, [seeMoreMembers, hobbyMembers])
+  }, [seeMoreMembers, hobbyMembers, clickedSeeLess])
 
   useEffect(() => {
     if (whatsNewContainerRef.current) {
@@ -972,6 +987,24 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
   }, [SeeMorewhatsNew, whatsNew])
+
+  useEffect(() => {
+    if (trendingContainerRef.current) {
+      const requiredHeight =
+        trendingHobbies.length * 43 +
+        (trendingHobbies.length - 1) * 4 +
+        44 +
+        16 +
+        40
+      if (trendingHobbies.length <= 2) {
+        trendingContainerRef.current.style.height = 'auto'
+      } else if (seeMoreTrendHobbies) {
+        trendingContainerRef.current.style.height = '240px'
+      } else {
+        trendingContainerRef.current.style.height = requiredHeight + 'px'
+      }
+    }
+  }, [seeMoreTrendHobbies, trendingHobbies])
 
   const DoubleArrowSvg = ({ rotate }: { rotate?: boolean }) => {
     return (
@@ -1730,6 +1763,16 @@ const CommunityLayout: React.FC<Props> = ({
                           invite={obj?.invite}
                           initialOpen={obj?.initialOpen}
                           handleAddTrendingHobby={handleAddTrendingHobby}
+                          clickedSeeLess={clickedSeeLess}
+                          seeMoreMembers={seeMoreMembers}
+                          seeLessMembers={seeLessMembers}
+                          setClickedSeeLess={setClickedSeeLess}
+                          setSeeLessMembers={setSeeLessMembers}
+                          setSeeMoreMembers={setSeeMoreMembers}
+                          seeMoreTrendHobbies={seeMoreTrendHobbies}
+                          seeMoreWhatsNew={SeeMorewhatsNew}
+                          setSeeMoreTrendHobbies={setSeeMoreTrendHobbies}
+                          setSeeMoreWhatsNew={setSeeMoreWhatsNew}
                         />
                       ),
                     )}
@@ -1942,7 +1985,12 @@ const CommunityLayout: React.FC<Props> = ({
               {hobbyMembers.length > 0 ? (
                 <>
                   {hobbyMembers
-                    ?.slice(0, seeMoreMembers === 0 ? 3 : hobbyMembers.length)
+                    ?.slice(
+                      0,
+                      seeMoreMembers === 0 || clickedSeeLess
+                        ? 3
+                        : hobbyMembers.length,
+                    )
                     .map(
                       (obj: any, idx) =>
                         obj !== null && (
@@ -1962,10 +2010,21 @@ const CommunityLayout: React.FC<Props> = ({
                           </div>
                         ),
                     )}
-                  {hobbyMembers.length > 3 && (
+                  {hobbyMembers.length > 3 && seeLessMembers ? (
+                    <div
+                      onClick={() => {
+                        setSeeLessMembers(false)
+                        setClickedSeeLess(true)
+                      }}
+                      className={styles['see-all']}
+                    >
+                      <p>See less</p>
+                    </div>
+                  ) : (
                     <div
                       onClick={() => {
                         setSeeMoreMembers((prev) => prev + 1)
+                        setClickedSeeLess(false)
                       }}
                       className={styles['see-all']}
                     >
@@ -2173,6 +2232,7 @@ const CommunityLayout: React.FC<Props> = ({
 
             <section
               className={`content-box-wrapper ${styles['trending-hobbies-side-wrapper']}`}
+              ref={trendingContainerRef}
             >
               <header>
                 <h3>Trending hobbies</h3>
