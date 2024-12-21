@@ -114,6 +114,7 @@ const CommunityLayout: React.FC<Props> = ({
   const dispatch = useDispatch()
   const membersContainerRef = useRef<HTMLElement>(null)
   const whatsNewContainerRef = useRef<HTMLElement>(null)
+  const trendingContainerRef = useRef<HTMLElement>(null)
   const inviteBtnRef = useRef<HTMLButtonElement>(null)
   const { activeProfile, user, isLoggedIn, listing } = useSelector(
     (state: RootState) => state.user,
@@ -165,9 +166,12 @@ const CommunityLayout: React.FC<Props> = ({
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const [trendingHobbies, setTrendingHobbies] = useState([])
   const [seeMoreMembers, setSeeMoreMembers] = useState(0)
+  const [seeLessMembers, setSeeLessMembers] = useState(false)
+  const [clickedSeeLess, setClickedSeeLess] = useState(false)
   const [seeMoreTrendHobbies, setSeeMoreTrendHobbies] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [hobbyMembers, setHobbymembers] = useState<HobbyMember[]>([])
+  console.log('asifs obj', hobbyMembers)
   const [selectedUser, setSelectedUser] = useState<any>()
   const [whatsNew, setWhatsNew] = useState([])
   const [SeeMorewhatsNew, setSeeMoreWhatsNew] = useState(true)
@@ -406,6 +410,9 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }, [post_pagination, router.asPath])
 
+  /**
+   * Fetch Hobby Members
+   */
   const fetchHobbyMembers = async (hobbies?: HobbyEntry[]) => {
     try {
       if (!hobbies || hobbies.length === 0) {
@@ -456,13 +463,20 @@ const CommunityLayout: React.FC<Props> = ({
         `${ids}?page=${seeMoreMembers}&limit=20`,
       )
 
+      console.log('asifs res', res.data.users)
+
+      if (res.data.users?.length === 0) {
+        setSeeLessMembers(true)
+      }
+
       if (res.data) {
         setHobbymembers((prevMembers) => {
           const existingMemberIds = new Set(
             prevMembers.map((member) => member?.profile_url),
           )
           const newMembers = res.data.users.filter(
-            (user: any) => !existingMemberIds.has(user?.profile_url),
+            (user: any) =>
+              !existingMemberIds.has(user?.profile_url) && user !== null,
           )
           return [...prevMembers, ...newMembers]
         })
@@ -907,7 +921,11 @@ const CommunityLayout: React.FC<Props> = ({
 
   useEffect(() => {
     if (membersContainerRef.current) {
-      const requiredHeight = hobbyMembers.length * 38 + 84
+      if (clickedSeeLess) {
+        membersContainerRef.current.style.height = '198px'
+        return
+      }
+      let requiredHeight = hobbyMembers.length * 38 + 44 + 40
       if (hobbyMembers.length <= 2) {
         membersContainerRef.current.style.height = 'auto'
       } else if (seeMoreMembers === 0) {
@@ -916,7 +934,7 @@ const CommunityLayout: React.FC<Props> = ({
         membersContainerRef.current.style.height = requiredHeight + 'px'
       }
     }
-  }, [seeMoreMembers, hobbyMembers])
+  }, [seeMoreMembers, hobbyMembers, clickedSeeLess])
 
   useEffect(() => {
     if (whatsNewContainerRef.current) {
@@ -930,6 +948,25 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
   }, [SeeMorewhatsNew, whatsNew])
+
+  useEffect(() => {
+    if (trendingContainerRef.current) {
+      const requiredHeight =
+        trendingHobbies.length * 43 +
+        (trendingHobbies.length - 1) * 4 +
+        44 +
+        16 +
+        40
+      if (trendingHobbies.length <= 2) {
+        trendingContainerRef.current.style.height = 'auto'
+      } else if (seeMoreTrendHobbies) {
+        trendingContainerRef.current.style.height = '240px'
+      } else {
+        trendingContainerRef.current.style.height = requiredHeight + 'px'
+      }
+    }
+    console.log('asifs trendingHobbies', trendingHobbies)
+  }, [seeMoreTrendHobbies, trendingHobbies])
 
   const DoubleArrowSvg = ({ rotate }: { rotate?: boolean }) => {
     return (
@@ -1199,7 +1236,7 @@ const CommunityLayout: React.FC<Props> = ({
                     speed={2}
                     width="100%"
                     backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
+                    foregroundColor="#ecebeb"
                     viewBox="0 0 229 282"
                   >
                     <rect
@@ -1302,25 +1339,73 @@ const CommunityLayout: React.FC<Props> = ({
                       })}
                     </InputSelect>
                   )}
-                  </>
-                ) : (
-                    <ContentLoader
-                    speed={2}
-                    width="100%"
-                    backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
-                    viewBox="0 0 229 160"
-                  >
-                    <rect x="16" y="11" width="55" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="197" y="52" width="16" height="16" rx="8" fill="#D9DBE9"/>
-                    <rect x="16" y="51" width="95" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="197" y="92" width="16" height="16" rx="8" fill="#D9DBE9"/>
-                    <rect x="16" y="91" width="93" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="197" y="132" width="16" height="16" rx="8" fill="#D9DBE9"/>
-                    <rect x="16" y="131" width="102" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                  </ContentLoader>
-                  )
-              }
+                </>
+              ) : (
+                <ContentLoader
+                  speed={2}
+                  width="100%"
+                  backgroundColor="#f3f3f3"
+                  foregroundColor="#ecebeb"
+                  viewBox="0 0 229 160"
+                >
+                  <rect
+                    x="16"
+                    y="11"
+                    width="55"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="197"
+                    y="52"
+                    width="16"
+                    height="16"
+                    rx="8"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16"
+                    y="51"
+                    width="95"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="197"
+                    y="92"
+                    width="16"
+                    height="16"
+                    rx="8"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16"
+                    y="91"
+                    width="93"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="197"
+                    y="132"
+                    width="16"
+                    height="16"
+                    rx="8"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16"
+                    y="131"
+                    width="102"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                </ContentLoader>
+              )}
             </section>
           </aside>
         )}
@@ -1640,6 +1725,16 @@ const CommunityLayout: React.FC<Props> = ({
                           invite={obj?.invite}
                           initialOpen={obj?.initialOpen}
                           handleAddTrendingHobby={handleAddTrendingHobby}
+                          clickedSeeLess={clickedSeeLess}
+                          seeMoreMembers={seeMoreMembers}
+                          seeLessMembers={seeLessMembers}
+                          setClickedSeeLess={setClickedSeeLess}
+                          setSeeLessMembers={setSeeLessMembers}
+                          setSeeMoreMembers={setSeeMoreMembers}
+                          seeMoreTrendHobbies={seeMoreTrendHobbies}
+                          seeMoreWhatsNew={SeeMorewhatsNew}
+                          setSeeMoreTrendHobbies={setSeeMoreTrendHobbies}
+                          setSeeMoreWhatsNew={setSeeMoreWhatsNew}
                         />
                       ),
                     )}
@@ -1849,32 +1944,49 @@ const CommunityLayout: React.FC<Props> = ({
               className={styles['desktop-members-conatiner']}
             >
               <header>Hobby Members</header>
-              {
-                hobbyMembers.length > 0 ? (
-                <>{
-                hobbyMembers
-                ?.slice(0, seeMoreMembers === 0 ? 3 : hobbyMembers.length)
-                .map((obj: any, idx) => (
-                  obj !== null &&
-                  <div key={idx} className={styles['member']}>
-                    <Link
-                      href={`/profile/${obj?.profile_url}`}
-                      className={styles['img-name']}
-                    >
-                      {obj?.profile_image ? (
-                        <img src={obj?.profile_image} />
-                      ) : (
-                        <Image src={defaultUserIcon} alt="" />
-                      )}
+              {hobbyMembers.length > 0 ? (
+                <>
+                  {hobbyMembers
+                    ?.slice(
+                      0,
+                      seeMoreMembers === 0 || clickedSeeLess
+                        ? 3
+                        : hobbyMembers.length,
+                    )
+                    .map(
+                      (obj: any, idx) =>
+                        obj !== null && (
+                          <div key={idx} className={styles['member']}>
+                            <Link
+                              href={`/profile/${obj?.profile_url}`}
+                              className={styles['img-name']}
+                            >
+                              {obj?.profile_image ? (
+                                <img src={obj?.profile_image} />
+                              ) : (
+                                <Image src={defaultUserIcon} alt="" />
+                              )}
 
-                          <p>{obj?.full_name}</p>
-                        </Link>
-                      </div>
-                    ))}
-                  {hobbyMembers.length > 3 && (
+                              <p>{obj?.full_name}</p>
+                            </Link>
+                          </div>
+                        ),
+                    )}
+                  {hobbyMembers.length > 3 && seeLessMembers ? (
+                    <div
+                      onClick={() => {
+                        setSeeLessMembers(false)
+                        setClickedSeeLess(true)
+                      }}
+                      className={styles['see-all']}
+                    >
+                      <p>See less</p>
+                    </div>
+                  ) : (
                     <div
                       onClick={() => {
                         setSeeMoreMembers((prev) => prev + 1)
+                        setClickedSeeLess(false)
                       }}
                       className={styles['see-all']}
                     >
@@ -1882,28 +1994,85 @@ const CommunityLayout: React.FC<Props> = ({
                     </div>
                   )}
                 </>
-                ) : (
-                  <ContentLoader
-                    speed={2}
-                    width="100%"
-                    backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
-                    viewBox="0 0 292 154"
-                  >
-                    <rect x="16.5" y="7.5" width="23" height="23" rx="11.5" fill="#D9DBE9"                    stroke="#D9DBE9"/>
-                    <rect x="48" y="12.875" width="88" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="186.754" y="9.5" width="88.7451" height="19" rx="3.5" fill="#D9DBE9"                     stroke="#D9DBE9"/>
-                    <rect x="16.5" y="45.5" width="23" height="23" rx="11.5" fill="#D9DBE9"                     stroke="#D9DBE9"/>
-                    <rect x="48" y="50.875" width="88" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="16.5" y="83.5" width="23" height="23" rx="11.5" fill="#D9DBE9"                     stroke="#D9DBE9"/>
-                    <rect x="48" y="88.875" width="54" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="112" y="121" width="66" height="12.25" rx="6.125" fill="#D9DBE9"/>
+              ) : (
+                <ContentLoader
+                  speed={2}
+                  width="100%"
+                  backgroundColor="#f3f3f3"
+                  foregroundColor="#ecebeb"
+                  viewBox="0 0 292 154"
+                >
+                  <rect
+                    x="16.5"
+                    y="7.5"
+                    width="23"
+                    height="23"
+                    rx="11.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="48"
+                    y="12.875"
+                    width="88"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="186.754"
+                    y="9.5"
+                    width="88.7451"
+                    height="19"
+                    rx="3.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="16.5"
+                    y="45.5"
+                    width="23"
+                    height="23"
+                    rx="11.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="48"
+                    y="50.875"
+                    width="88"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16.5"
+                    y="83.5"
+                    width="23"
+                    height="23"
+                    rx="11.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="48"
+                    y="88.875"
+                    width="54"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="112"
+                    y="121"
+                    width="66"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                </ContentLoader>
+              )}
 
-                  </ContentLoader>
-                )
-                
-              }
-              
               {/* {hobbyMembers.length === 0 && (
                 <div className={styles['see-all']}>
                   <p>Loading...</p>
@@ -1952,28 +2121,80 @@ const CommunityLayout: React.FC<Props> = ({
                     </div>
                   )}
                 </>
-                ) : 
-                  <ContentLoader
-                    speed={2}
-                    width="100%"
-                    backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
-                    viewBox="0 0 292 185"
-                  >
-                  <rect x="16.5" y="4" width="31" height="31" rx="3.5" fill="#D9DBE9" stroke="#D9DBE9"/>
-                  <rect x="56" y="13" width="127" height="13" rx="6.5" fill="#D9DBE9"/>
-                  <rect x="16.5" y="55" width="31" height="31" rx="3.5" fill="#D9DBE9" stroke="#D9DBE9"/>
-                  <rect x="56" y="64.5" width="125" height="12" rx="6" fill="#D9DBE9"/>
-                  <rect x="16.5" y="106" width="31" height="31" rx="3.5" fill="#D9DBE9" stroke="#D9DBE9"/                 >
-                  <rect x="56" y="115.5" width="127" height="12" rx="6" fill="#D9DBE9"/>
-                  <rect x="112" y="156.5" width="66" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                  </ContentLoader>
-              }
-
+              ) : (
+                <ContentLoader
+                  speed={2}
+                  width="100%"
+                  backgroundColor="#f3f3f3"
+                  foregroundColor="#ecebeb"
+                  viewBox="0 0 292 185"
+                >
+                  <rect
+                    x="16.5"
+                    y="4"
+                    width="31"
+                    height="31"
+                    rx="3.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="56"
+                    y="13"
+                    width="127"
+                    height="13"
+                    rx="6.5"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16.5"
+                    y="55"
+                    width="31"
+                    height="31"
+                    rx="3.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="56"
+                    y="64.5"
+                    width="125"
+                    height="12"
+                    rx="6"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16.5"
+                    y="106"
+                    width="31"
+                    height="31"
+                    rx="3.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="56"
+                    y="115.5"
+                    width="127"
+                    height="12"
+                    rx="6"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="112"
+                    y="156.5"
+                    width="66"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                </ContentLoader>
+              )}
             </section>
 
             <section
               className={`content-box-wrapper ${styles['trending-hobbies-side-wrapper']}`}
+              ref={trendingContainerRef}
             >
               <header>
                 <h3>Trending hobbies</h3>
@@ -2047,29 +2268,86 @@ const CommunityLayout: React.FC<Props> = ({
                         <p>{seeMoreTrendHobbies ? 'See more' : 'See less'}</p>
                       </div>
                     )}
-                    </>
-                  ) : (
-                    <ContentLoader
-                      speed={2}
-                      width="100%"
-                      backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
-                      height={185}
-                      viewBox="0 0 292 171"
-                    >
-                    <path d="M32.5 3L46.7894 11.25V27.75L32.5 36L18.2106 27.75V11.25L32.5 3Z"                       fill="#D9DBE9"/>
-                    <rect x="57" y="13.375" width="30" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="256.004" y="9.5" width="19.9954" height="20" rx="9.99768" fill="#D9DBE9"/>
-                    <path d="M32.5 47L46.7894 55.25V71.75L32.5 80L18.2106 71.75V55.25L32.5 47Z"                       fill="#D9DBE9"/>
-                    <rect x="57" y="57.375" width="80" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="256.004" y="53.5" width="19.9954" height="20" rx="9.99768" fill="#D9DBE9"/>
-                    <path d="M32.5 91L46.7894 99.25V115.75L32.5 124L18.2106 115.75V99.25L32.5 91Z"                      fill="#D9DBE9"/>
-                    <rect x="57" y="101.375" width="67" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    <rect x="256.004" y="97.5" width="19.9954" height="20" rx="9.99768" fill="#D9DBE9"/>
-                    <rect x="112" y="139" width="66" height="12.25" rx="6.125" fill="#D9DBE9"/>
-                    </ContentLoader>
-                  )
-                }
+                  </>
+                ) : (
+                  <ContentLoader
+                    speed={2}
+                    width="100%"
+                    backgroundColor="#f3f3f3"
+                    foregroundColor="#ecebeb"
+                    height={185}
+                    viewBox="0 0 292 171"
+                  >
+                    <path
+                      d="M32.5 3L46.7894 11.25V27.75L32.5 36L18.2106 27.75V11.25L32.5 3Z"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="57"
+                      y="13.375"
+                      width="30"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="256.004"
+                      y="9.5"
+                      width="19.9954"
+                      height="20"
+                      rx="9.99768"
+                      fill="#D9DBE9"
+                    />
+                    <path
+                      d="M32.5 47L46.7894 55.25V71.75L32.5 80L18.2106 71.75V55.25L32.5 47Z"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="57"
+                      y="57.375"
+                      width="80"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="256.004"
+                      y="53.5"
+                      width="19.9954"
+                      height="20"
+                      rx="9.99768"
+                      fill="#D9DBE9"
+                    />
+                    <path
+                      d="M32.5 91L46.7894 99.25V115.75L32.5 124L18.2106 115.75V99.25L32.5 91Z"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="57"
+                      y="101.375"
+                      width="67"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="256.004"
+                      y="97.5"
+                      width="19.9954"
+                      height="20"
+                      rx="9.99768"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="112"
+                      y="139"
+                      width="66"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                  </ContentLoader>
+                )}
               </section>
             </section>
             {isMobile ? null : (

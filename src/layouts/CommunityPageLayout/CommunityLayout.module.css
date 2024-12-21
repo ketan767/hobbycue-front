@@ -30,6 +30,7 @@
   transition: all;
   transition-duration: 300ms;
   transition-timing-function: ease;
+  overflow: hidden;
   height: 198px;
 }
 
@@ -362,6 +363,10 @@
 /* Trending Hobby Wrapper */
 .trending-hobbies-side-wrapper {
   margin-bottom: var(--spacing-16);
+  transition: all;
+  transition-duration: 300ms;
+  transition-timing-function: ease;
+  overflow: hidden;
 }
 .trending-hobbies-side-wrapper header {
   padding: var(--spacing-16) var(--spacing-16) var(--spacing-8);
