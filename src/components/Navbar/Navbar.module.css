@@ -419,16 +419,17 @@
   cursor: pointer;
 }
 
-@media screen and (max-width: 300px) {
+@media screen and (max-width: 340px) {
   .toggle-button{
     position: initial;
     padding-top: 5px ;
+    padding-left: 5px ;
   }
 }
 
 @media screen and (max-width: 1100px) {
   .toggle-button{
-    left: calc(50% - 50px) ;
+    /* left: calc(50% - 50px) ; */
   }
   .search-icon-container {
     width: 40px;

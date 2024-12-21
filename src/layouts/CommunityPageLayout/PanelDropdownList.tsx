@@ -50,7 +50,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
         if (options.length <= 2) {
           membersContainerRef.current.style.height = 'auto'
         } else if (seeMore) {
-          membersContainerRef.current.style.height = '208px'
+          membersContainerRef.current.style.height = '155px' // previous height = 208px
         } else {
           membersContainerRef.current.style.height = requiredHeight + 'px'
         }
@@ -138,6 +138,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
             </div>
           )}
           <div
+          style={(type === 'user members' || type === 'members') ? { gap:"0px" } : { gap:"7px" }}
             ref={membersContainerRef}
             className={
               styles['options-parent'] +
@@ -207,6 +208,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
               options
                 .slice(0, seeMore ? 3 : options.length)
                 .map((obj: any, idx: number) => (
+                  obj &&
                   <div key={idx} className={styles['option']}>
                     <div
                       className={
@@ -246,6 +248,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
               options
                 .slice(0, seeMoreHobbies === 0 ? 3 : options.length)
                 .map((obj: any, idx: number) => (
+                  obj &&
                   <div key={idx} className={styles['option']}>
                     <div
                       className={`${styles['member-container']} ${styles.userimg}`}
