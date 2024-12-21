@@ -50,9 +50,9 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
     const { err, res } = await getAllBlogs(`${params}`)
     if (err) return console.log(err)
     if (res?.data.success) {
-      const hobbyDisplayNames = activeProfile.data._hobbies.map(
-        (hobby: any) => hobby.hobby.display,
-      )
+      // const hobbyDisplayNames = activeProfile.data._hobbies.map(
+      //   (hobby: any) => hobby.hobby.display,
+      // )
       // activeProfile.data._hobbies.map((hobby: any) => {
       //   console.log('hobby.hobby.display', hobby.hobby.display)
       //   console.log('hobby.hobby._id', hobby.hobby._id)

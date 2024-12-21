@@ -57,16 +57,17 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import CommunityTopDropdown from '@/components/_formElements/CommunityTopDropdown/CommunityTopDropdown'
 import { CommunityDropdownOption } from '@/components/_formElements/CommunityDropdownOption/CommunityDropdownOption'
 import PanelDropdownList from './PanelDropdownList'
-import { showProfileError, updateActiveProfile } from '@/redux/slices/user'
+import { updateActiveProfile } from '@/redux/slices/user'
 import {
-  searchUsers,
   searchUsersAdvanced,
   TrendingHobbiesByUser,
 } from '@/services/user.service'
 import AddHobbyImg from '@/assets/image/AddHobbyImg.png'
 import ContentLoader from 'react-content-loader'
 import ProfileSwitcherDownArrow from '@/assets/icons/ProfileSwitcherDownArrow'
-import { getAllBlogs } from '@/services/blog.services'
+import useFetchBlogs from './hooks/useFetchBlogs'
+import useFetchPages from './hooks/useFetchPages'
+import useFetchStores from './hooks/useFetchStores'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -197,6 +198,9 @@ const CommunityLayout: React.FC<Props> = ({
     dispatch(setFilters({ seeMoreHobbies: !seeMoreHobby }))
   }
   console.warn('trending hobbies', trendingHobbies)
+  const fetchBlogs = useFetchBlogs()
+  const fetchPages = useFetchPages()
+  const fetchStores = useFetchStores()
 
   const handleHobbyClick = async (hobbyId: any, genreId: any) => {
     if (!isLoggedIn) {
@@ -616,47 +620,6 @@ const CommunityLayout: React.FC<Props> = ({
     dispatch(updateListingModalData(activeProfile.data))
   }, [activeProfile.type])
 
-  function filterBlogsByHobbyDisplayNames(
-    blogs: any,
-    hobbyId: any,
-    genreId: any,
-  ) {
-    return blogs.filter((blog: any) =>
-      blog._hobbies.some((hobby: any) => {
-        if (genreId) {
-          return hobby.genre?._id === genreId && hobby.hobby._id === hobbyId
-        }
-        return hobby.hobby._id === hobbyId
-      }),
-    )
-  }
-  const fetchBlogs = async () => {
-    if (selectedHobby === undefined || !activeProfile?.data?._hobbies) return
-    const params = new URLSearchParams(
-      `populate=_hobbies,author&status=Published`,
-    )
-
-    const { err, res } = await getAllBlogs(`${params}`)
-    if (err) return console.log(err)
-    if (res?.data.success) {
-      let filteredBlogs = []
-      if (selectedHobby === 'All Hobbies') {
-        filteredBlogs = res.data.data.blog
-      } else if (selectedHobby === 'My Hobbies') {
-        filteredBlogs = res.data.data.blog
-      } else {
-        filteredBlogs = filterBlogsByHobbyDisplayNames(
-          res.data.data.blog,
-          selectedHobby,
-          selectedGenre,
-        )
-      }
-      console.log('filteredBlogs', filteredBlogs)
-      dispatch(updateBlogs(filteredBlogs))
-      dispatch(updatePagesLoading(false))
-    }
-  }
-
   useEffect(() => {
     if (!user?.preferences?.community_view) return
     if (
@@ -664,12 +627,14 @@ const CommunityLayout: React.FC<Props> = ({
       (activeTab === 'links' || activeTab === 'posts')
     ) {
       if (selectedLocation !== '') {
-        // console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT', activeProfile.data)
         fetchPosts()
       }
-    }
-    if (activeProfile.data !== null && activeTab === 'blogs') {
-      if (selectedLocation !== '') fetchBlogs()
+    } else if (activeProfile.data !== null && activeTab === 'blogs') {
+      if (selectedLocation !== '') fetchBlogs(selectedHobby, selectedGenre)
+    } else if (activeProfile.data !== null && activeTab === 'store') {
+      if (selectedLocation !== '') fetchStores(selectedHobby, selectedGenre)
+    } else if (activeProfile.data !== null && activeTab === 'pages') {
+      if (selectedLocation !== '') fetchPages(selectedHobby, selectedGenre)
     }
   }, [
     selectedHobby,
