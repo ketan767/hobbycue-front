@@ -175,7 +175,6 @@ const CommunityLayout: React.FC<Props> = ({
   const [seeMoreTrendHobbies, setSeeMoreTrendHobbies] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [hobbyMembers, setHobbymembers] = useState<HobbyMember[]>([])
-  console.log('asifs obj', hobbyMembers)
   const [selectedUser, setSelectedUser] = useState<any>()
   const [whatsNew, setWhatsNew] = useState([])
   const [SeeMorewhatsNew, setSeeMoreWhatsNew] = useState(true)
@@ -489,8 +488,6 @@ const CommunityLayout: React.FC<Props> = ({
       const { res, err } = await getHobbyMembers(
         `${ids}?page=${seeMoreMembers}&limit=20`,
       )
-
-      console.log('asifs res', res.data.users)
 
       if (res.data.users?.length === 0) {
         setSeeLessMembers(true)
@@ -1042,7 +1039,6 @@ const CommunityLayout: React.FC<Props> = ({
         trendingContainerRef.current.style.height = requiredHeight + 'px'
       }
     }
-    console.log('asifs trendingHobbies', trendingHobbies)
   }, [seeMoreTrendHobbies, trendingHobbies])
 
   const DoubleArrowSvg = ({ rotate }: { rotate?: boolean }) => {
