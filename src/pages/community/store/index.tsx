@@ -3,14 +3,10 @@ import { withAuth } from '@/navigation/withAuth'
 import styles from '@/styles/Community.module.css'
 import { useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
-import { getAllPosts } from '@/services/post.service'
 import {
   updatePages,
   updatePagesLoading,
-  updatePosts,
 } from '@/redux/slices/post'
-import PostCard from '@/components/PostCard/PostCard'
-import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
 import { getListingPages } from '@/services/listing.service'
 import ListingCard from '@/components/ListingCard/ListingCard'
@@ -27,9 +23,7 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
 
   const getPost = async () => {
     const params = new URLSearchParams(
-
       `populate=_hobbies,_address,product_variant,seller&is_published=true&type=4`,
-
     )
 
     if (
@@ -41,28 +35,9 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
     const { err, res } = await getListingPages(`${params}`)
     if (err) return console.log(err)
     if (res?.data.success) {
-      const hobbyDisplayNames = activeProfile.data._hobbies.map(
-        (hobby: any) => hobby.hobby.display,
-      )
-
-      const filteredListings = filterListingsByHobbyDisplayNames(
-        res.data.data.listings,
-        hobbyDisplayNames,
-      )
-      store.dispatch(updatePages(filteredListings))
+      store.dispatch(updatePages(res.data.data.listings))
     }
     store.dispatch(updatePagesLoading(false))
-  }
-
-  function filterListingsByHobbyDisplayNames(
-    listings: any,
-    hobbyDisplayNames: any,
-  ) {
-    return listings.filter((listing: any) =>
-      listing._hobbies.some((hobby: any) =>
-        hobbyDisplayNames.includes(hobby.hobby.display),
-      ),
-    )
   }
 
   useEffect(() => {
@@ -77,10 +52,10 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
         <section className={styles['store-container']}>
           {pagesLoading ? (
             <>
-              <PagesLoader component='store' />
-              <PagesLoader component='store' />
-              <PagesLoader component='store' />
-              <PagesLoader component='store' />
+              <PagesLoader component="store" />
+              <PagesLoader component="store" />
+              <PagesLoader component="store" />
+              <PagesLoader component="store" />
             </>
           ) : allPages?.length === 0 ? (
             <>
