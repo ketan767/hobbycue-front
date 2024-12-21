@@ -417,6 +417,9 @@ const ModalManager: React.FC = () => {
                     activeModal === 'User-Contact-To-Owner' ||
                     activeModal === 'ListingSupportModal' ||
                     activeModal === 'SupportUserModal' ||
+                    activeModal === 'claim-listing' ||
+                    activeModal === 'listing-cta-edit' ||
+                    activeModal === 'listing-product-purchase' ||
                     activeModal === 'CopyProfileDataModal') &&
                   styles['responsive-popup']
                 }`
@@ -447,6 +450,9 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'ListingSupportModal' &&
                 activeModal !== 'SupportUserModal' &&
                 activeModal !== 'user-onboarding' &&
+                activeModal !== 'claim-listing' &&
+                activeModal !== 'listing-cta-edit' &&
+                activeModal !== 'listing-product-purchase' &&
                 !showAddHobbyModal && (
                   <>
                     <header className={styles['header']}>
@@ -657,6 +663,9 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'ListingSupportModal' &&
                 activeModal !== 'SupportUserModal' &&
                 activeModal !== 'blogPublish' &&
+                activeModal !== 'claim-listing' &&
+                activeModal !== 'listing-cta-edit' &&
+                activeModal !== 'listing-product-purchase' &&
                 !showAddGenreModal &&
                 !showAddHobbyModal && (
                   <CloseIcon
