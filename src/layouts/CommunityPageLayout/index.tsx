@@ -15,14 +15,17 @@ import { GetServerSideProps } from 'next'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import post, {
   appendPosts,
+  appendPostsWithLink,
   setFilters,
   setIsPinCode,
+  updateBlogs,
   updateCurrentPage,
   updateHasMore,
   updateLoading,
   updatePages,
   updatePagesLoading,
   updatePosts,
+  updatePostsWithLink,
 } from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
@@ -63,6 +66,7 @@ import {
 import AddHobbyImg from '@/assets/image/AddHobbyImg.png'
 import ContentLoader from 'react-content-loader'
 import ProfileSwitcherDownArrow from '@/assets/icons/ProfileSwitcherDownArrow'
+import { getAllBlogs } from '@/services/blog.services'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -297,6 +301,9 @@ const CommunityLayout: React.FC<Props> = ({
   }, [selectedHobby, selectedGenre])
 
   const fetchPosts = async (page = 1) => {
+    console.log('Fetching posts......')
+    console.log('selectedHobby......', selectedHobby)
+    if (selectedHobby === undefined) return
     if (showPageLoader) {
       dispatch(setShowPageLoader(false))
     }
@@ -376,7 +383,16 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
     if (page === 1) dispatch(updateLoading(true))
+    // console.log('activeTab: ', activeTab)
+    // console.log('params.toString(): ', params.toString())
+
     const { err, res } = await getAllHobbyPosts(params.toString())
+    const params2 = params
+    params2.append('has_link', 'true')
+
+    const { err: linksPostsErr, res: linksPostsRes } = await getAllHobbyPosts(
+      params2.toString(),
+    )
     if (err) return console.log(err)
     if (res?.data?.success) {
       let posts = res.data.data.posts.map((post: any) => {
@@ -388,6 +404,17 @@ const CommunityLayout: React.FC<Props> = ({
         dispatch(updatePosts(posts))
       } else {
         dispatch(appendPosts(posts))
+      }
+      if (linksPostsRes?.data?.success) {
+        let posts = linksPostsRes.data.data.posts.map((post: any) => {
+          let content = post.content.replace(/<img .*?>/g, '')
+          return { ...post, content }
+        })
+        if (page === 1) {
+          dispatch(updatePostsWithLink(posts))
+        } else {
+          dispatch(appendPostsWithLink(posts))
+        }
       }
 
       dispatch(updateHasMore(posts.length === 10))
@@ -592,6 +619,47 @@ const CommunityLayout: React.FC<Props> = ({
     dispatch(updateListingModalData(activeProfile.data))
   }, [activeProfile.type])
 
+  function filterBlogsByHobbyDisplayNames(
+    blogs: any,
+    hobbyId: any,
+    genreId: any,
+  ) {
+    return blogs.filter((blog: any) =>
+      blog._hobbies.some((hobby: any) => {
+        if (genreId) {
+          return hobby.genre?._id === genreId && hobby.hobby._id === hobbyId
+        }
+        return hobby.hobby._id === hobbyId
+      }),
+    )
+  }
+  const fetchBlogs = async () => {
+    if (selectedHobby === undefined || !activeProfile?.data?._hobbies) return
+    const params = new URLSearchParams(
+      `populate=_hobbies,author&status=Published`,
+    )
+
+    const { err, res } = await getAllBlogs(`${params}`)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      let filteredBlogs = []
+      if (selectedHobby === 'All Hobbies') {
+        filteredBlogs = res.data.data.blog
+      } else if (selectedHobby === 'My Hobbies') {
+        filteredBlogs = res.data.data.blog
+      } else {
+        filteredBlogs = filterBlogsByHobbyDisplayNames(
+          res.data.data.blog,
+          selectedHobby,
+          selectedGenre,
+        )
+      }
+      console.log('filteredBlogs', filteredBlogs)
+      dispatch(updateBlogs(filteredBlogs))
+      dispatch(updatePagesLoading(false))
+    }
+  }
+
   useEffect(() => {
     if (!user?.preferences?.community_view) return
     if (
@@ -602,6 +670,9 @@ const CommunityLayout: React.FC<Props> = ({
         // console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT', activeProfile.data)
         fetchPosts()
       }
+    }
+    if (activeProfile.data !== null && activeTab === 'blogs') {
+      if (selectedLocation !== '') fetchBlogs()
     }
   }, [
     selectedHobby,
@@ -619,6 +690,12 @@ const CommunityLayout: React.FC<Props> = ({
 
   const fetchHobby = async () => {
     // const query = `fields=display,sub_category&show=true&search=${selectedHobby}`
+    if (
+      selectedHobby === undefined ||
+      selectedHobby === 'My Hobbies' ||
+      selectedHobby === 'All Hobbies'
+    )
+      return
     const params = new URLSearchParams()
     params.set('_id', selectedHobby)
     const { err, res } = await getAllHobbies(

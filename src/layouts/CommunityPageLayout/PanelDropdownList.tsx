@@ -158,6 +158,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
             </div>
           )}
           <div
+          style={(type === 'user members' || type === 'members') ? { gap:"0px" } : { gap:"7px" }}
             ref={membersContainerRef}
             className={
               styles['options-parent'] +
@@ -227,6 +228,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
               options
                 .slice(0, seeMoreWhatsNew ? 3 : options.length)
                 .map((obj: any, idx: number) => (
+                  obj &&
                   <div key={idx} className={styles['option']}>
                     <div
                       className={
@@ -269,6 +271,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                   seeMoreMembers === 0 || clickedSeeLess ? 3 : options.length,
                 )
                 .map((obj: any, idx: number) => (
+                  obj &&
                   <div key={idx} className={styles['option']}>
                     <div
                       className={`${styles['member-container']} ${styles.userimg}`}
