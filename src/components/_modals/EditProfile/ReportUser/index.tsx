@@ -13,7 +13,7 @@ import styles from './styles.module.css'
 import { isEmpty, isEmptyField, isMobile } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, setHasChanges } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
@@ -91,7 +91,6 @@ const UserReport: React.FC<Props> = ({
     reported_user_email: currprofile?.public_email,
     for_url: propData?.reported_url ? propData?.reported_url : currentUrl,
   })
-  const [isChanged, setIsChanged] = useState(false)
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -244,6 +243,16 @@ const UserReport: React.FC<Props> = ({
     }
   }, [textAreaRef.current])
 
+  useEffect(() => {
+    if (data.description) {
+      dispatch(setHasChanges(true))
+    } else {
+      dispatch(setHasChanges(false))
+    }
+  }, [data])
+
+  // const isMob = isMobile()
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -251,10 +260,10 @@ const UserReport: React.FC<Props> = ({
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
+        content="Would you like to submit your report before exit?"
       />
     )
   }
-  const isMob = isMobile()
 
   return (
     <>
@@ -269,9 +278,7 @@ const UserReport: React.FC<Props> = ({
           {true && (
             <CloseIcon
               className={styles['modal-close-icon']}
-              onClick={() =>
-                isChanged ? setConfirmationModal(true) : handleClose()
-              }
+              onClick={() => handleClose()}
             />
           )}
         </header>

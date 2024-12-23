@@ -21,7 +21,7 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
   const containerRef = useRef<HTMLDivElement | null>(null)
   const hobbyRef = useRef<HTMLParagraphElement | null>(null)
   const styleRef = useRef<HTMLParagraphElement | null>(null)
-
+  const [isSelectingStartDate, setIsSelectingStartDate] = useState(true)
   const [focusTarget, setFocusTarget] = useState<any>('')
   const [showCalender, setShowCalender] = useState(false)
   const [showStyle, setShowStyle] = useState(false)
@@ -36,6 +36,9 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
   const [genreId, setGenreId] = useState('')
   const [focusedHobbyIndex, setFocusedHobbyIndex] = useState(-1)
   const [focusedGenreIndex, setFocusedGenreIndex] = useState(-1)
+  const [startDate, setStartDate] = useState('')
+  const today = new Date().toISOString().split('T')[0]
+
   // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
@@ -125,8 +128,8 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
     setGenreInputValue(e.target.value)
 
     if (isEmptyField(e.target.value)) return setGenreDropdownList([])
-    const query = `fields=display&show=true&genre=${genreId}&level=5`
-    const query2 = `fields=display,show&genre=${genreId}&level=5`
+    const query = `fields=display&show=true&level=5&search=${e.target.value}`
+    const query2 = `fields=display,show&level=5&search=${e.target.value}`
 
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
@@ -160,7 +163,7 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
 
     setGenreDropdownList(sortedGenres)
     setAllGenreList(allFilteredGenres)
-    console.log('all----------------->', allFilteredGenres)
+
     setFocusedGenreIndex(-1)
   }
 
@@ -252,6 +255,58 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+
+  const handleDateSelection = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    key: string,
+  ) => {
+    const updatedItem = event.target.value
+
+    if (key === 'from_date') {
+      const selectedStartDate = updatedItem
+      setFormValues((prevValues) => {
+        const updatedEndDate =
+          prevValues.endDate &&
+          new Date(prevValues.endDate) < new Date(selectedStartDate)
+            ? ''
+            : prevValues.endDate
+        return {
+          ...prevValues,
+          startDate: selectedStartDate,
+          endDate: updatedEndDate,
+        }
+      })
+    } else if (key === 'to_date') {
+      const selectedEndDate = updatedItem
+      setFormValues((prevValues) => {
+        const updatedStartDate =
+          prevValues.startDate &&
+          new Date(prevValues.startDate) > new Date(selectedEndDate)
+            ? 'Start Date'
+            : prevValues.startDate
+        return {
+          ...prevValues,
+          endDate: selectedEndDate,
+          startDate: updatedStartDate,
+        }
+      })
+    }
+  }
 
   return (
     <section className={styles.blogsSection} ref={containerRef}>
@@ -374,40 +429,35 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
             </label>
           </p>
         </div>
-        <div className={styles.datePickerContainer}>
-          <p onClick={() => setShowCalender((prev) => !prev)}>
-            <span
-              className={styles.showDate}
-              onClick={(e) => {
-                e.stopPropagation()
-                setFocusTarget('startDate')
-                setShowCalender(true)
-              }}
-            >
-              {formValues.startDate}
-            </span>
-            <span
-              className={styles.showDate}
-              onClick={(e) => {
-                e.stopPropagation()
-                setFocusTarget('endDate')
-                setShowCalender(true)
-              }}
-            >
-              {formValues.endDate}
-            </span>
-          </p>
-
-          {showCalender && (
-            <div className={styles.datePickerWrapper}>
-              <CustomDateRangePicker
-                setFormValues={setFormValues}
-                setShowCalender={setShowCalender}
-                focusTarget={focusTarget}
-                formValues={formValues}
+        <div className={styles['date-container']}>
+          <div>
+            <span className={styles.showDate}>
+              <input
+                autoComplete="new"
+                value={formValues.startDate}
+                className={styles.inputFieldTime + ` ${styles['date-input']}`}
+                type="date"
+                max={today}
+                onChange={(e: any) => handleDateSelection(e, 'from_date')}
               />
-            </div>
-          )}
+              <p className={styles['formatted-date']}>{formValues.startDate}</p>
+            </span>
+          </div>
+          <p className={styles['dash-between-calender']}>-</p>
+          <div>
+            <span className={styles.showDate}>
+              <input
+                autoComplete="new"
+                value={formValues.endDate}
+                className={styles.inputFieldTime + ` ${styles['date-input']}`}
+                type="date"
+                max={today}
+                min={formValues.startDate}
+                onChange={(e: any) => handleDateSelection(e, 'to_date')}
+              />
+              <p className={styles['formatted-date']}>{formValues.endDate}</p>
+            </span>
+          </div>
         </div>
       </div>
     </section>

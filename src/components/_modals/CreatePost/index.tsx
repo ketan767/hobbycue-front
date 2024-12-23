@@ -20,7 +20,7 @@ import {
   updateListingPost,
   updateUserPost,
 } from '@/services/post.service'
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, setHasChanges } from '@/redux/slices/modal'
 import CrossIcon from '@/assets/svg/cross.svg'
 
 import DOMPurify from 'dompurify'
@@ -124,6 +124,21 @@ export const CreatePost: React.FC<Props> = ({
   const [showMetaData, setShowMetaData] = useState(true)
   const [openDropdown, setOpenDropdown] = useState(false)
   const editBoxRef = useRef<HTMLDivElement | null>(null)
+  const [needsScroll, setNeedsScroll] = useState(false)
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (editBoxRef.current) {
+        const hasOverflow =
+          editBoxRef.current.scrollHeight > editBoxRef.current.clientHeight
+        setNeedsScroll(hasOverflow)
+      }
+    }
+
+    checkOverflow()
+    window.addEventListener('resize', checkOverflow)
+
+    return () => window.removeEventListener('resize', checkOverflow)
+  }, [data])
 
   const removeSelectedHobby = (hobbyToRemove: any) => {
     const newHobbyData = selectedHobbies.filter((hobbyData) => {
@@ -863,17 +878,6 @@ export const CreatePost: React.FC<Props> = ({
 
   const isReelBreakpoint = useMediaQuery('(max-width:600px)')
   const isMobile = useMediaQuery('(max-width:1100px)')
-  if (confirmationModal) {
-    return (
-      <SaveModal
-        handleClose={handleClose}
-        handleSubmit={handleSubmit}
-        setConfirmationModal={setConfirmationModal}
-        isError={isError}
-        content={'Would you like to post before exit ?'}
-      />
-    )
-  }
 
   const alreadyContains = (item: any) => {
     const alreadyContains = selectedHobbies.some((hobbyData) => {
@@ -900,6 +904,23 @@ export const CreatePost: React.FC<Props> = ({
     if (selectedHobbies.length === 0) {
       setOpenDropdown(!openDropdown)
     }
+  }
+
+  useEffect(() => {
+    if (data.content !== propData?.defaultValue) dispatch(setHasChanges(true))
+    else dispatch(setHasChanges(false))
+  }, [data])
+
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+        isError={isError}
+        content={'Would you like to post before exit ?'}
+      />
+    )
   }
 
   return (
@@ -950,7 +971,10 @@ export const CreatePost: React.FC<Props> = ({
               )}
 
               <aside>
-                <div className={styles1.z20} style={{ display: 'flex', flexDirection:"row", gap: "16px" }}>
+                <div
+                  className={styles1.z20}
+                  style={{ display: 'flex', flexDirection: 'row', gap: '16px' }}
+                >
                   <CreatePostProfileSwitcher
                     data={data}
                     setData={setData}
@@ -958,22 +982,20 @@ export const CreatePost: React.FC<Props> = ({
                     classForShowDropdown={styles['full-width-all']}
                     className={styles['profile-switcher-parent']}
                   />
-                  {
-                    !isMobile && (
-                      <FilledButton
-                    disabled={submitBtnLoading}
-                    onClick={handleSubmit}
-                    className={styles['create-post-btn2']}
-                    loading={submitBtnLoading}
-                  >
-                    {submitBtnLoading ? (
-                      <CircularProgress color="inherit" size={'16px'} />
-                    ) : (
-                      'Post'
-                    )}
-                  </FilledButton>
-                    )
-                  }
+                  {!isMobile && (
+                    <FilledButton
+                      disabled={submitBtnLoading}
+                      onClick={handleSubmit}
+                      className={styles['create-post-btn2']}
+                      loading={submitBtnLoading}
+                    >
+                      {submitBtnLoading ? (
+                        <CircularProgress color="inherit" size={'16px'} />
+                      ) : (
+                        'Post'
+                      )}
+                    </FilledButton>
+                  )}
                 </div>
                 <section
                   className={styles1.z10}
@@ -1120,10 +1142,7 @@ export const CreatePost: React.FC<Props> = ({
                                                 : undefined,
                                             },
                                           ]
-                                    console.log(
-                                      'selectedHobbies--->',
-                                      newHobbyData,
-                                    )
+
                                     setSelectedHobbies(newHobbyData)
                                     if (selectedHobbies.length >= 3) {
                                       setSnackbar({
@@ -1223,7 +1242,17 @@ export const CreatePost: React.FC<Props> = ({
               </aside>
             </div>
             <section
-              className={styles['editor-container'] + ` btnOutlinePurple ${!isMobile ? "custom-scrollbar-two" : styles['no-scroll']}`}
+              className={
+                styles['editor-container'] +
+                ` btnOutlinePurple ${
+                  !isMobile &&
+                  `${
+                    needsScroll
+                      ? styles['scroll-width']
+                      : styles['no-scroll-width']
+                  }`
+                }`
+              }
               ref={editBoxRef}
             >
               <CustomEditor
@@ -1291,39 +1320,56 @@ export const CreatePost: React.FC<Props> = ({
                     </div>
                   ) : isInstagramReelLink(url) ? (
                     !isReelBreakpoint ? (
-                      <div onClick={()=>window.open(url,"_blank")}  
-                      style={{background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"16px", cursor:"pointer", maxWidth:"637.4"}}>
-                      <div style={{width:"230.63px", height:"376.31px", display:"flex", alignItems:"center"}}>
-                      <img
-                        style={{cursor:"pointer", maxHeight:"376.31px"}}
-                        onClick={()=>window.open(url, '_blank')}
-                        width="230.63px"
-                          src={
-                            (typeof metaData?.image === 'string' &&
-                              metaData.image) ||
-                            (typeof metaData?.icon === 'string' &&
-                              metaData.icon) ||
-                            defaultImg
-                          }
-                          alt=""
-                        />
-                      </div>
                       <div
+                        onClick={() => window.open(url, '_blank')}
                         style={{
+                          background: '#fff',
                           display: 'flex',
-                          flexDirection: 'column',
+                          justifyContent: 'between',
+                          alignItems: 'center',
                           gap: '16px',
-                          fontSize: '15px',
-                          justifyContent: 'start',
-                          height: '100%',
+                          cursor: 'pointer',
+                          maxWidth: '637.4',
                         }}
                       >
-                        <p style={{ fontWeight: '500' }}>{metaData?.title}</p>
-                        <p style={{ color: '#333' }}>
-                          {metaData?.description?.split(':')[0]}
-                        </p>
+                        <div
+                          style={{
+                            width: '230.63px',
+                            height: '376.31px',
+                            display: 'flex',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <img
+                            style={{ cursor: 'pointer', maxHeight: '376.31px' }}
+                            onClick={() => window.open(url, '_blank')}
+                            width="230.63px"
+                            src={
+                              (typeof metaData?.image === 'string' &&
+                                metaData.image) ||
+                              (typeof metaData?.icon === 'string' &&
+                                metaData.icon) ||
+                              defaultImg
+                            }
+                            alt=""
+                          />
+                        </div>
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '16px',
+                            fontSize: '15px',
+                            justifyContent: 'start',
+                            height: '100%',
+                          }}
+                        >
+                          <p style={{ fontWeight: '500' }}>{metaData?.title}</p>
+                          <p style={{ color: '#333' }}>
+                            {metaData?.description?.split(':')[0]}
+                          </p>
+                        </div>
                       </div>
-                    </div>
                     ) : (
                       <div
                         onClick={() => window.open(url, '_blank')}
@@ -1333,19 +1379,19 @@ export const CreatePost: React.FC<Props> = ({
                           alignItems: 'center',
                           gap: '8px',
                           cursor: 'pointer',
-                          flexDirection:"column"
+                          flexDirection: 'column',
                         }}
                       >
                         <div
                           style={{
                             width: 'calc(100%)',
                           }}
-                          >
+                        >
                           <img
                             style={{
                               cursor: 'pointer',
                             }}
-                            width= '100%'
+                            width="100%"
                             onClick={() => window.open(url, '_blank')}
                             src={
                               (typeof metaData?.image === 'string' &&
@@ -1366,9 +1412,7 @@ export const CreatePost: React.FC<Props> = ({
                             justifyContent: 'start',
                           }}
                         >
-                          <p style={{ fontWeight: '500' }}>
-                            {metaData?.title}
-                          </p>
+                          <p style={{ fontWeight: '500' }}>{metaData?.title}</p>
                           <p style={{ color: '#333' }}>
                             {metaData?.description?.split(':')[0]}
                           </p>
@@ -1451,22 +1495,20 @@ export const CreatePost: React.FC<Props> = ({
                 </>
               )}
             </section>
-            {
-              isMobile && (
-                <FilledButton
-              disabled={submitBtnLoading}
-              onClick={handleSubmit}
-              className={styles['create-post-btn']}
-              loading={submitBtnLoading}
-            >
-              {submitBtnLoading ? (
-                <CircularProgress color="inherit" size={'16px'} />
-              ) : (
-                'Post'
-              )}
-            </FilledButton>
-              )
-            }
+            {isMobile && (
+              <FilledButton
+                disabled={submitBtnLoading}
+                onClick={handleSubmit}
+                className={styles['create-post-btn']}
+                loading={submitBtnLoading}
+              >
+                {submitBtnLoading ? (
+                  <CircularProgress color="inherit" size={'16px'} />
+                ) : (
+                  'Post'
+                )}
+              </FilledButton>
+            )}
           </div>
         </div>
       </div>

@@ -19,6 +19,16 @@ interface PanelDropdownListProps {
   inviteText?: string
   initialOpen?: boolean
   handleAddTrendingHobby?: (arg0: any) => void
+  seeMoreMembers: number
+  clickedSeeLess: boolean
+  seeLessMembers: boolean
+  setSeeLessMembers: (value: React.SetStateAction<boolean>) => void
+  setClickedSeeLess: (value: React.SetStateAction<boolean>) => void
+  setSeeMoreMembers: (value: React.SetStateAction<number>) => void
+  seeMoreWhatsNew: boolean
+  seeMoreTrendHobbies: boolean
+  setSeeMoreWhatsNew: (value: React.SetStateAction<boolean>) => void
+  setSeeMoreTrendHobbies: (value: React.SetStateAction<boolean>) => void
 }
 
 const PanelDropdownList: FC<PanelDropdownListProps> = ({
@@ -32,10 +42,20 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   inviteTextChangeFunc,
   initialOpen,
   handleAddTrendingHobby,
+  seeMoreMembers,
+  clickedSeeLess,
+  seeLessMembers,
+  setClickedSeeLess,
+  setSeeLessMembers,
+  setSeeMoreMembers,
+  seeMoreTrendHobbies,
+  seeMoreWhatsNew,
+  setSeeMoreTrendHobbies,
+  setSeeMoreWhatsNew,
 }) => {
   const [open, setOpen] = useState(initialOpen ?? false)
   const router = useRouter()
-  const [seeMore, setSeeMore] = useState(true)
+  // const [seeMore, setSeeMore] = useState(true)
   const [seeMoreHobbies, setSeeMoreHobbies] = useState(0)
   const membersContainerRef = useRef<HTMLDivElement>(null)
   // const [email, setEmail] = useState('')
@@ -43,20 +63,20 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   // const inviteBtnRef = useRef<HTMLButtonElement>(null)
   // const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
 
-  useEffect(() => {
-    if (type === 'members') {
-      if (membersContainerRef.current) {
-        const requiredHeight = options.length * (38 + 16) + 47
-        if (options.length <= 2) {
-          membersContainerRef.current.style.height = 'auto'
-        } else if (seeMore) {
-          membersContainerRef.current.style.height = '208px'
-        } else {
-          membersContainerRef.current.style.height = requiredHeight + 'px'
-        }
-      }
-    }
-  }, [seeMore, options])
+  // useEffect(() => {
+  //   if (type === 'members') {
+  //     if (membersContainerRef.current) {
+  //       const requiredHeight = options.length * (38 + 16) + 47
+  //       if (options.length <= 2) {
+  //         membersContainerRef.current.style.height = 'auto'
+  //       } else if () {
+  //         membersContainerRef.current.style.height = '208px'
+  //       } else {
+  //         membersContainerRef.current.style.height = requiredHeight + 'px'
+  //       }
+  //     }
+  //   }
+  // }, [seeMoreMembers, clickedSeeLess, options])
 
   const ArrowSvg = ({ rotate }: { rotate?: boolean }) => {
     return (
@@ -138,6 +158,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
             </div>
           )}
           <div
+          style={(type === 'user members' || type === 'members') ? { gap:"0px" } : { gap:"7px" }}
             ref={membersContainerRef}
             className={
               styles['options-parent'] +
@@ -152,7 +173,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
             {type !== 'members' &&
               type !== 'user members' &&
               options
-                .slice(0, seeMore ? 3 : options.length)
+                .slice(0, seeMoreTrendHobbies ? 3 : options.length)
                 .map((obj: any, idx: number) => (
                   <div key={idx} className={styles['option']}>
                     {/* For Hobbies */}
@@ -205,8 +226,9 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                 ))}
             {type === 'members' &&
               options
-                .slice(0, seeMore ? 3 : options.length)
+                .slice(0, seeMoreWhatsNew ? 3 : options.length)
                 .map((obj: any, idx: number) => (
+                  obj &&
                   <div key={idx} className={styles['option']}>
                     <div
                       className={
@@ -244,8 +266,12 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                 ))}
             {type === 'user members' &&
               options
-                .slice(0, seeMoreHobbies === 0 ? 3 : options.length)
+                ?.slice(
+                  0,
+                  seeMoreMembers === 0 || clickedSeeLess ? 3 : options.length,
+                )
                 .map((obj: any, idx: number) => (
+                  obj &&
                   <div key={idx} className={styles['option']}>
                     <div
                       className={`${styles['member-container']} ${styles.userimg}`}
@@ -275,18 +301,42 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                     </div>
                   </div>
                 ))}
-            {options.length > 3 && (
-              <div className={styles['option'] + ` ${styles['mb-15']}`}>
-                <div className={styles['member-container']}>
-                  <p
-                    onClick={() => {
-                      setSeeMoreHobbies((prev) => prev + 1)
-                    }}
-                    className={styles['see-more']}
-                  >
-                    {'See more'}
-                  </p>
+            {type === 'user members' &&
+              (options.length > 3 && seeLessMembers ? (
+                <div
+                  onClick={() => {
+                    setSeeLessMembers(false)
+                    setClickedSeeLess(true)
+                  }}
+                  className={styles['see-all']}
+                >
+                  <p>See less</p>
                 </div>
+              ) : (
+                <div
+                  onClick={() => {
+                    setSeeMoreMembers((prev) => prev + 1)
+                    setClickedSeeLess(false)
+                  }}
+                  className={styles['see-all']}
+                >
+                  <p>See more</p>
+                </div>
+              ))}
+            {type !== 'user members' && options.length > 3 && (
+              <div
+                onClick={() => {
+                  type === 'members'
+                    ? setSeeMoreWhatsNew((prev) => !prev)
+                    : setSeeMoreTrendHobbies((prev) => !prev)
+                }}
+                className={styles['see-all']}
+              >
+                <p>
+                  {(type === 'members' ? seeMoreWhatsNew : seeMoreTrendHobbies)
+                    ? 'See more'
+                    : 'See less'}
+                </p>
               </div>
             )}
           </div>

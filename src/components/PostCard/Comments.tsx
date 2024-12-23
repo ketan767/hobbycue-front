@@ -236,7 +236,7 @@ const PostComments = ({
         {comments.length > 0 && (
           <section className={styles['all-comment-container']}>
             {router.pathname === '/post/[post_id]' || displayMoreComments ? (
-              comments.map((comment: any, idx: number) => {
+              [...comments].reverse().map((comment: any, idx: number) => {
                 return (
                   <Comment
                     comment={comment}
@@ -249,7 +249,7 @@ const PostComments = ({
             ) : (
               <>
                 <Comment
-                  comment={comments[0]}
+                  comment={comments[comments.length - 1]}
                   data={data}
                   fetchComments={fetchComments}
                 />
