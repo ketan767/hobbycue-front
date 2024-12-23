@@ -1814,7 +1814,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
           )}
 
           {/* Hobbies */}
-          {!HideHobbies && hobbyPages.length > 0 && searchLoading === false && (
+          {!HideHobbies && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>Hobbies</div>
@@ -1962,7 +1962,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
           )}
 
           {/* User  */}
-          {!HideUser && userPages.length > 0 && searchLoading === false && (
+          {!HideUser && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>User Profiles</div>
@@ -2145,7 +2145,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </section>
           )}
           {/* People */}
-          {!HidePeople && peoplePages.length > 0 && searchLoading === false && (
+          {!HidePeople && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 {!isExplore && (
@@ -2327,7 +2327,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </section>
           )}
           {/* Place  */}
-          {!HidePlace && placeResults.length > 0 && searchLoading === false && (
+          {!HidePlace && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 {!isExplore && (
@@ -2484,7 +2484,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
           )}
 
           {/* Event  */}
-          {!HideEvent && EventResults.length > 0 && searchLoading === false && (
+          {!HideEvent && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 {!isExplore && (
@@ -2685,8 +2685,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </section>
           )}
           {/* Product  */}
-          {!HideProduct &&
-            ProductResults.length > 0 &&
+          {!HideProduct && 
             searchLoading === false && (
               <section className={styles.userSection}>
                 <div className={styles.peopleItemsContainer}>
@@ -2882,7 +2881,6 @@ const MainContent: React.FC<SearchResultsProps> = ({
             )}
           {/* Classes  */}
           {!HideClasses &&
-            ClassesResults.length > 0 &&
             searchLoading === false && (
               <section className={styles.userSection}>
                 <div className={styles.peopleItemsContainer}>
@@ -3058,9 +3056,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
               </section>
             )}
           {/* Rentals  */}
-          {!HideRentals &&
-            RentalResults.length > 0 &&
-            searchLoading === false && (
+          {!HideRentals && searchLoading === false && (
               <section className={styles.userSection}>
                 <div className={styles.peopleItemsContainer}>
                   {!isExplore && (
@@ -3236,7 +3232,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
               </section>
             )}
           {/* Posts  */}
-          {!HidePosts && PostsResults.length > 0 && searchLoading === false && (
+          {!HidePosts && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 {!isExplore && (
@@ -3426,7 +3422,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </section>
           )}
           {/* Blogs  */}
-          {!HideBlogs && BlogsResults.length > 0 && searchLoading === false && (
+          {!HideBlogs && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 {!isExplore && (
