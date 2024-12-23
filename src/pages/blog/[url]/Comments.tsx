@@ -57,7 +57,6 @@ const BlogComments = ({ data }: Props) => {
     )
     if (err) return console.log(err)
     setComments(res?.data?.data?.comments)
-    console.log('asifs obj', res?.data?.data?.comments)
   }
 
   const addComment = async (event: any) => {
