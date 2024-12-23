@@ -207,9 +207,9 @@ const CustomEditor: React.FC<Props> = ({
           hasLink ? styles['quill-has-link'] : ''
         }`}
         style={{
-          ...(forWhichComponent === "createPost" ? { maxHeight: "100%" } : {}),
-          ...(hasLink ? {maxHeight: "420px"} : { height: "490px" })
-        }}        
+          ...(forWhichComponent === 'createPost' ? { maxHeight: '100%' } : {}),
+          ...(hasLink ? { maxHeight: '420px' } : { height: '490px' }),
+        }}
         placeholder="Start something interesting..."
         modules={{
           toolbar: {
@@ -297,6 +297,7 @@ const CustomEditor: React.FC<Props> = ({
             forWhichComponent === 'createPost' &&
             `
               .ql-editor {
+              overflow:none;
                 scrollbar-width: thin;
                 scrollbar-color: #777 #f1f1f1;
               }
