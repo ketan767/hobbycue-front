@@ -981,6 +981,7 @@ export const CreatePost: React.FC<Props> = ({
                     setHobbies={setHobbies}
                     classForShowDropdown={styles['full-width-all']}
                     className={styles['profile-switcher-parent']}
+                    setSelectedHobbies={setSelectedHobbies}
                   />
                   {!isMobile && (
                     <FilledButton
