@@ -19,6 +19,7 @@
   border-radius: 100px;
   color: #8064A2;
   font-size: 12px;
+  padding: 4px;
 }
 
 .profile-switcher .profile-image[data-profile-type='user'] {

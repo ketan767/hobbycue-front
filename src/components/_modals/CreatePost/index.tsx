@@ -124,6 +124,21 @@ export const CreatePost: React.FC<Props> = ({
   const [showMetaData, setShowMetaData] = useState(true)
   const [openDropdown, setOpenDropdown] = useState(false)
   const editBoxRef = useRef<HTMLDivElement | null>(null)
+  const [needsScroll, setNeedsScroll] = useState(false)
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (editBoxRef.current) {
+        const hasOverflow =
+          editBoxRef.current.scrollHeight > editBoxRef.current.clientHeight
+        setNeedsScroll(hasOverflow)
+      }
+    }
+
+    checkOverflow()
+    window.addEventListener('resize', checkOverflow)
+
+    return () => window.removeEventListener('resize', checkOverflow)
+  }, [data])
 
   const removeSelectedHobby = (hobbyToRemove: any) => {
     const newHobbyData = selectedHobbies.filter((hobbyData) => {
@@ -1127,10 +1142,7 @@ export const CreatePost: React.FC<Props> = ({
                                                 : undefined,
                                             },
                                           ]
-                                    console.log(
-                                      'selectedHobbies--->',
-                                      newHobbyData,
-                                    )
+
                                     setSelectedHobbies(newHobbyData)
                                     if (selectedHobbies.length >= 3) {
                                       setSnackbar({
@@ -1233,7 +1245,12 @@ export const CreatePost: React.FC<Props> = ({
               className={
                 styles['editor-container'] +
                 ` btnOutlinePurple ${
-                  !isMobile ? 'custom-scrollbar-two' : styles['no-scroll']
+                  !isMobile &&
+                  `${
+                    needsScroll
+                      ? styles['scroll-width']
+                      : styles['no-scroll-width']
+                  }`
                 }`
               }
               ref={editBoxRef}
