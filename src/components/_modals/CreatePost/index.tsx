@@ -1142,10 +1142,7 @@ export const CreatePost: React.FC<Props> = ({
                                                 : undefined,
                                             },
                                           ]
-                                    console.log(
-                                      'selectedHobbies--->',
-                                      newHobbyData,
-                                    )
+
                                     setSelectedHobbies(newHobbyData)
                                     if (selectedHobbies.length >= 3) {
                                       setSnackbar({

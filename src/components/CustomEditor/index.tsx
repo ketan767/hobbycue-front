@@ -12,6 +12,8 @@ import quillEmoji from 'quill-emoji'
 import 'react-quill/dist/quill.snow.css'
 import 'quill-emoji/dist/quill-emoji.css'
 import Tooltip from '@/components/Tooltip/ToolTip'
+import { useDispatch } from 'react-redux'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 const { EmojiBlot, ShortNameEmoji, ToolbarEmoji, TextAreaEmoji } = quillEmoji
 
@@ -53,6 +55,7 @@ const CustomEditor: React.FC<Props> = ({
   const inputVideoRef = useRef<HTMLInputElement>(null)
   const [imageIconAdded, setImageIconAdded] = useState(false)
   const [content, setContent] = useState('')
+  const dispatch = useDispatch()
   const handleEditorChange = useCallback(
     (event: any, editor: any) => {
       const data = editor.getData()
@@ -99,6 +102,7 @@ const CustomEditor: React.FC<Props> = ({
   }
 
   const handleImageUpload = async (image: any, isVideo: boolean) => {
+    dispatch(setShowPageLoader(true))
     if (onStatusChange) {
       onStatusChange(true)
     }
@@ -108,6 +112,7 @@ const CustomEditor: React.FC<Props> = ({
     const { err, res } = await uploadImage(formData)
     if (err) return console.log(err)
     if (res?.data.success) {
+      dispatch(setShowPageLoader(false))
       console.log(res.data)
       const img = res.data.data.url
       if (isVideo) {
@@ -121,6 +126,8 @@ const CustomEditor: React.FC<Props> = ({
       }
       // window.location.reload()
       // dispatch(closeModal())
+    } else {
+      dispatch(setShowPageLoader(false))
     }
   }
 
@@ -208,7 +215,11 @@ const CustomEditor: React.FC<Props> = ({
         }`}
         style={{
           ...(forWhichComponent === 'createPost' ? { maxHeight: '100%' } : {}),
-          ...(hasLink ? { maxHeight: '420px' } : { height: '490px' }),
+          ...(hasLink
+            ? { maxHeight: '420px' }
+            : data?.media.length > 0
+            ? { height: '250px' }
+            : { height: '490px' }),
         }}
         placeholder="Start something interesting..."
         modules={{

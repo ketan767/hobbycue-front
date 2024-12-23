@@ -487,6 +487,12 @@
 }
 
 @media screen and (max-width: 1100px) {
+  .modal-wrapper {
+ 
+    max-height: 95vh;
+ 
+  }
+  
   .create-post-modal {
     flex-direction: column;
     padding-left: 1rem;
@@ -558,7 +564,7 @@
 
   .profile-switcher-parent {
     height: 42px !important;
-    padding: 8px 12px !important;
+    padding: 8px 8px 8px 12px !important;
   }
 
   .full-width-all {
@@ -570,7 +576,7 @@
   }
 
   .input-select {
-    height: 40px !important;
+
     display: flex !important;
     justify-content: center !important;
     align-items: stretch !important;
@@ -642,13 +648,21 @@
     width: 100%;
   }
   .create-post-modal > section {
-    height: calc(100vh - 18rem);
+    height: 40vh;
   }
   .img-cancel-icon {
     right: 8px;
   }
   .image-posting-as > aside > div {
     grid-column: span 2 / span 2;
+  }
+  .create-post-btn {
+    margin-top: auto;
+    position: relative;
+   
+  }  
+  .listing-profile-img {
+    display: none;
   }
 }
 

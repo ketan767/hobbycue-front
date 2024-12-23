@@ -93,7 +93,6 @@ const Explore: React.FC<Props> = ({ data }) => {
     }
 
     return data.filter((item) => {
-      // Match for search
       const searchMatch = filters.search
         ? [
             item.title?.toLowerCase(),
@@ -102,55 +101,56 @@ const Explore: React.FC<Props> = ({ data }) => {
           ].some((field) => field.includes(filters.search!.toLowerCase()))
         : true
 
-      // If search exists, prioritize it and return results based on it
       if (filters.search) {
         return searchMatch
       }
 
-      // Match for hobbies
       const hobbyMatch = filters.hobby
-        ? item._hobbies.some((h) =>
-            h.hobby?.display
-              .toLowerCase()
-              .includes(filters.hobby!.toLowerCase()),
-          )
-        : true
-
-      // Match for genre
-      const genreMatch = filters.genre
         ? item._hobbies.some((h) => {
-            return (
-              h.genre &&
-              h.genre?.display
-                ?.toLowerCase()
-                .includes(filters.genre!.toLowerCase())
-            )
+            const match = h.hobby?.display
+              ?.toLowerCase()
+              .includes(filters.hobby!.toLowerCase())
+            console.log('Hobby Match Debug:', {
+              match,
+              hobbyDisplay: h.hobby?.display,
+              filterHobby: filters.hobby,
+            })
+            return match
           })
         : true
 
-      // Match for keywords
+      const genreMatch = filters.genre
+        ? item._hobbies.some((h) => {
+            const match = h.genre?.display
+              ?.toLowerCase()
+              ?.includes(filters.genre!.toLowerCase())
+            console.log('Genre Match Debug:', {
+              match,
+              genreDisplay: h.genre?.display,
+              filterGenre: filters.genre,
+            })
+            return match
+          })
+        : true
+
       const keywordMatch = filters.keywords
         ? item.keywords.some((keyword) =>
             keyword.toLowerCase().includes(filters.keywords!.toLowerCase()),
           )
         : true
 
-      // Match for author
       const authorMatch = filters.author
-        ? item.author.full_name &&
-          item.author.full_name
-            .toLowerCase()
+        ? item.author.full_name
+            ?.toLowerCase()
             .includes(filters.author!.toLowerCase())
         : true
 
-      // Match for status
       const statusMatch = filters.status
         ? item.status.toLowerCase() === filters.status!.toLowerCase()
         : true
 
-      // Match for date range
       const startDate =
-        filters.startDate !== 'startDate' ? new Date(filters.startDate) : null
+        filters.startDate !== 'Start Date' ? new Date(filters.startDate) : null
       const endDate =
         filters.endDate !== 'End Date' ? new Date(filters.endDate) : null
       const createdAt = new Date(item.createdAt)
@@ -163,7 +163,6 @@ const Explore: React.FC<Props> = ({ data }) => {
           ? createdAt <= endDate
           : true
 
-      // Combine all conditions with logical AND
       return (
         hobbyMatch &&
         genreMatch &&
