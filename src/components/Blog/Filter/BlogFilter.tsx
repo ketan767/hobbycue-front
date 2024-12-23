@@ -37,6 +37,7 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
   const [focusedHobbyIndex, setFocusedHobbyIndex] = useState(-1)
   const [focusedGenreIndex, setFocusedGenreIndex] = useState(-1)
   const [startDate, setStartDate] = useState('')
+  const today = new Date().toISOString().split('T')[0]
 
   // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -296,12 +297,12 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
         const updatedStartDate =
           prevValues.startDate &&
           new Date(prevValues.startDate) > new Date(selectedEndDate)
-            ? selectedEndDate
+            ? 'Start Date'
             : prevValues.startDate
         return {
           ...prevValues,
           endDate: selectedEndDate,
-          startDate: 'Start date',
+          startDate: updatedStartDate,
         }
       })
     }
@@ -436,6 +437,7 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
                 value={formValues.startDate}
                 className={styles.inputFieldTime + ` ${styles['date-input']}`}
                 type="date"
+                max={today}
                 onChange={(e: any) => handleDateSelection(e, 'from_date')}
               />
               <p className={styles['formatted-date']}>{formValues.startDate}</p>
@@ -449,6 +451,7 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
                 value={formValues.endDate}
                 className={styles.inputFieldTime + ` ${styles['date-input']}`}
                 type="date"
+                max={today}
                 min={formValues.startDate}
                 onChange={(e: any) => handleDateSelection(e, 'to_date')}
               />
