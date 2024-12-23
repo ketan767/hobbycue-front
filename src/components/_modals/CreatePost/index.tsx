@@ -938,7 +938,7 @@ export const CreatePost: React.FC<Props> = ({
           }`}
         >
           <h3 className={styles['modal-heading']}>
-            {editing ? 'Update Post' : 'Create Post'}
+            {/* {editing ? 'Update Post' : 'Create Post'} */}
           </h3>
           <div className={styles['create-post-modal']}>
             <div className={styles['image-posting-as']}>
@@ -981,6 +981,7 @@ export const CreatePost: React.FC<Props> = ({
                     setHobbies={setHobbies}
                     classForShowDropdown={styles['full-width-all']}
                     className={styles['profile-switcher-parent']}
+                    setSelectedHobbies={setSelectedHobbies}
                   />
                   {!isMobile && (
                     <FilledButton

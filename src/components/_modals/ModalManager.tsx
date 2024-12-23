@@ -650,6 +650,8 @@ const ModalManager: React.FC = () => {
               {/* Modal Close Icon */}
               {closable &&
                 activeModal !== 'auth' &&
+                activeModal !== 'create-post' &&
+                activeModal !== 'update-post' &&
                 activeModal !== 'social-media-share' &&
                 activeModal !== 'user-onboarding-welcome' &&
                 activeModal !== 'add-event' &&

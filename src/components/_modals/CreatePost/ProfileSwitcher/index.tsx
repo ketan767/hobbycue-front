@@ -9,6 +9,14 @@ import { updateActiveProfile } from '@/redux/slices/user'
 import { listingTypes } from '@/constants/constant'
 import { isMobile } from '@/utils'
 import { useMediaQuery } from '@mui/material'
+import useGetDefaultHobby from '../components/hobby/useDefaultHobby'
+
+type HobbyData = {
+  hobby: string
+  genre: string
+  hobbyId: string
+  genreId: string
+}
 
 type Props = {
   data: any
@@ -16,6 +24,7 @@ type Props = {
   setHobbies: any
   classForShowDropdown?: string
   className?: string
+  setSelectedHobbies: React.Dispatch<React.SetStateAction<HobbyData[]>>
 }
 
 const ProfileSwitcher: React.FC<Props> = ({
@@ -24,6 +33,7 @@ const ProfileSwitcher: React.FC<Props> = ({
   setHobbies,
   classForShowDropdown,
   className,
+  setSelectedHobbies,
 }) => {
   const { user, listing } = useSelector((state: RootState) => state.user)
   const filteredListing = listing.filter((item: any) => item.is_published)
@@ -32,12 +42,51 @@ const ProfileSwitcher: React.FC<Props> = ({
 
   useOutsideAlerter(dropdownRef, () => setShowDropdown(false))
   const isMobile = useMediaQuery('(max-width:1100px)')
+  const defaultFirstHobby = useGetDefaultHobby()
+
   const handleUpdateActiveProfile = (type: 'user' | 'listing', data: any) => {
     setData((prev: any) => {
       return { ...prev, type, data }
     })
     setHobbies(data?._hobbies)
     setShowDropdown(false)
+    if (type === 'listing') {
+      setSelectedHobbies([
+        {
+          hobby: data?._hobbies[0]?.hobby?.display,
+          genre: data?._hobbies[0]?.genre?.display
+            ? data?._hobbies[0]?.genre?.display
+            : null,
+          hobbyId: data?._hobbies[0]?.hobby?._id,
+          genreId: data?._hobbies[0]?.genre?._id
+            ? data?._hobbies[0]?.genre?._id
+            : null,
+        },
+      ])
+    } else {
+      const { firstHobby, firstGenre, firstHobbyId, firstGenreId } =
+        defaultFirstHobby()
+
+      const preferredLocation =
+        user?.preferences?.create_post_pref?.preferred_location?.city?.split(
+          ' ',
+        )[0]
+          ? user?.preferences?.create_post_pref?.preferred_location?.city?.split(
+              ' ',
+            )[0]
+          : 'All Locations'
+
+      setSelectedHobbies([
+        {
+          hobby: firstHobby,
+          genre: firstGenre,
+          hobbyId: firstHobbyId,
+          genreId: firstGenreId,
+        },
+      ])
+
+      setData((prev: any) => ({ ...prev, visibility: preferredLocation }))
+    }
   }
 
   const getClass = (type: any) => {
