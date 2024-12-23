@@ -46,26 +46,27 @@ const BlogComments = ({ data }: Props) => {
     message: '',
   })
   const [inputFocus, setInputFocus] = useState(false)
-  const [inputError, setInputError] = useState("")
+  const [inputError, setInputError] = useState('')
   const { activeModal, closable } = useSelector(
     (state: RootState) => state.modal,
   )
 
   const fetchComments = async () => {
     const { err, res } = await getBlogComment(
-      `_blog=${data?._id}&populate=_author`,
+      `_blog=${data?._id}&populate=_author&sort=createdAt`,
     )
     if (err) return console.log(err)
     setComments(res?.data?.data?.comments)
+    console.log('asifs obj', res?.data?.data?.comments)
   }
 
   const addComment = async (event: any) => {
     event.preventDefault()
     if (isLoggedIn) {
       event.preventDefault()
-      if (inputValue.trim() === "") {
-        setInputError("Comment cannot be empty");
-        return;
+      if (inputValue.trim() === '') {
+        setInputError('Comment cannot be empty')
+        return
       }
       if (user.is_onboarded === false) {
         router.push(`/profile/${user.profile_url}`)
