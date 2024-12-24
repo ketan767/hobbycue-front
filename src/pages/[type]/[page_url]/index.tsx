@@ -17,7 +17,7 @@ import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeT
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 
 import { useMediaQuery } from '@mui/material'
-import { htmlToPlainTextAdv, pageType } from '@/utils'
+import { formatDateRange, htmlToPlainTextAdv, pageType } from '@/utils'
 
 type Props = { data: ListingPageData; unformattedAbout?: string }
 
@@ -93,6 +93,77 @@ const ListingHome: React.FC<Props> = (props) => {
     return <ErrorPage restricted />
   }
 
+  const hobbiesDisplay =
+    props?.data?.pageData?._hobbies
+      ?.slice(0, 3)
+      ?.map((hobbyItem: any, index: any) => {
+        const hobbyDisplay = hobbyItem?.hobby?.display || ''
+        const genreDisplay = hobbyItem?.genre?.display
+          ? ` - ${hobbyItem?.genre?.display}`
+          : ''
+        const separator =
+          index < props?.data?.pageData?._hobbies.length - 1 && index < 2
+            ? ', '
+            : ''
+        return `${hobbyDisplay}${genreDisplay}${separator}`
+      })
+      ?.join('') || ''
+
+  const additionalHobbies =
+    props?.data?.pageData?._hobbies?.length > 3
+      ? ` (+${props?.data?.pageData?._hobbies?.length - 3})`
+      : ''
+
+  const result = `${hobbiesDisplay}${additionalHobbies}`
+
+  const address = [
+    props?.data?.pageData?.society,
+    props?.data?.pageData?.locality,
+    props?.data?.pageData?.city,
+  ]
+    .filter(Boolean)
+    .join(', ')
+
+  const pageTypeAndCity =
+    props?.data?.pageData?.page_type.map((item: any, idx: any) => {
+      if (idx === 0) {
+        return item
+      } else {
+        return ' ' + item
+      }
+    }) +
+      (props?.data?.pageData?._address?.city
+        ? ` | ${props?.data?.pageData?._address?.city}`
+        : '') || '\u00a0'
+
+  const pageTypeCityAndDate =
+    props?.data?.pageData?.page_type.map((item: any, idx: any) => {
+      if (idx === 0) {
+        return item
+      } else {
+        return ' ' + item
+      }
+    }) +
+      (props?.data?.pageData?._address?.city
+        ? ` | ${props?.data?.pageData?._address?.city}`
+        : '') ||
+    ('\u00a0' + props?.data?.pageData?.event_date_time &&
+      props?.data?.pageData?.event_date_time.length !== 0)
+      ? formatDateRange(props?.data?.pageData?.event_date_time[0])
+      : ''
+
+  const pageTypeAndPrice =
+    props?.data?.pageData?.page_type.map((item: any, idx: any) => {
+      if (idx === 0) {
+        return item
+      } else {
+        return ' ' + item
+      }
+    }) +
+    (props?.data?.pageData?.product_variant?.variations[0]?.value
+      ? ` | ₹${props?.data?.pageData?.product_variant?.variations[0]?.value}`
+      : ` | ₹0`)
+
   return (
     <>
       <Head>
@@ -112,13 +183,19 @@ const ListingHome: React.FC<Props> = (props) => {
         />
         <meta
           property="og:description"
-          // content={`${props?.data?.pageData?.tagline ?? ''}`}
           content={`${
-            (props?.data?.pageData?.tagline || '') +
-            (props.data?.pageData?.tagline && props?.unformattedAbout
-              ? ' | '
-              : '') +
-            (props?.unformattedAbout || '')
+            props?.data?.pageData?.type === 1 ||
+            props?.data?.pageData?.type === 2
+              ? props?.data?.pageData?.tagline
+                ? props?.data?.pageData?.tagline
+                : result + ';' + pageTypeAndCity
+              : props?.data?.pageData?.type === 3
+              ? props?.data?.pageData?.tagline
+                ? props?.data?.pageData?.tagline
+                : address + ';' + pageTypeCityAndDate
+              : props?.data?.pageData?.tagline
+              ? props?.data?.pageData?.tagline
+              : result + ';' + pageTypeAndPrice
           }`}
         />
 
