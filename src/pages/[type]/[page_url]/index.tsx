@@ -187,14 +187,14 @@ const ListingHome: React.FC<Props> = (props) => {
             props?.data?.pageData?.type === 1 ||
             props?.data?.pageData?.type === 2
               ? props?.data?.pageData?.tagline
-                ? props?.data?.pageData?.tagline
+                ? props?.data?.pageData?.tagline + ';' + pageTypeAndCity
                 : result + ';' + pageTypeAndCity
               : props?.data?.pageData?.type === 3
               ? props?.data?.pageData?.tagline
-                ? props?.data?.pageData?.tagline
+                ? props?.data?.pageData?.tagline + ';' + pageTypeCityAndDate
                 : address + ';' + pageTypeCityAndDate
               : props?.data?.pageData?.tagline
-              ? props?.data?.pageData?.tagline
+              ? props?.data?.pageData?.tagline + ';' + pageTypeAndPrice
               : result + ';' + pageTypeAndPrice
           }`}
         />
