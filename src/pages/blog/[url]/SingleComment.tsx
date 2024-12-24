@@ -60,8 +60,8 @@ const SingleComment: React.FC<Props> = ({
    */
   const pageUrlClass = styles.postUrl
   const processedContent = comment?.content
-    .replace(/<img\b[^>]*>/g, '')
-    .replace(/(https?:\/\/[^\s<]+)(?![^<]*<\/a>)/gi, (url: string) => {
+    ?.replace(/<img\b[^>]*>/g, '')
+    ?.replace(/(https?:\/\/[^\s<]+)(?![^<]*<\/a>)/gi, (url: string) => {
       const href =
         url.startsWith('http://') || url.startsWith('https://')
           ? url
@@ -70,13 +70,13 @@ const SingleComment: React.FC<Props> = ({
     })
 
   const finalContent = processedContent
-    .replace(/<a\b([^>]*)>/gi, (match: any) => {
+    ?.replace(/<a\b([^>]*)>/gi, (match: any) => {
       if (!match.includes('style=')) {
         return match.replace('<a', '<a style="color: rgb(128, 100, 162);"')
       }
       return match
     })
-    .replace(/\n/g, '<br>')
+    ?.replace(/\n/g, '<br>')
 
   useEffect(() => {
     const outsideClick = () => {
