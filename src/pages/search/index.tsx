@@ -100,6 +100,7 @@ type User = {
   tagline: string
   primary_address: { society: string; locality: string; city: string }
   profile_url: string
+  preferences: any
   _hobbies: any[]
 }
 type PeopleData = {
@@ -2009,14 +2010,32 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           )}
                         </div>
                         <div className={styles.userLocation}>
-                          {user.primary_address?.society}
+                          {(user?.preferences
+                            ? user?.preferences?.location_visibility ===
+                                'My Society'
+                            : false)?user.primary_address?.society:""}
                           {user.primary_address?.society &&
-                          user.primary_address?.locality
+                          user.primary_address?.locality &&
+                          (user?.preferences
+                            ? user?.preferences?.location_visibility ===
+                                'My Society'
+                            : false)
                             ? ', '
                             : ''}
-                          {user.primary_address?.locality}
+                          {(user?.preferences
+                            ? user?.preferences?.location_visibility ===
+                                'My Society' ||
+                              user?.preferences?.location_visibility ===
+                                'My Locality'
+                            : false)?user.primary_address?.locality:""}
                           {user.primary_address?.city &&
-                          user.primary_address?.locality
+                          user.primary_address?.locality &&
+                          (user?.preferences
+                            ? user?.preferences?.location_visibility ===
+                                'My Society' ||
+                              user?.preferences?.location_visibility ===
+                                'My Locality'
+                            : false)
                             ? ', '
                             : ''}
                           {user.primary_address?.city || '\u00a0'}
@@ -2685,464 +2704,262 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </section>
           )}
           {/* Product  */}
-          {!HideProduct && 
-            searchLoading === false && (
-              <section className={styles.userSection}>
-                <div className={styles.peopleItemsContainer}>
-                  {!isExplore && (
-                    <div className={styles.resultHeading}>Products</div>
-                  )}
+          {!HideProduct && searchLoading === false && (
+            <section className={styles.userSection}>
+              <div className={styles.peopleItemsContainer}>
+                {!isExplore && (
+                  <div className={styles.resultHeading}>Products</div>
+                )}
 
-                  {ProductResults.slice(0, showAllProducts ? undefined : 3).map(
-                    (page, index) => (
-                      <div
-                        className={styles.peopleItem}
-                        key={index}
-                        onClick={() => navigateToProductPage(page.page_url)}
-                        onMouseEnter={() => setHoveredProductIndex(index)}
-                        onMouseLeave={() => setHoveredProductIndex(-1)}
-                      >
-                        {hoveredProductIndex === index ? (
-                          <div className={styles['bookmark']}>
-                            <BookmarkOnCards setSnackbar={setSnackbar} />
-                          </div>
-                        ) : (
-                          <></>
-                        )}
-
-                        <div className={styles.peopleAvatar}>
-                          {page.profile_image ? (
-                            <img
-                              src={page.profile_image}
-                              alt={`${page.title}'s `}
-                              width={64}
-                              height={64}
-                              className={styles.peopleavatarImage}
-                            />
-                          ) : (
-                            <div
-                              className={`${styles['people-img']} default-product-listing-icon`}
-                            ></div>
-                          )}
+                {ProductResults.slice(0, showAllProducts ? undefined : 3).map(
+                  (page, index) => (
+                    <div
+                      className={styles.peopleItem}
+                      key={index}
+                      onClick={() => navigateToProductPage(page.page_url)}
+                      onMouseEnter={() => setHoveredProductIndex(index)}
+                      onMouseLeave={() => setHoveredProductIndex(-1)}
+                    >
+                      {hoveredProductIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
                         </div>
-                        <div className={styles.userDetails}>
-                          <div className={styles.userName}>{page?.title}</div>
-                          <div className={styles.userTagline}>
-                            {page?.tagline ? (
-                              page?.tagline
-                            ) : (
-                              <>
-                                <span>
-                                  {`${
-                                    page?._hobbies[0]?.hobby?.display
-                                      ? page?._hobbies[0]?.hobby?.display
-                                      : ''
-                                  }${
-                                    page?._hobbies[0]?.genre?.display
-                                      ? ' - ' +
-                                        page?._hobbies[0]?.genre?.display
-                                      : ''
-                                  }`}
-                                  {page?._hobbies[1]?.hobby?.display
-                                    ? ', '
-                                    : ''}
-                                  {`${
-                                    page?._hobbies[1]?.hobby?.display
-                                      ? page?._hobbies[1]?.hobby?.display
-                                      : ''
-                                  }${
-                                    page?._hobbies[1]?.genre?.display
-                                      ? ' - ' +
-                                        page?._hobbies[1]?.genre?.display
-                                      : ''
-                                  }`}
-                                  {page?._hobbies[2]?.hobby?.display
-                                    ? ', '
-                                    : ''}
-                                  {`${
-                                    page?._hobbies[2]?.hobby?.display
-                                      ? page?._hobbies[2]?.hobby?.display
-                                      : ''
-                                  }${
-                                    page?._hobbies[2]?.genre?.display
-                                      ? ' - ' +
-                                        page?._hobbies[2]?.genre?.display
-                                      : ''
-                                  }${
-                                    page?._hobbies?.length > 3
-                                      ? ' (+' +
-                                        (page?._hobbies?.length - 3) +
-                                        ')'
-                                      : ''
-                                  }`}
-                                </span>
-                              </>
-                            )}
-                          </div>
+                      ) : (
+                        <></>
+                      )}
+
+                      <div className={styles.peopleAvatar}>
+                        {page.profile_image ? (
+                          <img
+                            src={page.profile_image}
+                            alt={`${page.title}'s `}
+                            width={64}
+                            height={64}
+                            className={styles.peopleavatarImage}
+                          />
+                        ) : (
                           <div
-                            className={`${styles.userLocation} ${inter.className}`}
-                          >
-                            {page?.page_type?.map(
-                              (pt: string, index: number) => {
-                                return `${index > 0 ? ' ' : ''}${pt}`
-                              },
-                            ) +
-                              (page?.product_variant?.variations[0]?.value
-                                ? ` | ₹${page?.product_variant?.variations[0]?.value}`
-                                : ` | ₹0`) || '\u00a0'}
-                          </div>
-                        </div>
-                      </div>
-                    ),
-                  )}
-                  {showAllProducts && (
-                    <div className={styles.loaders}>
-                      {!hasNoMoreProductPages ? <SearchLoader /> : ''}
-                    </div>
-                  )}
-                  {showAllProducts
-                    ? undefined
-                    : (ProductResults ? (
-                        <div className={styles['view-more-btn-container']}>
-                          <button
-                            onClick={toggleShowAllproducts}
-                            className={`${styles['view-more-btn']} ${
-                              ProductResults.length <= 3
-                                ? styles.btnDisabled
-                                : ''
-                            }`}
-                            disabled={ProductResults.length <= 3}
-                          >
-                            View More
-                          </button>
-                          <button
-                            onClick={() =>
-                              setOpenExploreProduct(!openExploreProduct)
-                            }
-                            onMouseEnter={() => setExploreProductHoved(true)}
-                            onMouseLeave={() => setExploreProductHoved(false)}
-                            className={`${styles['explore-btn']}`}
-                          >
-                            <span>Explore</span>
-                            {!exploreProductHoved ? (
-                              <Image
-                                src={Dropdown}
-                                width={16}
-                                height={16}
-                                alt="Dropdown"
-                                className={`${styles.arrow} ${
-                                  openExploreProduct
-                                    ? `${styles.arrowRotated}`
-                                    : ''
-                                }`}
-                              />
-                            ) : (
-                              <Image
-                                src={DropdownWhite}
-                                width={16}
-                                height={16}
-                                alt="Dropdown"
-                                className={`${styles.arrow} ${
-                                  openExploreProduct
-                                    ? `${styles.arrowRotated}`
-                                    : ''
-                                }`}
-                              />
-                            )}
-                          </button>
-                        </div>
-                      ) : (
-                        ''
-                      )) || ''}
-                  <div
-                    className={`${styles.userExploreContainer} ${
-                      openExploreProduct ? styles.visible : styles.hidden
-                    }`}
-                  >
-                    <PExplore
-                      categoryValue={defaultProductCategory}
-                      setCategoryValue={setDefaultProductCategory}
-                    />
-                  </div>
-                  <div
-                    className={`${styles.userExploreContainer} ${
-                      hasNoMoreProductPages
-                        ? `${styles.visible} ${styles.singlePageExplore}`
-                        : styles.hidden
-                    } ${!filter ? styles.hidden : ''}`}
-                  >
-                    <PExplore
-                      categoryValue={defaultProductCategory}
-                      setCategoryValue={setDefaultProductCategory}
-                    />
-                  </div>
-                </div>
-              </section>
-            )}
-          {/* Classes  */}
-          {!HideClasses &&
-            searchLoading === false && (
-              <section className={styles.userSection}>
-                <div className={styles.peopleItemsContainer}>
-                  {!isExplore && (
-                    <div className={styles.resultHeading}>Classes</div>
-                  )}
-                  {ClassesResults.slice(0, showAllClasses ? undefined : 3).map(
-                    (page, index) => (
-                      <div
-                        className={styles.peopleItem}
-                        key={index}
-                        onClick={() => navigateToProgramPage(page.page_url)}
-                        onMouseEnter={() => setHoveredClassIndex(index)}
-                        onMouseLeave={() => setHoveredClassIndex(-1)}
-                      >
-                        {hoveredClassIndex === index ? (
-                          <div className={styles['bookmark']}>
-                            <BookmarkOnCards setSnackbar={setSnackbar} />
-                          </div>
-                        ) : (
-                          <></>
+                            className={`${styles['people-img']} default-product-listing-icon`}
+                          ></div>
                         )}
-
-                        <div className={styles.peopleAvatar}>
-                          {page.profile_image ? (
-                            <img
-                              src={page.profile_image}
-                              alt={`${page.title}'s `}
-                              width={64}
-                              height={64}
-                              className={styles.peopleavatarImage}
-                            />
+                      </div>
+                      <div className={styles.userDetails}>
+                        <div className={styles.userName}>{page?.title}</div>
+                        <div className={styles.userTagline}>
+                          {page?.tagline ? (
+                            page?.tagline
                           ) : (
-                            <div
-                              className={`${styles['people-img']} default-program-listing-icon`}
-                            ></div>
+                            <>
+                              <span>
+                                {`${
+                                  page?._hobbies[0]?.hobby?.display
+                                    ? page?._hobbies[0]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[0]?.genre?.display
+                                    ? ' - ' + page?._hobbies[0]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[1]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[1]?.hobby?.display
+                                    ? page?._hobbies[1]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[1]?.genre?.display
+                                    ? ' - ' + page?._hobbies[1]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[2]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[2]?.hobby?.display
+                                    ? page?._hobbies[2]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[2]?.genre?.display
+                                    ? ' - ' + page?._hobbies[2]?.genre?.display
+                                    : ''
+                                }${
+                                  page?._hobbies?.length > 3
+                                    ? ' (+' + (page?._hobbies?.length - 3) + ')'
+                                    : ''
+                                }`}
+                              </span>
+                            </>
                           )}
                         </div>
-                        <div className={styles.userDetails}>
-                          <div className={styles.userName}>{page?.title}</div>
-                          <div className={styles.userTagline}>
-                            {page?.tagline ? (
-                              page?.tagline
-                            ) : (
-                              <>
-                                <span>
-                                  {`${
-                                    page?._address?.society
-                                      ? page?._address?.society
-                                      : ''
-                                  }`}
-                                  {page?._address?.society &&
-                                  page?._address?.locality
-                                    ? ', '
-                                    : ''}
-                                  {`${
-                                    page?._address?.locality
-                                      ? page?._address?.locality
-                                      : ''
-                                  }`}
-                                  {page?._address?.locality &&
-                                  page?._address?.city
-                                    ? ', '
-                                    : ''}
-                                  {`${
-                                    page?._address?.city
-                                      ? page?._address?.city
-                                      : ''
-                                  }`}
-                                </span>
-                              </>
-                            )}
-                          </div>
-                          <div className={styles.blogAuthor}>
-                            <div className={styles.address}>
-                              {page?.page_type?.map(
-                                (pt: string, index: number) => {
-                                  return `${index > 0 ? ' ' : ''}${pt}`
-                                },
-                              ) +
-                                (page._address?.city
-                                  ? ` | ${page._address?.city}`
-                                  : '') || '\u00a0'}
-                            </div>
-
-                            <>
-                              {page?.event_date_time &&
-                                page?.event_date_time.length !== 0 && (
-                                  <span>
-                                    {' | '}
-                                    {formatDateRange(page?.event_date_time[0])}
-                                  </span>
-                                )}
-                            </>
-                          </div>
+                        <div
+                          className={`${styles.userLocation} ${inter.className}`}
+                        >
+                          {page?.page_type?.map((pt: string, index: number) => {
+                            return `${index > 0 ? ' ' : ''}${pt}`
+                          }) +
+                            (page?.product_variant?.variations[0]?.value
+                              ? ` | ₹${page?.product_variant?.variations[0]?.value}`
+                              : ` | ₹0`) || '\u00a0'}
                         </div>
                       </div>
-                    ),
-                  )}
-                  {showAllClasses
-                    ? undefined
-                    : (ClassesResults ? (
-                        <div className={styles['view-more-btn-container']}>
-                          <button
-                            onClick={toggleShowAllclasses}
-                            className={`${styles['view-more-btn']} ${
-                              ClassesResults.length <= 3
-                                ? styles.btnDisabled
-                                : ''
-                            }`}
-                            disabled={ClassesResults.length <= 3}
-                          >
-                            View More
-                          </button>
-                          <button
-                            onClick={() =>
-                              setOpenExploreClass(!openExploreClass)
-                            }
-                            onMouseEnter={() => setExploreClassHoved(true)}
-                            onMouseLeave={() => setExploreClassHoved(false)}
-                            className={`${styles['explore-btn']}`}
-                          >
-                            <span>Explore</span>
-                            {!exploreClassHoved ? (
-                              <Image
-                                src={Dropdown}
-                                width={16}
-                                height={16}
-                                alt="Dropdown"
-                                className={`${styles.arrow} ${
-                                  openExploreClass
-                                    ? `${styles.arrowRotated}`
-                                    : ''
-                                }`}
-                              />
-                            ) : (
-                              <Image
-                                src={DropdownWhite}
-                                width={16}
-                                height={16}
-                                alt="Dropdown"
-                                className={`${styles.arrow} ${
-                                  openExploreClass
-                                    ? `${styles.arrowRotated}`
-                                    : ''
-                                }`}
-                              />
-                            )}
-                          </button>
-                        </div>
-                      ) : (
-                        ''
-                      )) || ''}
-                  <div
-                    className={`${styles.userExploreContainer} ${
-                      openExploreClass ? styles.visible : styles.hidden
-                    }`}
-                  >
-                    <PExplore
-                      categoryValue={defaultClassCategory}
-                      setCategoryValue={setDefaultClassCategory}
-                    />
+                    </div>
+                  ),
+                )}
+                {showAllProducts && (
+                  <div className={styles.loaders}>
+                    {!hasNoMoreProductPages ? <SearchLoader /> : ''}
                   </div>
-                  {/* <div
-                  className={`${styles.userExploreContainer} ${hasNoMoreProgramPages ? `${styles.visible} ${styles.singlePageExplore}`:styles.hidden} ${!filter ? styles.hidden : ''}`}
+                )}
+                {showAllProducts
+                  ? undefined
+                  : (ProductResults ? (
+                      <div className={styles['view-more-btn-container']}>
+                        <button
+                          onClick={toggleShowAllproducts}
+                          className={`${styles['view-more-btn']} ${
+                            ProductResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={ProductResults.length <= 3}
+                        >
+                          View More
+                        </button>
+                        <button
+                          onClick={() =>
+                            setOpenExploreProduct(!openExploreProduct)
+                          }
+                          onMouseEnter={() => setExploreProductHoved(true)}
+                          onMouseLeave={() => setExploreProductHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!exploreProductHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreProduct
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreProduct
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExploreProduct ? styles.visible : styles.hidden
+                  }`}
                 >
                   <PExplore
-                    categoryValue={defaultProgramCategory}
-                    setCategoryValue={setDefaultProgramCategory}
+                    categoryValue={defaultProductCategory}
+                    setCategoryValue={setDefaultProductCategory}
                   />
-                </div> */}
                 </div>
-              </section>
-            )}
-          {/* Rentals  */}
-          {!HideRentals && searchLoading === false && (
-              <section className={styles.userSection}>
-                <div className={styles.peopleItemsContainer}>
-                  {!isExplore && (
-                    <div className={styles.resultHeading}>Rentals</div>
-                  )}
-                  {RentalResults.slice(0, showAllRentals ? undefined : 3).map(
-                    (page, index) => (
-                      <div
-                        className={styles.peopleItem}
-                        key={index}
-                        onClick={() => navigateToProductPage(page.page_url)}
-                        onMouseEnter={() => setHoveredRentalIndex(index)}
-                        onMouseLeave={() => setHoveredRentalIndex(-1)}
-                      >
-                        {hoveredRentalIndex === index ? (
-                          <div className={styles['bookmark']}>
-                            <BookmarkOnCards setSnackbar={setSnackbar} />
-                          </div>
-                        ) : (
-                          <></>
-                        )}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    hasNoMoreProductPages
+                      ? `${styles.visible} ${styles.singlePageExplore}`
+                      : styles.hidden
+                  } ${!filter ? styles.hidden : ''}`}
+                >
+                  <PExplore
+                    categoryValue={defaultProductCategory}
+                    setCategoryValue={setDefaultProductCategory}
+                  />
+                </div>
+              </div>
+            </section>
+          )}
+          {/* Classes  */}
+          {!HideClasses && searchLoading === false && (
+            <section className={styles.userSection}>
+              <div className={styles.peopleItemsContainer}>
+                {!isExplore && (
+                  <div className={styles.resultHeading}>Classes</div>
+                )}
+                {ClassesResults.slice(0, showAllClasses ? undefined : 3).map(
+                  (page, index) => (
+                    <div
+                      className={styles.peopleItem}
+                      key={index}
+                      onClick={() => navigateToProgramPage(page.page_url)}
+                      onMouseEnter={() => setHoveredClassIndex(index)}
+                      onMouseLeave={() => setHoveredClassIndex(-1)}
+                    >
+                      {hoveredClassIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
 
-                        <div className={styles.peopleAvatar}>
-                          {page.profile_image ? (
-                            <img
-                              src={page.profile_image}
-                              alt={`${page.title}'s `}
-                              width={64}
-                              height={64}
-                              className={styles.peopleavatarImage}
-                            />
+                      <div className={styles.peopleAvatar}>
+                        {page.profile_image ? (
+                          <img
+                            src={page.profile_image}
+                            alt={`${page.title}'s `}
+                            width={64}
+                            height={64}
+                            className={styles.peopleavatarImage}
+                          />
+                        ) : (
+                          <div
+                            className={`${styles['people-img']} default-program-listing-icon`}
+                          ></div>
+                        )}
+                      </div>
+                      <div className={styles.userDetails}>
+                        <div className={styles.userName}>{page?.title}</div>
+                        <div className={styles.userTagline}>
+                          {page?.tagline ? (
+                            page?.tagline
                           ) : (
-                            <div
-                              className={`${styles['people-img']} default-product-listing-icon`}
-                            ></div>
+                            <>
+                              <span>
+                                {`${
+                                  page?._address?.society
+                                    ? page?._address?.society
+                                    : ''
+                                }`}
+                                {page?._address?.society &&
+                                page?._address?.locality
+                                  ? ', '
+                                  : ''}
+                                {`${
+                                  page?._address?.locality
+                                    ? page?._address?.locality
+                                    : ''
+                                }`}
+                                {page?._address?.locality &&
+                                page?._address?.city
+                                  ? ', '
+                                  : ''}
+                                {`${
+                                  page?._address?.city
+                                    ? page?._address?.city
+                                    : ''
+                                }`}
+                              </span>
+                            </>
                           )}
                         </div>
-                        <div className={styles.userDetails}>
-                          <div className={styles.userName}>{page?.title}</div>
-                          <div className={styles.userTagline}>
-                            {page?.tagline ? (
-                              page?.tagline
-                            ) : (
-                              <>
-                                <span>
-                                  {`${
-                                    page?._hobbies[0]?.hobby?.display
-                                      ? page?._hobbies[0]?.hobby?.display
-                                      : ''
-                                  }${
-                                    page?._hobbies[0]?.genre?.display
-                                      ? ' - ' +
-                                        page?._hobbies[0]?.genre?.display
-                                      : ''
-                                  }`}
-                                  {page?._hobbies[1]?.hobby?.display
-                                    ? ', '
-                                    : ''}
-                                  {`${
-                                    page?._hobbies[1]?.hobby?.display
-                                      ? page?._hobbies[1]?.hobby?.display
-                                      : ''
-                                  }${
-                                    page?._hobbies[1]?.genre?.display
-                                      ? ' - ' +
-                                        page?._hobbies[1]?.genre?.display
-                                      : ''
-                                  }`}
-                                  {page?._hobbies[2]?.hobby?.display
-                                    ? ', '
-                                    : ''}
-                                  {`${
-                                    page?._hobbies[2]?.hobby?.display
-                                      ? page?._hobbies[2]?.hobby?.display
-                                      : ''
-                                  }${
-                                    page?._hobbies[2]?.genre?.display
-                                      ? ' - ' +
-                                        page?._hobbies[2]?.genre?.display
-                                      : ''
-                                  }`}
-                                </span>
-                              </>
-                            )}
-                          </div>
-                          <div className={styles.userLocation}>
+                        <div className={styles.blogAuthor}>
+                          <div className={styles.address}>
                             {page?.page_type?.map(
                               (pt: string, index: number) => {
                                 return `${index > 0 ? ' ' : ''}${pt}`
@@ -3152,75 +2969,78 @@ const MainContent: React.FC<SearchResultsProps> = ({
                                 ? ` | ${page._address?.city}`
                                 : '') || '\u00a0'}
                           </div>
+
+                          <>
+                            {page?.event_date_time &&
+                              page?.event_date_time.length !== 0 && (
+                                <span>
+                                  {' | '}
+                                  {formatDateRange(page?.event_date_time[0])}
+                                </span>
+                              )}
+                          </>
                         </div>
                       </div>
-                    ),
-                  )}
-                  {showAllRentals
-                    ? undefined
-                    : (RentalResults ? (
-                        <div className={styles['view-more-btn-container']}>
-                          <button
-                            onClick={toggleShowAllrentals}
-                            className={`${styles['view-more-btn']} ${
-                              RentalResults.length <= 3
-                                ? styles.btnDisabled
-                                : ''
-                            }`}
-                            disabled={RentalResults.length <= 3}
-                          >
-                            View More
-                          </button>
-                          <button
-                            onClick={() =>
-                              setOpenExploreRental(!openExploreRental)
-                            }
-                            onMouseEnter={() => setExploreRentalHoved(true)}
-                            onMouseLeave={() => setExploreRentalHoved(false)}
-                            className={`${styles['explore-btn']}`}
-                          >
-                            <span>Explore</span>
-                            {!exploreRentalHoved ? (
-                              <Image
-                                src={Dropdown}
-                                width={16}
-                                height={16}
-                                alt="Dropdown"
-                                className={`${styles.arrow} ${
-                                  openExploreRental
-                                    ? `${styles.arrowRotated}`
-                                    : ''
-                                }`}
-                              />
-                            ) : (
-                              <Image
-                                src={DropdownWhite}
-                                width={16}
-                                height={16}
-                                alt="Dropdown"
-                                className={`${styles.arrow} ${
-                                  openExploreRental
-                                    ? `${styles.arrowRotated}`
-                                    : ''
-                                }`}
-                              />
-                            )}
-                          </button>
-                        </div>
-                      ) : (
-                        ''
-                      )) || ''}
-                  <div
-                    className={`${styles.userExploreContainer} ${
-                      openExploreRental ? styles.visible : styles.hidden
-                    }`}
-                  >
-                    <PExplore
-                      categoryValue={defaultRentalCategory}
-                      setCategoryValue={setDefaultRentalCategory}
-                    />
-                  </div>
-                  {/* <div
+                    </div>
+                  ),
+                )}
+                {showAllClasses
+                  ? undefined
+                  : (ClassesResults ? (
+                      <div className={styles['view-more-btn-container']}>
+                        <button
+                          onClick={toggleShowAllclasses}
+                          className={`${styles['view-more-btn']} ${
+                            ClassesResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={ClassesResults.length <= 3}
+                        >
+                          View More
+                        </button>
+                        <button
+                          onClick={() => setOpenExploreClass(!openExploreClass)}
+                          onMouseEnter={() => setExploreClassHoved(true)}
+                          onMouseLeave={() => setExploreClassHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!exploreClassHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreClass ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreClass ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExploreClass ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PExplore
+                    categoryValue={defaultClassCategory}
+                    setCategoryValue={setDefaultClassCategory}
+                  />
+                </div>
+                {/* <div
                   className={`${styles.userExploreContainer} ${hasNoMoreProgramPages ? `${styles.visible} ${styles.singlePageExplore}`:styles.hidden} ${!filter ? styles.hidden : ''}`}
                 >
                   <PExplore
@@ -3228,9 +3048,174 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     setCategoryValue={setDefaultProgramCategory}
                   />
                 </div> */}
+              </div>
+            </section>
+          )}
+          {/* Rentals  */}
+          {!HideRentals && searchLoading === false && (
+            <section className={styles.userSection}>
+              <div className={styles.peopleItemsContainer}>
+                {!isExplore && (
+                  <div className={styles.resultHeading}>Rentals</div>
+                )}
+                {RentalResults.slice(0, showAllRentals ? undefined : 3).map(
+                  (page, index) => (
+                    <div
+                      className={styles.peopleItem}
+                      key={index}
+                      onClick={() => navigateToProductPage(page.page_url)}
+                      onMouseEnter={() => setHoveredRentalIndex(index)}
+                      onMouseLeave={() => setHoveredRentalIndex(-1)}
+                    >
+                      {hoveredRentalIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+
+                      <div className={styles.peopleAvatar}>
+                        {page.profile_image ? (
+                          <img
+                            src={page.profile_image}
+                            alt={`${page.title}'s `}
+                            width={64}
+                            height={64}
+                            className={styles.peopleavatarImage}
+                          />
+                        ) : (
+                          <div
+                            className={`${styles['people-img']} default-product-listing-icon`}
+                          ></div>
+                        )}
+                      </div>
+                      <div className={styles.userDetails}>
+                        <div className={styles.userName}>{page?.title}</div>
+                        <div className={styles.userTagline}>
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._hobbies[0]?.hobby?.display
+                                    ? page?._hobbies[0]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[0]?.genre?.display
+                                    ? ' - ' + page?._hobbies[0]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[1]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[1]?.hobby?.display
+                                    ? page?._hobbies[1]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[1]?.genre?.display
+                                    ? ' - ' + page?._hobbies[1]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[2]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[2]?.hobby?.display
+                                    ? page?._hobbies[2]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[2]?.genre?.display
+                                    ? ' - ' + page?._hobbies[2]?.genre?.display
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                        <div className={styles.userLocation}>
+                          {page?.page_type?.map((pt: string, index: number) => {
+                            return `${index > 0 ? ' ' : ''}${pt}`
+                          }) +
+                            (page._address?.city
+                              ? ` | ${page._address?.city}`
+                              : '') || '\u00a0'}
+                        </div>
+                      </div>
+                    </div>
+                  ),
+                )}
+                {showAllRentals
+                  ? undefined
+                  : (RentalResults ? (
+                      <div className={styles['view-more-btn-container']}>
+                        <button
+                          onClick={toggleShowAllrentals}
+                          className={`${styles['view-more-btn']} ${
+                            RentalResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={RentalResults.length <= 3}
+                        >
+                          View More
+                        </button>
+                        <button
+                          onClick={() =>
+                            setOpenExploreRental(!openExploreRental)
+                          }
+                          onMouseEnter={() => setExploreRentalHoved(true)}
+                          onMouseLeave={() => setExploreRentalHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!exploreRentalHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreRental
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreRental
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExploreRental ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PExplore
+                    categoryValue={defaultRentalCategory}
+                    setCategoryValue={setDefaultRentalCategory}
+                  />
                 </div>
-              </section>
-            )}
+                {/* <div
+                  className={`${styles.userExploreContainer} ${hasNoMoreProgramPages ? `${styles.visible} ${styles.singlePageExplore}`:styles.hidden} ${!filter ? styles.hidden : ''}`}
+                >
+                  <PExplore
+                    categoryValue={defaultProgramCategory}
+                    setCategoryValue={setDefaultProgramCategory}
+                  />
+                </div> */}
+              </div>
+            </section>
+          )}
           {/* Posts  */}
           {!HidePosts && searchLoading === false && (
             <section className={styles.userSection}>
