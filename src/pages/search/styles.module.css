@@ -900,7 +900,7 @@
 
 .btnDisabled {
   color: #ccc1da !important;
-  border:1px solid #ccc1da !important;
+  border: 1px solid #ccc1da !important;
 }
 .btnDisabled:hover {
   background-color: #fff;
@@ -1187,6 +1187,10 @@
   .dropdownLocation-below-70vh {
     top: auto;
     bottom: 45px;
+  }
+  .submitButtonMobile {
+    width: 114px;
+    max-width: 114px;
   }
 }
 

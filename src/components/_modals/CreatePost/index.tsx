@@ -397,6 +397,7 @@ export const CreatePost: React.FC<Props> = ({
   const hobbyRef = useRef<HTMLInputElement>(null)
   const genreRef = useRef<HTMLInputElement>(null)
   const [metadataImg, setMetaDataImg] = useState('')
+    const [openDropdownId, setOpenDropdownId] = useState<string | null|undefined>(null);
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     DropdownListItem[]
@@ -1062,6 +1063,10 @@ export const CreatePost: React.FC<Props> = ({
                     className={styles['input-select']}
                     openDropdown={openDropdown}
                     setOpenDropdown={setOpenDropdown}
+                    singleActiveMode={true}
+                      openDropdownId={openDropdownId}
+                      setOpenDropdownId={setOpenDropdownId}
+                      id={'hobbyCreatePost'}
                   >
                     <>
                       {hobbies?.length > 0 && (
@@ -1194,6 +1199,10 @@ export const CreatePost: React.FC<Props> = ({
                       style={{ width: '229px', marginLeft: '62px' }}
                       // inputProps={{ 'aria-label': 'Without label' }}
                       // className={` ${styles['visibility-dropdown']}`}
+                      singleActiveMode={true}
+                      openDropdownId={openDropdownId}
+                      setOpenDropdownId={setOpenDropdownId}
+                      id={'locationCreatePost'}
                     >
                       {visibilityData?.map((item: any, idx) => {
                         return (
@@ -1224,6 +1233,10 @@ export const CreatePost: React.FC<Props> = ({
                       }
                       // inputProps={{ 'aria-label': 'Without label' }}
                       // className={` ${styles['visibility-dropdown']}`}
+                      singleActiveMode={true}
+                      openDropdownId={openDropdownId}
+                      setOpenDropdownId={setOpenDropdownId}
+                      id={'locationCreatePost'}
                     >
                       {visibilityData?.map((item: any, idx: number) => {
                         return (
@@ -1481,10 +1494,10 @@ export const CreatePost: React.FC<Props> = ({
                           {!isMobile && metaData?.url && (
                             <>
                               <p className={styles['metadata-url']}>
-                                {metaData?.description.split(';')[0]}
+                                {metaData?.description?.split(';')[0]}
                               </p>
                               <p className={styles['metadata-url']}>
-                                {metaData?.description.split(';')[1]}
+                                {metaData?.description?.split(';')[1]}
                               </p>
                             </>
                           )}
@@ -1494,11 +1507,11 @@ export const CreatePost: React.FC<Props> = ({
                         <>
                           <p className={styles['metadata-url']}>
                             {' '}
-                            {metaData?.description.split(';')[0]}
+                            {metaData?.description?.split(';')[0]}
                           </p>
                           <p className={styles['metadata-url']}>
                             {' '}
-                            {metaData?.description.split(';')[1]}
+                            {metaData?.description?.split(';')[1]}
                           </p>
                         </>
                       )}
