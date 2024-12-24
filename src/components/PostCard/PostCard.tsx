@@ -661,7 +661,7 @@ const PostCard: React.FC<Props> = (props) => {
                         <div className={styles.videoPlayer}>
                           <ReactPlayer
                             className={styles.reactplayer}
-                            style={{maxHeight: "376.31px"}}
+                            style={{ maxHeight: '376.31px' }}
                             width="100%"
                             url={url}
                             controls={true}
@@ -848,7 +848,14 @@ const PostCard: React.FC<Props> = (props) => {
                                 target="_blank"
                                 className={styles.contentUrl}
                               >
-                                {metaData?.description}
+                                {metaData?.description.split(';')[0]}
+                              </a>
+                              <a
+                                href={url}
+                                target="_blank"
+                                className={styles.contentUrl}
+                              >
+                                {metaData?.description.split(';')[1]}
                               </a>
                             </div>
                           </div>

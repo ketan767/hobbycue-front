@@ -17,9 +17,17 @@ import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeT
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 
 import { useMediaQuery } from '@mui/material'
-import { htmlToPlainTextAdv, pageType } from '@/utils'
+import { formatDateRange, htmlToPlainTextAdv, pageType } from '@/utils'
 
-type Props = { data: ListingPageData; unformattedAbout?: string }
+type Props = {
+  data: ListingPageData
+  unformattedAbout?: string
+  address: any
+  result: any
+  pageTypeAndCity: any
+  date: any
+  pageTypeAndPrice: any
+}
 
 const ListingHome: React.FC<Props> = (props) => {
   console.warn({ props })
@@ -30,6 +38,7 @@ const ListingHome: React.FC<Props> = (props) => {
     location: false,
     contact: false,
   })
+
   const { listing } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(listing)
   const { user } = useSelector((state: RootState) => state.user)
@@ -112,13 +121,27 @@ const ListingHome: React.FC<Props> = (props) => {
         />
         <meta
           property="og:description"
-          // content={`${props?.data?.pageData?.tagline ?? ''}`}
           content={`${
-            (props?.data?.pageData?.tagline || '') +
-            (props.data?.pageData?.tagline && props?.unformattedAbout
-              ? ' | '
-              : '') +
-            (props?.unformattedAbout || '')
+            props?.data?.pageData?.type === 1 ||
+            props?.data?.pageData?.type === 2
+              ? props?.data?.pageData?.tagline
+                ? props?.data?.pageData?.tagline + ';' + props?.pageTypeAndCity
+                : props?.result + ';' + props.pageTypeAndCity
+              : props?.data?.pageData?.type === 3
+              ? props?.data?.pageData?.tagline
+                ? props?.data?.pageData?.tagline +
+                  ';' +
+                  props?.pageTypeAndCity +
+                  ' ' +
+                  props?.date
+                : props?.address +
+                  ';' +
+                  props?.pageTypeAndCity +
+                  ' ' +
+                  props?.date
+              : props?.data?.pageData?.tagline
+              ? props?.data?.pageData?.tagline + ';' + props?.pageTypeAndPrice
+              : props?.result + ';' + props?.pageTypeAndPrice
           }`}
         />
 
@@ -186,22 +209,74 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     }
   }
 
-  const data = {
-    pageData: res?.data.data.listings[0],
-    postsData: null,
-    mediaData: null,
-    reviewsData: null,
-    eventsData: null,
-    storeData: null,
-  }
-  const unformattedAbout = htmlToPlainTextAdv(
-    res?.data.data.listings[0]?.description,
-  )
+  const pageData = res?.data.data.listings[0]
+
+  const hobbiesDisplay =
+    pageData?._hobbies
+      ?.slice(0, 3)
+      ?.map((hobbyItem: any, index: any) => {
+        const hobbyDisplay = hobbyItem?.hobby?.display || ''
+        const genreDisplay = hobbyItem?.genre?.display
+          ? ` - ${hobbyItem?.genre?.display}`
+          : ''
+        const separator =
+          index < pageData?._hobbies.length - 1 && index < 2 ? ', ' : ''
+        return `${hobbyDisplay}${genreDisplay}${separator}`
+      })
+      ?.join('') || ''
+
+  const additionalHobbies =
+    pageData?._hobbies?.length > 3
+      ? ` (+${pageData?._hobbies?.length - 3})`
+      : ''
+
+  const result = `${hobbiesDisplay}${additionalHobbies}`
+
+  const address = [
+    pageData?._address?.society,
+    pageData?._address?.locality,
+    pageData?._address?.city,
+  ]
+    .filter(Boolean)
+    .join(', ')
+
+  const pageTypeAndCity =
+    pageData?.page_type.map((pt: string, index: number) => {
+      return `${index > 0 ? ' ' : ''}${pt}`
+    }) + (pageData?._address?.city ? ` | ${pageData?._address?.city}` : '') ||
+    '\u00a0'
+
+  const date =
+    pageData?.event_date_time.length !== 0
+      ? formatDateRange(pageData?.event_date_time[0])
+      : ''
+
+  const pageTypeAndPrice =
+    pageData?.page_type.map((pt: string, index: number) => {
+      return `${index > 0 ? ' ' : ''}${pt}`
+    }) +
+    (pageData?.product_variant?.variations[0]?.value
+      ? ` | ₹${pageData?.product_variant?.variations[0]?.value}`
+      : ` | ₹0`)
+
+  const unformattedAbout = htmlToPlainTextAdv(pageData?.description)
 
   return {
     props: {
-      data,
+      data: {
+        pageData,
+        postsData: null,
+        mediaData: null,
+        reviewsData: null,
+        eventsData: null,
+        storeData: null,
+      },
+      address,
       unformattedAbout,
+      result,
+      pageTypeAndCity,
+      date,
+      pageTypeAndPrice,
     },
   }
 }
