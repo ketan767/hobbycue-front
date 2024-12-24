@@ -15,8 +15,8 @@ type Props = {
 }
 
 const haveCommonHobby = (currentUser: any, profileUser: any): boolean => {
-  return currentUser._hobbies.some((hobby : any) =>
-    profileUser._hobbies.some((profileHobby : any) => profileHobby.hobby._id === hobby.hobby._id)
+  return currentUser._hobbies?.some((hobby : any) =>
+    profileUser._hobbies?.some((profileHobby : any) => profileHobby.hobby._id === hobby.hobby._id)
   );
 };
 
@@ -28,7 +28,6 @@ const canViewField = (currentUser: any, profileUser: any, visibilityType: 'email
   
   switch (visibilityPreference) {
     
-    
     case 'Everyone':
       return true;
     case 'No one':
@@ -38,10 +37,10 @@ const canViewField = (currentUser: any, profileUser: any, visibilityType: 'email
     case 'Common Hobby and City':
       return (
         haveCommonHobby(currentUser, profileUser) &&
-        currentUser.primary_address.city === profileUser.primary_address.city
+        currentUser?.primary_address?.city === profileUser?.primary_address?.city
       );
     case 'Common Society':
-      return currentUser.primary_address.society === profileUser.primary_address.society;
+      return currentUser?.primary_address?.society === profileUser?.primary_address?.society;
     default:
       return false;
   }

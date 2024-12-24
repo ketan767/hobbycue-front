@@ -12,6 +12,7 @@ export interface User {
   primary_address: { society: string; locality: string; city: string }
   profile_url: string
   _hobbies: any[]
+  preferences: any
 }
 
 export interface Page {
