@@ -117,32 +117,24 @@ const ListingHome: React.FC<Props> = (props) => {
   const result = `${hobbiesDisplay}${additionalHobbies}`
 
   const address = [
-    props?.data?.pageData?.society,
-    props?.data?.pageData?.locality,
-    props?.data?.pageData?.city,
+    props?.data?.pageData?._address?.society,
+    props?.data?.pageData?._address?.locality,
+    props?.data?.pageData?._address?.city,
   ]
     .filter(Boolean)
     .join(', ')
 
   const pageTypeAndCity =
-    props?.data?.pageData?.page_type.map((item: any, idx: any) => {
-      if (idx === 0) {
-        return item
-      } else {
-        return ' ' + item
-      }
+    props?.data?.pageData?.page_type.map((pt: string, index: number) => {
+      return `${index > 0 ? ' ' : ''}${pt}`
     }) +
       (props?.data?.pageData?._address?.city
         ? ` | ${props?.data?.pageData?._address?.city}`
         : '') || '\u00a0'
 
   const pageTypeCityAndDate =
-    props?.data?.pageData?.page_type.map((item: any, idx: any) => {
-      if (idx === 0) {
-        return item
-      } else {
-        return ' ' + item
-      }
+    props?.data?.pageData?.page_type.map((pt: string, index: number) => {
+      return `${index > 0 ? ' ' : ''}${pt}`
     }) +
       (props?.data?.pageData?._address?.city
         ? ` | ${props?.data?.pageData?._address?.city}`
@@ -153,17 +145,13 @@ const ListingHome: React.FC<Props> = (props) => {
       : ''
 
   const pageTypeAndPrice =
-    props?.data?.pageData?.page_type.map((item: any, idx: any) => {
-      if (idx === 0) {
-        return item
-      } else {
-        return ' ' + item
-      }
+    props?.data?.pageData?.page_type.map((pt: string, index: number) => {
+      return `${index > 0 ? ' ' : ''}${pt}`
     }) +
     (props?.data?.pageData?.product_variant?.variations[0]?.value
       ? ` | ₹${props?.data?.pageData?.product_variant?.variations[0]?.value}`
       : ` | ₹0`)
-
+  console.warn('pagetypeandcity', result)
   return (
     <>
       <Head>
@@ -186,14 +174,14 @@ const ListingHome: React.FC<Props> = (props) => {
           content={`${
             props?.data?.pageData?.type === 1 ||
             props?.data?.pageData?.type === 2
-              ? props?.data?.pageData?.tagline
+              ? props?.data?.pageData?.tagline?.length !== 0
                 ? props?.data?.pageData?.tagline + ';' + pageTypeAndCity
                 : result + ';' + pageTypeAndCity
               : props?.data?.pageData?.type === 3
-              ? props?.data?.pageData?.tagline
+              ? props?.data?.pageData?.tagline?.length !== 0
                 ? props?.data?.pageData?.tagline + ';' + pageTypeCityAndDate
                 : address + ';' + pageTypeCityAndDate
-              : props?.data?.pageData?.tagline
+              : props?.data?.pageData?.tagline?.length !== 0
               ? props?.data?.pageData?.tagline + ';' + pageTypeAndPrice
               : result + ';' + pageTypeAndPrice
           }`}
