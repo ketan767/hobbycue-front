@@ -579,7 +579,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
           )}
 
           {/** Sticky header */}
-          {!isMobileScreen && showStickyHeader && (
+          {!isMobileScreen && showStickyHeader && !isEditing && (
             <BlogStickyHeader
               data={data}
               vote={vote}

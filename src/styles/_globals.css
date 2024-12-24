@@ -352,6 +352,10 @@ select:-webkit-autofill {
   width: 100%;
 }
 
+.blog-quill .ql-toolbar span {
+  margin: 0 !important;
+}
+
 .blog-quill .ql-toolbar:after {
   content: none !important;
 }

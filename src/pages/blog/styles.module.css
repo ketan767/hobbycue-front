@@ -40,13 +40,11 @@
 
 .no-post-text {
   font-size: 14px;
-    font-weight: 500;
-    color: #6d747a;
-
+  font-weight: 500;
+  color: #6d747a;
 }
 
 .container {
-
   max-width: 1296px;
   margin: 0 auto;
   background-color: #f2f0f5;
@@ -67,7 +65,7 @@
 
   height: 90vh;
   position: sticky;
-  top: calc(var(--navbar-height-desktop)) ;
+  top: calc(var(--navbar-height-desktop));
   margin-bottom: var(--spacing-12);
 }
 
@@ -155,8 +153,8 @@
 }
 
 .blogContent p:has(+ ul) {
-   margin-bottom: 0px;
- }
+  margin-bottom: 0px;
+}
 
 .blogContent > p > a > img {
   aspect-ratio: auto !important;
@@ -180,12 +178,12 @@
 
 .blogContent ol,
 .blogContent ul {
-  color: var(--Grey-Darkest, #08090a);
-  font-family: Cambria;
-  font-size: 16px !important;
+  color: var(--Grey-Darkest, #08090a) !important;
+  font-family: Cambria !important;
+  font-size: 18px !important;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px;
+  line-height: 26px !important;
 
   padding-left: 4px;
   margin-bottom: 11px;
@@ -460,10 +458,8 @@
 
 .ql-editor figure,
 .blogContent figure,
-.blogContent 
-.ql-editor {
+.blogContent .ql-editor {
   display: block;
-
 }
 
 .ql-editor figcaption,
@@ -574,7 +570,7 @@
   letter-spacing: 0em;
   text-align: left;
   color: #6d747a;
-  
+
   max-width: inherit;
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -657,6 +653,18 @@
 }
 
 @media screen and (max-width: 1100px) {
+  .blogContent p,
+  .blogContent ul,
+  .quill p,
+  .quill ul {
+    font-size: 20px !important;
+  }
+
+  .blogContent img,
+  .quill img {
+    width: 100% !important;
+  }
+
   .buttonWrapper {
     position: static;
     margin-left: auto;
@@ -674,7 +682,7 @@
     line-clamp: 2;
   }
 
-  .profile-title{
+  .profile-title {
     -webkit-line-clamp: 2;
     line-clamp: 2;
   }
@@ -714,7 +722,6 @@
   }
 }
 
-
 .gridContainer {
   margin: 0 auto;
   max-width: 1296px;
@@ -723,7 +730,6 @@
   row-gap: 12px;
   column-gap: 24px;
 }
-
 
 @media (max-width: 1100px) {
   .blogButtons {
@@ -773,7 +779,7 @@
 
   .blog-title {
     font-family: Poppins;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 500;
     line-height: 23.12px;
     text-align: center;
@@ -782,7 +788,7 @@
 
   .blog-desc {
     font-family: Poppins;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 500;
     line-height: 13.21px;
     text-align: center;
