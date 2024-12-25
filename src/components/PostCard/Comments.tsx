@@ -25,6 +25,7 @@ type Props = {
   showAllComments?: boolean
   getInput?: (x: string) => void
   hideSeeMore?: boolean
+  activeCommentBox?: boolean
 }
 
 const PostComments = ({
@@ -34,6 +35,7 @@ const PostComments = ({
   showAllComments,
   getInput,
   hideSeeMore,
+  activeCommentBox,
 }: Props) => {
   const router = useRouter()
   const dispatch = useDispatch()
@@ -125,29 +127,12 @@ const PostComments = ({
       dispatch(openModal({ type: 'auth', closable: true }))
     }
   }
-  const editReportDeleteRef: any = useRef(null)
-  // useEffect(() => {
-  //   function handleClickOutside(event: Event) {
-  //     if (
-  //       editReportDeleteRef.current &&
-  //       !editReportDeleteRef.current.contains(event.target)
-  //     ) {
-  //       setOpenAction(false)
-  //     }
-  //   }
 
-  //   // Bind the event listener
-  //   document.addEventListener('click', handleClickOutside)
-
-  //   // Unbind the event listener on cleanup
-  //   return () => {
-  //     document.removeEventListener('click', handleClickOutside)
-  //   }
-  // }, [])
-
-  const handleShowDelete = (postid: string) => {
-    setDeleteData({ open: true, _id: postid })
-  }
+  useEffect(() => {
+    if (activeCommentBox) {
+      inputRef.current.focus()
+    }
+  }, [activeCommentBox])
 
   useEffect(() => {
     if (showAllComments !== null && showAllComments !== undefined) {

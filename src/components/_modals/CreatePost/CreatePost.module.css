@@ -65,7 +65,7 @@
 }
 
 .image-posting-as > aside div {
-  /* display: grid; */
+  display: grid;
   flex-direction: column;
   gap: var(--spacing-4);
   /* background-color: #ffffff; */
@@ -580,6 +580,9 @@
     display: flex !important;
     justify-content: center !important;
     align-items: stretch !important;
+  }
+  .options-container-class {
+    max-height: 300px !important;
   }
 
   .input-select > header > p {
