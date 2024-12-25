@@ -84,139 +84,139 @@ const commentIcon = (
 interface LinksLoaderProps {}
 
 const LinksLoader: FC<LinksLoaderProps> = ({}) => {
-
   const isMobile = useMediaQuery('(max-width:1100px)')
-  
+
   return (
     <div className={styles.wrapper}>
-      <div style={{ display: 'flex', width:"100%" }}>
+      <div style={{ display: 'flex', width: '100%' }}>
         <div className={styles.box}></div>
         <div className={styles.content}>
-          {
-            isMobile ? (
-          <ContentLoader
-            speed={2}
-            width="100%"
-            backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
-            height={130}
-            viewBox='0 0 480 auto'
-          >
-            <rect
-              x="0"
-              y="0"
+          {isMobile ? (
+            <ContentLoader
+              speed={2}
               width="100%"
-              height="10"
-              rx={6}
-              ry={6}
-              fill="#F7F5F9"
-            />
-            <rect
-              x="0"
-              y="15"
-              width="80%"
-              height="10"
-              rx={6}
-              ry={6}
-              fill="#F7F5F9"
-            />
-            {/* two stroke in a line */}
-            <rect
-              x="0"
-              y="38"
-              width="20%"
-              height="10"
-              rx={6}
-              ry={6}
-              fill="#F7F5F9"
-            />
-            <rect
-              x="40%"
-              y="38"
-              width="20%"
-              height="10"
-              rx={6}
-              ry={6}
-              fill="#F7F5F9"
-            />
-            {/* two stroke in a line */}
-            <rect
-              x="0"
-              y="57"
-              width="22%"
-              height="10"
-              rx={6}
-              ry={6}
-              fill="#F7F5F9"
-            />
-            <rect
-              x="40%"
-              y="57"
-              width="20%"
-              height="10"
-              rx={6}
-              ry={6}
-              fill="#F7F5F9"
-            />
-          </ContentLoader>
-            ) : (
-          <ContentLoader
-            speed={2}
-            width="100%"
-            backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
-            height={130}
-          >
-            <rect
-              x="0"
-              y="0"
-              width="254"
-              height="14"
-              rx={6}
-              ry={6}
-              fill="#F7F5F9"
-            />
-            <rect
-              x="0"
-              y="24"
-              width="157"
-              height="14"
-              rx={6}
-              ry={6}
-              fill="#F7F5F9"
-            />
+              backgroundColor="#D9DBE9"
+              foregroundColor="#ecebeb"
+              height={130}
+              viewBox="0 0 480 auto"
+            >
+              <rect
+                x="0"
+                y="0"
+                width="100%"
+                height="10"
+                rx={6}
+                ry={6}
+                fill="#F7F5F9"
+              />
+              <rect
+                x="0"
+                y="15"
+                width="80%"
+                height="10"
+                rx={6}
+                ry={6}
+                fill="#F7F5F9"
+              />
+              {/* two stroke in a line */}
+              <rect
+                x="0"
+                y="38"
+                width="20%"
+                height="10"
+                rx={6}
+                ry={6}
+                fill="#F7F5F9"
+              />
+              <rect
+                x="40%"
+                y="38"
+                width="20%"
+                height="10"
+                rx={6}
+                ry={6}
+                fill="#F7F5F9"
+              />
+              {/* two stroke in a line */}
+              <rect
+                x="0"
+                y="57"
+                width="22%"
+                height="10"
+                rx={6}
+                ry={6}
+                fill="#F7F5F9"
+              />
+              <rect
+                x="40%"
+                y="57"
+                width="20%"
+                height="10"
+                rx={6}
+                ry={6}
+                fill="#F7F5F9"
+              />
+            </ContentLoader>
+          ) : (
+            <ContentLoader
+              speed={2}
+              width="100%"
+              backgroundColor="#D9DBE9"
+              foregroundColor="#ecebeb"
+              height={130}
+            >
+              <rect
+                x="0"
+                y="0"
+                width="250"
+                height="14"
+                rx={6}
+                ry={6}
+                fill="#F7F5F9"
+              />
+              <rect
+                x="0"
+                y="24"
+                width="157"
+                height="14"
+                rx={6}
+                ry={6}
+                fill="#F7F5F9"
+              />
 
-            <rect
-              x="0"
-              y="60"
-              width="145"
-              height="14"
-              rx={6}
-              ry={6}
-              fill="#F7F5F9"
-            />
-            <rect
-              x="0"
-              y="84"
-              width="113"
-              height="14"
-              rx={6}
-              ry={6}
-              fill="#F7F5F9"
-            />
-          </ContentLoader>
-            )
-          }
+              <rect
+                x="0"
+                y="60"
+                width="145"
+                height="14"
+                rx={6}
+                ry={6}
+                fill="#F7F5F9"
+              />
+              <rect
+                x="0"
+                y="84"
+                width="113"
+                height="14"
+                rx={6}
+                ry={6}
+                fill="#F7F5F9"
+              />
+            </ContentLoader>
+          )}
           <div className={styles.iconsContainer}>
             <div className={styles.upArrow}>{upArrow}</div>
-            <svg width="25" height="14" viewBox="0 0 25 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="0.5" width="24" height="14" rx="7" fill="#D9DBE9"/>
+            <svg
+              width="25"
+              height="14"
+              viewBox="0 0 25 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect x="0.5" width="24" height="14" rx="7" fill="#D9DBE9" />
             </svg>
             <div className={styles.downArrow}>{downArrow}</div>
             <div className={styles.commentIcon}>{commentIcon}</div>
-            <svg width="23" height="14" viewBox="0 0 23 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="0.5" width="22" height="14" rx="7" fill="#D9DBE9"/>
-            </svg>
           </div>
         </div>
       </div>
@@ -224,20 +224,23 @@ const LinksLoader: FC<LinksLoaderProps> = ({}) => {
         <ContentLoader
           speed={2}
           width="100%"
-          backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
-          height={20}
+          backgroundColor="#D9DBE9"
+          foregroundColor="#ecebeb"
+          height={isMobile ? 36 : 40}
           viewBox="0 0 50 auto"
         >
-          <rect
-            x="0"
-            y="4"
-            width="95%"
-            height="10"
-            rx={6}
-            ry={6}
-            fill="#F7F5F9"
-          />
+          {isMobile ? (
+            <rect
+              x="10"
+              y="12"
+              width="191"
+              height="8.75"
+              rx="4.375"
+              fill="#D9DBE9"
+            />
+          ) : (
+            <rect x="10" y="12" width="381" height="14" rx="7" fill="#D9DBE9" />
+          )}
         </ContentLoader>
       </div>
     </div>
