@@ -217,7 +217,7 @@ const CustomEditor: React.FC<Props> = ({
           ...(forWhichComponent === 'createPost' ? { maxHeight: '100%' } : {}),
           ...(hasLink
             ? { maxHeight: '420px' }
-            : data?.media.length > 0
+            : data?.media?.length > 0
             ? { height: '250px' }
             : { height: '490px' }),
         }}
