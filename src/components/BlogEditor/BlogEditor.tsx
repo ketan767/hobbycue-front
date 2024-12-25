@@ -32,9 +32,12 @@ const BlogEditor: React.FC<Props> = ({
   elementRef,
 }) => {
   const quillRef = useRef<ReactQuill>(null)
+  const editorRef = useRef<HTMLDivElement | null>(null)
   const inputVideoRef = useRef<HTMLInputElement>(null)
   const [imageIconAdded, setImageIconAdded] = useState(false)
   const [content, setContent] = useState('')
+  const [isBlurred, setIsBlurred] = useState(false)
+  console.log('asifs isBlurred', isBlurred)
 
   useEffect(() => {
     // Ensure the Quill instance is correctly accessed
@@ -133,14 +136,37 @@ const BlogEditor: React.FC<Props> = ({
     }
   }, [])
 
+  useEffect(() => {
+    if (editorRef.current) {
+      const editorBounds = editorRef.current.getBoundingClientRect()
+      const popup: HTMLDivElement | null = document.querySelector('.ql-tooltip')
+      if (popup) {
+        console.log('asifs obj', popup)
+        const popupBounds = popup.getBoundingClientRect()
+
+        // Check if the popup goes beyond the right edge
+        if (popupBounds.right > editorBounds.right) {
+          popup.style.left = `${editorBounds.width - popupBounds.width}px`
+        }
+
+        // Check if the popup goes beyond the left edge
+        if (popupBounds.left < editorBounds.left) {
+          popup.style.left = `0px`
+        }
+      }
+    }
+  }, [isBlurred])
+
   return (
     // <div className={`${error ? 'quill-error' : ''}`}>
+    <div ref={editorRef}>
       <ReactQuill
         ref={quillRef}
         theme="snow"
         value={value}
         onChange={onChange}
-        onFocus={onFocus}
+        onFocus={() => setIsBlurred(false)}
+        onBlur={() => setIsBlurred(true)}
         // onBlur={() => handleEditBlog('content')}
         className={`${styles.quill} ${styles['ql-editor']} blog-quill`}
         placeholder={'Text'}
@@ -163,6 +189,7 @@ const BlogEditor: React.FC<Props> = ({
           },
         }}
       />
+    </div>
   )
 }
 
