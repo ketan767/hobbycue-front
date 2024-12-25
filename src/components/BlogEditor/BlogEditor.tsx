@@ -37,7 +37,6 @@ const BlogEditor: React.FC<Props> = ({
   const [imageIconAdded, setImageIconAdded] = useState(false)
   const [content, setContent] = useState('')
   const [isBlurred, setIsBlurred] = useState(false)
-  console.log('asifs isBlurred', isBlurred)
 
   useEffect(() => {
     // Ensure the Quill instance is correctly accessed
@@ -141,7 +140,6 @@ const BlogEditor: React.FC<Props> = ({
       const editorBounds = editorRef.current.getBoundingClientRect()
       const popup: HTMLDivElement | null = document.querySelector('.ql-tooltip')
       if (popup) {
-        console.log('asifs obj', popup)
         const popupBounds = popup.getBoundingClientRect()
 
         // Check if the popup goes beyond the right edge
