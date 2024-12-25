@@ -113,13 +113,8 @@ const Filter = () => {
         selectedHobby={selectedHobby}
         setSelectedHobby={setSelectedHobby}
       />
-      {filter !== 'users' && filter !== 'posts' && (
+      {filter !== 'users' && filter !== 'posts' && !isMob && (
         <div className={`${styles.relative} ${styles['mt-4px']}`}>
-
-          {/* <AccordionMenu2
-            categoryValue={categoryValue}
-            handleSubmit={handleSubmit}
-          /> */}
           <AccordionMenu3
             defaultCategory={categoryValue}
             setDefaultCategory={setCategoryValue}
@@ -142,6 +137,21 @@ const Filter = () => {
         selectedLocation={selectedLocation}
         setSelectedLocation={setSelectedLocation}
       />
+      {filter !== 'users' && filter !== 'posts' && isMob && (
+        <div className={`${styles.relative} ${styles['mt-4px']}`}>
+          <AccordionMenu3
+            defaultCategory={categoryValue}
+            setDefaultCategory={setCategoryValue}
+            selectedCategory={selectedCategory}
+            selectedPageType={selectedPageType}
+            setSelectedCategory={setSelectedCategory}
+            setSelectedPageType={setSelectedPageType}
+            selectedHobby={selectedHobby}
+            selectedLocation={selectedLocation}
+            handleSubmit={handleSubmit}
+          />
+        </div>
+      )}
 
       {filter !== 'users' && filter !== 'posts' ? (
         <button
