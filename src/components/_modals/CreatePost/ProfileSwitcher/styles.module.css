@@ -15,6 +15,7 @@
   border-radius: 8px;
   width: calc(100% - 116px) !important;
   z-index: 10;
+  height: 40px;
 }
 .default-img[data-profile-type='user'] {
   width: 32px;

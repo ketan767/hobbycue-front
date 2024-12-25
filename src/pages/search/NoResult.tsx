@@ -58,7 +58,7 @@ const NoResult = () => {
       </div>
 
       <div className={styles.wrapperFooter}>
-        <p>Do you feel we are missing a listing ?</p>
+        <p>Are we missing a listing ?</p>
         <button>
           <Link href="/add-listing">Add New</Link>
         </button>
