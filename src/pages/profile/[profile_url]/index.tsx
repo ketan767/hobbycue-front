@@ -43,9 +43,16 @@ import { htmlToPlainTextAdv } from '@/utils'
 interface Props {
   data: ProfilePageData
   unformattedAbout?: string
+  result?: any
+  addressAndHObby?: any
 }
 
-const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
+const ProfileHome: React.FC<Props> = ({
+  data,
+  unformattedAbout,
+  result,
+  addressAndHObby,
+}) => {
   console.warn({ data })
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
@@ -334,11 +341,7 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
         />
         <meta
           property="og:description"
-          content={`${
-            (data?.pageData?.tagline || '') +
-            (data?.pageData?.tagline && unformattedAbout ? ' | ' : '') +
-            (unformattedAbout || '')
-          }`}
+          content={`${result + ';' + addressAndHObby}`}
         />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data.pageData.full_name} | HobbyCue`}</title>
@@ -748,10 +751,65 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
   const unformattedAbout = htmlToPlainTextAdv(res.data.data.users[0]?.about)
 
+  const taglineOrHobby = data?.pageData?.tagline
+    ? data.pageData?.tagline
+    : data?.pageData?._hobbies
+        ?.slice(0, 3)
+        ?.map((hobbyItem: any, index: any) => {
+          const hobbyDisplay = hobbyItem?.hobby?.display || ''
+          const genreDisplay = hobbyItem?.genre?.display
+            ? ` - ${hobbyItem?.genre?.display}`
+            : ''
+          const separator =
+            index < data?.pageData?._hobbies.length - 1 && index < 2 ? ', ' : ''
+          return `${hobbyDisplay}${genreDisplay}${separator}`
+        })
+        ?.join('') || ''
+
+  const additionalHobbies =
+    data?.pageData?._hobbies?.length > 3
+      ? ` (+${data?.pageData?._hobbies?.length - 3})`
+      : ''
+
+  const result = `${taglineOrHobby}${additionalHobbies}`
+
+  const addressAndHObby =
+    (user.primary_address?.society || '') +
+    (user.primary_address?.society && user.primary_address?.locality
+      ? ', '
+      : '') +
+    (user.primary_address?.locality || '') +
+    (user.primary_address?.city && user.primary_address?.locality ? ', ' : '') +
+    (user.primary_address?.city || '\u00a0') +
+    (user?.tagline && user.primary_address?.city && user?._hobbies?.length > 0
+      ? ' | '
+      : '') +
+    (user?.tagline
+      ? (user?._hobbies[0]?.hobby?.display || '') +
+        (user?._hobbies[0]?.genre?.display
+          ? ' - ' + user?._hobbies[0]?.genre?.display
+          : '') +
+        (user?._hobbies[1]?.hobby?.display ? ', ' : '') +
+        (user?._hobbies[1]?.hobby?.display || '') +
+        (user?._hobbies[1]?.genre?.display
+          ? ' - ' + user?._hobbies[1]?.genre?.display
+          : '') +
+        (user?._hobbies[2]?.hobby?.display ? ', ' : '') +
+        (user?._hobbies[2]?.hobby?.display || '') +
+        (user?._hobbies[2]?.genre?.display
+          ? ' - ' + user?._hobbies[2]?.genre?.display
+          : '') +
+        (user?._hobbies?.length > 3
+          ? ' (+' + (user?._hobbies?.length - 3) + ')'
+          : '')
+      : '')
+
   return {
     props: {
       data,
       unformattedAbout,
+      result,
+      addressAndHObby,
     },
   }
 }

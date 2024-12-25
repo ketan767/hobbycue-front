@@ -53,6 +53,7 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
           }
         })
         allPosts = allPosts.sort((x: any) => (x.isPinned ? -1 : 1))
+        console.warn('all postsss', allPosts)
         setPagesData(allPosts)
       })
       .catch((err) => {

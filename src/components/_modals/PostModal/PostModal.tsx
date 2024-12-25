@@ -452,95 +452,127 @@ export const PostModal: React.FC<Props> = ({
                         <ReactPlayer
                           width="100%"
                           height="410px"
-                          style={{overflow:"hidden"}}
+                          style={{ overflow: 'hidden' }}
                           url={url}
                           controls={true}
                         />
                       </div>
-                    ) : 
-                    isInstagramReelLink(url) ? (
-                      
-                        !isReelBreakpoint ? (
-                          <div onClick={()=>window.open(url,"_blank")} 
-                      style={isMobile ? {background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"16px", cursor:"pointer", padding:"0"} :{background:"#fff", display:"flex", justifyContent:"between", alignItems:"center", gap:"16px", cursor:"pointer", padding:"0 12px"}}>
-                          <div style={{width:"230.63px", maxHeight:"376.31px"}}>
-                      <img
-                        style={{cursor:"pointer", maxHeight:"376.31px"}}
-                        onClick={()=>window.open(url, '_blank')}
-                        width="230.63px"
-                          src={
-                            (typeof metaData?.image === 'string' &&
-                              metaData.image) ||
-                            (typeof metaData?.icon === 'string' &&
-                              metaData.icon) ||
-                            defaultImg
+                    ) : isInstagramReelLink(url) ? (
+                      !isReelBreakpoint ? (
+                        <div
+                          onClick={() => window.open(url, '_blank')}
+                          style={
+                            isMobile
+                              ? {
+                                  background: '#fff',
+                                  display: 'flex',
+                                  justifyContent: 'between',
+                                  alignItems: 'center',
+                                  gap: '16px',
+                                  cursor: 'pointer',
+                                  padding: '0',
+                                }
+                              : {
+                                  background: '#fff',
+                                  display: 'flex',
+                                  justifyContent: 'between',
+                                  alignItems: 'center',
+                                  gap: '16px',
+                                  cursor: 'pointer',
+                                  padding: '0 12px',
+                                }
                           }
-                          alt=""
-                        />
-                      </div>
-                            <div style={{display:"flex", flexDirection:"column", gap:"16px", fontSize:"15px", justifyContent:"start", height:"376.31px"}} >
-                              <p style={{fontWeight:"500"}}>
-                                {metaData?.title}
-                              </p>
-                              <p style={{color:"#333"}}>
-                                {metaData?.description?.split(':')[0]}
-                              </p>
-                            </div>
-                        </div>
-                        ) : (
+                        >
                           <div
-                            onClick={() => window.open(url, '_blank')}
+                            style={{ width: '230.63px', maxHeight: '376.31px' }}
+                          >
+                            <img
+                              style={{
+                                cursor: 'pointer',
+                                maxHeight: '376.31px',
+                              }}
+                              onClick={() => window.open(url, '_blank')}
+                              width="230.63px"
+                              src={
+                                (typeof metaData?.image === 'string' &&
+                                  metaData.image) ||
+                                (typeof metaData?.icon === 'string' &&
+                                  metaData.icon) ||
+                                defaultImg
+                              }
+                              alt=""
+                            />
+                          </div>
+                          <div
                             style={{
                               display: 'flex',
-                              justifyContent: 'between',
-                              alignItems: 'center',
-                              gap: '8px',
-                              cursor: 'pointer',
-                              flexDirection:"column"
+                              flexDirection: 'column',
+                              gap: '16px',
+                              fontSize: '15px',
+                              justifyContent: 'start',
+                              height: '376.31px',
                             }}
                           >
-                            <div
-                              style={{
-                                width: 'calc(100%)',
-                              }}
-                              >
-                              <img
-                                style={{
-                                  cursor: 'pointer',
-                                }}
-                                width= '100%'
-                                onClick={() => window.open(url, '_blank')}
-                                src={
-                                  (typeof metaData?.image === 'string' &&
-                                    metaData.image) ||
-                                  (typeof metaData?.icon === 'string' &&
-                                    metaData.icon) ||
-                                  defaultImg
-                                }
-                                alt=""
-                              />
-                            </div>
-                            <div
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '16px',
-                                fontSize: '15px',
-                                justifyContent: 'start',
-                              }}
-                            >
-                              <p style={{ fontWeight: '500' }}>
-                                {metaData?.title}
-                              </p>
-                              <p style={{ color: '#333' }}>
-                                {metaData?.description?.split(':')[0]}
-                              </p>
-                            </div>
+                            <p style={{ fontWeight: '500' }}>
+                              {metaData?.title}
+                            </p>
+                            <p style={{ color: '#333' }}>
+                              {metaData?.description?.split(':')[0]}
+                            </p>
                           </div>
-                        )
-                      
-                      ) :
-                    (
+                        </div>
+                      ) : (
+                        <div
+                          onClick={() => window.open(url, '_blank')}
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'between',
+                            alignItems: 'center',
+                            gap: '8px',
+                            cursor: 'pointer',
+                            flexDirection: 'column',
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: 'calc(100%)',
+                            }}
+                          >
+                            <img
+                              style={{
+                                cursor: 'pointer',
+                              }}
+                              width="100%"
+                              onClick={() => window.open(url, '_blank')}
+                              src={
+                                (typeof metaData?.image === 'string' &&
+                                  metaData.image) ||
+                                (typeof metaData?.icon === 'string' &&
+                                  metaData.icon) ||
+                                defaultImg
+                              }
+                              alt=""
+                            />
+                          </div>
+                          <div
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '16px',
+                              fontSize: '15px',
+                              justifyContent: 'start',
+                            }}
+                          >
+                            <p style={{ fontWeight: '500' }}>
+                              {metaData?.title}
+                            </p>
+                            <p style={{ color: '#333' }}>
+                              {metaData?.description?.split(':')[0]}
+                            </p>
+                          </div>
+                        </div>
+                      )
+                    ) : (
                       <>
                         <div className={styles['posts-meta-data-container']}>
                           <a
@@ -571,26 +603,46 @@ export const PostModal: React.FC<Props> = ({
                               {metaData?.title}{' '}
                             </a>
                             {!isMobile && (
-                              <a
-                                href={url}
-                                target="_blank"
-                                className={styles.contentUrl}
-                              >
-                                {' '}
-                                {metaData?.description}{' '}
-                              </a>
+                              <>
+                                <a
+                                  href={url}
+                                  target="_blank"
+                                  className={styles.contentUrl}
+                                >
+                                  {' '}
+                                  {metaData?.description?.split(';')[0]}{' '}
+                                </a>
+                                <a
+                                  href={url}
+                                  target="_blank"
+                                  className={styles.contentUrl}
+                                >
+                                  {' '}
+                                  {metaData?.description?.split(';')[1]}{' '}
+                                </a>
+                              </>
                             )}
                           </div>
                         </div>
                         {isMobile && (
-                          <a
-                            href={url}
-                            target="_blank"
-                            className={styles.contentUrl}
-                          >
-                            {' '}
-                            {metaData?.description}{' '}
-                          </a>
+                          <>
+                            <a
+                              href={url}
+                              target="_blank"
+                              className={styles.contentUrl}
+                            >
+                              {' '}
+                              {metaData?.description?.split(';')[0]}{' '}
+                            </a>
+                            <a
+                              href={url}
+                              target="_blank"
+                              className={styles.contentUrl}
+                            >
+                              {' '}
+                              {metaData?.description?.split(';')[1]}{' '}
+                            </a>
+                          </>
                         )}
                       </>
                     )}
