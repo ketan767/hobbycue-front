@@ -486,20 +486,22 @@ const PostCard: React.FC<Props> = (props) => {
                       </button>
                     </>
                   )}
-                  <button
-                    onClick={() => {
-                      dispatch(
-                        openModal({
-                          type: 'PostReportModal',
-                          closable: true,
-                          propData: { reported_url: postUrl },
-                        }),
-                      )
-                      setOpenAction(false)
-                    }}
-                  >
-                    Report
-                  </button>
+                  {!postedByMe && (
+                    <button
+                      onClick={() => {
+                        dispatch(
+                          openModal({
+                            type: 'PostReportModal',
+                            closable: true,
+                            propData: { reported_url: postUrl },
+                          }),
+                        )
+                        setOpenAction(false)
+                      }}
+                    >
+                      Report
+                    </button>
+                  )}
                 </div>
               )}
               <svg
@@ -531,11 +533,11 @@ const PostCard: React.FC<Props> = (props) => {
                 </defs>
               </svg>
               {optionsActive && fromProfile && (
-                <ul
+                <div
                   style={{ marginTop: '12px' }}
-                  className={styles.optionsContainer}
+                  className={styles.editReportDelete}
                 >
-                  <li
+                  <button
                     onClick={
                       onPinPost !== undefined
                         ? () => onPinPost(postData._id)
@@ -543,8 +545,8 @@ const PostCard: React.FC<Props> = (props) => {
                     }
                   >
                     Pin post
-                  </li>
-                  <li
+                  </button>
+                  <button
                     onClick={() => {
                       dispatch(
                         openModal({
@@ -557,16 +559,16 @@ const PostCard: React.FC<Props> = (props) => {
                     }}
                   >
                     Edit
-                  </li>
-                  <li
+                  </button>
+                  <button
                     onClick={() => {
-                      showFeatureUnderDevelopment()
-                      setOptionsActive(false)
+                      handleShowDelete(postData._id)
+                      setOpenAction(false)
                     }}
                   >
                     Delete
-                  </li>
-                </ul>
+                  </button>
+                </div>
               )}
             </div>
           </header>
@@ -1116,7 +1118,7 @@ const PostCard: React.FC<Props> = (props) => {
 
             {/* Comments Section */}
             {(showComments || router.pathname.startsWith('/post/')) && (
-              <PostComments data={postData} />
+              <PostComments data={postData} activeCommentBox={true} />
             )}
           </footer>
         )}
