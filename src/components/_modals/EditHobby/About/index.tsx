@@ -47,6 +47,7 @@ type HobbyAboutData = {
   onboarding_step?: string
   completed_onboarding_steps?: any
   _id?: any
+  keywords?: string
 }
 
 const HobbyAboutEditModal: React.FC<Props> = ({
@@ -88,6 +89,19 @@ const HobbyAboutEditModal: React.FC<Props> = ({
   const handleInputChange = (value: string) => {
     setData((prev) => ({ ...prev, description: value }))
     setInputErrs({ description: null })
+
+    const hasChanged = value !== initialData.description
+    setIsChanged(hasChanged)
+
+    if (onStatusChange) {
+      onStatusChange(hasChanged)
+    }
+  }
+  const handleKeywordInputChange: React.ChangeEventHandler<
+    HTMLInputElement
+  > = async (event) => {
+    const value = event.target.value
+    setData((prev) => ({ ...prev, keywords: value }))
 
     const hasChanged = value !== initialData.description
     setIsChanged(hasChanged)
@@ -242,7 +256,9 @@ const HobbyAboutEditModal: React.FC<Props> = ({
     setData((prev) => ({
       ...prev,
       description: res.data?.hobbies[0]?.description,
+      keywords: res.data?.hobbies[0]?.keywords,
     }))
+    console.warn('ressss', res)
     sethobbyId(res.data?.hobbies[0]?._id)
   }
 
@@ -391,7 +407,13 @@ const HobbyAboutEditModal: React.FC<Props> = ({
               {'Keywords'}
             </h3>
             {!user.is_onboarded && showSkip ? skipSvg : null}
-            <input type="text" />
+            <input
+              type="text"
+              autoComplete="new"
+              placeholder=""
+              onChange={handleKeywordInputChange}
+              value={data.keywords}
+            />
           </div>
         </section>
 

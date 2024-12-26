@@ -563,10 +563,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     }
   }
 
-  // let postContentPlain = ''
-  // if (res?.data?.data.posts?.length) {
-  //   postContentPlain = htmlToPlainText(res.data.data.posts[0].content)
-  // }
   let postContentPlain = htmlToPlainTextAdv(res?.data?.data?.posts[0]?.content)
 
   return {

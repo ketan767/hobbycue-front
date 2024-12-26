@@ -204,7 +204,9 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
   // }, [eventData.from_date])
   const [dayError, setDayError] = useState([])
 
-  useEffect(() => {console.log(dayError)}, [dayError])
+  useEffect(() => {
+    console.log(dayError)
+  }, [dayError])
 
   const handleSubmit = async () => {
     const modifiedEventData = eventData.map((event) => {
@@ -241,17 +243,8 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
       }
     }
     let errs = 0
-    for(let i = 0; i < weekdays.length; i++){
-      if(dayToIndex(weekdays[i].from_day) > dayToIndex(weekdays[i].to_day)){
-        errs = 1;
-        setDayError((prev)=>{
-          let temp: any = [...prev]
-          temp[i] = 'Invalid Day Range'
-          return temp
-        })
-      }
-    }
-    if(errs === 1){
+
+    if (errs === 1) {
       console.log('Error')
       return
     }
@@ -589,15 +582,16 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                       <input
                         autoComplete="new"
                         value={obj.from_date}
-                        className={styles.inputField + ` ${styles['date-input']}`}
+                        className={
+                          styles.inputField + ` ${styles['date-input']}`
+                        }
                         type="date"
                         min={today}
                         onChange={(item) =>
                           handleDateSelection(item, 'from_date', i)
                         }
                       />
-                      <p
-                        className={styles['formatted-date']}>
+                      <p className={styles['formatted-date']}>
                         {formatDateFunc(obj.from_date)}
                       </p>
                     </div>
@@ -618,7 +612,9 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                       <input
                         autoComplete="new"
                         value={obj.to_date}
-                        className={styles.inputField + ` ${styles['date-input']}`}
+                        className={
+                          styles.inputField + ` ${styles['date-input']}`
+                        }
                         type="date"
                         min={obj.from_date}
                         onChange={(e: any) =>
@@ -698,7 +694,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
             ))}
           </div>
           {/* weekdays */}
-          <div className={styles.listContainer} style={{marginTop:"22px"}}>
+          <div className={styles.listContainer} style={{ marginTop: '22px' }}>
             <div onClick={addWeekday} className={styles['adder']}>
               <PlusIcon />
               <p>Add Weekdays</p>
@@ -752,9 +748,11 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                       className={styles['weekday-input']}
                       iconClass={styles['input-icon']}
                     />
-                    {
-                      (dayError[i] !== undefined) && <p className={styles['day-error-message']}>{dayError[i]}</p>
-                    }
+                    {dayError[i] !== undefined && (
+                      <p className={styles['day-error-message']}>
+                        {dayError[i]}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <p className={styles['comma']}>,</p>

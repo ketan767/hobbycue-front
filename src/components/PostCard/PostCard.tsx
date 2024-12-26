@@ -770,10 +770,16 @@ const PostCard: React.FC<Props> = (props) => {
                               }}
                             >
                               <p style={{ fontWeight: '500' }}>
-                                {metaData?.title}
+                                {metaData?.title.slice(0, 300) +
+                                  (metaData?.title.length > 250 ? '...' : '')}
                               </p>
                               <p style={{ color: '#333' }}>
-                                {metaData?.description?.split(':')[0]}
+                                {metaData?.description
+                                  ?.split(':')[0]
+                                  .slice(0, 600) +
+                                  (metaData?.description.length > 600
+                                    ? '...'
+                                    : '')}
                               </p>
                             </div>
                           </div>
