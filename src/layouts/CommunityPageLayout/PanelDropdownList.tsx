@@ -6,7 +6,7 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import Link from 'next/link'
 import Image from 'next/image'
-import { pageType } from '@/utils'
+import { isMobile, pageType } from '@/utils'
 import { CircularProgress } from '@mui/material'
 interface PanelDropdownListProps {
   name: string
@@ -56,6 +56,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   const [open, setOpen] = useState(initialOpen ?? false)
   const router = useRouter()
   // const [seeMore, setSeeMore] = useState(true)
+  const isMob = isMobile();
   const [seeMoreHobbies, setSeeMoreHobbies] = useState(0)
   const membersContainerRef = useRef<HTMLDivElement>(null)
   // const [email, setEmail] = useState('')
@@ -124,6 +125,12 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
       />
     </svg>
   )
+
+  useEffect(() => {
+    if (isMob) {
+      setOpen(true)
+    }
+  }, [])
   return (
     <div className={styles['parent-list']}>
       <div className={styles['list']}>
@@ -158,7 +165,11 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
             </div>
           )}
           <div
-          style={(type === 'user members' || type === 'members') ? { gap:"0px" } : { gap:"7px" }}
+            style={
+              type === 'user members' || type === 'members'
+                ? { gap: '0px' }
+                : { gap: '7px' }
+            }
             ref={membersContainerRef}
             className={
               styles['options-parent'] +
@@ -225,82 +236,92 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                   </div>
                 ))}
             {type === 'members' &&
-              options
-                .slice(0, seeMoreWhatsNew ? 3 : options.length)
-                .map((obj: any, idx: number) => (
-                  obj &&
-                  <div key={idx} className={styles['option']}>
-                    <div
-                      className={
-                        styles['member-container'] +
-                        ' ' +
-                        styles['whatsNewContainer']
-                      }
-                    >
-                      <Link
-                        href={`/${pageType(obj?.type)}/${obj?.page_url}`}
+              options.slice(0, seeMoreWhatsNew ? 3 : options.length).map(
+                (obj: any, idx: number) =>
+                  obj && (
+                    <div key={idx} className={styles['option']}>
+                      <div
                         className={
-                          styles['img-name'] + ' ' + styles['whatsNewImg']
+                          styles['member-container'] +
+                          ' ' +
+                          styles['whatsNewContainer']
                         }
                       >
-                        {obj?.profile_image ? (
-                          <img width={24} height={24} src={obj.profile_image} />
-                        ) : (
-                          <Image
-                            width={24}
-                            height={24}
-                            src={defaultUserIcon}
-                            alt=""
-                          />
-                        )}
+                        <Link
+                          href={`/${pageType(obj?.type)}/${obj?.page_url}`}
+                          className={
+                            styles['img-name'] + ' ' + styles['whatsNewImg']
+                          }
+                        >
+                          {obj?.profile_image ? (
+                            <img
+                              width={24}
+                              height={24}
+                              src={obj.profile_image}
+                            />
+                          ) : (
+                            <Image
+                              width={24}
+                              height={24}
+                              src={defaultUserIcon}
+                              alt=""
+                            />
+                          )}
 
-                        <p>{obj?.title}</p>
-                      </Link>
-                      {obj?.admin === true && (
-                        <button className={styles['admin-btn']}>
-                          Location Admin
-                        </button>
-                      )}
+                          <p>{obj?.title}</p>
+                        </Link>
+                        {obj?.admin === true && (
+                          <button className={styles['admin-btn']}>
+                            Location Admin
+                          </button>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ),
+              )}
             {type === 'user members' &&
               options
                 ?.slice(
                   0,
                   seeMoreMembers === 0 || clickedSeeLess ? 3 : options.length,
                 )
-                .map((obj: any, idx: number) => (
-                  obj &&
-                  <div key={idx} className={styles['option']}>
-                    <div
-                      className={`${styles['member-container']} ${styles.userimg}`}
-                    >
-                      <Link
-                        href={`/profile/${obj?.profile_url}`}
-                        className={styles['img-name']}
-                      >
-                        {obj?.profile_image ? (
-                          <img width={24} height={24} src={obj.profile_image} />
-                        ) : (
-                          <Image
-                            width={24}
-                            height={24}
-                            src={defaultUserIcon}
-                            alt=""
-                          />
-                        )}
+                .map(
+                  (obj: any, idx: number) =>
+                    obj && (
+                      <div key={idx} className={styles['option']}>
+                        <div
+                          className={`${styles['member-container']} ${styles.userimg}`}
+                        >
+                          <Link
+                            href={`/profile/${obj?.profile_url}`}
+                            className={styles['img-name']}
+                          >
+                            {obj?.profile_image ? (
+                              <img
+                                width={24}
+                                height={24}
+                                src={obj.profile_image}
+                              />
+                            ) : (
+                              <Image
+                                width={24}
+                                height={24}
+                                src={defaultUserIcon}
+                                alt=""
+                              />
+                            )}
 
-                        <p>{obj?.full_name}</p>
-                      </Link>
-                      {obj?.admin === true && (
-                        <button className={styles['admin-btn']}>
-                          Location Admin
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                            <p>{obj?.full_name}</p>
+                          </Link>
+                          {obj?.admin === true && (
+                            <button className={styles['admin-btn']}>
+                              Location Admin
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ),
+                )}
             {type === 'user members' &&
               (options.length > 3 && seeLessMembers ? (
                 <div
