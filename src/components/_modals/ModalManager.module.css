@@ -32,12 +32,12 @@
   position: relative;
 }
 
-.self-centre{
+.self-centre {
   align-self: center;
   justify-self: center;
 }
 
-.create-post-postion{
+.create-post-postion {
   position: relative;
   right: 41px;
 }
@@ -95,9 +95,10 @@
     place-items: stretch;
     height: 100%;
     overflow: auto;
+    overflow-x: hidden;
     padding: 0;
   }
-  .create-post-postion{
+  .create-post-postion {
     left: 0;
   }
   .header {
@@ -125,10 +126,9 @@
     font-weight: 600;
   }
 
-  .modal-close-icon{
+  .modal-close-icon {
     position: fixed !important;
     z-index: 1001 !important;
-
   }
 
   .close-icon-clicked {
@@ -137,7 +137,7 @@
     top: calc(50vh - 44px) !important;
   }
 
-  .self-centre{
+  .self-centre {
     width: 96vw;
   }
 
