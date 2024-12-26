@@ -77,7 +77,7 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
       return
     }
 
-    const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
+    const query = `fields=display,genre&level=5&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
     const query2 = `fields=display,genre&level=5&level=4&level=3&level=2&level=1&level=0&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
     const { err: err2, res: res2 } = await getAllHobbiesWithoutPagi(query2)
