@@ -123,6 +123,7 @@ const AdminDashboard: React.FC = () => {
   const [joinedSort, setJoinedSort] = useState<boolean>(true)
   const [NameSort, setNameSort] = useState<boolean>(true)
   const [loading, setLoading] = useState<boolean>(false)
+   const [count, setCount] = useState(0)
   const [isError, setIsError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<String>('')
   const [isSearching, setIsSearching] = useState<boolean>(false)
@@ -206,6 +207,7 @@ const AdminDashboard: React.FC = () => {
       setErrorMessage('No users found')
     } else {
       setSearchResults(res.data)
+      setCount(res.data.length || 0)
       setIsError(false)
       setLoading(false)
       setPageNumber(res?.data?.length > 0 ? res?.data?.length : 1)
@@ -234,6 +236,7 @@ const AdminDashboard: React.FC = () => {
       setIsError(false)
       setLoading(false)
       setSearchResults(res.data.data.users)
+      setCount(res.data.data.no_of_users)
       dispatch(setShowPageLoader(false))
     }
     setLoading(false)
@@ -404,10 +407,11 @@ const AdminDashboard: React.FC = () => {
                 {searchSvg}
               </button>
             </form>
+            <span className={styles.countText}>Count: <span style={{ color:"#0096c8", fontWeight:"500"}}>{count}</span></span>
             {hasNonEmptyValues(modalState) && (
               <DisplayState modalState={modalState} />
             )}
-
+           
             {hasNonEmptyValues(modalState) ? (
               <button
                 className={styles.filterBtn}
@@ -464,7 +468,7 @@ const AdminDashboard: React.FC = () => {
                       </button>
                     </div>
                   </th>
-                  <th style={{ width: '6.48%' }}>
+                  <th style={{ width: '8.48%' }}>
                     <span style={{ marginLeft: '-10px' }}>Contact</span>
                   </th>
                   <th style={{ width: '16.48%' }}>
@@ -547,7 +551,7 @@ const AdminDashboard: React.FC = () => {
                     ?.sort((a, b) => {
                       if (NameSort) {
                         return NameSort
-                          ? a.full_name.localeCompare(b.full_name) // Ascending order
+                          ? (a.full_name || '').localeCompare(b.full_name || '') // Ascending order
                           : b.full_name.localeCompare(a.full_name) // Descending order
                       }
                       if (loginSort) {
@@ -795,7 +799,7 @@ const AdminDashboard: React.FC = () => {
 
               <button
                 disabled={page <= 1}
-                className="admin-next-btn"
+                className="users-next-btn"
                 onClick={goToPreviousPage}
               >
                 Prev
@@ -803,7 +807,7 @@ const AdminDashboard: React.FC = () => {
 
               <button
                 disabled={searchResults.length !== pagelimit}
-                className="admin-next-btn"
+                className="users-next-btn"
                 onClick={goToNextPage}
               >
                 Next
