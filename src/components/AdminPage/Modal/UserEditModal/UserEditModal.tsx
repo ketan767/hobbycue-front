@@ -76,11 +76,11 @@ const EditUser: React.FC<UserEditProps> = ({
       <div className={styles.header}>
         <h1
           className={styles.title}
-          title={user?.full_name.length > 30 ? user?.full_name : ''}
+          title={user?.full_name && user.full_name.length > 30 ? user.full_name : ''}
         >
           Edit User:{' '}
-          {user?.full_name.length > 30
-            ? `${user?.full_name.slice(0, 30)} ...`
+          {user?.full_name && user.full_name.length > 30
+            ? `${user.full_name.slice(0, 30)} ...`
             : user?.full_name}
         </h1>
         <CloseIcon

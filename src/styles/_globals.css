@@ -459,6 +459,19 @@ select:-webkit-autofill {
   border: none;
 }
 
+.users-next-btn {
+  width: 80px;
+  height: 40px;
+  border-radius: 8px;
+  padding: 12px 24px;
+  background-color: #0096c8;
+  color: white;
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 500;
+  border: none;
+}
+
 @media screen and (max-width: 1100px) {
   .content-box-wrapper {
     border: none;
