@@ -489,7 +489,7 @@
 }
 
 .ql-editor a {
-  color: rgb(128, 100, 162);
+  color: rgb(128, 100, 162) !important;
   text-decoration: none !important;
 }
 .ql-editor p {
