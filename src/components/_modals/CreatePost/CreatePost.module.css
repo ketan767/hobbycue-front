@@ -519,7 +519,7 @@
     padding-right: 1rem;
     gap: 16px;
     overflow-y: scroll;
-    height: calc(100% - 1rem);
+    height: calc(100% - 4rem);
   }
 
   .image-posting-as > img {
