@@ -25,6 +25,7 @@ import { formatDate } from '@/utils/Date'
 import StatusDropdown from '@/components/_formElements/AdminStatusDropdown'
 import PreLoader from '@/components/PreLoader'
 import { setShowPageLoader } from '@/redux/slices/site'
+import ToggleButton from '@/components/_buttons/ToggleButton'
 
 import HobbiesNotesModal from '@/components/AdminPage/Modal/HobbiesFilterModal/HobbiesNotesModal'
 type SearchInput = {
@@ -103,6 +104,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
     user_id: '',
     listing_id: '',
   })
+  // const [createdAtSort, setCreatedAtSort] = useState(false);
 
   const handleSearch = async (event: React.FormEvent) => {
     event.preventDefault(); 
@@ -395,7 +397,11 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
   const CustomBackdrop: React.FC = () => {
     return <div className={styles['custom-backdrop']}></div>
   }
-  
+
+  // const handleCreatedAtSort = () => {
+  //   setCreatedAtSort((prev) => !prev);
+  // };
+
   const sortedResults = searchResults
     ?.slice() 
     ?.sort((a, b) => {
@@ -403,6 +409,15 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
         ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
         : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
+
+  
+  // const sortedResults = searchResults
+  //   ?.slice() 
+  //   ?.sort((a, b) => {
+  //     return createdAtSort
+  //       ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+  //       : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  //   });
 
 
   return (
@@ -432,6 +447,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
           </Fade>
         </Modal>
       )}
+
       <AdminLayout>
         <div className={styles.searchContainer}>
           {/* <div className={styles.admintitle}>Admin Search</div> */}
@@ -517,48 +533,67 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                       </div>
                     </td>
                     <td className={styles.userName}>
-                      <div>{hobbyreq?.level}</div>
-                    </td>
-                    <td className={styles.LoginType}>
-                      <Link
-                        href={
-                          hobbyreq.user_type == 'user'
-                            ? `/profile/${hobbyreq.user_id?.profile_url}`
-                            : `/${pageType(hobbyreq?.listing_id?.type)}/${hobbyreq.listing_id?.page_url}`
-                        }
-                      >
-                        <div className={styles.userInfo}>
-                          {hobbyreq.user_type == 'user' && hobbyreq.user_id?.profile_image ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              src={hobbyreq.user_id.profile_image}
-                              alt={`${hobbyreq.user_id.full_name}'s profile`}
-                              width={40}
-                              height={40}
-                              className={styles.avatarImage}
-                            />
-                          ) : (
-                            <Image
-                              className={styles.img}
-                              src={DefaultProfile}
-                              alt="profile"
-                              width={40}
-                              height={40}
-                            />
-                          )}
-                          <span className={styles.userName}>
-                            {hobbyreq.user_type == 'user'
-                              ? hobbyreq.user_id?.full_name
-                              : hobbyreq.listing_id?.title}
-                          </span>
-                        </div>
-                      </Link>
+                      <div>{hobbyreq?.genre}</div>
                     </td>
 
+                    <td>
+                        <Link
+                           href={
+                            hobbyreq.user_type == 'user'
+                              ? `/profile/${hobbyreq.user_id?.profile_url}`
+                              : `/${pageType(hobbyreq?.listing_id?.type)}/${
+                                  hobbyreq.listing_id?.page_url
+                                }`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <div className={styles.resultItem}>
+                            <div className={styles.avatarContainer}>
+                              {hobbyreq?.user_id?.profile_image ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                  src={hobbyreq?.user_id?.profile_image}
+                                  alt={`${hobbyreq?.user_id?.full_name}'s profile`}
+                                  width={40}
+                                  height={40}
+                                  className={styles.avatarImage}
+                                />
+                              ) : (
+                                <Image
+                                  className={styles['img']}
+                                  src={DefaultProfile}
+                                  alt="profile"
+                                  width={40}
+                                  height={40}
+                                />
+                              )}
+                            </div>
+                            <div
+                              className={styles.detailsContainer}
+                              title={
+                                // hobbyreq?.user_id?.full_name?.length > 25
+                                //   ? hobbyreq?.user_id?.full_name
+                                //   : ''
+                                hobbyreq.user_type == 'user'
+                          ? hobbyreq.user_id?.full_name.slice(0,25)
+                          : hobbyreq.listing_id?.title
+                              }
+                              style={{whiteSpace: 'nowrap'}}
+                            >
+                              {hobbyreq.user_type == 'user'
+                          ? hobbyreq.user_id?.full_name.slice(0,25)
+                          : hobbyreq.listing_id?.title}
+                            </div>
+                          </div>
+                        </Link>
+                      </td>
                     <td className={styles.userName}>
                       <div>{formatDate(hobbyreq?.createdAt)}</div>
                     </td>
-                    <td className={styles.lastLoggedIn}>{hobbyreq?.similar}</td>
+                    <td className={styles.userName}>
+                      <div>{hobbyreq?.similar}</div>
+                      </td>
 
                     <td className={styles.pagesLength}>
                       <input
@@ -579,26 +614,31 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                       />
                     </td>
                     <td>
-                      <div className={styles.actions}>
-                        <div onClick={() => handleAction(hobbyreq)}>
-                          {pencilSvg}
-                        </div>
-                        <StatusDropdown
-                          status={hobbyreq?.status}
-                          onStatusChange={async (newStatus) => {
-                            console.log(newStatus, hobbyreq, 100);
-                            const { err, res } = await UpdateHobbyreq({
-                              user_id: hobbyreq?.user_id?._id,
-                              listing_id: hobbyreq?.listing_id?._id,
-                              hobby: hobbyreq?.hobby,
-                              description: hobbyreq?.description,
-                              status: newStatus?.status,
-                            });
-                            if (err) {
-                              console.log(err);
-                            }
-                          }}
-                        />
+                      <div
+                        
+                        className={styles.actions}
+                      >
+                        <div onClick={()=>{
+                          setShowAdminActionModal(true)
+                        }}>{pencilSvg}</div>
+                          <StatusDropdown
+                            status={hobbyreq?.status}
+                            onStatusChange={async (newStatus) => {
+                              console.log(newStatus, hobbyreq, 100);
+                              const { err, res } = await UpdateHobbyreq({
+                                user_id: hobbyreq?.user_id?._id,
+                                listing_id: hobbyreq?.listing_id?._id,
+                                hobby: hobbyreq?.hobby,
+                                description: hobbyreq?.description,
+                                status: newStatus?.status,
+                              })
+                              if (err) {
+                                console.log(err);
+                                
+                              }
+                            }}
+                          />
+                        
                       </div>
                     </td>
                   </tr>

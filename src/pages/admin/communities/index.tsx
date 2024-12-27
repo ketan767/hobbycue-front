@@ -333,7 +333,14 @@ const AdminCommunities: React.FC = () => {
                     <td className={styles.userName}></td>
 
                     <td>
-                      <div className={styles.actions}></div>
+                    <div className={styles.actions}>
+                        {/* <div onClick={() => handleEdit(user.slug)} style={{height:30}}>
+                          {pencilSvg}
+                        </div>
+                        <div onClick={() => handleDelete(user._id)} style={{height:30}}>
+                          {deleteSvg}
+                        </div> */}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -342,22 +349,21 @@ const AdminCommunities: React.FC = () => {
           </div>
           <div className={styles.pagination}>
             {/* Previous Page Button */}
-
-            <button
-              disabled={page <= 1}
-              className="admin-next-btn"
-              onClick={goToPreviousPage}
-            >
-              Previous
-            </button>
-
-            <button
-              disabled={searchResults.length !== pagelimit}
-              className="admin-next-btn"
-              onClick={goToNextPage}
-            >
-              Next
-            </button>
+            {page > 1 ? (
+              <button className={styles.PaginationButton} onClick={goToPreviousPage}>Prev</button>
+            ) : (
+              ''
+            )}
+            {searchResults.length === pagelimit ? (
+              <button
+                className={styles.PaginationButton}
+                onClick={goToNextPage}
+              >
+                Next
+              </button>
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </AdminLayout>

@@ -161,7 +161,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
 
   const handleGenreInputFocus = () => {
     setShowGenreDowpdown(true)
-    const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${hobbyInputValue}`
+    const query = `fields=display,genre&populate=category,sub_category,tags,related_hobbies&level=3&level=2&level=1&level=0&show=true&search=${hobbyInputValue}`
     getAllHobbies(query).then((result) => {
       const sortedHobbies = result.res.data.hobbies.sort((a: any, b: any) => {
         const indexA = a.display
@@ -366,7 +366,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
 
   const handleHobbySelection = async (selectedHobby: DropdownListItem) => {
     setGenreId('')
-    console.log(selectedHobby)
+    console.log("Hobby : ",selectedHobby)
 
     setData((prev) => ({ ...prev, hobby: selectedHobby }))
     setHobbyInputValue(selectedHobby?.display ?? hobbyInputValue)
