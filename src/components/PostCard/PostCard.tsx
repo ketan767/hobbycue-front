@@ -63,6 +63,7 @@ const PostCard: React.FC<Props> = (props) => {
   const editReportDeleteRef: any = useRef(null)
   const [postData, setPostData] = useState(props.postData)
   const [comments, setComments] = useState([])
+  const [showActiveComment, setShowActiveComment] = useState(false)
   const [showComments, setShowComments] = useState(
     props.currentSection === 'links'
       ? false
@@ -1035,7 +1036,10 @@ const PostCard: React.FC<Props> = (props) => {
               >
                 <CustomizedTooltips title="Comments">
                   <svg
-                    onClick={() => setShowComments(!showComments)}
+                    onClick={() => {
+                      setShowComments(!showComments)
+                      setShowActiveComment(true)
+                    }}
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"
@@ -1124,7 +1128,10 @@ const PostCard: React.FC<Props> = (props) => {
 
             {/* Comments Section */}
             {(showComments || router.pathname.startsWith('/post/')) && (
-              <PostComments data={postData} activeCommentBox={true} />
+              <PostComments
+                data={postData}
+                activeCommentBox={showActiveComment}
+              />
             )}
           </footer>
         )}
