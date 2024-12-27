@@ -87,7 +87,8 @@ type DropdownListItem = {
   _id: string
   display: string
   sub_category?: string
-  genre?: any
+  genre?: any;
+  related_hobbies ?: any;
 }
 
 type Snackbar = {
