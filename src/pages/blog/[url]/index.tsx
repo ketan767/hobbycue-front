@@ -78,7 +78,6 @@ const BlogPage: React.FC<Props> = ({ data }) => {
 
   const [isAuthor, setIsAuthor] = useState(false)
   const [isAuthorizedToView, setIsAuthorizedToView] = useState(false)
-  // const [isEditing, setIsEditing] = useState(false) // to check if the author is shown the editable interface
 
   const [hasChanged, setHasChanged] = useState(false)
 
@@ -113,10 +112,6 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     if (err) console.log('Error while fetching blog: ', err)
     dispatch(setBlog(res?.data?.data?.blog?.[0]))
   }
-
-  useEffect(() => {
-    dispatch(setBlog(data?.blog_url))
-  }, [data])
 
   useEffect(() => {
     if (refetch > 0) {
@@ -224,39 +219,10 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     }
   }
 
-  // const handleImageUpload = () => {
-  //   if (!quillInstance) return
-
-  //   const input = document.createElement('input')
-  //   input.setAttribute('type', 'file')
-  //   input.setAttribute('accept', 'image/*')
-  //   input.click()
-
-  //   input.onchange = async () => {
-  //     const file = input.files?.[0]
-  //     if (!file) return
-
-  //     const formData = new FormData()
-  //     formData.append('blog-image', file)
-  //     // Send the image to the backend
-  //     const { res, err } = await uploadBlogImage(formData, blog?._id, false)
-
-  //     if (err)
-  //       console.log('Error in uploading image @handleImageUpload(): ', err)
-
-  //     if (res?.data?.success) {
-  //       // Insert the uploaded image URL into the editor
-  //       const imgUrl = res?.data?.data?.img_url
-  //       const range = quillInstance.getSelection()
-  //       quillInstance.insertEmbed(range.index, 'image', imgUrl)
-  //     } else {
-  //       console.error(
-  //         'Image upload failed @handleImageUpload():',
-  //         res?.data?.message,
-  //       )
-  //     }
-  //   }
-  // }
+  useEffect(() => {
+    /** The redux state here is not set on mount, hence the issue of showing previous blog in a new URL */
+    dispatch(setBlog(data?.blog_url))
+  }, [])
 
   useEffect(() => {
     if (blog?.content !== data?.blog_url?.content) {

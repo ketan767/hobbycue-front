@@ -1,23 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react'
 import CustomDateRangePicker from './DateRangePicker/DateRangePicker'
 import styles from './BlogFilter.module.css'
-import { FormValues } from '@/pages/blog'
 import {
   getAllHobbies,
   getAllHobbiesWithoutPagi,
 } from '@/services/hobby.service'
-import { isEmptyField } from '@/utils'
+import { isEmptyField, isMobile } from '@/utils'
 import { DropdownListItem } from '@/components/_modals/AdminModals/EditpostsModal'
+import CloseIcon from '@/assets/icons/CloseIcon'
+import { RootState } from '@/redux/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { initialFormValues, setFormValues } from '@/redux/slices/blog'
+import { closeModal } from '@/redux/slices/modal'
+import OutlinedButton from '@/components/_buttons/OutlinedButton'
+import FilledButton from '@/components/_buttons/FilledButton'
 
-interface BlogFilterProps {
-  setFormValues: React.Dispatch<React.SetStateAction<FormValues>>
-  formValues: FormValues
-}
-
-const BlogFilter: React.FC<BlogFilterProps> = ({
-  setFormValues,
-  formValues,
-}) => {
+const BlogFilter: React.FC = () => {
+  const { formValues } = useSelector((state: RootState) => state.blog)
+  const isMob = isMobile()
   const containerRef = useRef<HTMLDivElement | null>(null)
   const hobbyRef = useRef<HTMLParagraphElement | null>(null)
   const styleRef = useRef<HTMLParagraphElement | null>(null)
@@ -38,33 +38,42 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
   const [focusedGenreIndex, setFocusedGenreIndex] = useState(-1)
   const [startDate, setStartDate] = useState('')
   const today = new Date().toISOString().split('T')[0]
+  const dispatch = useDispatch()
 
   // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: type === 'radio' ? (checked ? value : prevValues.status) : value,
-    }))
+    dispatch(
+      setFormValues({
+        ...formValues,
+        [name]:
+          type === 'radio' ? (checked ? value : formValues.status) : value,
+      }),
+    )
   }
 
   const handleChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
-
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      search: value,
-    }))
+    dispatch(
+      setFormValues({
+        ...formValues,
+        search: value,
+      }),
+    )
   }
 
   console.warn('formValues', formValues)
 
   const handleHobbyInputChange = async (e: any) => {
     const { name, value, type, checked } = e.target
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: type === 'radio' ? (checked ? value : prevValues.status) : value,
-    }))
+    dispatch(
+      setFormValues({
+        ...formValues,
+        [name]:
+          type === 'radio' ? (checked ? value : formValues.status) : value,
+      }),
+    )
+
     setShowHobby(true)
     setHobbyInputValue(e.target.value)
     setGenreInputValue('')
@@ -121,10 +130,14 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
 
   const handleGenreInputChange = async (e: any) => {
     const { name, value, type, checked } = e.target
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: type === 'radio' ? (checked ? value : prevValues.status) : value,
-    }))
+    dispatch(
+      setFormValues({
+        ...formValues,
+        [name]:
+          type === 'radio' ? (checked ? value : formValues.status) : value,
+      }),
+    )
+
     setGenreInputValue(e.target.value)
 
     if (isEmptyField(e.target.value)) return setGenreDropdownList([])
@@ -187,18 +200,23 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
       } else {
       }
     }
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      hobby: selectedHobby?.display,
-    }))
+    dispatch(
+      setFormValues({
+        ...formValues,
+        hobby: selectedHobby?.display,
+      }),
+    )
+
     setShowHobby(false)
   }
 
   const handleGenreSelection = async (x: any) => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      genre: x?.display,
-    }))
+    dispatch(
+      setFormValues({
+        ...formValues,
+        genre: x?.display,
+      }),
+    )
     setShowStyle(false)
   }
 
@@ -279,39 +297,54 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
 
     if (key === 'from_date') {
       const selectedStartDate = updatedItem
-      setFormValues((prevValues) => {
-        const updatedEndDate =
-          prevValues.endDate &&
-          new Date(prevValues.endDate) < new Date(selectedStartDate)
-            ? ''
-            : prevValues.endDate
-        return {
-          ...prevValues,
+      const updatedEndDate =
+        formValues.endDate &&
+        new Date(formValues.endDate) < new Date(selectedStartDate)
+          ? ''
+          : formValues.endDate
+      dispatch(
+        setFormValues({
+          ...formValues,
           startDate: selectedStartDate,
           endDate: updatedEndDate,
-        }
-      })
+        }),
+      )
     } else if (key === 'to_date') {
       const selectedEndDate = updatedItem
-      setFormValues((prevValues) => {
-        const updatedStartDate =
-          prevValues.startDate &&
-          new Date(prevValues.startDate) > new Date(selectedEndDate)
-            ? 'Start Date'
-            : prevValues.startDate
-        return {
-          ...prevValues,
+      const updatedStartDate =
+        formValues.startDate &&
+        new Date(formValues.startDate) > new Date(selectedEndDate)
+          ? 'Start Date'
+          : formValues.startDate
+      dispatch(
+        setFormValues({
+          ...formValues,
           endDate: selectedEndDate,
           startDate: updatedStartDate,
-        }
-      })
+        }),
+      )
     }
+  }
+
+  const handleClearFilters = () => {
+    dispatch(setFormValues(initialFormValues))
+    dispatch(closeModal())
+  }
+
+  const handleApplyFilters = () => {
+    dispatch(closeModal())
   }
 
   return (
     <section className={styles.blogsSection} ref={containerRef}>
-      <h1 className={styles.blogsTitle}>Blogs</h1>
-      <h2 className={styles.filter}>Filter</h2>
+      <div className={styles.filterHeader}>
+        <div className={styles.blogsTitleWrapper}>
+          <h1 className={styles.blogsTitle}>Blogs</h1>
+          {isMob && <CloseIcon onClick={() => dispatch(closeModal())} />}
+        </div>
+        {isMob && <hr />}
+      </div>
+      {!isMob && <h2 className={styles.filter}>Filter</h2>}
 
       <form className={styles.blogsForm}>
         <div className={`${styles.formGroup} ${styles.position}`}>
@@ -459,6 +492,10 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
             </span>
           </div>
         </div>
+      </div>
+      <div className={styles.footerButtons}>
+        <OutlinedButton onClick={handleClearFilters}>Clear</OutlinedButton>
+        <FilledButton onClick={handleApplyFilters}>Apply</FilledButton>
       </div>
     </section>
   )

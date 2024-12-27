@@ -63,6 +63,7 @@ const PostCard: React.FC<Props> = (props) => {
   const editReportDeleteRef: any = useRef(null)
   const [postData, setPostData] = useState(props.postData)
   const [comments, setComments] = useState([])
+  const [showActiveComment, setShowActiveComment] = useState(false)
   const [showComments, setShowComments] = useState(
     props.currentSection === 'links'
       ? false
@@ -916,7 +917,36 @@ const PostCard: React.FC<Props> = (props) => {
                   </p>
                 </div>
                 <div className={styles['meta-author']}>
-                  <p className={styles['date']}>{postData?._hobby?.display}</p>
+                  <p className={styles['date']}>
+                    {' '}
+                    <span>
+                      {`${postData?._allHobbies?._hobby1?.display}${
+                        postData?._allHobbies?._genre1?.display
+                          ? ' - ' + postData?._allHobbies?._genre1?.display
+                          : ''
+                      }`}
+                      {postData?._allHobbies?._hobby2?.display ? ', ' : ''}
+                      {`${
+                        postData?._allHobbies?._hobby2?.display
+                          ? postData?._allHobbies?._hobby2?.display
+                          : ''
+                      }${
+                        postData?._allHobbies?._genre2?.display
+                          ? ' - ' + postData?._allHobbies?._genre2?.display
+                          : ''
+                      }`}
+                      {postData?._allHobbies?._hobby3?.display ? ', ' : ''}
+                      {`${
+                        postData?._allHobbies?._hobby3?.display
+                          ? postData?._allHobbies?._hobby3?.display
+                          : ''
+                      }${
+                        postData?._allHobbies?._genre3?.display
+                          ? ' - ' + postData?._allHobbies?._genre3?.display
+                          : ''
+                      }`}
+                    </span>
+                  </p>
 
                   <p className={styles['date']}>
                     <span className={styles['separator']}>
@@ -956,11 +986,13 @@ const PostCard: React.FC<Props> = (props) => {
                           viewBox="0 0 18 18"
                           fill="none"
                         >
-                          <g clipPath="url(#clip0_10350_4296)">
-                            <path
-                              d="M15 12.8775L14.1225 12H3V3H15V12.8775ZM15 1.5H3C2.175 1.5 1.5 2.175 1.5 3V12C1.5 12.825 2.175 13.5 3 13.5H13.5L16.5 16.5V3C16.5 2.175 15.825 1.5 15 1.5Z"
-                              fill="#8064A2"
-                            />
+                          <g transform="scale(-1, 1)" transform-origin="center">
+                            <g clipPath="url(#clip0_10350_4296)">
+                              <path
+                                d="M15 12.8775L14.1225 12H3V3H15V12.8775ZM15 1.5H3C2.175 1.5 1.5 2.175 1.5 3V12C1.5 12.825 2.175 13.5 3 13.5H13.5L16.5 16.5V3C16.5 2.175 15.825 1.5 15 1.5Z"
+                                fill="#8064A2"
+                              />
+                            </g>
                           </g>
                           <defs>
                             <clipPath id="clip0_10350_4296">
@@ -1035,7 +1067,10 @@ const PostCard: React.FC<Props> = (props) => {
               >
                 <CustomizedTooltips title="Comments">
                   <svg
-                    onClick={() => setShowComments(!showComments)}
+                    onClick={() => {
+                      setShowComments(!showComments)
+                      setShowActiveComment(true)
+                    }}
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"
@@ -1124,7 +1159,10 @@ const PostCard: React.FC<Props> = (props) => {
 
             {/* Comments Section */}
             {(showComments || router.pathname.startsWith('/post/')) && (
-              <PostComments data={postData} activeCommentBox={true} />
+              <PostComments
+                data={postData}
+                activeCommentBox={showActiveComment}
+              />
             )}
           </footer>
         )}

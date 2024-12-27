@@ -58,7 +58,10 @@ const CustomEditor: React.FC<Props> = ({
     },
     [onChange],
   )
-
+  const placeholderText = `Start something interesting...
+  
+Note: This post will be visible to all those having the selected hobby and location
+  `
   const onReady = () => {
     if (image && !imageIconAdded) {
       const toolbar = document.querySelector('.ql-toolbar.ql-snow');
@@ -201,7 +204,7 @@ const CustomEditor: React.FC<Props> = ({
             ? { height: '250px' }
             : { height: '490px' }),
         }}
-        placeholder="Start something interesting..."
+        placeholder={placeholderText}
         modules={{
           toolbar: {
             container: '#toolbar',

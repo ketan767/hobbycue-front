@@ -501,7 +501,13 @@ const HobbyDetail: React.FC<Props> = (props) => {
                           </ul>
                         </>
                       ) : (
-                        <span style={isMobile ? { marginTop: '16px' } : {}}>
+                        <span
+                          style={
+                            isMobile
+                              ? { display: 'flex', marginTop: '16px' }
+                              : {}
+                          }
+                        >
                           No further sub-classification.
                         </span>
                       )}

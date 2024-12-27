@@ -914,11 +914,12 @@ const CommunityLayout: React.FC<Props> = ({
       setErrorMessage('This field is required')
       return
     }
+    console.warn('seelctedduser', selectedUser)
 
     if (selectedUser?.display_name === email) {
       to = selectedUser?.email
     }
-
+    console.warn('toooo', to)
     if (!validateEmail(to) && selectedUser?.display_name !== email) {
       setErrorMessage('Please enter a valid email')
       return
@@ -937,7 +938,7 @@ const CommunityLayout: React.FC<Props> = ({
       hobby_id,
       location,
     })
-    if (res.data?.success) {
+    if (res?.data?.success) {
       setInviteBtnLoader(false)
       setSnackbar({
         display: true,
@@ -1073,6 +1074,7 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.warn('inputtttr', e.target.value)
     const input = e.target.value
     setEmail(input)
     setErrorMessage('')
@@ -1749,7 +1751,10 @@ const CommunityLayout: React.FC<Props> = ({
                         idx: number,
                       ) => (
                         <PanelDropdownList
+                          email={email}
+                          setEmail={setEmail}
                           name={obj.name}
+                          setSelectedUser={setSelectedUser}
                           options={obj.options}
                           key={idx}
                           type={obj?.type}

@@ -67,11 +67,13 @@ const commentIcon = (
     viewBox="0 0 19 18"
     fill="none"
   >
-    <g clip-path="url(#clip0_13344_151892)">
-      <path
-        d="M15.5 12.8775L14.6225 12H3.5V3H15.5V12.8775ZM15.5 1.5H3.5C2.675 1.5 2 2.175 2 3V12C2 12.825 2.675 13.5 3.5 13.5H14L17 16.5V3C17 2.175 16.325 1.5 15.5 1.5Z"
-        fill="#8064A2"
-      />
+    <g transform="scale(-1, 1)" transform-origin="center">
+      <g clipPath="url(#clip0_10350_4296)">
+        <path
+          d="M15 12.8775L14.1225 12H3V3H15V12.8775ZM15 1.5H3C2.175 1.5 1.5 2.175 1.5 3V12C1.5 12.825 2.175 13.5 3 13.5H13.5L16.5 16.5V3C16.5 2.175 15.825 1.5 15 1.5Z"
+          fill="#8064A2"
+        />
+      </g>
     </g>
     <defs>
       <clipPath id="clip0_13344_151892">

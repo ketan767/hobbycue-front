@@ -920,7 +920,7 @@
     animation: fadeDown 0.3s ease forwards;
   }
   .dropdowns-panel > * {
-    padding: 0 12px;
+    padding: 0 16px;
   }
 
   /* .dropdowns-panel input {
@@ -1142,7 +1142,7 @@
   }
   .navigation-links {
     /* right: 8px; */
-    padding-inline: 16px;
+    padding-inline: 12px;
   }
 
   .navigation-links ul li {

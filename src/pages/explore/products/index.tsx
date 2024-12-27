@@ -152,8 +152,8 @@ const Products: React.FC<Props> = ({ data: initialData }) => {
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
         />
-        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
-        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+        <meta property="og:image" content="/product_page.png" />
+        <meta property="og:image:secure_url" content="/product_page.png" />
         <title>HobbyCue - Explore</title>
       </Head>
       <ExploreSearchContainer

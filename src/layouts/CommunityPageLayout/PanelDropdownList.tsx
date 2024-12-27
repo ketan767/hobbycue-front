@@ -6,7 +6,7 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import Link from 'next/link'
 import Image from 'next/image'
-import { pageType, validateEmail } from '@/utils'
+import { isMobile, pageType, validateEmail } from '@/utils'
 import { CircularProgress } from '@mui/material'
 import { searchUsersAdvanced } from '@/services/user.service'
 import { RootState } from '@/redux/store'
@@ -19,6 +19,9 @@ interface PanelDropdownListProps {
   type?: string
   invite?: boolean
   inviteFunction: () => Promise<void>
+  email?: string
+  setEmail?: any
+  setSelectedUser?: any
   inviteError?: string
   inviteTextChangeFunc?: (arg0: any) => void
   inviteText?: string
@@ -42,6 +45,9 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   type,
   invite,
   inviteFunction,
+  email,
+  setEmail,
+  setSelectedUser,
   inviteError,
   inviteText,
   inviteTextChangeFunc,
@@ -61,14 +67,15 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   const [open, setOpen] = useState(initialOpen ?? false)
   const router = useRouter()
   // const [seeMore, setSeeMore] = useState(true)
+  const isMob = isMobile()
   const [seeMoreHobbies, setSeeMoreHobbies] = useState(0)
-  const [email, setEmail] = useState('')
+
   const [filteredUsers, setFilteredUsers] = useState([])
   const [filtersUsersLoading, setFilteredUsersLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const membersContainerRef = useRef<HTMLDivElement>(null)
   const [showModal, setShowModal] = useState(false)
-  const [selectedUser, setSelectedUser] = useState<any>()
+
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const { activeProfile, user, isLoggedIn, listing } = useSelector(
     (state: RootState) => state.user,
@@ -102,7 +109,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   }
   useEffect(() => {
     if (showModal) {
-      const query = email.slice(1)
+      const query = email?.slice(1)
       console.log(query)
       fetchUsers(query || '')
     }
@@ -124,62 +131,6 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
     setEmail(selectedUser.display_name)
     setSelectedUser(selectedUser)
     setShowModal(false)
-  }
-
-  const Invitecommunity = async () => {
-    if (!isLoggedIn) {
-      dispatch(openModal({ type: 'auth', closable: true }))
-      return
-    }
-
-    let to = email
-
-    if (!to || to === '') {
-      setErrorMessage('This field is required')
-      return
-    }
-
-    if (selectedUser?.display_name === email) {
-      to = selectedUser?.email
-    }
-
-    if (!validateEmail(to) && selectedUser?.display_name !== email) {
-      setErrorMessage('Please enter a valid email')
-      return
-    }
-    setErrorMessage('')
-    const name = activeProfile?.data.full_name
-    const _id = activeProfile?.data?._id
-    const hobby_id = filters?.hobby
-    const location = filters?.location || ''
-    setInviteBtnLoader(true)
-
-    const { err, res } = await InviteToCommunity({
-      to,
-      name,
-      _id,
-      hobby_id,
-      location,
-    })
-    if (res.data?.success) {
-      setInviteBtnLoader(false)
-      setSnackbar({
-        display: true,
-        type: 'success',
-        message: 'Invitation sent',
-      })
-      setEmail('')
-      setSelectedUser({})
-    }
-    if (err) {
-      setEmail('')
-      setInviteBtnLoader(false)
-      setSnackbar({
-        display: true,
-        type: 'error',
-        message: 'Invitation failed.',
-      })
-    }
   }
 
   const ArrowSvg = ({ rotate }: { rotate?: boolean }) => {
@@ -228,6 +179,12 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
       />
     </svg>
   )
+
+  useEffect(() => {
+    if (isMob) {
+      setOpen(true)
+    }
+  }, [])
   return (
     <div className={styles['parent-list']}>
       <div className={styles['list']}>
