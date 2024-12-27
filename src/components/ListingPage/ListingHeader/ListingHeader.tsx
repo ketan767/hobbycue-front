@@ -1135,7 +1135,8 @@ const ListingHeader: React.FC<Props> = ({
             <div className={styles['content-container']}>
               <div className={styles['name-container']}>
                 <h1 className={styles['name']}>
-                  {data?.title}
+                  {data?.title.slice(0, 77) +
+                    (data?.title.length > 77 ? '...' : '')}
                   {data?.is_verified ? (
                     <Image alt="claim" src={claimSvg} />
                   ) : (

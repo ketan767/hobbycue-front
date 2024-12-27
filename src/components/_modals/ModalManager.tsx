@@ -91,7 +91,6 @@ import ProductCategoryModal from './EditListing/ProductCategory/ProductCategory'
 import HobbyAboutEditModal from './EditHobby/About'
 import FBNoEmail from './FBNoEmail'
 import BlogPublish from './BlogPublish/BlogPublishModal'
-import BlogFilterMobileModal from './BlogFilterMobileModal/BlogFilterMobileModal'
 
 const CustomBackdrop: React.FC = () => {
   const { activeModal } = useSelector((state: RootState) => state.modal)
@@ -454,7 +453,6 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'claim-listing' &&
                 activeModal !== 'listing-cta-edit' &&
                 activeModal !== 'listing-product-purchase' &&
-                activeModal !== 'BlogFilterMobileModal' &&
                 !showAddHobbyModal && (
                   <>
                     <header className={styles['header']}>
@@ -474,9 +472,6 @@ const ModalManager: React.FC = () => {
                   </>
                 )}
               {activeModal === 'blogPublish' && <BlogPublish {...props} />}
-              {activeModal === 'BlogFilterMobileModal' && (
-                <BlogFilterMobileModal />
-              )}
               {activeModal === 'FBNoEmail' && <FBNoEmail />}
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
@@ -673,7 +668,6 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'claim-listing' &&
                 activeModal !== 'listing-cta-edit' &&
                 activeModal !== 'listing-product-purchase' &&
-                activeModal !== 'BlogFilterMobileModal' &&
                 !showAddGenreModal &&
                 !showAddHobbyModal && (
                   <CloseIcon

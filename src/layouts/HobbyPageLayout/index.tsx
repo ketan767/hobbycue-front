@@ -355,13 +355,7 @@ const HobbyPageLayout: React.FC<Props> = ({
               <aside>
                 <div className={styles['members']}>
                   <div className={styles['heading']}>
-                    <div
-                      style={{
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                      }}
-                    >
+                    <div className={styles['members-pencil-container']}>
                       <h4
                         style={{
                           fontWeight: '600',
@@ -444,7 +438,7 @@ const HobbyPageLayout: React.FC<Props> = ({
                             className={styles.seeAllBtn}
                             onClick={toggleMembers}
                           >
-                            See More
+                            See more
                           </p>
                         )}
                       </>

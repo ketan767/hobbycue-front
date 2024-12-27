@@ -5,7 +5,7 @@
   mix-blend-mode: normal;
   border-radius: var(--spacing-8);
   max-height: 50rem;
-  height: calc(100vh - 3rem);
+  height: calc(100vh - 2rem);
 }
 
 .changedWidth {
