@@ -258,7 +258,7 @@ const BlogPublish = (props: any) => {
                 <label className={styles.blogLabel} htmlFor="URL">
                   Blog URL <span className={styles.Star}>*</span>{' '}
                   <span className={styles.urlSpan}>
-                    {process.env.NEXT_PUBLIC_BASE_URL}/blog/{urlText}
+                    {process.env.NEXT_PUBLIC_BASE_URL}/blog/
                   </span>
                 </label>
                 <input
