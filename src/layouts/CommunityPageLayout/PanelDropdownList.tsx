@@ -6,7 +6,7 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import Link from 'next/link'
 import Image from 'next/image'
-import { pageType, validateEmail } from '@/utils'
+import {isMobile, pageType, validateEmail } from '@/utils'
 import { CircularProgress } from '@mui/material'
 import { searchUsersAdvanced } from '@/services/user.service'
 import { RootState } from '@/redux/store'
@@ -61,6 +61,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   const [open, setOpen] = useState(initialOpen ?? false)
   const router = useRouter()
   // const [seeMore, setSeeMore] = useState(true)
+  const isMob = isMobile();
   const [seeMoreHobbies, setSeeMoreHobbies] = useState(0)
   const [email, setEmail] = useState('')
   const [filteredUsers, setFilteredUsers] = useState([])
@@ -228,6 +229,12 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
       />
     </svg>
   )
+
+  useEffect(() => {
+    if (isMob) {
+      setOpen(true)
+    }
+  }, [])
   return (
     <div className={styles['parent-list']}>
       <div className={styles['list']}>

@@ -28,7 +28,7 @@
   gap: 16px;
   padding: 0 var(--spacing-24);
   width: 100%;
-  height: calc(100% - 4rem) ;
+  height: calc(100% - 4rem);
 }
 
 .create-post-modal > section {
@@ -257,7 +257,7 @@
   width: 100%;
   display: flex;
   align-items: center;
-  height: 210%;
+
 }
 .imgContainer > img {
   height: 100%;
@@ -286,7 +286,6 @@
   align-items: stretch;
   overflow: auto;
 }
-
 
 .editor-container::-webkit-scrollbar-track {
   background: transparent;
@@ -485,20 +484,42 @@
   width: 100%;
   height: 410px;
 }
+/* .relative{
+  position: relative;
+} */
+.post-button-mobile {
+  position: absolute;
+  top: -38px;
+  right: -4px;
+  z-index: 1001;
+}
+.nav-post-btn {
+  position: absolute;
+  border: none;
+  width: 80px;
+  height: 32px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  color: #ffffff;
+  background: #8064a2;
+  border-radius: 8px;
+  cursor: pointer;
+  right: 40px;
+}
 
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
- 
     max-height: 95vh;
- 
   }
-  
+
   .create-post-modal {
     flex-direction: column;
     padding-left: 1rem;
     padding-right: 1rem;
     gap: 16px;
     overflow-y: scroll;
+    height: calc(100% - 4rem);
   }
 
   .image-posting-as > img {
@@ -526,7 +547,7 @@
     /* max-width: 350px; */
     width: 100vw !important;
     border-radius: 0;
-    height: 100%;
+    /* height: 100%; */
   }
 
   .create-post-btn {
@@ -543,6 +564,9 @@
 
   .modal-heading::before {
     display: none !important;
+  }
+  .modal-heading {
+    padding-top: 0;
   }
 
   .image-posting-as > aside {
@@ -576,7 +600,6 @@
   }
 
   .input-select {
-
     display: flex !important;
     justify-content: center !important;
     align-items: stretch !important;
@@ -662,8 +685,7 @@
   .create-post-btn {
     margin-top: auto;
     position: relative;
-   
-  }  
+  }
   .listing-profile-img {
     display: none;
   }
