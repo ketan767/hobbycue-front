@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import styles from './DateRangePicker.module.css'
 import { format } from 'date-fns'
-import { FormValues } from '@/pages/blog'
+import { FormValues } from '@/redux/slices/blog'
 interface CustomDateRangePickerProps {
   setFormValues: React.Dispatch<React.SetStateAction<FormValues>>
   setShowCalender: React.Dispatch<React.SetStateAction<boolean>>

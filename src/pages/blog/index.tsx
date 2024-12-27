@@ -252,11 +252,11 @@ const Explore: React.FC<Props> = ({ data }) => {
                     }),
                   )
                 }
-                // className={
-                //   activeModal === 'BlogFilterMobileModal'
-                //     ? styles.filterIcon
-                //     : ''
-                // }
+                className={
+                  activeModal === 'BlogFilterMobileModal'
+                    ? styles.filterIcon
+                    : ''
+                }
               >
                 {JSON.stringify(formValues) ===
                 JSON.stringify(initialFormValues)
