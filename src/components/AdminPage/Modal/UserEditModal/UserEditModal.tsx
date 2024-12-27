@@ -231,6 +231,7 @@ const EditUser: React.FC<UserEditProps> = ({
               <input
                 type="date"
                 autoComplete="new"
+                style={{cursor: 'pointer'}}
                 value={user?.year_of_birth}
                 onChange={(e) =>
                   setUser({ ...user, year_of_birth: e.target.value })
@@ -629,6 +630,7 @@ const EditUser: React.FC<UserEditProps> = ({
           <div className={styles.inputbox}>
             <label>Is Onboarded:</label>
             <select
+            style={{cursor: 'pointer'}}
               value={user.is_onboarded.toString()} // Convert boolean to string explicitly
               onChange={(e) => {
                 setUser({ ...user, is_onboarded: e.target.value === 'true' })
@@ -655,6 +657,7 @@ const EditUser: React.FC<UserEditProps> = ({
             <div className={styles.inputbox}>
               <label>Is Account Activated:</label>
               <select
+              style={{cursor: 'pointer'}}
                 value={user.is_account_activated.toString()} // Convert boolean to string explicitly
                 onChange={(e) => {
                   setUser({
@@ -679,6 +682,7 @@ const EditUser: React.FC<UserEditProps> = ({
             <div className={styles.inputbox}>
               <label>Is Account Verified:</label>
               <select
+              style={{cursor: 'pointer'}}
                 value={user.verified.toString()} // Convert boolean to string explicitly
                 onChange={(e) => {
                   setUser({
