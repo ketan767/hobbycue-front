@@ -1,7 +1,20 @@
+.gray-bg {
+  background-color: rgb(235, 237, 240);
+}
+
 .truncateOneLine {
   white-space: nowrap; /* Prevents text from wrapping to the next line */
-  overflow: hidden;    /* Ensures content beyond the element's width is hidden */
+  overflow: hidden; /* Ensures content beyond the element's width is hidden */
   text-overflow: ellipsis; /* Displays ellipsis (...) for overflowing text */
+}
+
+.truncateTwoLines {
+  display: -webkit-box; /* Required for multiline truncation */
+  -webkit-box-orient: vertical; /* Specifies the box's orientation */
+  overflow: hidden; /* Hides any overflowing text */
+  text-overflow: ellipsis; /* Adds ellipsis (...) at the end of the visible text */
+  line-clamp: 2; /* Limits the text to 2 lines */
+  -webkit-line-clamp: 2; /* Required for multiline truncation */
 }
 
 html {
@@ -249,16 +262,16 @@ select:-webkit-autofill {
   background-size: cover;
 }
 .ql-toolbar.ql-snow + .ql-container.ql-snow {
-  border-top: 1px solid #ebedf0 !important;
+  border: 1px solid #ebedf0;
   border-bottom: 0;
-  border-radius: 8px 8px 0 0;
-  border-color: 1px solid #ebedf0 !important;
+  /* border-radius: 8px 8px 0 0; */
+  border-color: #ebedf0;
 }
 
 .ql-toolbar.ql-snow {
   display: flex;
   align-items: center;
-  border-radius: 0 0 8px 8px;
+  border-radius: 8px 8px 0 0;
   border-color: 1px solid #ebedf0 !important;
   height: 48px;
 }
@@ -275,6 +288,14 @@ select:-webkit-autofill {
 .ql-toolbar.ql-snow .ql-formats:nth-child(1) {
   margin-right: 6px;
 }
+.ql-toolbar.ql-snow .ql-formats:nth-child(3) .ql-link {
+  padding: 0 !important;
+}
+.ql-toolbar.ql-snow .ql-formats:nth-child(3) {
+  padding: 0 !important;
+  width: 30px;
+  margin-left: auto;
+}
 .ql-toolbar.ql-snow > img {
   padding-top: 0px;
   display: inline-block;
@@ -285,7 +306,7 @@ select:-webkit-autofill {
 }
 
 .ql-editor.ql-blank {
-  min-height: 15rem;
+  min-height: calc(100vh - 21rem);
 }
 .quill > .ql-container > .ql-editor.ql-blank::before {
   font-family: 'Poppins';
@@ -305,6 +326,38 @@ select:-webkit-autofill {
   /* max-width: 800px; */
   width: 100%;
   font-family: 'Poppins';
+}
+
+.blog-quill .ql-container {
+  max-width: 100% !important;
+  min-height: 100vh;
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-top: 1px solid #ccc !important;
+  border-bottom: 1px solid #ccc !important;
+}
+
+.blog-quill .ql-editor {
+  min-height: inherit !important;
+  padding-inline: 24px;
+}
+
+.blog-quill .ql-toolbar {
+  border-radius: 8px 8px 0 0 !important;
+  border: 0;
+  /* border-bottom: 1px solid #ccc; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.blog-quill .ql-toolbar span {
+  margin: 0 !important;
+}
+
+.blog-quill .ql-toolbar:after {
+  content: none !important;
 }
 
 .ck.ck-content.ck-editor__editable ul,
@@ -394,14 +447,32 @@ select:-webkit-autofill {
 }
 
 .admin-next-btn {
+  width: 80px;
+  height: 40px;
   border-radius: 8px;
-  padding: 5px 10px;
+  padding: 12px 24px;
   background-color: #0056b3;
   color: white;
   font-size: 16px;
   line-height: 16px;
   font-weight: 500;
+  border: none;
 }
+
+.users-next-btn {
+  width: 80px;
+  height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 12px 24px;
+  background-color: #0096c8;
+  color: white;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 600;
+  border: none;
+}
+
 @media screen and (max-width: 1100px) {
   .content-box-wrapper {
     border: none;
@@ -617,11 +688,15 @@ select:-webkit-autofill {
   .margin-bottom-65vh {
     margin-bottom: 65vh;
   }
+  .blog-quill .ql-editor {
+    padding-inline: 16px !important;
+  }
   .ql-toolbar.ql-snow + .ql-container.ql-snow {
     border: none !important;
+    border-bottom: 1px solid #ccc;
   }
   .ql-toolbar.ql-snow {
-    border-radius: 0;
+    border-radius: 0 !important;
     position: relative;
     overflow: hidden;
   }

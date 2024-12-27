@@ -23,6 +23,9 @@ import {
 import { countryData } from '@/utils/countrydata'
 import { useMediaQuery } from '@mui/material'
 import SettingsDropdownLayout from '@/layouts/SettingsDropdownLayout'
+import ViewProfileBtn from '../visibility-notification/components/viewProfile/ViewProfileBtn'
+import ExploreSidebarBtn from '../visibility-notification/components/ExploreSidebarBtn'
+import QuestionIcon from '@/assets/icons/QuestionIcon'
 
 let options = {
   region: countryData.map((item) => item.name),
@@ -67,6 +70,7 @@ const VisibilityAndNotification: React.FC = () => {
       }
 
       const { err: error, res: response } = await getMyProfileDetail()
+
       if (error) return console.log(error)
 
       if (response?.data.success) {
@@ -94,16 +98,20 @@ const VisibilityAndNotification: React.FC = () => {
 
   return (
     <>
-          {isMobile&&<aside className={`custom-scrollbar static-position settings-container`}>
-        <section className={`content-box-wrapper`}>
-          <header>
-            <div className={'settings-title'}>
-              <h1>Settings</h1>
-            </div>
-          </header>
-        </section>
-      </aside>}
-      <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
+      {isMobile && (
+        <aside
+          className={`custom-scrollbar static-position settings-container`}
+        >
+          <section className={`content-box-wrapper`}>
+            <header>
+              <div className={'settings-title'}>
+                <h1>Settings</h1>
+              </div>
+            </header>
+          </section>
+        </aside>
+      )}
+      <PageGridLayout column={3} customStyles={styles['settingcontainer']}>
         <SettingsDropdownLayout>
           {isMobile ? null : <SettingsSidebar active="localization-payments" />}
           <div className={styles.container}>
@@ -318,6 +326,16 @@ const VisibilityAndNotification: React.FC = () => {
             </div>
           </div>
         </SettingsDropdownLayout>
+        {!isMobile && (
+          <aside className={styles['aside-two']}>
+            <ViewProfileBtn />
+            <ExploreSidebarBtn
+              text="Help Center"
+              href="/help"
+              icon={<QuestionIcon />}
+            />
+          </aside>
+        )}
       </PageGridLayout>
     </>
   )

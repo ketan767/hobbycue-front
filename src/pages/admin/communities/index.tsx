@@ -3,16 +3,9 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllUserDetail, searchUsers } from '../../../services/user.service'
 import styles from './styles.module.css'
+import sortAscending from '@/assets/icons/Sort-Ascending-On.png'
+import sortDescending from '@/assets/icons/Sort-Ascending-Off.png'
 import Image from 'next/image'
-import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
-import { forgotPassword } from '@/services/auth.service'
-import {
-  closeModal,
-  openModal,
-  updateForgotPasswordEmail,
-} from '@/redux/slices/modal'
-import { RootState } from '@/redux/store'
-import AdminNavbar from '@/components/AdminNavbar/AdminNavbar'
 import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
@@ -22,13 +15,8 @@ import {
   getCommunities,
   getsearchHistory,
 } from '@/services/admin.service'
-import { formatDateTime, formatDateTimeTwo } from '@/utils'
-import phoneIcon from '@/assets/svg/admin_phone.svg'
-import emailIcon from '@/assets/svg/admin_email.svg'
-import GoogleIcon from '@/assets/svg/google-icon.svg'
-import MailIcon from '@/assets/svg/mail.svg'
-import FacebookIcon from '@/assets/svg/mobile-social/facebook.svg'
-import StatusDropdown from '@/components/_formElements/StatusDropdown'
+
+import { setShowPageLoader } from '@/redux/slices/site'
 
 type SearchInput = {
   search: InputData<string>
@@ -60,8 +48,9 @@ const AdminCommunities: React.FC = () => {
     display: false,
     message: '',
   })
-
+  const dispatch = useDispatch()
   const handleSearch = async (event: any) => {
+    dispatch(setShowPageLoader(true))
     const searchValue = data.search.value.trim()
     event.preventDefault()
     let searchCriteria = {
@@ -71,9 +60,11 @@ const AdminCommunities: React.FC = () => {
     const { res, err } = await searchUsers(searchCriteria)
     if (err) {
       console.log('An error', err)
+      dispatch(setShowPageLoader(false))
     } else {
       setSearchResults(res.data)
       console.log('res', res)
+      dispatch(setShowPageLoader(false))
     }
   }
 
@@ -189,12 +180,15 @@ const AdminCommunities: React.FC = () => {
     }
   }
   const fetchUsers = async () => {
+    dispatch(setShowPageLoader(true))
     const { res, err } = await getCommunities()
     if (err) {
       console.log('An error', err)
+      dispatch(setShowPageLoader(false))
     } else {
       console.log('fetchUsers', res.data)
       setSearchResults(res.data.data)
+      dispatch(setShowPageLoader(false))
     }
   }
   useEffect(() => {
@@ -273,9 +267,33 @@ const AdminCommunities: React.FC = () => {
                 <tr>
                   <th style={{ width: '20.06%' }}>Hobby</th>
                   <th style={{ width: '30.48%' }}>Location</th>
-                  <th style={{ width: '15.48%' }}>Members</th>
+                  <th style={{ width: '15.48%' }}>
+                    <div className={styles.sortButtonWrapper}>
+                    Members
+                    <button className={styles.sortButton}>
+                            <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                            />
+                    </button>
+                    </div>
+                  </th>
 
-                  <th style={{ width: '8.163%' }}>Posts</th>
+                  <th style={{ width: '8.163%' }}>
+                  <div className={styles.sortButtonWrapper}>
+                    Posts
+                    <button className={styles.sortButton}>
+                            <Image
+                            src={sortDescending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                            />
+                    </button>
+                    </div>
+                  </th>
 
                   <th style={{ width: '13.252%', textAlign: 'center' }}>
                     Most Active
@@ -289,13 +307,16 @@ const AdminCommunities: React.FC = () => {
                     <td>
                       <div className={styles.resultItem}>
                         <div className={styles.detailsContainer}>
-                          <div className={styles.userName}>
+                          <Link
+                            className={styles.userName}
+                            href={`/hobby/${user?.hobby?.slug}`}
+                          >
                             {`${user?.hobby?.display}${
                               user?.genre?.display
                                 ? ' - ' + user?.genre?.display
                                 : ''
                             }`}
-                          </div>
+                          </Link>
                         </div>
                       </div>
                     </td>
@@ -312,7 +333,14 @@ const AdminCommunities: React.FC = () => {
                     <td className={styles.userName}></td>
 
                     <td>
-                      <div className={styles.actions}></div>
+                    <div className={styles.actions}>
+                        {/* <div onClick={() => handleEdit(user.slug)} style={{height:30}}>
+                          {pencilSvg}
+                        </div>
+                        <div onClick={() => handleDelete(user._id)} style={{height:30}}>
+                          {deleteSvg}
+                        </div> */}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -321,22 +349,21 @@ const AdminCommunities: React.FC = () => {
           </div>
           <div className={styles.pagination}>
             {/* Previous Page Button */}
-
-            <button
-              disabled={page <= 1}
-              className="admin-next-btn"
-              onClick={goToPreviousPage}
-            >
-              Previous
-            </button>
-
-            <button
-              disabled={searchResults.length !== pagelimit}
-              className="admin-next-btn"
-              onClick={goToNextPage}
-            >
-              Next
-            </button>
+            {page > 1 ? (
+              <button className={styles.PaginationButton} onClick={goToPreviousPage}>Prev</button>
+            ) : (
+              ''
+            )}
+            {searchResults.length === pagelimit ? (
+              <button
+                className={styles.PaginationButton}
+                onClick={goToNextPage}
+              >
+                Next
+              </button>
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </AdminLayout>

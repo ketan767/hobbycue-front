@@ -86,7 +86,7 @@ interface InvitetoHobbycuePayload {
 }
 
 interface InviteToCommunityPayload {
-  to:string
+  to?:string
   name: string
   _id: string
   hobby_id: string

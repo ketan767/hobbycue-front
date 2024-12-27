@@ -51,7 +51,7 @@ const AdminActionModal: React.FC<Props> = ({
   }
 
   return (
-    <>
+    <section className={styles.mainContainer}>
       <div className={`${styles['modal-wrapper']}  `}>
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Admin Notes'}</h4>
@@ -129,7 +129,7 @@ const AdminActionModal: React.FC<Props> = ({
           setSnackbar((prevValue) => ({ ...prevValue, display: false }))
         }}
       />
-    </>
+    </section>
   )
 }
 

@@ -1,9 +1,31 @@
 import { headers } from 'next/headers'
 import axiosInstance, { operation } from './_axios'
-
+type stringOrUndefined = string | undefined
 export const getAllPosts = async (query: string): Promise<ApiReturnObject> => {
   try {
     const res = await axiosInstance.get(`/post/?${query}`)
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+export const getAllHobbyPosts = async (
+  query: string,
+): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.get(`/post/hobby-posts?${query}`)
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+export const getPostById = async (query: string): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.get(`/post/postById?${query}`)
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -31,8 +53,13 @@ export const getAllPostsWithComments = async (
 
 /** Create a User Post `POST: /api/post/user/` */
 export const createUserPost = async (data: {
-  hobbyId: string
-  genreId: string | undefined
+  hobbyId1: string
+  hobbyId2: string
+  hobbyId3: string
+  genreId1: string
+  genreId2: string
+  genreId3: string
+  // genreIds: stringOrUndefined[]
   content: string
   visibility: string
   media: []
@@ -53,8 +80,12 @@ export const createUserPost = async (data: {
 /** Create a Listing Page Post `POST: /api/post/listing/` */
 export const createListingPost = async (data: {
   listingId: string
-  hobbyId: string
-  genreId: string | undefined
+  hobbyId1: string
+  hobbyId2: string
+  hobbyId3: string
+  genreId1: string
+  genreId2: string
+  genreId3: string
   content: string
   visibility: string
 }): Promise<ApiReturnObject> => {
@@ -274,6 +305,23 @@ export const deletePostComment = async (commentId: string) => {
   }
 }
 
+export const editPostComment = async (commentId: string, text: string) => {
+  console.log('editPostComment: ', commentId, text);
+  const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+  try {
+    const res = await axiosInstance.patch(
+      `/post/comment/edit/${commentId}`,
+      { text }, 
+      { headers } 
+    );
+    return { res: res, err: null };
+  } catch (err) {
+    console.log('Error in editPostComment: ', err);
+    return { err: err, res: null };
+  }
+};
+
+
 /** DownVote Post `PATCH: /api/post/remove-upvote/:postId` */
 export const removeVote = async (
   postId: string,
@@ -335,8 +383,12 @@ export const searchPosts = async (searchCriteria: any) => {
 /** Update a User Post `POST: /api/post/user/update/:postId` */
 export const updateUserPost = async (
   data: {
-    hobbyId: string
-    genreId: string | undefined
+    hobbyId1: string
+    hobbyId2: string
+    hobbyId3: string
+    genreId1: string
+    genreId2: string
+    genreId3: string
     content: string
     visibility: string
     media: []
@@ -362,8 +414,12 @@ export const updateUserPost = async (
 export const updateListingPost = async (
   data: {
     listingId: string
-    hobbyId: string
-    genreId: string | undefined
+    hobbyId1: string
+    hobbyId2: string
+    hobbyId3: string
+    genreId1: string
+    genreId2: string
+    genreId3: string
     content: string
     visibility: string
   },

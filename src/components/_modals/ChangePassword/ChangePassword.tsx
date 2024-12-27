@@ -23,6 +23,7 @@ import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { changePassword } from '@/services/auth.service'
 import PasswordAnalyzer from '@/components/PasswordAnalyzer/PasswordAnalyzer'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import CloseIcon from '@/assets/icons/CloseIcon'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -201,6 +202,9 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>Change Password</h4>
+          <button onClick={handleClose} style={{ backgroundColor: 'transparent', display: 'flex', border: 'none' }}>
+            <CloseIcon />
+          </button>
         </header>
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
@@ -257,6 +261,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               className={`${styles['input-box']} ${
                 errors.newPassword ? styles['input-box-error'] : ''
               }`}
+              style={{ marginBottom: 15 }}
             >
               <TextField
                 autoComplete="off"
@@ -346,6 +351,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               className={`${styles['input-box']} ${
                 errors.confirmPassword ? styles['input-box-error'] : ''
               }`}
+              style={{ marginBottom: '0' }}
             >
               <TextField
                 autoComplete="off"
@@ -406,8 +412,16 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               'Save'
             )}
           </button>
+          <OutlinedButton
+            className={styles.mobBtnCancel}
+            onClick={() => {
+              handleClose()
+            }}
+          >
+            Cancel
+          </OutlinedButton>
           <button
-            className="modal-mob-btn-save"
+            className={`modal-mob-btn-save ${styles.mobBtnSave}`}
             onClick={() => {
               handleSubmit('confirmPassword')
             }}

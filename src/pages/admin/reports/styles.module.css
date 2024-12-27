@@ -39,15 +39,15 @@
   /* 133.333% */
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
-  border: 1px solid var(--Grey-Lighter, #EBEDF0);
-  background: var(--Grey-Hover, #F8F9FA);
+  border: 1px solid var(--Grey-Lighter, #ebedf0);
+  background: var(--Grey-Hover, #f8f9fa);
   border-right: none;
   outline: none;
   width: 100%;
 }
 
 .searchInput::placeholder {
-  color: var(--Grey-Dark, #939CA3);
+  color: var(--Grey-Dark, #939ca3);
   font-family: Poppins;
   font-size: 12px;
   font-style: normal;
@@ -57,7 +57,7 @@
 }
 
 .searchInput:focus {
-  border: 1px solid #0096C8;
+  border: 1px solid #0096c8;
   border-right: none;
 }
 
@@ -76,7 +76,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 0px 8px 8px 0px;
-  background: var(--Blue1, #0096C8);
+  background: var(--Blue1, #0096c8);
   cursor: pointer;
   border: none;
   outline: none;
@@ -101,14 +101,12 @@
   text-align: left;
 }
 
-.resultsTable tbody{
-  
-  border: 1px solid var(--Grey-Lighter, #EBEDF0);
+.resultsTable tbody {
+  border: 1px solid var(--Grey-Lighter, #ebedf0);
 }
 
 .resultsTable tbody td {
-
-  color: var(--Grey-Darkest, #08090A);
+  color: var(--Grey-Darkest, #08090a);
   font-feature-settings: 'clig' off, 'liga' off;
   font-family: Poppins;
   font-size: 14px;
@@ -126,9 +124,9 @@
 
 .resultsTable th {
   padding: 12px 8px 12px 24px;
-  border-bottom: 1px solid var(--Grey-Lighter, #EBEDF0);
-  background: var(--Blue1, #0096C8);
-  color: var(--Base-White, var(--background-white, #FFF));
+  border-bottom: 1px solid var(--Grey-Lighter, #ebedf0);
+  background: var(--Blue1, #0096c8);
+  color: var(--Base-White, var(--background-white, #fff));
   font-feature-settings: 'clig' off, 'liga' off;
   font-family: 'Poppins';
   font-size: 12px;
@@ -146,12 +144,12 @@
 }
 
 .resultsTable tbody tr {
-  border-bottom: 1px solid var(--Grey-Lighter, #EBEDF0);
-  background: var(--background-white, #FFF);
+  border-bottom: 1px solid var(--Grey-Lighter, #ebedf0);
+  background: var(--background-white, #fff);
 }
 
 .resultsTable tbody tr:nth-child(even) {
-  background-color: #F8F9FA;
+  background-color: #f8f9fa;
 }
 
 .resultsTable tbody tr td {
@@ -162,8 +160,6 @@
 .avatarImage {
   border-radius: 50%;
 }
-
-
 
 /* User details container styles */
 .resultItem {
@@ -183,7 +179,7 @@
 }
 
 .userName {
-  color: var(--Grey-Darkest, #08090A);
+  color: var(--Grey-Darkest, #08090a);
   font-feature-settings: 'clig' off, 'liga' off;
   font-family: 'Poppins';
   font-size: 14px;
@@ -194,7 +190,7 @@
 }
 
 .userEmail {
-  color: #1877F2 !important;
+  color: #1877f2 !important;
   font-feature-settings: 'clig' off, 'liga' off;
   font-family: 'Poppins';
   font-size: 14px;
@@ -205,7 +201,6 @@
   text-decoration-line: underline;
 }
 
-
 /* Login types cell styles */
 .LoginType {
   font-size: 14px;
@@ -214,14 +209,13 @@
   /* Fixed width for the Login Types column */
 }
 
-
 .lastLoggedIn {
   padding-right: 16px !important;
   text-align: center !important;
   /* Fixed width for the Last LoggedIn by column */
 }
 
-.pagesLength{
+.pagesLength {
   text-align: center !important;
   padding-right: 16px !important;
 }
@@ -230,13 +224,20 @@
 
 .actions {
   display: flex;
-  padding: 24px 20px;
-  justify-content: center;
+  padding: 10px 6px;
   align-items: center;
   gap: 16px;
+  background: none;
+  border: none;
+  text-align: left;
+}
+.actions button {
+  background: none;
+  border: none;
+  padding: 3px;
 }
 
-.actions svg{
+.actions svg {
   cursor: pointer;
 }
 

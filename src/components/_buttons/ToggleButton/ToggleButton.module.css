@@ -1,0 +1,51 @@
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 26px; /* Updated width */
+  height: 14px; /* Updated height */
+  cursor: pointer;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  height: 14px; /* Match the new height */
+  width: 26px; /* Match the new width */
+  border-radius: 7px; /* Half of the height for a pill shape */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ced4da;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 10px; /* Slightly smaller than the slider height */
+  width: 10px; /* Circular toggle button */
+  left: 2px; /* Adjust position */
+  bottom: 2px; /* Center it vertically */
+  border-radius: 50%; /* Circular */
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #0096c8;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(12px); /* Updated for the smaller width */
+  -ms-transform: translateX(12px); /* IE compatibility */
+  transform: translateX(12px); /* Move to match the reduced width */
+}

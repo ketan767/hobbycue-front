@@ -34,6 +34,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
       response?.data?.data.user.is_onboarded
     ) {
       dispatch(openModal({ type: 'user-onboarding-welcome', closable: false }))
+      document.body.style.overflow = 'hidden'
     }
   }
   useEffect(() => {
@@ -65,22 +66,27 @@ const CommunityHome: React.FC<Props> = ({}) => {
   return (
     <>
       <CommunityPageLayout activeTab="posts">
-        <section style={{padding:`${loading && "0"}`}} className={loading ? "":styles['posts-container']}>
+        <section
+          style={{ padding: `${loading && '0'}` }}
+          className={loading ? '' : styles['posts-container']}
+        >
           {loading ? (
             <>
-              <PostCardSkeletonLoading />
-              <PostCardSkeletonLoading />
-              <PostCardSkeletonLoading />
+              <div style={{ marginTop: '12px' }}>
+                <PostCardSkeletonLoading />
+              </div>
+              <div style={{ marginTop: '12px' }}>
+                <PostCardSkeletonLoading />
+              </div>
+              <div style={{ marginTop: '12px' }}>
+                <PostCardSkeletonLoading />
+              </div>
             </>
           ) : allPosts.length > 0 ? (
             allPosts.map((post: any) => {
               return (
-                <div ref={lastPostElementRef}>
-                  <PostCard
-                    key={post._id}
-                    postData={post}
-                    currentSection="posts"
-                  />
+                <div key={post._id} ref={lastPostElementRef}>
+                  <PostCard postData={post} currentSection="posts" />
                 </div>
               )
             })

@@ -76,7 +76,9 @@
   cursor: pointer;
   margin-left: 6px;
 }
-
+.pencil-edit-about {
+  margin-left: 200px;
+}
 .navigation-links {
   display: flex;
   gap: 60px;
@@ -229,6 +231,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-16);
+  font-size: 14px;
 }
 
 .members .heading > h4 {
@@ -273,6 +276,12 @@
 .members .member-list p.seeAllBtn {
   color: #8064a2;
   cursor: pointer;
+}
+
+.members-pencil-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 /* Post Page */
 
@@ -482,6 +491,7 @@
     position: relative !important;
     top: 0;
     height: auto;
+    margin-top: 8px;
   }
   /* .keyword-container ul {
     display: none;
@@ -557,6 +567,11 @@
   .pages-container {
     /* margin-top: 8px; */
     grid-template-columns: 1fr !important;
+  }
+  .members-pencil-container {
+    width: 100%;
+    display: flex;
+    justify-content: normal;
   }
 }
 

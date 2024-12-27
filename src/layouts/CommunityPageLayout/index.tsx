@@ -1,3 +1,4 @@
+import addIcon from '@/assets/svg/add.svg'
 import React, { useEffect, useRef, useState } from 'react'
 import PageContentBox from '@/layouts/PageContentBox'
 import PageGridLayout from '@/layouts/PageGridLayout'
@@ -9,18 +10,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
 import EditIcon from '@/assets/svg/edit-icon.svg'
 import { openModal } from '@/redux/slices/modal'
-import { getAllPosts } from '@/services/post.service'
+import { getAllHobbyPosts } from '@/services/post.service'
 import { GetServerSideProps } from 'next'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import post, {
   appendPosts,
+  appendPostsWithLink,
   setFilters,
+  setIsPinCode,
+  updateBlogs,
   updateCurrentPage,
   updateHasMore,
   updateLoading,
   updatePages,
   updatePagesLoading,
   updatePosts,
+  updatePostsWithLink,
 } from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
@@ -52,8 +57,17 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import CommunityTopDropdown from '@/components/_formElements/CommunityTopDropdown/CommunityTopDropdown'
 import { CommunityDropdownOption } from '@/components/_formElements/CommunityDropdownOption/CommunityDropdownOption'
 import PanelDropdownList from './PanelDropdownList'
-import { showProfileError } from '@/redux/slices/user'
-import { TrendingHobbiesByUser } from '@/services/user.service'
+import { updateActiveProfile } from '@/redux/slices/user'
+import {
+  searchUsersAdvanced,
+  TrendingHobbiesByUser,
+} from '@/services/user.service'
+import AddHobbyImg from '@/assets/image/AddHobbyImg.png'
+import ContentLoader from 'react-content-loader'
+import ProfileSwitcherDownArrow from '@/assets/icons/ProfileSwitcherDownArrow'
+import useFetchBlogs from './hooks/useFetchBlogs'
+import useFetchPages from './hooks/useFetchPages'
+import useFetchStores from './hooks/useFetchStores'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -105,10 +119,12 @@ const CommunityLayout: React.FC<Props> = ({
   const dispatch = useDispatch()
   const membersContainerRef = useRef<HTMLElement>(null)
   const whatsNewContainerRef = useRef<HTMLElement>(null)
+  const trendingContainerRef = useRef<HTMLElement>(null)
   const inviteBtnRef = useRef<HTMLButtonElement>(null)
-  const { activeProfile, user, isLoggedIn } = useSelector(
+  const { activeProfile, user, isLoggedIn, listing } = useSelector(
     (state: RootState) => state.user,
   )
+
   const { allPosts, filters, post_pagination } = useSelector(
     (state: RootState) => state.post,
   )
@@ -121,13 +137,13 @@ const CommunityLayout: React.FC<Props> = ({
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
   const [selectedHobby, setSelectedHobby] = useState(
-    filters.hobby || 'All Hobbies',
+    user?.preferences?.community_view?.preferred_hobby?.hobby?._id,
   )
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(
-    filters.genre,
+    user?.preferences?.community_view?.preferred_hobby?.genre?._id,
   )
-  const [selectedLocation, setSelectedLocation] = useState(
-    filters.location || 'All Locations',
+  const [selectedLocation, setSelectedLocation] = useState<string>(
+    user?.preferences?.community_view?.preferred_location?.city?.split(' ')[0],
   )
 
   const [snackbar, setSnackbar] = useState({
@@ -151,11 +167,16 @@ const CommunityLayout: React.FC<Props> = ({
   )
   const [errorMessage, setErrorMessage] = useState('')
 
+  const [showDropdown, setShowDropdown] = useState(false)
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const [trendingHobbies, setTrendingHobbies] = useState([])
   const [seeMoreMembers, setSeeMoreMembers] = useState(0)
+  const [seeLessMembers, setSeeLessMembers] = useState(false)
+  const [clickedSeeLess, setClickedSeeLess] = useState(false)
   const [seeMoreTrendHobbies, setSeeMoreTrendHobbies] = useState(true)
+  const [showModal, setShowModal] = useState(false)
   const [hobbyMembers, setHobbymembers] = useState<HobbyMember[]>([])
+  const [selectedUser, setSelectedUser] = useState<any>()
   const [whatsNew, setWhatsNew] = useState([])
   const [SeeMorewhatsNew, setSeeMoreWhatsNew] = useState(true)
   const [childData, setChildData] = useState<singlePostProps | null>({
@@ -163,16 +184,23 @@ const CommunityLayout: React.FC<Props> = ({
     whatsNew: [],
     trendingHobbies: [],
   })
-
+  const [filteredUsers, setFilteredUsers] = useState([])
+  const [filtersUsersLoading, setFilteredUsersLoading] = useState(false)
   const hideThirdColumnTabs = ['pages', 'links', 'store', 'blogs']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
   const { refreshNum } = useSelector((state: RootState) => state.post)
   const router = useRouter()
 
+  const [seeMoreOpenedFirstTime, setSeeMoreOpenedFirstTime] =
+    useState<boolean>(false)
   const toggleSeeMore = () => {
     setSeeMoreHobby(!seeMoreHobby)
     dispatch(setFilters({ seeMoreHobbies: !seeMoreHobby }))
   }
+  console.warn('trending hobbies', trendingHobbies)
+  const fetchBlogs = useFetchBlogs()
+  const fetchPages = useFetchPages()
+  const fetchStores = useFetchStores()
 
   const handleHobbyClick = async (hobbyId: any, genreId: any) => {
     if (!isLoggedIn) {
@@ -221,7 +249,7 @@ const CommunityLayout: React.FC<Props> = ({
     }
 
     if (activeProfile?.type === 'user') {
-      window.location.href = '/settings/localization-payments'
+      router.push('/settings/localization-payments')
     } else {
       dispatch(openModal({ type: 'listing-address-edit', closable: true }))
     }
@@ -273,9 +301,12 @@ const CommunityLayout: React.FC<Props> = ({
   }
   useEffect(() => {
     scrollToTop()
-  }, [selectedHobby])
+  }, [selectedHobby, selectedGenre])
 
   const fetchPosts = async (page = 1) => {
+    console.log('Fetching posts......')
+    console.log('selectedHobby......', selectedHobby)
+    if (selectedHobby === undefined) return
     if (showPageLoader) {
       dispatch(setShowPageLoader(false))
     }
@@ -294,11 +325,7 @@ const CommunityLayout: React.FC<Props> = ({
     if (activeTab === 'links') {
       params.append('has_link', 'true')
     }
-    if (
-      selectedGenre &&
-      selectedGenre !== 'undefined' &&
-      selectedGenre !== ''
-    ) {
+    if (selectedGenre && selectedGenre !== undefined && selectedGenre !== '') {
       params.append('_genre', selectedGenre)
     }
     if (selectedHobby === 'My Hobbies') {
@@ -307,7 +334,7 @@ const CommunityLayout: React.FC<Props> = ({
       })
     } else if (selectedHobby === 'All Hobbies') {
       params = new URLSearchParams(
-        `page=${page}&limit=10&populate=_author,_genre,_hobby`,
+        `page=${page}&limit=10&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`,
       )
     } else if (
       selectedHobby !== '' &&
@@ -315,6 +342,10 @@ const CommunityLayout: React.FC<Props> = ({
       selectedHobby !== 'My Hobbies'
     ) {
       params.append('_hobby', selectedHobby)
+      params.append('hobbyId', selectedHobby)
+      if (selectedGenre) {
+        params.append('genreId', selectedGenre)
+      }
     } else {
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item?.hobby?._id)
@@ -355,8 +386,16 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
     if (page === 1) dispatch(updateLoading(true))
+    // console.log('activeTab: ', activeTab)
+    // console.log('params.toString(): ', params.toString())
 
-    const { err, res } = await getAllPosts(params.toString())
+    const { err, res } = await getAllHobbyPosts(params.toString())
+    const params2 = params
+    params2.append('has_link', 'true')
+
+    const { err: linksPostsErr, res: linksPostsRes } = await getAllHobbyPosts(
+      params2.toString(),
+    )
     if (err) return console.log(err)
     if (res?.data?.success) {
       let posts = res.data.data.posts.map((post: any) => {
@@ -368,6 +407,17 @@ const CommunityLayout: React.FC<Props> = ({
         dispatch(updatePosts(posts))
       } else {
         dispatch(appendPosts(posts))
+      }
+      if (linksPostsRes?.data?.success) {
+        let posts = linksPostsRes.data.data.posts.map((post: any) => {
+          let content = post.content.replace(/<img .*?>/g, '')
+          return { ...post, content }
+        })
+        if (page === 1) {
+          dispatch(updatePostsWithLink(posts))
+        } else {
+          dispatch(appendPostsWithLink(posts))
+        }
       }
 
       dispatch(updateHasMore(posts.length === 10))
@@ -383,9 +433,16 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    if (post_pagination !== 1) fetchPosts(post_pagination)
+    if (post_pagination !== 1) {
+      // console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#2')
+
+      fetchPosts(post_pagination)
+    }
   }, [post_pagination, router.asPath])
 
+  /**
+   * Fetch Hobby Members
+   */
   const fetchHobbyMembers = async (hobbies?: HobbyEntry[]) => {
     try {
       if (!hobbies || hobbies.length === 0) {
@@ -436,13 +493,18 @@ const CommunityLayout: React.FC<Props> = ({
         `${ids}?page=${seeMoreMembers}&limit=20`,
       )
 
+      if (res.data.users?.length === 0) {
+        setSeeLessMembers(true)
+      }
+
       if (res.data) {
         setHobbymembers((prevMembers) => {
           const existingMemberIds = new Set(
             prevMembers.map((member) => member?.profile_url),
           )
           const newMembers = res.data.users.filter(
-            (user: any) => !existingMemberIds.has(user?.profile_url),
+            (user: any) =>
+              !existingMemberIds.has(user?.profile_url) && user !== null,
           )
           return [...prevMembers, ...newMembers]
         })
@@ -498,20 +560,89 @@ const CommunityLayout: React.FC<Props> = ({
   }, [])
 
   useEffect(() => {
+    if (!user) return
+    if (user && user.preferences) {
+      if (user.preferences.community_view?.my_hobbies) {
+        setSelectedHobby('My Hobbies')
+      } else if (!user.preferences.community_view?.preferred_hobby?.hobby) {
+        setSelectedHobby('All Hobbies')
+      } else if (!user.preferences.community_view.all_hobbies) {
+        setSelectedHobby(
+          user.preferences.community_view.preferred_hobby.hobby._id,
+        )
+
+        if (user._hobbies?.length > 0) {
+          const preferredHobbyId =
+            user?.preferences?.community_view?.preferred_hobby?.hobby?._id
+          const preferredGenreId =
+            user?.preferences?.community_view?.preferred_hobby?.genre?._id
+
+          user._hobbies?.forEach((hobb: any, index: number) => {
+            if (preferredGenreId && preferredHobbyId) {
+              if (
+                hobb?.hobby?._id === preferredHobbyId &&
+                hobb?.genre?._id === preferredGenreId &&
+                index > 2
+              ) {
+                // console.log('preferredGenreId is called')
+                dispatch(setFilters({ seeMoreHobbies: true }))
+              }
+            } else if (preferredHobbyId) {
+              if (hobb?.genre?._id) {
+              } else if (hobb?.hobby?._id === preferredHobbyId && index > 2) {
+                // console.log('preferredHobbyId is called')
+                dispatch(setFilters({ seeMoreHobbies: true }))
+              }
+            }
+          })
+        }
+        if (user.preferences.community_view.preferred_hobby.genre) {
+          setSelectedGenre(
+            user.preferences.community_view.preferred_hobby.genre._id,
+          )
+        }
+      }
+
+      if (!user.preferences.community_view.all_locations) {
+        // console.log(
+        //   '###########################2',
+        //   user.preferences.community_view.preferred_location.city.split(' ')[0],
+        // )
+
+        setSelectedLocation(
+          user.preferences.community_view.preferred_location.city.split(' ')[0],
+        )
+      }
+    }
+  }, [user])
+
+  useEffect(() => {
     dispatch(updateListingModalData(activeProfile.data))
   }, [activeProfile.type])
 
   useEffect(() => {
+    if (!user?.preferences?.community_view) return
     if (
       activeProfile.data !== null &&
       (activeTab === 'links' || activeTab === 'posts')
     ) {
       if (selectedLocation !== '') {
-        console.warn('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT', activeProfile.data)
         fetchPosts()
       }
+    } else if (activeProfile.data !== null && activeTab === 'blogs') {
+      if (selectedLocation !== '') fetchBlogs(selectedHobby, selectedGenre)
+    } else if (activeProfile.data !== null && activeTab === 'store') {
+      if (selectedLocation !== '') fetchStores(selectedHobby, selectedGenre)
+    } else if (activeProfile.data !== null && activeTab === 'pages') {
+      if (selectedLocation !== '') fetchPages(selectedHobby, selectedGenre)
     }
-  }, [selectedHobby, selectedLocation, activeProfile?.type, refreshNum])
+  }, [
+    selectedHobby,
+    selectedGenre,
+    selectedLocation,
+    activeProfile?.type,
+    refreshNum,
+  ])
 
   useEffect(() => {
     if (selectedHobby !== '' && selectedLocation !== '') {
@@ -521,6 +652,12 @@ const CommunityLayout: React.FC<Props> = ({
 
   const fetchHobby = async () => {
     // const query = `fields=display,sub_category&show=true&search=${selectedHobby}`
+    if (
+      selectedHobby === undefined ||
+      selectedHobby === 'My Hobbies' ||
+      selectedHobby === 'All Hobbies'
+    )
+      return
     const params = new URLSearchParams()
     params.set('_id', selectedHobby)
     const { err, res } = await getAllHobbies(
@@ -528,7 +665,7 @@ const CommunityLayout: React.FC<Props> = ({
     )
     // const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
-    console.log('res', res.data)
+    // console.log('res', res.data)
     if (res?.data && res?.data?.hobbies) {
       const hobby = res.data.hobbies[0]
       if (hobby !== undefined) {
@@ -538,9 +675,26 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
-    setSelectedHobby(!filters.hobby ? 'All Hobbies' : filters.hobby)
-    setSelectedLocation(filters.location ?? '')
+    // console.log('filters.genre', filters.genre)
+    if (filters.genre) {
+      if (filters.genre === 'No genre') {
+        setSelectedGenre(undefined)
+        // dispatch(
+        //   setFilters({
+        //     genre: '',
+        //   }),
+        // )
+      } else {
+        setSelectedGenre(filters.genre ? filters.genre : undefined)
+      }
+    }
+
+    if (filters.hobby) {
+      setSelectedHobby(filters.hobby)
+    }
+    if (filters.location) {
+      setSelectedLocation(filters.location ?? '')
+    }
   }, [filters.genre, filters.hobby, filters.location])
 
   useEffect(() => {
@@ -598,10 +752,29 @@ const CommunityLayout: React.FC<Props> = ({
           if (filters.location === null) {
             dispatch(
               setFilters({
-                location: 'All Locations',
+                location:
+                  user?.preferences?.community_view?.preferred_location?.city?.split(
+                    ' ',
+                  )[0]
+                    ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                        ' ',
+                      )[0]
+                    : 'All Locations',
               }),
             )
-            setSelectedLocation('All Locations')
+            // console.log('###########################4', 'All Locations')
+
+            setSelectedLocation(
+              user?.preferences?.community_view?.preferred_location?.city?.split(
+                ' ',
+              )[0]
+                ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                    ' ',
+                  )[0]
+                : 'All Locations',
+            )
+            // console.log('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT#5')
+            fetchPosts(1)
           }
           setVisibilityData(visibilityArr)
         }
@@ -650,13 +823,36 @@ const CommunityLayout: React.FC<Props> = ({
       }
       setVisibilityData(visibilityArr)
 
-      if (filters.location === null) {
+      if (
+        filters.location === null &&
+        user?.preferences?.community_view?.preferred_location?.city?.split(
+          ' ',
+        )[0]
+      ) {
         dispatch(
           setFilters({
-            location: 'All Locations',
+            location:
+              user?.preferences?.community_view?.preferred_location?.city?.split(
+                ' ',
+              )[0]
+                ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                    ' ',
+                  )[0]
+                : 'All Locations',
           }),
         )
-        setSelectedLocation('All Locations')
+        // console.log('###########################5', 'All Locations')
+
+        setSelectedLocation(
+          user?.preferences?.community_view?.preferred_location?.city?.split(
+            ' ',
+          )[0]
+            ? user?.preferences?.community_view?.preferred_location?.city?.split(
+                ' ',
+              )[0]
+            : 'All Locations',
+        )
+        fetchPosts()
       }
     }
   }, [activeProfile])
@@ -666,12 +862,16 @@ const CommunityLayout: React.FC<Props> = ({
       dispatch(openModal({ type: 'auth', closable: true }))
       return
     }
+    // console.log('Location-------->', selectedLocation)
+    // console.log('selectedLocation === val ------->', selectedLocation === val)
+    // console.log('val----->', val)
     dispatch(
       setFilters({
         location: selectedLocation === val ? 'All Locations' : val,
       }),
     )
-    setSelectedLocation((prev) => {
+    // console.log('###########################6', val)
+    setSelectedLocation((prev: any) => {
       if (prev === val) {
         return 'All Locations'
       } else {
@@ -708,12 +908,19 @@ const CommunityLayout: React.FC<Props> = ({
       return
     }
 
-    const to = email
+    let to = email
+
     if (!to || to === '') {
       setErrorMessage('This field is required')
       return
     }
-    if (!validateEmail(to)) {
+    console.warn('seelctedduser', selectedUser)
+
+    if (selectedUser?.display_name === email) {
+      to = selectedUser?.email
+    }
+    console.warn('toooo', to)
+    if (!validateEmail(to) && selectedUser?.display_name !== email) {
       setErrorMessage('Please enter a valid email')
       return
     }
@@ -731,7 +938,7 @@ const CommunityLayout: React.FC<Props> = ({
       hobby_id,
       location,
     })
-    if (res.data?.success) {
+    if (res?.data?.success) {
       setInviteBtnLoader(false)
       setSnackbar({
         display: true,
@@ -739,6 +946,7 @@ const CommunityLayout: React.FC<Props> = ({
         message: 'Invitation sent',
       })
       setEmail('')
+      setSelectedUser({})
     }
     if (err) {
       setEmail('')
@@ -753,7 +961,11 @@ const CommunityLayout: React.FC<Props> = ({
 
   useEffect(() => {
     if (membersContainerRef.current) {
-      const requiredHeight = hobbyMembers.length * 38 + 84
+      if (clickedSeeLess) {
+        membersContainerRef.current.style.height = '198px'
+        return
+      }
+      let requiredHeight = hobbyMembers.length * 38 + 44 + 40
       if (hobbyMembers.length <= 2) {
         membersContainerRef.current.style.height = 'auto'
       } else if (seeMoreMembers === 0) {
@@ -762,7 +974,7 @@ const CommunityLayout: React.FC<Props> = ({
         membersContainerRef.current.style.height = requiredHeight + 'px'
       }
     }
-  }, [seeMoreMembers, hobbyMembers])
+  }, [seeMoreMembers, hobbyMembers, clickedSeeLess])
 
   useEffect(() => {
     if (whatsNewContainerRef.current) {
@@ -776,6 +988,24 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
   }, [SeeMorewhatsNew, whatsNew])
+
+  useEffect(() => {
+    if (trendingContainerRef.current) {
+      const requiredHeight =
+        trendingHobbies.length * 43 +
+        (trendingHobbies.length - 1) * 4 +
+        44 +
+        16 +
+        40
+      if (trendingHobbies.length <= 2) {
+        trendingContainerRef.current.style.height = 'auto'
+      } else if (seeMoreTrendHobbies) {
+        trendingContainerRef.current.style.height = '240px'
+      } else {
+        trendingContainerRef.current.style.height = requiredHeight + 'px'
+      }
+    }
+  }, [seeMoreTrendHobbies, trendingHobbies])
 
   const DoubleArrowSvg = ({ rotate }: { rotate?: boolean }) => {
     return (
@@ -823,6 +1053,104 @@ const CommunityLayout: React.FC<Props> = ({
         item?.genre?.display ?? ''
       }`,
     })) ?? []
+
+  // user search for invite
+
+  const fetchUsers = async (query: string) => {
+    setFilteredUsersLoading(true)
+    try {
+      let searchCriteria = {
+        name: query,
+      }
+      const { res, err } = await searchUsersAdvanced(searchCriteria)
+      // console.log('Data : ', res.data)
+
+      setFilteredUsers(res.data)
+      setFilteredUsersLoading(false)
+    } catch (error) {
+      setFilteredUsersLoading(false)
+      console.error('Error fetching users:', error)
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.warn('inputtttr', e.target.value)
+    const input = e.target.value
+    setEmail(input)
+    setErrorMessage('')
+
+    if (input.startsWith('@') && input.length > 1) {
+      setShowModal(true)
+    } else {
+      setShowModal(false)
+    }
+  }
+
+  const handleUserSelect = (selectedUser: any) => {
+    setEmail(selectedUser.display_name)
+    setSelectedUser(selectedUser)
+    setShowModal(false)
+  }
+
+  const handleAddTrendingHobby = (hobby: any) => {
+    if (!hobby.genre) {
+      dispatch(
+        openModal({
+          type: 'profile-hobby-edit',
+          closable: true,
+          propData: { selectedHobbyToAdd: hobby?.hobby },
+        }),
+      )
+    } else if (hobby.genre) {
+      dispatch(
+        openModal({
+          type: 'profile-hobby-edit',
+          closable: true,
+          propData: {
+            selectedHobbyToAdd: hobby?.hobby,
+            hobbyAndGenre: true,
+            selectedGenreToAdd: hobby.genre,
+          },
+        }),
+      )
+    }
+  }
+
+  const filteredListing = listing.filter((item: any) => item.is_published)
+
+  const handleUpdateActiveProfile = (type: 'user' | 'listing', data: any) => {
+    dispatch(updateActiveProfile({ type, data }))
+    dispatch(
+      setFilters({
+        location: null,
+        hobby: '',
+        genre: '',
+        seeMoreHobbies: false,
+      }),
+    )
+    if (type === 'listing') {
+      dispatch(updateListingModalData(data))
+    }
+    setShowDropdown(false)
+  }
+
+  // Effect to call API when email starts with @ and modal is open
+  useEffect(() => {
+    if (showModal) {
+      const query = email.slice(1) // Remove "@" from query
+      console.log(query)
+      fetchUsers(query || '') // Fetch all users if query is empty
+    }
+  }, [email, showModal])
+
+  useEffect(() => {
+    const handleDropDownClose = () => {
+      setShowDropdown(false)
+    }
+
+    window.addEventListener('click', handleDropDownClose)
+    return () => window.removeEventListener('click', handleDropDownClose)
+  }, [])
 
   return (
     <>
@@ -872,64 +1200,143 @@ const CommunityLayout: React.FC<Props> = ({
               </header>
               {/* <span className={styles['divider']}></span> */}
               <section>
-                <ul>
-                  <li
-                    onClick={() => handleHobbyClick('All Hobbies', null)}
-                    className={
-                      selectedHobby === 'All Hobbies' ? styles.selectedItem : ''
-                    }
-                  >
-                    All Hobbies
-                  </li>
-                  <li
-                    onClick={() => handleHobbyClick('My Hobbies', null)}
-                    className={
-                      selectedHobby === 'My Hobbies' && selectedGenre === null
-                        ? styles.selectedItem
-                        : ''
-                    }
-                  >
-                    My Hobbies
-                  </li>
-                  {activeProfile.data?._hobbies
-                    ?.slice(
-                      0,
-                      seeMoreHobby ? activeProfile.data?._hobbies.length : 3,
-                    )
-                    .map((hobby: any) => {
-                      return (
-                        <li
-                          key={hobby._id}
-                          onClick={() =>
-                            handleHobbyClick(hobby.hobby?._id, hobby.genre?._id)
-                          }
-                          className={
-                            selectedHobby === hobby.hobby?._id &&
-                            (selectedGenre !== ''
-                              ? selectedGenre === hobby.genre?._id
-                              : '')
-                              ? styles.selectedItem
-                              : ''
-                          }
-                        >
-                          {hobby?.hobby?.display}{' '}
-                          {hobby?.genre && ` - ${hobby?.genre?.display} `}
-                        </li>
+                {activeProfile.data?._hobbies?.length > 0 ? (
+                  <ul>
+                    <li
+                      onClick={() => handleHobbyClick('All Hobbies', undefined)}
+                      className={
+                        selectedHobby === 'All Hobbies'
+                          ? styles.selectedItem
+                          : ''
+                      }
+                    >
+                      All Hobbies
+                    </li>
+                    <li
+                      onClick={() => handleHobbyClick('My Hobbies', undefined)}
+                      className={
+                        selectedHobby === 'My Hobbies' &&
+                        selectedGenre === undefined
+                          ? styles.selectedItem
+                          : ''
+                      }
+                    >
+                      My Hobbies
+                    </li>
+                    {activeProfile.data?._hobbies
+                      ?.slice(
+                        0,
+                        seeMoreHobby ? activeProfile.data?._hobbies.length : 3,
                       )
-                    })}
-                  {activeProfile.data?._hobbies?.length >= 4 &&
-                    (!seeMoreHobby ? (
-                      <p className={styles['see-more']} onClick={toggleSeeMore}>
-                        {' '}
-                        See more{' '}
-                      </p>
-                    ) : (
-                      <p className={styles['see-more']} onClick={toggleSeeMore}>
-                        {' '}
-                        See less{' '}
-                      </p>
-                    ))}
-                </ul>
+                      .map((hobby: any) => {
+                        return (
+                          <li
+                            key={hobby._id}
+                            onClick={() =>
+                              handleHobbyClick(
+                                hobby.hobby?._id,
+                                hobby.genre?._id,
+                              )
+                            }
+                            className={
+                              selectedHobby === hobby.hobby?._id &&
+                              (selectedGenre !== ''
+                                ? selectedGenre === hobby.genre?._id
+                                : '')
+                                ? styles.selectedItem
+                                : ''
+                            }
+                          >
+                            {hobby?.hobby?.display}{' '}
+                            {hobby?.genre && ` - ${hobby?.genre?.display} `}
+                          </li>
+                        )
+                      })}
+                    {activeProfile.data?._hobbies?.length >= 4 &&
+                      (!seeMoreHobby ? (
+                        <p
+                          className={styles['see-more']}
+                          onClick={toggleSeeMore}
+                        >
+                          {' '}
+                          See more{' '}
+                        </p>
+                      ) : (
+                        <p
+                          className={styles['see-more']}
+                          onClick={toggleSeeMore}
+                        >
+                          {' '}
+                          See less{' '}
+                        </p>
+                      ))}
+                  </ul>
+                ) : (
+                  <ContentLoader
+                    speed={2}
+                    width="100%"
+                    backgroundColor="#f3f3f3"
+                    foregroundColor="#ecebeb"
+                    viewBox="0 0 229 282"
+                  >
+                    <rect
+                      x="16"
+                      y="10"
+                      width="47"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="16"
+                      y="49"
+                      width="77"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="16"
+                      y="89"
+                      width="57"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="16"
+                      y="129"
+                      width="32"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="16"
+                      y="169"
+                      width="111"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="16"
+                      y="209"
+                      width="91"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="81"
+                      y="250"
+                      width="67"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                  </ContentLoader>
+                )}
               </section>
             </section>
 
@@ -946,27 +1353,98 @@ const CommunityLayout: React.FC<Props> = ({
                 {/* <Image src={EditIcon} alt="Edit" /> */}
               </header>
               {/* <span className={styles['divider']}></span> */}
-              {visibilityData?.length > 0 && (
-                <InputSelect
-                  onChange={(e: any) => updateFilterLocation(e.target.value)}
-                  value={selectedLocation}
-                  // inputProps={{ 'aria-label': 'Without label' }}
-                  className={` ${styles['location-dropdown']}`}
+              {visibilityData?.length > 0 ? (
+                <>
+                  {visibilityData?.length > 0 && (
+                    <InputSelect
+                      onChange={(e: any) =>
+                        updateFilterLocation(e.target.value)
+                      }
+                      value={selectedLocation}
+                      // inputProps={{ 'aria-label': 'Without label' }}
+                      className={` ${styles['location-dropdown']}`}
+                    >
+                      {visibilityData?.map((item: any, idx) => {
+                        return (
+                          <>
+                            <DropdownOption
+                              className={styles['location-dropdown-container']}
+                              {...item}
+                              key={idx}
+                              currentValue={selectedLocation}
+                              onChange={(val: any) => updateFilterLocation(val)}
+                            />
+                          </>
+                        )
+                      })}
+                    </InputSelect>
+                  )}
+                </>
+              ) : (
+                <ContentLoader
+                  speed={2}
+                  width="100%"
+                  backgroundColor="#f3f3f3"
+                  foregroundColor="#ecebeb"
+                  viewBox="0 0 229 160"
                 >
-                  {visibilityData?.map((item: any, idx) => {
-                    return (
-                      <>
-                        <DropdownOption
-                          className={styles['location-dropdown-container']}
-                          {...item}
-                          key={idx}
-                          currentValue={selectedLocation}
-                          onChange={(val: any) => updateFilterLocation(val)}
-                        />
-                      </>
-                    )
-                  })}
-                </InputSelect>
+                  <rect
+                    x="16"
+                    y="11"
+                    width="55"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="197"
+                    y="52"
+                    width="16"
+                    height="16"
+                    rx="8"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16"
+                    y="51"
+                    width="95"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="197"
+                    y="92"
+                    width="16"
+                    height="16"
+                    rx="8"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16"
+                    y="91"
+                    width="93"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="197"
+                    y="132"
+                    width="16"
+                    height="16"
+                    rx="8"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16"
+                    y="131"
+                    width="102"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                </ContentLoader>
               )}
             </section>
           </aside>
@@ -984,47 +1462,146 @@ const CommunityLayout: React.FC<Props> = ({
               <div className={styles['community-header-left']}>
                 <section
                   className={`content-box-wrapper ${styles['start-post-btn-container']}`}
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  {activeProfile.type === 'user' ? (
-                    <>
-                      {activeProfile.data?.profile_image ? (
-                        <img
-                          className={styles['profile-img']}
-                          src={activeProfile?.data?.profile_image}
-                          alt=""
-                          width={48}
-                          height={48}
-                        />
-                      ) : (
-                        <div
-                          className={`${styles['profile-img']} ${styles['profile-img-user']} default-user-icon`}
-                        ></div>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      {activeProfile?.data?.profile_image ? (
-                        <img
-                          className={`${styles['img-listing']}`}
-                          src={activeProfile?.data?.profile_image}
-                        ></img>
-                      ) : (
-                        <div
-                          className={
-                            activeProfile.data?.type == 1
-                              ? `default-people-listing-icon ${styles['img-listing']}`
-                              : activeProfile.data?.type == 2
-                              ? `${styles['img-listing']} default-place-listing-icon`
-                              : activeProfile.data?.type == 3
-                              ? `${styles['img-listing']} default-program-listing-icon`
-                              : activeProfile.data?.type == 4
-                              ? `${styles['img-listing']} default-product-listing-icon`
-                              : `${styles['contentImage']} default-people-listing-icon`
+                  <div
+                    style={{ position: 'relative' }}
+                    onClick={() => setShowDropdown(!showDropdown)}
+                  >
+                    {activeProfile.type === 'user' ? (
+                      <>
+                        {activeProfile.data?.profile_image ? (
+                          <img
+                            className={styles['profile-img']}
+                            src={activeProfile?.data?.profile_image}
+                            alt=""
+                            width={48}
+                            height={48}
+                          />
+                        ) : (
+                          <div
+                            className={`${styles['profile-img']} ${styles['profile-img-user']} default-user-icon`}
+                          ></div>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {activeProfile?.data?.profile_image ? (
+                          <img
+                            className={`${styles['img-listing']}`}
+                            src={activeProfile?.data?.profile_image}
+                          ></img>
+                        ) : (
+                          <div
+                            className={
+                              activeProfile.data?.type == 1
+                                ? `default-people-listing-icon ${styles['img-listing']}`
+                                : activeProfile.data?.type == 2
+                                ? `${styles['img-listing']} default-place-listing-icon`
+                                : activeProfile.data?.type == 3
+                                ? `${styles['img-listing']} default-program-listing-icon`
+                                : activeProfile.data?.type == 4
+                                ? `${styles['img-listing']} default-product-listing-icon`
+                                : `${styles['contentImage']} default-people-listing-icon`
+                            }
+                          ></div>
+                        )}
+                      </>
+                    )}
+                    {isMobile && <ProfileSwitcherDownArrow />}
+                  </div>
+
+                  {showDropdown && (
+                    <div className={styles['profile-switcher-dropdown']}>
+                      <ul>
+                        <li
+                          onClick={() =>
+                            handleUpdateActiveProfile('user', user)
                           }
-                        ></div>
-                      )}
-                    </>
+                          className={`${styles['dd-item']} ${
+                            activeProfile.type === 'user' &&
+                            styles['account-active']
+                          }`}
+                        >
+                          {user?.profile_image ? (
+                            <img
+                              className={styles['profile-img']}
+                              src={user?.profile_image}
+                              alt=""
+                              width={24}
+                              height={24}
+                              data-profile-type="user"
+                            />
+                          ) : (
+                            <div
+                              className={`default-user-icon ${styles['profile-img']}`}
+                              data-profile-type="user"
+                            ></div>
+                          )}
+                          <p className={styles['sidemenu-name']}>
+                            {user.full_name}
+                          </p>
+                        </li>
+
+                        {filteredListing.map((page: any) => {
+                          return (
+                            <li
+                              key={page._id}
+                              onClick={() =>
+                                handleUpdateActiveProfile('listing', page)
+                              }
+                              className={`${styles['dd-item']} ${
+                                activeProfile.type === 'listing' &&
+                                activeProfile.data._id === page._id &&
+                                styles['active']
+                              }`}
+                            >
+                              {page?.profile_image ? (
+                                <img
+                                  className={styles['img-listing']}
+                                  src={page?.profile_image}
+                                  alt=""
+                                  width={24}
+                                  height={24}
+                                  data-profile-type="listing"
+                                />
+                              ) : (
+                                <div
+                                  className={
+                                    page?.type == 1
+                                      ? `default-people-listing-icon ${styles['img-listing']}`
+                                      : page.type == 2
+                                      ? `${styles['img-listing']} default-place-listing-icon`
+                                      : page.type == 3
+                                      ? `${styles['img-listing']} default-program-listing-icon`
+                                      : page.type == 4
+                                      ? `${styles['img-listing']} default-product-listing-icon`
+                                      : `${styles['contentImage']} default-people-listing-icon`
+                                  }
+                                  data-profile-type="listing"
+                                ></div>
+                              )}
+
+                              <p className={styles['sidemenu-name']}>
+                                {page.title}
+                              </p>
+                            </li>
+                          )
+                        })}
+                      </ul>
+
+                      <button
+                        onClick={() => {
+                          setShowDropdown(false)
+                          router.push('/add-listing')
+                        }}
+                      >
+                        <Image src={addIcon} alt="" />
+                        Add Listing Page
+                      </button>
+                    </div>
                   )}
+
                   <button
                     onClick={handleStartPost}
                     className={styles['start-post-btn']}
@@ -1062,7 +1639,11 @@ const CommunityLayout: React.FC<Props> = ({
                           (obj: any) => obj?.value === selectedHobby,
                         )?.display ?? selectedHobby
                       }
-                      variant={selectedHobby === '' ? 'secondary' : 'primary'}
+                      variant={
+                        selectedHobby === 'All Hobbies'
+                          ? 'secondary'
+                          : 'primary'
+                      }
                     >
                       {[
                         { display: 'All Hobbies', value: 'All Hobbies' },
@@ -1092,7 +1673,9 @@ const CommunityLayout: React.FC<Props> = ({
                       ))}
                     </CommunityTopDropdown>
 
-                    <div className={styles.hobbyDropDownOption}>in</div>
+                    <div className={styles.hobbyDropDownOption}>
+                      {filters.isPinCode ? `at` : `in`}
+                    </div>
 
                     {visibilityData?.length > 0 && (
                       <CommunityTopDropdown
@@ -1116,11 +1699,15 @@ const CommunityLayout: React.FC<Props> = ({
                             {...item}
                             key={idx}
                             currentValue={selectedLocation}
-                            onChange={(val: any) =>
+                            onChange={(val: any) => {
+                              if (val?.display?.includes('PIN Code'))
+                                dispatch(setIsPinCode(true))
+                              else dispatch(setIsPinCode(false))
+
                               updateFilterLocation(
                                 val?.display?.split('-')[0]?.trim(),
                               )
-                            }
+                            }}
                           />
                         ))}
                       </CommunityTopDropdown>
@@ -1164,7 +1751,10 @@ const CommunityLayout: React.FC<Props> = ({
                         idx: number,
                       ) => (
                         <PanelDropdownList
+                          email={email}
+                          setEmail={setEmail}
                           name={obj.name}
+                          setSelectedUser={setSelectedUser}
                           options={obj.options}
                           key={idx}
                           type={obj?.type}
@@ -1177,6 +1767,17 @@ const CommunityLayout: React.FC<Props> = ({
                           inviteText={email}
                           invite={obj?.invite}
                           initialOpen={obj?.initialOpen}
+                          handleAddTrendingHobby={handleAddTrendingHobby}
+                          clickedSeeLess={clickedSeeLess}
+                          seeMoreMembers={seeMoreMembers}
+                          seeLessMembers={seeLessMembers}
+                          setClickedSeeLess={setClickedSeeLess}
+                          setSeeLessMembers={setSeeLessMembers}
+                          setSeeMoreMembers={setSeeMoreMembers}
+                          seeMoreTrendHobbies={seeMoreTrendHobbies}
+                          seeMoreWhatsNew={SeeMorewhatsNew}
+                          setSeeMoreTrendHobbies={setSeeMoreTrendHobbies}
+                          setSeeMoreWhatsNew={setSeeMoreWhatsNew}
                         />
                       ),
                     )}
@@ -1248,7 +1849,7 @@ const CommunityLayout: React.FC<Props> = ({
           <section
             className={`${styles['children-wrapper']} ${
               singlePostPage ? styles['single-post-children-wrapper'] : ''
-            } `}
+            } gray-bg ${styles.parentSection}`}
           >
             {/* {children} */}
             {/* It might have key issue here */}
@@ -1289,23 +1890,22 @@ const CommunityLayout: React.FC<Props> = ({
                         )?.genre?.display
                       } `}
                   </span>{' '}
-                  in <span>{selectedLocation}</span>
+                  {filters.isPinCode ? `at` : `in`}{' '}
+                  <span>{selectedLocation}</span>
                 </h3>
               </header>
               {/* <span className={styles['divider']}></span> */}
-              <section>
+              <section className={styles['.invite-wrapper']}>
                 <input
                   autoComplete="new"
                   value={email}
-                  placeholder="Email"
+                  placeholder="Email or @ mention "
                   name="society"
-                  onChange={(e: any) => {
-                    setEmail(e.target.value)
-                    setErrorMessage('')
-                  }}
+                  onChange={handleInputChange}
                   type="email"
                   id=""
                   className={errorMessage !== '' ? styles['error-input'] : ''}
+                  //style={selectedUser?.email?{color:'blue'}:{color:'black'}}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       inviteBtnRef?.current?.click()
@@ -1328,6 +1928,57 @@ const CommunityLayout: React.FC<Props> = ({
                 {errorMessage !== '' && (
                   <span className={styles['error-invite']}>{errorMessage}</span>
                 )}
+
+                {showModal && (
+                  <div className={styles['modal-container']}>
+                    <ul className={styles['modal-list']}>
+                      <h4
+                        className={styles['user-name']}
+                        style={{
+                          fontWeight: '600',
+                          marginLeft: '12px',
+                          marginTop: '8px',
+                        }}
+                      >
+                        HobbyCue
+                      </h4>
+                      {filteredUsers.length > 0 ? (
+                        filteredUsers.map((user: any) => (
+                          <li
+                            key={user.id}
+                            className={styles['modal-item']}
+                            onClick={() => handleUserSelect(user)}
+                          >
+                            <img
+                              src={user.profile_image || defaultUserIcon.src} // Ensure `defaultUserIcon` is defined
+                              alt={user.full_name}
+                              className={styles['profile-pic']}
+                            />
+                            <div>
+                              <p className={styles['user-name']}>
+                                {user.full_name.length > 23
+                                  ? user.full_name.slice(0, 23) + '...'
+                                  : user.full_name}
+                              </p>
+                              <p
+                                className={styles['user-name']}
+                                style={{ fontSize: 12 }}
+                              >
+                                {user.tagline
+                                  ? user.tagline.slice(0, 25) + '...'
+                                  : ''}
+                              </p>
+                            </div>
+                          </li>
+                        ))
+                      ) : !filtersUsersLoading ? (
+                        <li className={styles['modal-item']}>No users found</li>
+                      ) : (
+                        <li className={styles['modal-item']}>loading...</li>
+                      )}
+                    </ul>
+                  </div>
+                )}
               </section>
             </section>
 
@@ -1336,34 +1987,135 @@ const CommunityLayout: React.FC<Props> = ({
               className={styles['desktop-members-conatiner']}
             >
               <header>Hobby Members</header>
-              {hobbyMembers
-                ?.slice(0, seeMoreMembers === 0 ? 3 : hobbyMembers.length)
-                .map((obj: any, idx) => (
-                  <div key={idx} className={styles['member']}>
-                    <Link
-                      href={`/profile/${obj?.profile_url}`}
-                      className={styles['img-name']}
-                    >
-                      {obj?.profile_image ? (
-                        <img src={obj?.profile_image} />
-                      ) : (
-                        <Image src={defaultUserIcon} alt="" />
-                      )}
+              {hobbyMembers.length > 0 ? (
+                <>
+                  {hobbyMembers
+                    ?.slice(
+                      0,
+                      seeMoreMembers === 0 || clickedSeeLess
+                        ? 3
+                        : hobbyMembers.length,
+                    )
+                    .map(
+                      (obj: any, idx) =>
+                        obj !== null && (
+                          <div key={idx} className={styles['member']}>
+                            <Link
+                              href={`/profile/${obj?.profile_url}`}
+                              className={styles['img-name']}
+                            >
+                              {obj?.profile_image ? (
+                                <img src={obj?.profile_image} />
+                              ) : (
+                                <Image src={defaultUserIcon} alt="" />
+                              )}
 
-                      <p>{obj?.full_name}</p>
-                    </Link>
-                  </div>
-                ))}
-              {hobbyMembers.length > 3 && (
-                <div
-                  onClick={() => {
-                    setSeeMoreMembers((prev) => prev + 1)
-                  }}
-                  className={styles['see-all']}
+                              <p>{obj?.full_name}</p>
+                            </Link>
+                          </div>
+                        ),
+                    )}
+                  {hobbyMembers.length > 3 && seeLessMembers ? (
+                    <div
+                      onClick={() => {
+                        setSeeLessMembers(false)
+                        setClickedSeeLess(true)
+                      }}
+                      className={styles['see-all']}
+                    >
+                      <p>See less</p>
+                    </div>
+                  ) : (
+                    <div
+                      onClick={() => {
+                        setSeeMoreMembers((prev) => prev + 1)
+                        setClickedSeeLess(false)
+                      }}
+                      className={styles['see-all']}
+                    >
+                      <p>See more</p>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <ContentLoader
+                  speed={2}
+                  width="100%"
+                  backgroundColor="#f3f3f3"
+                  foregroundColor="#ecebeb"
+                  viewBox="0 0 292 154"
                 >
-                  <p>See more</p>
-                </div>
+                  <rect
+                    x="16.5"
+                    y="7.5"
+                    width="23"
+                    height="23"
+                    rx="11.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="48"
+                    y="12.875"
+                    width="88"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="186.754"
+                    y="9.5"
+                    width="88.7451"
+                    height="19"
+                    rx="3.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="16.5"
+                    y="45.5"
+                    width="23"
+                    height="23"
+                    rx="11.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="48"
+                    y="50.875"
+                    width="88"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16.5"
+                    y="83.5"
+                    width="23"
+                    height="23"
+                    rx="11.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="48"
+                    y="88.875"
+                    width="54"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="112"
+                    y="121"
+                    width="66"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                </ContentLoader>
               )}
+
               {/* {hobbyMembers.length === 0 && (
                 <div className={styles['see-all']}>
                   <p>Loading...</p>
@@ -1375,101 +2127,269 @@ const CommunityLayout: React.FC<Props> = ({
               className={styles['desktop-members-conatiner']}
             >
               <header>What's New</header>
-              {whatsNew
-                ?.slice(0, SeeMorewhatsNew ? 3 : whatsNew.length)
-                .map((obj: any, idx) => (
-                  <div key={idx} className={styles['member']}>
-                    <Link
-                      href={`/${pageType(obj?.type)}/${obj.page_url}`}
-                      className={styles['img-name-listing']}
-                    >
-                      {obj?.profile_image ? (
-                        <img src={obj.profile_image} />
-                      ) : (
-                        <div
-                          className={
-                            getClassName(obj?.type) + ` ${styles['defaultImg']}`
-                          }
-                        ></div>
-                      )}
 
-                      <p>{obj?.title}</p>
-                    </Link>
-                  </div>
-                ))}
-              {whatsNew.length > 3 && (
-                <div
-                  onClick={() => {
-                    setSeeMoreWhatsNew((prev) => !prev)
-                  }}
-                  className={styles['see-all']}
+              {whatsNew.length > 0 ? (
+                <>
+                  {whatsNew
+                    ?.slice(0, SeeMorewhatsNew ? 3 : whatsNew.length)
+                    .map((obj: any, idx) => (
+                      <div key={idx} className={styles['member']}>
+                        <Link
+                          href={`/${pageType(obj?.type)}/${obj.page_url}`}
+                          className={styles['img-name-listing']}
+                        >
+                          {obj?.profile_image ? (
+                            <img src={obj.profile_image} />
+                          ) : (
+                            <div
+                              className={
+                                getClassName(obj?.type) +
+                                ` ${styles['defaultImg']}`
+                              }
+                            ></div>
+                          )}
+
+                          <p>{obj?.title}</p>
+                        </Link>
+                      </div>
+                    ))}
+                  {whatsNew.length > 3 && (
+                    <div
+                      onClick={() => {
+                        setSeeMoreWhatsNew((prev) => !prev)
+                      }}
+                      className={styles['see-all']}
+                    >
+                      <p>{SeeMorewhatsNew ? 'See more' : 'See less'}</p>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <ContentLoader
+                  speed={2}
+                  width="100%"
+                  backgroundColor="#f3f3f3"
+                  foregroundColor="#ecebeb"
+                  viewBox="0 0 292 185"
                 >
-                  <p>{SeeMorewhatsNew ? 'See more' : 'See less'}</p>
-                </div>
+                  <rect
+                    x="16.5"
+                    y="4"
+                    width="31"
+                    height="31"
+                    rx="3.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="56"
+                    y="13"
+                    width="127"
+                    height="13"
+                    rx="6.5"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16.5"
+                    y="55"
+                    width="31"
+                    height="31"
+                    rx="3.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="56"
+                    y="64.5"
+                    width="125"
+                    height="12"
+                    rx="6"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="16.5"
+                    y="106"
+                    width="31"
+                    height="31"
+                    rx="3.5"
+                    fill="#D9DBE9"
+                    stroke="#D9DBE9"
+                  />
+                  <rect
+                    x="56"
+                    y="115.5"
+                    width="127"
+                    height="12"
+                    rx="6"
+                    fill="#D9DBE9"
+                  />
+                  <rect
+                    x="112"
+                    y="156.5"
+                    width="66"
+                    height="12.25"
+                    rx="6.125"
+                    fill="#D9DBE9"
+                  />
+                </ContentLoader>
               )}
             </section>
 
             <section
               className={`content-box-wrapper ${styles['trending-hobbies-side-wrapper']}`}
+              ref={trendingContainerRef}
             >
               <header>
                 <h3>Trending hobbies</h3>
               </header>
               {/* <span className={styles['divider']}></span> */}
               <section>
-                <ul>
-                  {trendingHobbies
-                    ?.slice(0, seeMoreTrendHobbies ? 3 : trendingHobbies.length)
-                    .map((hobby: any) => {
-                      if (hobby.profile_image) {
-                      }
-                      return (
-                        <li key={hobby._id}>
-                          <Link href={`/hobby/${hobby.slug}`}>
-                            {hobby?.profile_image ? (
-                              <div className={styles['border-div']}>
-                                <img
-                                  className={styles.profileImage}
-                                  src={hobby.profile_image}
-                                  alt={`${hobby.display}'s `}
-                                  width={40}
-                                  height={40}
-                                />{' '}
-                              </div>
-                            ) : (
-                              <svg
-                                className={styles.polygonOverlay}
-                                width={40}
-                                viewBox="0 0 160 160"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M80 0L149.282 40V120L80 160L10.718 120V40L80 0Z"
-                                  fill="#969696"
-                                  fillOpacity="0.5"
-                                />
-                                <path
-                                  d="M79.6206 46.1372C79.7422 45.7727 80.2578 45.7727 80.3794 46.1372L87.9122 68.7141C87.9663 68.8763 88.1176 68.9861 88.2885 68.9875L112.088 69.175C112.472 69.178 112.632 69.6684 112.323 69.8967L93.1785 84.0374C93.041 84.139 92.9833 84.3168 93.0348 84.4798L100.211 107.173C100.327 107.539 99.9097 107.842 99.5971 107.619L80.2326 93.7812C80.0935 93.6818 79.9065 93.6818 79.7674 93.7812L60.4029 107.619C60.0903 107.842 59.6731 107.539 59.789 107.173L66.9652 84.4798C67.0167 84.3168 66.959 84.139 66.8215 84.0374L47.6773 69.8967C47.3682 69.6684 47.5276 69.178 47.9118 69.175L71.7115 68.9875C71.8824 68.9861 72.0337 68.8763 72.0878 68.7141L79.6206 46.1372Z"
-                                  fill="white"
-                                />
-                              </svg>
-                            )}
-                            <span>{`${hobby.display}`}</span>
-                          </Link>
-                        </li>
-                      )
-                    })}
-                </ul>
-                {trendingHobbies.length > 3 && (
-                  <div
-                    onClick={() => {
-                      setSeeMoreTrendHobbies((prev) => !prev)
-                    }}
-                    className={styles['see-all']}
+                {trendingHobbies.length > 0 ? (
+                  <>
+                    <ul>
+                      {trendingHobbies
+                        ?.slice(
+                          0,
+                          seeMoreTrendHobbies ? 3 : trendingHobbies.length,
+                        )
+                        .map((hobby: any) => {
+                          if (hobby.profile_image) {
+                          }
+                          return (
+                            <li key={hobby._id}>
+                              <Link href={`/hobby/${hobby.slug}`}>
+                                {hobby?.profile_image ? (
+                                  <div className={styles['border-div']}>
+                                    <img
+                                      className={styles.profileImage}
+                                      src={hobby.profile_image}
+                                      alt={`${hobby.display}'s `}
+                                      width={40}
+                                      height={40}
+                                    />{' '}
+                                  </div>
+                                ) : (
+                                  <svg
+                                    className={styles.polygonOverlay}
+                                    width={40}
+                                    viewBox="0 0 160 160"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M80 0L149.282 40V120L80 160L10.718 120V40L80 0Z"
+                                      fill="#969696"
+                                      fillOpacity="0.5"
+                                    />
+                                    <path
+                                      d="M79.6206 46.1372C79.7422 45.7727 80.2578 45.7727 80.3794 46.1372L87.9122 68.7141C87.9663 68.8763 88.1176 68.9861 88.2885 68.9875L112.088 69.175C112.472 69.178 112.632 69.6684 112.323 69.8967L93.1785 84.0374C93.041 84.139 92.9833 84.3168 93.0348 84.4798L100.211 107.173C100.327 107.539 99.9097 107.842 99.5971 107.619L80.2326 93.7812C80.0935 93.6818 79.9065 93.6818 79.7674 93.7812L60.4029 107.619C60.0903 107.842 59.6731 107.539 59.789 107.173L66.9652 84.4798C67.0167 84.3168 66.959 84.139 66.8215 84.0374L47.6773 69.8967C47.3682 69.6684 47.5276 69.178 47.9118 69.175L71.7115 68.9875C71.8824 68.9861 72.0337 68.8763 72.0878 68.7141L79.6206 46.1372Z"
+                                      fill="white"
+                                    />
+                                  </svg>
+                                )}
+                                <span>{`${hobby.display}`}</span>
+                              </Link>
+                              <img
+                                src={AddHobbyImg.src}
+                                height={20}
+                                width={20}
+                                alt="Add"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => handleAddTrendingHobby(hobby)}
+                              />
+                            </li>
+                          )
+                        })}
+                    </ul>
+                    {trendingHobbies.length > 3 && (
+                      <div
+                        onClick={() => {
+                          setSeeMoreTrendHobbies((prev) => !prev)
+                        }}
+                        className={styles['see-all']}
+                      >
+                        <p>{seeMoreTrendHobbies ? 'See more' : 'See less'}</p>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <ContentLoader
+                    speed={2}
+                    width="100%"
+                    backgroundColor="#f3f3f3"
+                    foregroundColor="#ecebeb"
+                    height={185}
+                    viewBox="0 0 292 171"
                   >
-                    <p>{seeMoreTrendHobbies ? 'See more' : 'See less'}</p>
-                  </div>
+                    <path
+                      d="M32.5 3L46.7894 11.25V27.75L32.5 36L18.2106 27.75V11.25L32.5 3Z"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="57"
+                      y="13.375"
+                      width="30"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="256.004"
+                      y="9.5"
+                      width="19.9954"
+                      height="20"
+                      rx="9.99768"
+                      fill="#D9DBE9"
+                    />
+                    <path
+                      d="M32.5 47L46.7894 55.25V71.75L32.5 80L18.2106 71.75V55.25L32.5 47Z"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="57"
+                      y="57.375"
+                      width="80"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="256.004"
+                      y="53.5"
+                      width="19.9954"
+                      height="20"
+                      rx="9.99768"
+                      fill="#D9DBE9"
+                    />
+                    <path
+                      d="M32.5 91L46.7894 99.25V115.75L32.5 124L18.2106 115.75V99.25L32.5 91Z"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="57"
+                      y="101.375"
+                      width="67"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="256.004"
+                      y="97.5"
+                      width="19.9954"
+                      height="20"
+                      rx="9.99768"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="112"
+                      y="139"
+                      width="66"
+                      height="12.25"
+                      rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                  </ContentLoader>
                 )}
               </section>
             </section>

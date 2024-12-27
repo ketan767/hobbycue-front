@@ -361,7 +361,7 @@ background: #FFF;
     justify-content: space-between;
   }
   .select-container .options-container {
-    max-height: 300px;
+    max-height: 100px;
     overflow: auto;
     position: absolute;
     top: calc(100% + 4px);

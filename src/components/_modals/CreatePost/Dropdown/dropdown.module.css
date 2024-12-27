@@ -35,7 +35,7 @@
 }
 
 .create-post-width {
-  width: 265px;
+  width: 176px;
 }
 
 .community-dropdown-width {
@@ -123,6 +123,7 @@ p.dropdown-value-active {
   background-color: #DFD8E7;
   color: #8064a2 !important;
   border-radius: 4px;
+  margin-block: 4px;
   /* width: 218px; */
 }
 .dropdown-options p.option-active {

@@ -33,6 +33,8 @@ const People: React.FC<Props> = ({ data: initialData }) => {
   const [ShowAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const { isSearching } = useSelector((state: RootState) => state.explore)
+  const [hoverCardIndex, setHoveredCardIndex] = useState<number>(-1)
+
   const dispatch = useDispatch()
 
   const locationDropdownRef = useRef<HTMLDivElement>(null)
@@ -54,7 +56,10 @@ const People: React.FC<Props> = ({ data: initialData }) => {
       queryString = `type=${encodeURIComponent(type.toString())}&` + queryString
     } else if (category) {
       queryString =
-        `page_type=${encodeURIComponent(category.toString())}&` + queryString
+        `type=1&page_type=${encodeURIComponent(category.toString())}&` +
+        queryString
+    } else {
+      queryString = `type=1&` + queryString
     }
 
     if (keyword) {
@@ -147,8 +152,8 @@ const People: React.FC<Props> = ({ data: initialData }) => {
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
         />
-        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
-        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+        <meta property="og:image" content="/people_page.png" />
+        <meta property="og:image:secure_url" content="/people_page.png" />
         <title>HobbyCue - Explore</title>
       </Head>
       <ExploreSearchContainer
@@ -183,6 +188,8 @@ const People: React.FC<Props> = ({ data: initialData }) => {
                 key={el._id}
                 data={el}
                 style={{ minWidth: 271, maxWidth: 700 }}
+                hoverCardIndex={hoverCardIndex}
+                setHoveredCardIndex={setHoveredCardIndex}
               />
             ))}
             <>{loading && <PagesLoader />}</>
@@ -212,8 +219,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     queryString = `type=${encodeURIComponent(type.toString())}&` + queryString
   } else if (query.category) {
     queryString =
-      `page_type=${encodeURIComponent(query.category.toString())}&` +
+      `type=1&page_type=${encodeURIComponent(query.category.toString())}&` +
       queryString
+  } else {
+    queryString = `type=1&` + queryString
   }
   if (query.keyword) {
     queryString =

@@ -1,3 +1,6 @@
+.noBoxShadow {
+  box-shadow: none !important;
+}
 .ql-editor.ql-indent-1{
   padding-left:4px;
 }
@@ -170,6 +173,25 @@ font-family:'Poppins';
   position: absolute;
   bottom: 0;
   right: var(--spacing-8);
+}
+.name {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 ;
+  line-clamp: 2 ;
+  -webkit-box-orient: vertical ;
+  overflow: hidden ;
+  text-overflow: ellipsis ;
+  width: 100% ;
+  max-width: 850px ;
+}
+.tagline {
+  display: -webkit-box;
+  -webkit-line-clamp: 1 ;
+  line-clamp: 1 ;
+  -webkit-box-orient: vertical ;
+  overflow: hidden ;
+  text-overflow: ellipsis ;
+  max-width: 850px ;
 }
 
 .center-container .name {
@@ -755,6 +777,7 @@ font-family:'Poppins';
 
   .eventDate-parent {
     margin-top: 5px;
+    margin-bottom: 10px;
   }
 
   .eventDate .date {
@@ -867,7 +890,10 @@ font-family:'Poppins';
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 8px;
+    gap: 10px;
+  }
+  .profile-img-wrapper{
+    height: 62px;
   }
   .profile-img-wrapper .name-container {
     display: block;
@@ -955,11 +981,13 @@ font-family:'Poppins';
   .event-date-container-responsive {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    /* align-items: flex-end; */
+    padding-left: 5px;
     max-height: 24px;
     z-index: 1;
     order: 3;
-    margin-top: -12px;
+    /* padding-top: 4px; */
+    /* margin-top: -12px; */
   }
   .qunatity {
     padding-top: 9px;

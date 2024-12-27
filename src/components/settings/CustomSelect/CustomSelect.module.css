@@ -1,0 +1,91 @@
+.customSelect {
+    width: 172px;
+    background: #f7f5f9;
+    border: none;
+    position: relative;
+    /* border: 2px solid #a259ff; */
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    /* background-color: #f9f9f9; */
+}
+
+.customSelectDisabled {
+    width: 172px;
+    background: #f7f5f9;
+    border: none;
+    position: relative;
+    cursor: not-allowed !important;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    /* background-color: #f9f9f9; */
+}
+
+.expandMoreIcon {
+    display: flex;
+}
+
+.selectBox {
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.selected {
+    font-size: 14px;
+    font-family:'poppins';
+    color: rgba(8, 9, 10, 1);
+    font-weight: 500;
+    /* color: #333; */
+}
+
+.optionsContainer {
+    position: absolute;
+    width: 100%;
+    top: 102%;
+    left: 0;
+    background-color: #fff;
+    padding: 4px;
+    /* border: 2px solid #a259ff; */
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    z-index: 100;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.option {
+    padding: 8px;
+    font-weight: 400;
+    font-size: 14px;
+    font-family:'poppins';
+    color: rgba(109, 116, 122, 1);
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.optionDisabled {
+    padding: 8px;
+    font-weight: 400;
+    font-size: 14px;
+    font-family:'poppins';
+    color: rgba(109, 116, 122, 1);
+
+}
+
+.notAllow {
+    cursor: not-allowed !important;
+}
+
+.option:hover {
+    background-color: #dfd8e7;
+    transition: all 0.1s;
+}
+
+.selectedOption {
+    color: #7857A1;
+    background-color: #dfd8e7;
+}

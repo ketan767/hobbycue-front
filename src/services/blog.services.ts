@@ -1,9 +1,12 @@
+import { useQuery } from 'react-query'
 import axiosInstance, { operation } from './_axios'
 
 /** Get User Details `GET /api/user/?{query}`  */
 export const getAllBlogs = async (query: string): Promise<ApiReturnObject> => {
   try {
-    const res = await axiosInstance.get(`/blogs/?${query}`)
+    let url = `/blogs/?${query}`
+    console.log(url)
+    const res = await axiosInstance.get(url)
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -95,3 +98,193 @@ export const downvoteBlog = async (blogId: string, userId: string) => {
     return { res: null, err }
   }
 }
+
+export const createBlog = async () => {
+  try {
+    const token = localStorage.getItem(`token`)
+    const body = null
+    const headers = { Authorization: `Bearer ${token}` }
+    const res = await axiosInstance.post(`/blogs/create`, body, { headers })
+    return { res, err: null }
+  } catch (err) {
+    return { res: null, err }
+  }
+}
+
+interface UpdateBlogArgsType {
+  title?: string
+  tagline?: string
+  content?: string
+  blogId: string
+}
+
+export const updateBlog = async ({
+  title,
+  tagline,
+  content,
+  blogId,
+  ...args
+}: UpdateBlogArgsType) => {
+  try {
+    const body = { title, tagline, content }
+    const token = localStorage.getItem(`token`)
+    const headers = { Authorization: `Bearer ${token}` }
+    const res = await axiosInstance.patch(`/blogs/edit/${blogId}`, body, {
+      headers,
+    })
+    return { res, err: null }
+  } catch (err) {
+    return { res: null, err }
+  }
+}
+
+export const deleteBlog = async (blogId: string) => {
+  try {
+    const token = localStorage.getItem(`token`)
+    const headers = { Authorization: `Bearer ${token}` }
+    const res = await axiosInstance.delete(`/blogs/delete/${blogId}`, {
+      headers,
+    })
+    return { res, err: null }
+  } catch (err) {
+    return { res: null, err }
+  }
+}
+
+export const uploadBlogImage = async (formData: FormData, blogId: string) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.patch(
+      `/blogs/upload-blog-image/${blogId}`,
+      formData,
+      {
+        headers,
+      },
+    )
+    return { res, err: null }
+  } catch (err) {
+    return { err: err, res: null }
+  }
+}
+
+export const useGetBlogById = (query: string) => {
+  return useQuery({
+    queryKey: ['blogs', query],
+    queryFn: async () => {
+      let url = `/blogs/?${query}`
+      const { data } = await axiosInstance.get(url)
+
+      return data
+    },
+  })
+}
+
+export const getBlogById = async (id: string) => {
+  try {
+    const res = await axiosInstance.get(`/blogs/${id}`)
+    return { res, err: null }
+  } catch (err) {
+    return { res: null, err }
+  }
+}
+
+// Example: const axiosInstance = axios.create({ baseURL: 'http://localhost:5000/api' });
+
+export async function addHobby(blogId: string, hobbyData: any) {
+  const token =
+    typeof window !== 'undefined' ? localStorage.getItem('token') : null
+
+  if (!token) {
+    throw new Error('Token not found. Please log in.')
+  }
+
+  try {
+    const response = await axiosInstance.post(
+      `/blogs/${blogId}/hobbies`,
+      hobbyData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+
+    return response.data // Parsed JSON response
+  } catch (error: any) {
+    console.error('Error adding hobby:', error)
+    if (error.response && error.response.data) {
+      throw new Error(error?.response?.data?.error || 'Failed to add hobby')
+    } else {
+      throw error
+    }
+  }
+}
+
+export const upvoteBlogComment = async (commentId: string, userId: string) => {
+  try {
+    const body = { userId }
+
+    const token = localStorage.getItem(`token`)
+    const headers = { Authorization: `Bearer ${token}` }
+
+    const res = await axiosInstance.patch(
+      `/blogs/comment/${commentId}/upvote`,
+      body,
+      {
+        headers,
+      },
+    )
+
+    return { res, err: null }
+  } catch (err) {
+    console.log(`Error in upvoteBlog(): `, err)
+    return { res: null, err }
+  }
+}
+
+export const downvoteBlogComment = async (
+  commentId: string,
+  userId: string,
+) => {
+  try {
+    const body = { userId }
+
+    const token = localStorage.getItem(`token`)
+    const headers = { Authorization: `Bearer ${token}` }
+
+    const res = await axiosInstance.patch(
+      `/blogs/comment/${commentId}/downvote`,
+      body,
+      {
+        headers,
+      },
+    )
+
+    return { res, err: null }
+  } catch (err) {
+    console.log(`Error in upvoteBlog(): `, err)
+    return { res: null, err }
+  }
+}
+
+export const uploadEditorImage = async (base64Image: string) => {
+  const token = localStorage.getItem('token');
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json', // Set the content type to JSON
+  };
+
+  try {
+    const res = await axiosInstance.post(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/blogs/uploadimage`,
+      { base64Image }, // Send Base64 string in the request body
+      { headers }
+    );
+    return { res, err: null };
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    return { err: error, res: null };
+  }
+};

@@ -1,3 +1,4 @@
+import AddHobbyImg from '@/assets/image/AddHobbyImg.png'
 import { FC, useState, useRef, useEffect } from 'react'
 import styles from './CommunityLayout.module.css'
 import { useRouter } from 'next/router'
@@ -5,18 +6,37 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import Link from 'next/link'
 import Image from 'next/image'
-import { pageType } from '@/utils'
+import { isMobile, pageType, validateEmail } from '@/utils'
 import { CircularProgress } from '@mui/material'
+import { searchUsersAdvanced } from '@/services/user.service'
+import { RootState } from '@/redux/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { openModal } from '@/redux/slices/modal'
+import { InviteToCommunity } from '@/services/auth.service'
 interface PanelDropdownListProps {
   name: string
   options: any[]
   type?: string
   invite?: boolean
   inviteFunction: () => Promise<void>
+  email?: string
+  setEmail?: any
+  setSelectedUser?: any
   inviteError?: string
   inviteTextChangeFunc?: (arg0: any) => void
   inviteText?: string
   initialOpen?: boolean
+  handleAddTrendingHobby?: (arg0: any) => void
+  seeMoreMembers: number
+  clickedSeeLess: boolean
+  seeLessMembers: boolean
+  setSeeLessMembers: (value: React.SetStateAction<boolean>) => void
+  setClickedSeeLess: (value: React.SetStateAction<boolean>) => void
+  setSeeMoreMembers: (value: React.SetStateAction<number>) => void
+  seeMoreWhatsNew: boolean
+  seeMoreTrendHobbies: boolean
+  setSeeMoreWhatsNew: (value: React.SetStateAction<boolean>) => void
+  setSeeMoreTrendHobbies: (value: React.SetStateAction<boolean>) => void
 }
 
 const PanelDropdownList: FC<PanelDropdownListProps> = ({
@@ -25,35 +45,93 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   type,
   invite,
   inviteFunction,
+  email,
+  setEmail,
+  setSelectedUser,
   inviteError,
   inviteText,
   inviteTextChangeFunc,
   initialOpen,
+  handleAddTrendingHobby,
+  seeMoreMembers,
+  clickedSeeLess,
+  seeLessMembers,
+  setClickedSeeLess,
+  setSeeLessMembers,
+  setSeeMoreMembers,
+  seeMoreTrendHobbies,
+  seeMoreWhatsNew,
+  setSeeMoreTrendHobbies,
+  setSeeMoreWhatsNew,
 }) => {
   const [open, setOpen] = useState(initialOpen ?? false)
   const router = useRouter()
-  const [seeMore, setSeeMore] = useState(true)
+  // const [seeMore, setSeeMore] = useState(true)
+  const isMob = isMobile()
   const [seeMoreHobbies, setSeeMoreHobbies] = useState(0)
-  const membersContainerRef = useRef<HTMLDivElement>(null)
-  // const [email, setEmail] = useState('')
-  // const [errorMessage, setErrorMessage] = useState('')
-  // const inviteBtnRef = useRef<HTMLButtonElement>(null)
-  // const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
 
-  useEffect(() => {
-    if (type === 'members') {
-      if (membersContainerRef.current) {
-        const requiredHeight = options.length * (38 + 16) + 47
-        if (options.length <= 2) {
-          membersContainerRef.current.style.height = 'auto'
-        } else if (seeMore) {
-          membersContainerRef.current.style.height = '208px'
-        } else {
-          membersContainerRef.current.style.height = requiredHeight + 'px'
-        }
+  const [filteredUsers, setFilteredUsers] = useState([])
+  const [filtersUsersLoading, setFilteredUsersLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const membersContainerRef = useRef<HTMLDivElement>(null)
+  const [showModal, setShowModal] = useState(false)
+
+  const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
+  const { activeProfile, user, isLoggedIn, listing } = useSelector(
+    (state: RootState) => state.user,
+  )
+  const { allPosts, filters, post_pagination } = useSelector(
+    (state: RootState) => state.post,
+  )
+
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+  const dispatch = useDispatch()
+
+  const fetchUsers = async (query: string) => {
+    setFilteredUsersLoading(true)
+    try {
+      let searchCriteria = {
+        name: query,
       }
+      const { res, err } = await searchUsersAdvanced(searchCriteria)
+      // console.log('Data : ', res.data)
+
+      setFilteredUsers(res.data)
+      setFilteredUsersLoading(false)
+    } catch (error) {
+      setFilteredUsersLoading(false)
+      console.error('Error fetching users:', error)
     }
-  }, [seeMore, options])
+  }
+  useEffect(() => {
+    if (showModal) {
+      const query = email?.slice(1)
+      console.log(query)
+      fetchUsers(query || '')
+    }
+  }, [email, showModal])
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value
+    setEmail(input)
+    setErrorMessage('')
+
+    if (input.startsWith('@') && input.length > 1) {
+      setShowModal(true)
+    } else {
+      setShowModal(false)
+    }
+  }
+
+  const handleUserSelect = (selectedUser: any) => {
+    setEmail(selectedUser.display_name)
+    setSelectedUser(selectedUser)
+    setShowModal(false)
+  }
 
   const ArrowSvg = ({ rotate }: { rotate?: boolean }) => {
     return (
@@ -101,6 +179,12 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
       />
     </svg>
   )
+
+  useEffect(() => {
+    if (isMob) {
+      setOpen(true)
+    }
+  }, [])
   return (
     <div className={styles['parent-list']}>
       <div className={styles['list']}>
@@ -118,15 +202,65 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
             >
               <section>
                 <input
-                  placeholder=""
+                  placeholder="Email or @ mention "
                   type="text"
                   autoComplete="new"
                   name=""
                   id=""
                   className={inviteError !== '' ? styles['error-input'] : ''}
-                  onChange={inviteTextChangeFunc}
-                  value={inviteText}
+                  onChange={handleInputChange}
+                  value={email}
                 />
+                {showModal && (
+                  <div className={styles['modal-container']}>
+                    <ul className={styles['modal-list']}>
+                      <h4
+                        className={styles['user-name']}
+                        style={{
+                          fontWeight: '600',
+                          marginLeft: '12px',
+                          marginTop: '8px',
+                        }}
+                      >
+                        HobbyCue
+                      </h4>
+                      {filteredUsers.length > 0 ? (
+                        filteredUsers.map((user: any) => (
+                          <li
+                            key={user.id}
+                            className={styles['modal-item']}
+                            onClick={() => handleUserSelect(user)}
+                          >
+                            <img
+                              src={user.profile_image || defaultUserIcon.src} // Ensure `defaultUserIcon` is defined
+                              alt={user.full_name}
+                              className={styles['profile-pic']}
+                            />
+                            <div>
+                              <p className={styles['user-name']}>
+                                {user.full_name.length > 23
+                                  ? user.full_name.slice(0, 23) + '...'
+                                  : user.full_name}
+                              </p>
+                              <p
+                                className={styles['user-name']}
+                                style={{ fontSize: 12 }}
+                              >
+                                {user.tagline
+                                  ? user.tagline.slice(0, 25) + '...'
+                                  : ''}
+                              </p>
+                            </div>
+                          </li>
+                        ))
+                      ) : !filtersUsersLoading ? (
+                        <li className={styles['modal-item']}>No users found</li>
+                      ) : (
+                        <li className={styles['modal-item']}>loading...</li>
+                      )}
+                    </ul>
+                  </div>
+                )}
                 <FilledButton onClick={inviteFunction}>Invite</FilledButton>
               </section>
               {inviteError !== '' && (
@@ -135,6 +269,11 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
             </div>
           )}
           <div
+            style={
+              type === 'user members' || type === 'members'
+                ? { gap: '0px' }
+                : { gap: '7px' }
+            }
             ref={membersContainerRef}
             className={
               styles['options-parent'] +
@@ -149,7 +288,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
             {type !== 'members' &&
               type !== 'user members' &&
               options
-                .slice(0, seeMore ? 3 : options.length)
+                .slice(0, seeMoreTrendHobbies ? 3 : options.length)
                 .map((obj: any, idx: number) => (
                   <div key={idx} className={styles['option']}>
                     {/* For Hobbies */}
@@ -190,85 +329,139 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                         <p>{obj?.display}</p>
                       </div>
                     ) : null}
+                    <img
+                      src={AddHobbyImg.src}
+                      height={20}
+                      width={20}
+                      alt="Add"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => handleAddTrendingHobby?.(obj)}
+                    />
                   </div>
                 ))}
-
             {type === 'members' &&
-              options
-                .slice(0, seeMore ? 3 : options.length)
-                .map((obj: any, idx: number) => (
-                  <div key={idx} className={styles['option']}>
-                    <div className={styles['member-container']}>
-                      <Link
-                        href={`/${pageType(obj?.type)}/${obj?.page_url}`}
-                        className={styles['img-name']}
+              options.slice(0, seeMoreWhatsNew ? 3 : options.length).map(
+                (obj: any, idx: number) =>
+                  obj && (
+                    <div key={idx} className={styles['option']}>
+                      <div
+                        className={
+                          styles['member-container'] +
+                          ' ' +
+                          styles['whatsNewContainer']
+                        }
                       >
-                        {obj?.profile_image ? (
-                          <img width={24} height={24} src={obj.profile_image} />
-                        ) : (
-                          <Image
-                            width={24}
-                            height={24}
-                            src={defaultUserIcon}
-                            alt=""
-                          />
-                        )}
+                        <Link
+                          href={`/${pageType(obj?.type)}/${obj?.page_url}`}
+                          className={
+                            styles['img-name'] + ' ' + styles['whatsNewImg']
+                          }
+                        >
+                          {obj?.profile_image ? (
+                            <img
+                              width={24}
+                              height={24}
+                              src={obj.profile_image}
+                            />
+                          ) : (
+                            <Image
+                              width={24}
+                              height={24}
+                              src={defaultUserIcon}
+                              alt=""
+                            />
+                          )}
 
-                        <p>{obj?.title}</p>
-                      </Link>
-                      {obj?.admin === true && (
-                        <button className={styles['admin-btn']}>
-                          Location Admin
-                        </button>
-                      )}
+                          <p>{obj?.title}</p>
+                        </Link>
+                        {obj?.admin === true && (
+                          <button className={styles['admin-btn']}>
+                            Location Admin
+                          </button>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ),
+              )}
             {type === 'user members' &&
               options
-                .slice(0, seeMoreHobbies === 0 ? 3 : options.length)
-                .map((obj: any, idx: number) => (
-                  <div key={idx} className={styles['option']}>
-                    <div
-                      className={`${styles['member-container']} ${styles.userimg}`}
-                    >
-                      <Link
-                        href={`/profile/${obj?.profile_url}`}
-                        className={styles['img-name']}
-                      >
-                        {obj?.profile_image ? (
-                          <img width={24} height={24} src={obj.profile_image} />
-                        ) : (
-                          <Image
-                            width={24}
-                            height={24}
-                            src={defaultUserIcon}
-                            alt=""
-                          />
-                        )}
+                ?.slice(
+                  0,
+                  seeMoreMembers === 0 || clickedSeeLess ? 3 : options.length,
+                )
+                .map(
+                  (obj: any, idx: number) =>
+                    obj && (
+                      <div key={idx} className={styles['option']}>
+                        <div
+                          className={`${styles['member-container']} ${styles.userimg}`}
+                        >
+                          <Link
+                            href={`/profile/${obj?.profile_url}`}
+                            className={styles['img-name']}
+                          >
+                            {obj?.profile_image ? (
+                              <img
+                                width={24}
+                                height={24}
+                                src={obj.profile_image}
+                              />
+                            ) : (
+                              <Image
+                                width={24}
+                                height={24}
+                                src={defaultUserIcon}
+                                alt=""
+                              />
+                            )}
 
-                        <p>{obj?.full_name}</p>
-                      </Link>
-                      {obj?.admin === true && (
-                        <button className={styles['admin-btn']}>
-                          Location Admin
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-            {options.length > 3 && (
-              <div className={styles['option'] + ` ${styles['mb-15']}`}>
-                <div className={styles['member-container']}>
-                  <p
-                    onClick={() => {
-                      setSeeMoreHobbies((prev) => prev + 1)
-                    }}
-                    className={styles['see-more']}
-                  >
-                    {'See more'}
-                  </p>
+                            <p>{obj?.full_name}</p>
+                          </Link>
+                          {obj?.admin === true && (
+                            <button className={styles['admin-btn']}>
+                              Location Admin
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ),
+                )}
+            {type === 'user members' &&
+              (options.length > 3 && seeLessMembers ? (
+                <div
+                  onClick={() => {
+                    setSeeLessMembers(false)
+                    setClickedSeeLess(true)
+                  }}
+                  className={styles['see-all']}
+                >
+                  <p>See less</p>
                 </div>
+              ) : (
+                <div
+                  onClick={() => {
+                    setSeeMoreMembers((prev) => prev + 1)
+                    setClickedSeeLess(false)
+                  }}
+                  className={styles['see-all']}
+                >
+                  <p>See more</p>
+                </div>
+              ))}
+            {type !== 'user members' && options.length > 3 && (
+              <div
+                onClick={() => {
+                  type === 'members'
+                    ? setSeeMoreWhatsNew((prev) => !prev)
+                    : setSeeMoreTrendHobbies((prev) => !prev)
+                }}
+                className={styles['see-all']}
+              >
+                <p>
+                  {(type === 'members' ? seeMoreWhatsNew : seeMoreTrendHobbies)
+                    ? 'See more'
+                    : 'See less'}
+                </p>
               </div>
             )}
           </div>

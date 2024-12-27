@@ -12,6 +12,33 @@ type Props = {
   addressError?: boolean
 }
 
+const getVisibleLocation = (
+  address: any,
+  visibilityLevel: 'My City' | 'My Locality' | 'My Society',
+): string => {
+  let addressText = ''
+
+  switch (visibilityLevel) {
+    case 'My Society':
+      if (address.society) addressText += `${address.society}, `
+    case 'My Locality':
+      if (address.street) addressText += `${address.street}, `
+      if (address.city) addressText += `${address.city}, `
+      break
+    case 'My City':
+      if (address.city) addressText += `${address.city}, `
+      break
+    default:
+      return ''
+  }
+
+  // Always include state and country for any visibility level
+  if (address.state) addressText += `${address.state}, `
+  if (address.country) addressText += `${address.country}`
+
+  return addressText.trim().replace(/,\s*$/, '') // Remove trailing comma
+}
+
 const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
   const { profileLayoutMode, locationStates } = useSelector(
     (state: RootState) => state.site,
@@ -19,10 +46,21 @@ const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
   const dispatch = useDispatch()
   const [displayData, setDisplayData] = useState(false)
   let addressText = ''
-  if (data?.primary_address?.street) {
+  if (
+    data?.primary_address?.street &&
+    (data?.preferences
+      ? data?.preferences?.location_visibility === 'My Society'
+      : false)
+  ) {
     addressText += `${data?.primary_address?.street}, `
   }
-  if (data?.primary_address?.society) {
+  if (
+    data?.primary_address?.society &&
+    (data?.preferences
+      ? data?.preferences?.location_visibility === 'My Society' ||
+        data?.preferences?.location_visibility === 'My Locality'
+      : false)
+  ) {
     addressText += `${data?.primary_address?.society}, `
   }
   if (data?.primary_address?.city) {
@@ -116,11 +154,10 @@ const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
                     </span>
                   ) : (
                     <span className={styles.textGray}>
-                      {`${
-                        data?.primary_address?.city
-                          ? data?.primary_address?.city
-                          : ''
-                      }`}
+                      {getVisibleLocation(
+                        data?.primary_address,
+                        data?.preferences?.location_visibility || 'My City',
+                      )}
                     </span>
                   )}
                 </span>

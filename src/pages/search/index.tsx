@@ -52,6 +52,8 @@ import styles from './styles.module.css'
 import { SetLinkviaAuth } from '@/redux/slices/user'
 import Link from 'next/link'
 import SearchLoader from '@/components/SearchLoader'
+import Dropdown from '@/assets/svg/exploreSearch/Down.svg'
+import DropdownWhite from '@/assets/svg/exploreSearch/DownWhite.svg'
 
 import { addSearchHistory, searchUsers } from '@/services/user.service'
 import {
@@ -76,15 +78,16 @@ import ExploreIcon from '@/assets/icons/ExploreIcon'
 import QuestionIcon from '@/assets/icons/QuestionIcon'
 import InterestedDiv from './InterestedDiv'
 import DoubleDownArrow from '@/assets/icons/DoubleDownArrow'
-import hobbycue from '../../assets/svg/Search/hobbycue.svg'
-import People from '../../assets/svg/Search/People.svg'
-import UserSvg from '../../assets/svg/Search/User.svg'
-import Hobby from '../../assets/svg/Search/Hobbies.svg'
-import Place from '../../assets/svg/Search/Place.svg'
-import Program from '../../assets/svg/Search/Program.svg'
-import Product from '../../assets/svg/Search/Product.svg'
-import Blogs from '../../assets/svg/Search/blogs.svg'
 import { searchPosts } from '@/services/post.service'
+import { Inter } from 'next/font/google'
+import UserExplore from './explore/UserExplore'
+import PExplore from './explore/PExplore'
+import PostExplore from './explore/PostExplore'
+import UserHobbies from './searchComponents/user/UserHobbies'
+import FilterDropdown from './responsive/FilterDropdown'
+import { Bookmark } from '@mui/icons-material'
+import BookmarkOnCards from './ui_components/bookmark/Bookmark'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   data?: any
@@ -95,10 +98,13 @@ type User = {
   profile_image: string
   full_name: string
   tagline: string
-  primary_address: { city: string }
+  primary_address: { society: string; locality: string; city: string }
   profile_url: string
+  preferences: any
+  _hobbies: any[]
 }
 type PeopleData = {
+  _hobbies: any
   profile_image: string
   title: string
   tagline: string
@@ -110,7 +116,11 @@ type PlaceData = {
   profile_image: string
   title: string
   tagline: string
-  _address: { city: string }
+  _address: {
+    society: string
+    city: string
+    locality: string
+  }
   page_url: string
   page_type: []
 }
@@ -118,13 +128,15 @@ type EventData = {
   profile_image: string
   title: string
   tagline: string
-  _address: { city: string }
+  _address: { society: string; city: string; locality: string }
   page_url: string
   page_type: []
   event_date_time: any
   event_weekdays: any
 }
 type ProductData = {
+  _hobbies: any
+  product_variant: any
   profile_image: string
   title: string
   tagline: string
@@ -148,6 +160,9 @@ type PostData = {
   author_type: string
   createdAt: any
   _hobby: any
+  _genre: any
+  _allHobbies: any
+  _allGenres: any
   visibility: any
   content: any
 }
@@ -160,6 +175,7 @@ type hobby = {
   category: { display: string }
   sub_category: { display: string }
   description: string
+  level: number
 }
 type SearchResultsProps = {
   searchResults: User[]
@@ -173,6 +189,13 @@ type SearchResultsProps = {
   RentalResults: ProductData[]
   BlogsResults: BlogData[]
   PostsResults: PostData[]
+  setSnackbar: React.Dispatch<
+    React.SetStateAction<{
+      type: string
+      display: boolean
+      message: string
+    }>
+  >
 }
 
 type PropsExploreSidebarBtn = {
@@ -184,6 +207,11 @@ type PropsExploreMoreBtn = {
   text: string
   icon?: React.ReactNode
 }
+
+const inter = Inter({
+  subsets: ['latin'], // Choose subsets like 'latin' or others as per your needs
+  weight: ['400', '500', '600', '700'], // Select the weights you want to use (optional)
+})
 
 const ExploreSidebarBtn: React.FC<PropsExploreSidebarBtn> = ({
   href,
@@ -287,6 +315,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   RentalResults,
   PostsResults,
   BlogsResults,
+  setSnackbar,
 }) => {
   // const showAll = useSelector((state: RootState) => state.search.showAll)
   // const showAllUsers = useSelector(
@@ -384,7 +413,39 @@ const MainContent: React.FC<SearchResultsProps> = ({
     useState<boolean>(false)
   const [hasNoMoreBlogsPages, setHasNoMoreBlogsPages] = useState<boolean>(false)
   const [hasNoMorePostsPages, setHasNoMorePostsPages] = useState<boolean>(false)
+  const [openExploreClass, setOpenExploreClass] = useState<boolean>(false)
+  const [exploreClassHoved, setExploreClassHoved] = useState<boolean>(false)
+  const [openExploreUser, setOpenExploreUser] = useState<boolean>(false)
+  const [exploreUserHoved, setExploreUserHoved] = useState<boolean>(false)
+  const [openExplorePeople, setOpenExplorePeople] = useState<boolean>(false)
+  const [explorePeopleHoved, setExplorePeopleHoved] = useState<boolean>(false)
+  const [openExplorePlace, setOpenExplorePlace] = useState<boolean>(false)
+  const [explorePlaceHoved, setExplorePlaceHoved] = useState<boolean>(false)
+  const [openExploreProgram, setOpenExploreProgram] = useState<boolean>(false)
+  const [exploreProgramHoved, setExploreProgramHoved] = useState<boolean>(false)
+  const [openExploreProduct, setOpenExploreProduct] = useState<boolean>(false)
+  const [exploreProductHoved, setExploreProductHoved] = useState<boolean>(false)
+  const [openExploreRental, setOpenExploreRental] = useState<boolean>(false)
+  const [exploreRentalHoved, setExploreRentalHoved] = useState<boolean>(false)
+  const [openExplorePost, setOpenExplorePost] = useState<boolean>(false)
+  const [explorePostHoved, setExplorePostHoved] = useState<boolean>(false)
+  const [exploreHobbyHoved, setExploreHobbyHoved] = useState<boolean>(false)
+  const [exploreBlogHoved, setExploreBlogHoved] = useState<boolean>(false)
+  const [currUserName, setCurrUserName] = useState<string>('')
+  const [currPostedBy, setCurrPostedBy] = useState<string>('')
 
+  const [defaultPeopleCategory, setDefaultPeopleCategory] =
+    useState<string>('People')
+  const [defaultPlaceCategory, setDefaultPlaceCategory] =
+    useState<string>('Place')
+  const [defaultProgramCategory, setDefaultProgramCategory] =
+    useState<string>('Program')
+  const [defaultProductCategory, setDefaultProductCategory] =
+    useState<string>('Product')
+  const [defaultClassCategory, setDefaultClassCategory] =
+    useState<string>('Classes')
+  const [defaultRentalCategory, setDefaultRentalCategory] =
+    useState<string>('Item Rental')
   // const callForData = async (page: number) => {
   //   if (page === 1) return
   //   setMoreLoading(true)
@@ -450,6 +511,17 @@ const MainContent: React.FC<SearchResultsProps> = ({
   //   [searchLoading, hasMore, currentPage, dispatch],
   // )
 
+  const [hoveredHobbyIndex, setHoveredHobbyIndex] = useState<number>(-1)
+  const [hoveredUserIndex, setHoveredUserIndex] = useState<number>(-1)
+  const [hoveredPeopleIndex, setHoveredPeopleIndex] = useState<number>(-1)
+  const [hoveredPlaceIndex, setHoveredPlaceIndex] = useState<number>(-1)
+  const [hoveredProgramIndex, setHoveredProgramIndex] = useState<number>(-1)
+  const [hoveredProductIndex, setHoveredProductIndex] = useState<number>(-1)
+  const [hoveredClassIndex, setHoveredClassIndex] = useState<number>(-1)
+  const [hoveredRentalIndex, setHoveredRentalIndex] = useState<number>(-1)
+  const [hoveredPostIndex, setHoveredPostIndex] = useState<number>(-1)
+  const [hoveredBlogIndex, setHoveredBlogIndex] = useState<number>(-1)
+
   useEffect(() => {
     if (showAll === true) {
       setHideUser(false)
@@ -460,8 +532,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHideProduct(false)
       setHideBlogs(false)
       setHidePosts(false)
-      setHideClasses(true)
-      setHideRentals(true)
+      setHideClasses(false)
+      setHideRentals(false)
     } else if (showAllUsers === true) {
       setHideHobbies(true)
       setHidePeople(true)
@@ -628,6 +700,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
       try {
         dispatch(setSearchLoading(true))
         let data = {}
+        data = { ...data, is_onboarded: true }
         if (name || hobby || location) {
           if (name) {
             data = { ...data, name: name }
@@ -1250,6 +1323,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       ProductResults.length === 0 &&
       PostsResults.length === 0 &&
       BlogsResults.length === 0 &&
+      ClassesResults.length === 0 &&
+      RentalResults.length === 0 &&
       showAll) ||
     (searchResults.length === 0 && showAllUsers) ||
     (hobbyResults.length === 0 && showAllhobbies) ||
@@ -1258,6 +1333,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
     (EventResults.length === 0 && showAllEvent) ||
     (ProductResults.length === 0 && showAllProducts) ||
     (PostsResults.length === 0 && showAllPosts) ||
+    (ClassesResults.length === 0 && showAllClasses) ||
+    (RentalResults.length === 0 && showAllRentals) ||
     (BlogsResults.length === 0 && showAllBlogs && searchLoading === false)
 
   const isMobile = useMediaQuery('(max-width:1100px)')
@@ -1266,6 +1343,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
     if (isSearchingMore) return
     setIsSearchingMore(true)
     let data = {}
+    data = { ...data, is_onboarded: true }
     if (name || hobby || location) {
       if (name) {
         data = { ...data, name: name }
@@ -1689,6 +1767,19 @@ const MainContent: React.FC<SearchResultsProps> = ({
     fetchMoreProductPages,
   ])
 
+  useEffect(() => {
+    setOpenExploreUser(false)
+    setOpenExplorePeople(false)
+    setOpenExplorePlace(false)
+    setOpenExploreProgram(false)
+    setOpenExploreProduct(false)
+    setOpenExploreClass(false)
+    setOpenExploreRental(false)
+    setOpenExplorePost(false)
+    setCurrUserName('')
+    setCurrPostedBy('')
+  }, [q, filter])
+
   return (
     <main className={styles.searchResults}>
       {noResultsFound && searchLoading === false ? (
@@ -1724,7 +1815,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
           )}
 
           {/* Hobbies */}
-          {!HideHobbies && hobbyPages.length > 0 && searchLoading === false && (
+          {!HideHobbies && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>Hobbies</div>
@@ -1741,7 +1832,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       //     : null
 
                       // }
+                      onMouseEnter={() => setHoveredHobbyIndex(index)}
+                      onMouseLeave={() => setHoveredHobbyIndex(-1)}
                     >
+                      {hoveredHobbyIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
                       <div className={styles.hobbyAvtar}>
                         {/* Render the image */}
                         {hobby.profile_image ? (
@@ -1777,16 +1877,33 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{hobby.display}</div>
                         <div className={styles.userTagline}>
-                          {`${
-                            hobby?.category?.display
-                              ? hobby.category.display
-                              : ''
-                          }${
-                            hobby?.sub_category?.display
-                              ? ' | ' + hobby.sub_category.display
-                              : ''
-                          }`}
-                          &nbsp;
+                          <span>
+                            {hobby?.level === 0
+                              ? 'Category'
+                              : hobby?.level === 1
+                              ? 'Sub-Category'
+                              : hobby?.level === 2
+                              ? 'Hobby Tag'
+                              : hobby?.level === 3
+                              ? 'Hobby'
+                              : hobby?.level === 5
+                              ? 'Genre/Style'
+                              : 'Hobby'}
+                          </span>
+                          {hobby?.level !== 0 && (
+                            <>
+                              {' | '}
+                              <span>
+                                {hobby?.category?.display}
+                                {hobby?.level > 1 && (
+                                  <>
+                                    ,{` `}
+                                    {hobby?.sub_category?.display}
+                                  </>
+                                )}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className={styles.hobbydescription}>
                           {hobby?.description}
@@ -1799,26 +1916,54 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreHobbies ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllhobbies
-                    ? undefined
-                    : (hobbyResults.length > 3 ? (
+                {showAllhobbies
+                  ? undefined
+                  : (hobbyResults ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllhobbies}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']} ${
+                            hobbyResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={hobbyResults.length <= 3}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
-                </div>
+                        <button
+                          onClick={() => router.push('/hobby')}
+                          onMouseEnter={() => setExploreHobbyHoved(true)}
+                          onMouseLeave={() => setExploreHobbyHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!exploreHobbyHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrowRight}`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrowRight}`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
               </div>
             </section>
           )}
 
           {/* User  */}
-          {!HideUser && userPages.length > 0 && searchLoading === false && (
+          {!HideUser && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>User Profiles</div>
@@ -1829,7 +1974,17 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToProfile(user.profile_url)}
+                      onMouseEnter={() => setHoveredUserIndex(index)}
+                      onMouseLeave={() => setHoveredUserIndex(-1)}
                     >
+                      {hoveredUserIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+
                       <div className={styles.userAvatar}>
                         {user?.profile_image ? (
                           <img
@@ -1848,10 +2003,85 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{user?.full_name}</div>
                         <div className={styles.userTagline}>
-                          {user?.tagline || '\u00a0'}
+                          {user?.tagline ? (
+                            user?.tagline
+                          ) : (
+                            <UserHobbies user={user} />
+                          )}
                         </div>
                         <div className={styles.userLocation}>
+                          {(user?.preferences
+                            ? user?.preferences?.location_visibility ===
+                                'My Society'
+                            : false)?user.primary_address?.society:""}
+                          {user.primary_address?.society &&
+                          user.primary_address?.locality &&
+                          (user?.preferences
+                            ? user?.preferences?.location_visibility ===
+                                'My Society'
+                            : false)
+                            ? ', '
+                            : ''}
+                          {(user?.preferences
+                            ? user?.preferences?.location_visibility ===
+                                'My Society' ||
+                              user?.preferences?.location_visibility ===
+                                'My Locality'
+                            : false)?user.primary_address?.locality:""}
+                          {user.primary_address?.city &&
+                          user.primary_address?.locality &&
+                          (user?.preferences
+                            ? user?.preferences?.location_visibility ===
+                                'My Society' ||
+                              user?.preferences?.location_visibility ===
+                                'My Locality'
+                            : false)
+                            ? ', '
+                            : ''}
                           {user.primary_address?.city || '\u00a0'}
+                          {user?.tagline &&
+                          user.primary_address?.city &&
+                          user?._hobbies?.length > 0
+                            ? ' | '
+                            : ''}
+                          {/* {user?.tagline && <UserHobbies user={user}/>} */}
+                          {user?.tagline && (
+                            <span className={styles.truncate}>
+                              {`${
+                                user?._hobbies[0]?.hobby?.display
+                                  ? user?._hobbies[0]?.hobby?.display
+                                  : ''
+                              }${
+                                user?._hobbies[0]?.genre?.display
+                                  ? ' - ' + user?._hobbies[0]?.genre?.display
+                                  : ''
+                              }`}
+                              {user?._hobbies[1]?.hobby?.display ? ', ' : ''}
+                              {`${
+                                user?._hobbies[1]?.hobby?.display
+                                  ? user?._hobbies[1]?.hobby?.display
+                                  : ''
+                              }${
+                                user?._hobbies[1]?.genre?.display
+                                  ? ' - ' + user?._hobbies[1]?.genre?.display
+                                  : ''
+                              }`}
+                              {user?._hobbies[2]?.hobby?.display ? ', ' : ''}
+                              {`${
+                                user?._hobbies[2]?.hobby?.display
+                                  ? user?._hobbies[2]?.hobby?.display
+                                  : ''
+                              }${
+                                user?._hobbies[2]?.genre?.display
+                                  ? ' - ' + user?._hobbies[2]?.genre?.display
+                                  : ''
+                              }${
+                                user?._hobbies?.length > 3
+                                  ? ' (+' + (user?._hobbies?.length - 3) + ')'
+                                  : ''
+                              }`}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -1861,25 +2091,80 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreUsers ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllUsers
-                    ? undefined
-                    : (userPages.length > 3 ? (
+                {showAllUsers
+                  ? undefined
+                  : (userPages ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllusers}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']} ${
+                            userPages.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={userPages.length <= 3}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
+                        <button
+                          onClick={() => setOpenExploreUser(!openExploreUser)}
+                          onMouseEnter={() => setExploreUserHoved(true)}
+                          onMouseLeave={() => setExploreUserHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+
+                          {!exploreUserHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreUser ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreUser ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExploreUser ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <UserExplore
+                    currUserName={currUserName}
+                    setCurrUserName={setCurrUserName}
+                  />
+                </div>
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    hasNoMoreUsers
+                      ? `${styles.visible} ${styles.singlePageExplore}`
+                      : styles.hidden
+                  } ${!filter ? styles.hidden : ''}`}
+                >
+                  <UserExplore
+                    currUserName={currUserName}
+                    setCurrUserName={setCurrUserName}
+                  />
                 </div>
               </div>
             </section>
           )}
           {/* People */}
-          {!HidePeople && peoplePages.length > 0 && searchLoading === false && (
+          {!HidePeople && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 {!isExplore && (
@@ -1892,7 +2177,17 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToPeoplePage(page.page_url)}
+                      onMouseEnter={() => setHoveredPeopleIndex(index)}
+                      onMouseLeave={() => setHoveredPeopleIndex(-1)}
                     >
+                      {hoveredPeopleIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
                           <img
@@ -1911,7 +2206,47 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{page?.title}</div>
                         <div className={styles.userTagline}>
-                          {page?.tagline || '\u00a0'}
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._hobbies[0]?.hobby?.display
+                                    ? page?._hobbies[0]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[0]?.genre?.display
+                                    ? ' - ' + page?._hobbies[0]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[1]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[1]?.hobby?.display
+                                    ? page?._hobbies[1]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[1]?.genre?.display
+                                    ? ' - ' + page?._hobbies[1]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[2]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[2]?.hobby?.display
+                                    ? page?._hobbies[2]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[2]?.genre?.display
+                                    ? ' - ' + page?._hobbies[2]?.genre?.display
+                                    : ''
+                                }${
+                                  page?._hobbies?.length > 3
+                                    ? ' (+' + (page?._hobbies?.length - 3) + ')'
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className={styles.userLocation}>
                           {page.page_type.map((item, idx) => {
@@ -1933,25 +2268,85 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePersonPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllPeople
-                    ? undefined
-                    : (peopleResults.length > 3 ? (
+                {showAllPeople
+                  ? undefined
+                  : (peopleResults ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllpeople}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']} ${
+                            peopleResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={peopleResults.length <= 3}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
+                        <button
+                          onClick={() =>
+                            setOpenExplorePeople(!openExplorePeople)
+                          }
+                          onMouseEnter={() => setExplorePeopleHoved(true)}
+                          onMouseLeave={() => setExplorePeopleHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!explorePeopleHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePeople
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePeople
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExplorePeople ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PExplore
+                    categoryValue={defaultPeopleCategory}
+                    setCategoryValue={setDefaultPeopleCategory}
+                  />
+                </div>
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    hasNoMorePersonPages
+                      ? `${styles.visible} ${styles.singlePageExplore}`
+                      : styles.hidden
+                  } ${!filter ? styles.hidden : ''}`}
+                >
+                  <PExplore
+                    categoryValue={defaultPeopleCategory}
+                    setCategoryValue={setDefaultPeopleCategory}
+                  />
                 </div>
               </div>
             </section>
           )}
           {/* Place  */}
-          {!HidePlace && placeResults.length > 0 && searchLoading === false && (
+          {!HidePlace && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 {!isExplore && (
@@ -1964,7 +2359,17 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToPlacePage(page.page_url)}
+                      onMouseEnter={() => setHoveredPlaceIndex(index)}
+                      onMouseLeave={() => setHoveredPlaceIndex(-1)}
                     >
+                      {hoveredPlaceIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
                           <img
@@ -1983,10 +2388,36 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{page?.title}</div>
                         <div className={styles.userTagline}>
-                          {page?.tagline || '\u00a0'}
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._address?.society
+                                    ? page?._address?.society
+                                    : ''
+                                }`}
+                                {page?._address?.locality ? ', ' : ''}
+                                {`${
+                                  page?._address?.locality
+                                    ? page?._address?.locality
+                                    : ''
+                                }`}
+                                {page?._address?.city ? ', ' : ''}
+                                {`${
+                                  page?._address?.city
+                                    ? page?._address?.city
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type +
+                          {page?.page_type?.map((pt: string, index: number) => {
+                            return `${index > 0 ? ' ' : ''}${pt}`
+                          }) +
                             (page._address?.city
                               ? ` | ${page._address?.city}`
                               : '') || '\u00a0'}
@@ -1999,26 +2430,80 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePlacePages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllPlace
-                    ? undefined
-                    : (placeResults.length > 3 ? (
+                {showAllPlace
+                  ? undefined
+                  : (placeResults ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllplace}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']} ${
+                            placeResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={placeResults.length <= 3}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
+                        <button
+                          onClick={() => setOpenExplorePlace(!openExplorePlace)}
+                          onMouseEnter={() => setExplorePlaceHoved(true)}
+                          onMouseLeave={() => setExplorePlaceHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!explorePlaceHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePlace ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePlace ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExplorePlace ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PExplore
+                    categoryValue={defaultPlaceCategory}
+                    setCategoryValue={setDefaultPlaceCategory}
+                  />
+                </div>
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    hasNoMorePlacePages
+                      ? `${styles.visible} ${styles.singlePageExplore}`
+                      : styles.hidden
+                  } ${!filter ? styles.hidden : ''}`}
+                >
+                  <PExplore
+                    categoryValue={defaultPlaceCategory}
+                    setCategoryValue={setDefaultPlaceCategory}
+                  />
                 </div>
               </div>
             </section>
           )}
 
           {/* Event  */}
-          {!HideEvent && EventResults.length > 0 && searchLoading === false && (
+          {!HideEvent && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 {!isExplore && (
@@ -2030,7 +2515,17 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToProgramPage(page.page_url)}
+                      onMouseEnter={() => setHoveredProgramIndex(index)}
+                      onMouseLeave={() => setHoveredProgramIndex(-1)}
                     >
+                      {hoveredProgramIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
                           <img
@@ -2049,180 +2544,57 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{page?.title}</div>
                         <div className={styles.userTagline}>
-                          {page?.tagline || '\u00a0'}
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._address?.society
+                                    ? page?._address?.society
+                                    : ''
+                                }`}
+                                {page?._address?.society &&
+                                page?._address?.locality
+                                  ? ', '
+                                  : ''}
+                                {`${
+                                  page?._address?.locality
+                                    ? page?._address?.locality
+                                    : ''
+                                }`}
+                                {page?._address?.locality &&
+                                page?._address?.city
+                                  ? ', '
+                                  : ''}
+                                {`${
+                                  page?._address?.city
+                                    ? page?._address?.city
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
                         </div>
-                        <div className={styles.userLocation}>
-                          {page.page_type +
-                            (page._address?.city
-                              ? ` | ${page._address?.city}`
-                              : '') || '\u00a0'}
-                          {page?.event_date_time &&
-                            page?.event_date_time.length !== 0 && (
-                              <>
-                                {' | '}
-                                {formatDateRange(page?.event_date_time[0])}
-                                {!isMobile && (
-                                  <>
-                                    {', '}
-                                    {page?.event_date_time[0]?.from_time +
-                                      ' - '}
-                                    {page?.event_weekdays?.length > 0 ? (
-                                      <>
-                                        ...
-                                        <span className={styles['purpleText']}>
-                                          more
-                                        </span>
-                                      </>
-                                    ) : (
-                                      page?.event_date_time[0]?.to_time
-                                    )}
-                                  </>
-                                )}
-                              </>
-                            )}
-                        </div>
-                      </div>
-                    </div>
-                  ),
-                )}
-                {showAllEvent && (
-                  <div className={styles.loaders}>
-                    {!hasNoMoreProgramPages ? <SearchLoader /> : ''}
-                  </div>
-                )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllEvent
-                    ? undefined
-                    : (EventResults.length > 3 ? (
-                        <button
-                          onClick={toggleShowAllevent}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
-                        >
-                          View More
-                        </button>
-                      ) : (
-                        ''
-                      )) || ''}
-                </div>
-              </div>
-            </section>
-          )}
-          {/* Product  */}
-          {!HideProduct &&
-            ProductResults.length > 0 &&
-            searchLoading === false && (
-              <section className={styles.userSection}>
-                <div className={styles.peopleItemsContainer}>
-                  {!isExplore && (
-                    <div className={styles.resultHeading}>Products</div>
-                  )}
+                        <div className={styles.programDetails}>
+                          <div className={styles.address}>
+                            {page?.page_type?.map(
+                              (pt: string, index: number) => {
+                                return `${index > 0 ? ' ' : ''}${pt}`
+                              },
+                            ) +
+                              (page._address?.city
+                                ? ` | ${page._address?.city}`
+                                : '') || '\u00a0'}
+                          </div>
 
-                  {ProductResults.slice(0, showAllProducts ? undefined : 3).map(
-                    (page, index) => (
-                      <div
-                        className={styles.peopleItem}
-                        key={index}
-                        onClick={() => navigateToProductPage(page.page_url)}
-                      >
-                        <div className={styles.peopleAvatar}>
-                          {page.profile_image ? (
-                            <img
-                              src={page.profile_image}
-                              alt={`${page.title}'s `}
-                              width={64}
-                              height={64}
-                              className={styles.peopleavatarImage}
-                            />
-                          ) : (
-                            <div
-                              className={`${styles['people-img']} default-product-listing-icon`}
-                            ></div>
-                          )}
-                        </div>
-                        <div className={styles.userDetails}>
-                          <div className={styles.userName}>{page?.title}</div>
-                          <div className={styles.userTagline}>
-                            {page?.tagline || '\u00a0'}
-                          </div>
-                          <div className={styles.userLocation}>
-                            {page.page_type +
-                              (page._address?.city
-                                ? ` | ${page._address?.city}`
-                                : '') || '\u00a0'}
-                          </div>
-                        </div>
-                      </div>
-                    ),
-                  )}
-                  {showAllProducts && (
-                    <div className={styles.loaders}>
-                      {!hasNoMoreProductPages ? <SearchLoader /> : ''}
-                    </div>
-                  )}
-                  <div className={styles['view-more-btn-container']}>
-                    {showAllProducts
-                      ? undefined
-                      : (ProductResults.length > 3 ? (
-                          <button
-                            onClick={toggleShowAllproducts}
-                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
-                          >
-                            View More
-                          </button>
-                        ) : (
-                          ''
-                        )) || ''}
-                  </div>
-                </div>
-              </section>
-            )}
-          {/* Classes  */}
-          {!HideClasses &&
-            ClassesResults.length > 0 &&
-            searchLoading === false && (
-              <section className={styles.userSection}>
-                <div className={styles.peopleItemsContainer}>
-                  {!isExplore && (
-                    <div className={styles.resultHeading}>Classes</div>
-                  )}
-                  {ClassesResults.slice(0, showAllClasses ? undefined : 3).map(
-                    (page, index) => (
-                      <div
-                        className={styles.peopleItem}
-                        key={index}
-                        onClick={() => navigateToProgramPage(page.page_url)}
-                      >
-                        <div className={styles.peopleAvatar}>
-                          {page.profile_image ? (
-                            <img
-                              src={page.profile_image}
-                              alt={`${page.title}'s `}
-                              width={64}
-                              height={64}
-                              className={styles.peopleavatarImage}
-                            />
-                          ) : (
-                            <div
-                              className={`${styles['people-img']} default-program-listing-icon`}
-                            ></div>
-                          )}
-                        </div>
-                        <div className={styles.userDetails}>
-                          <div className={styles.userName}>{page?.title}</div>
-                          <div className={styles.userTagline}>
-                            {page?.tagline || '\u00a0'}
-                          </div>
-                          <div className={styles.userLocation}>
-                            {page.page_type +
-                              (page._address?.city
-                                ? ` | ${page._address?.city}`
-                                : '') || '\u00a0'}
+                          <>
                             {page?.event_date_time &&
                               page?.event_date_time.length !== 0 && (
-                                <>
+                                <span>
                                   {' | '}
                                   {formatDateRange(page?.event_date_time[0])}
-                                  {!isMobile && (
+                                  {/* {!isMobile && (
                                     <>
                                       {', '}
                                       {page?.event_date_time[0]?.from_time +
@@ -2240,96 +2612,612 @@ const MainContent: React.FC<SearchResultsProps> = ({
                                         page?.event_date_time[0]?.to_time
                                       )}
                                     </>
-                                  )}
-                                </>
+                                  )} */}
+                                </span>
                               )}
-                          </div>
+                          </>
                         </div>
                       </div>
-                    ),
-                  )}
-                  <div className={styles['view-more-btn-container']}>
-                    {showAllClasses
-                      ? undefined
-                      : (ClassesResults.length > 3 ? (
-                          <button
-                            onClick={toggleShowAllclasses}
-                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
-                          >
-                            View More
-                          </button>
-                        ) : (
-                          ''
-                        )) || ''}
+                    </div>
+                  ),
+                )}
+                {showAllEvent && (
+                  <div className={styles.loaders}>
+                    {!hasNoMoreProgramPages ? <SearchLoader /> : ''}
                   </div>
+                )}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    hasNoMoreProgramPages && filter
+                      ? `${styles.visible} ${styles.singlePageExplore}`
+                      : styles.hidden
+                  } `}
+                >
+                  <PExplore
+                    categoryValue={defaultProgramCategory}
+                    setCategoryValue={setDefaultProgramCategory}
+                  />
                 </div>
-              </section>
-            )}
-          {/* Rentals  */}
-          {!HideRentals &&
-            RentalResults.length > 0 &&
-            searchLoading === false && (
-              <section className={styles.userSection}>
-                <div className={styles.peopleItemsContainer}>
-                  {!isExplore && (
-                    <div className={styles.resultHeading}>Rentals</div>
-                  )}
-                  {RentalResults.slice(0, showAllRentals ? undefined : 3).map(
-                    (page, index) => (
-                      <div
-                        className={styles.peopleItem}
-                        key={index}
-                        onClick={() => navigateToProductPage(page.page_url)}
-                      >
-                        <div className={styles.peopleAvatar}>
-                          {page.profile_image ? (
-                            <img
-                              src={page.profile_image}
-                              alt={`${page.title}'s `}
-                              width={64}
-                              height={64}
-                              className={styles.peopleavatarImage}
+                {showAllEvent
+                  ? undefined
+                  : (EventResults ? (
+                      <div className={styles['view-more-btn-container']}>
+                        <button
+                          onClick={toggleShowAllevent}
+                          className={`${styles['view-more-btn']} ${
+                            EventResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={EventResults.length <= 3}
+                        >
+                          View More
+                        </button>
+                        <button
+                          onClick={() =>
+                            setOpenExploreProgram(!openExploreProgram)
+                          }
+                          onMouseEnter={() => setExploreProgramHoved(true)}
+                          onMouseLeave={() => setExploreProgramHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!exploreProgramHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreProgram
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
                             />
                           ) : (
-                            <div
-                              className={`${styles['people-img']} default-product-listing-icon`}
-                            ></div>
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreProgram
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExploreProgram ? styles.visible : styles.hidden
+                  } `}
+                >
+                  <PExplore
+                    categoryValue={defaultProgramCategory}
+                    setCategoryValue={setDefaultProgramCategory}
+                  />
+                </div>
+              </div>
+            </section>
+          )}
+          {/* Product  */}
+          {!HideProduct && searchLoading === false && (
+            <section className={styles.userSection}>
+              <div className={styles.peopleItemsContainer}>
+                {!isExplore && (
+                  <div className={styles.resultHeading}>Products</div>
+                )}
+
+                {ProductResults.slice(0, showAllProducts ? undefined : 3).map(
+                  (page, index) => (
+                    <div
+                      className={styles.peopleItem}
+                      key={index}
+                      onClick={() => navigateToProductPage(page.page_url)}
+                      onMouseEnter={() => setHoveredProductIndex(index)}
+                      onMouseLeave={() => setHoveredProductIndex(-1)}
+                    >
+                      {hoveredProductIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+
+                      <div className={styles.peopleAvatar}>
+                        {page.profile_image ? (
+                          <img
+                            src={page.profile_image}
+                            alt={`${page.title}'s `}
+                            width={64}
+                            height={64}
+                            className={styles.peopleavatarImage}
+                          />
+                        ) : (
+                          <div
+                            className={`${styles['people-img']} default-product-listing-icon`}
+                          ></div>
+                        )}
+                      </div>
+                      <div className={styles.userDetails}>
+                        <div className={styles.userName}>{page?.title}</div>
+                        <div className={styles.userTagline}>
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._hobbies[0]?.hobby?.display
+                                    ? page?._hobbies[0]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[0]?.genre?.display
+                                    ? ' - ' + page?._hobbies[0]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[1]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[1]?.hobby?.display
+                                    ? page?._hobbies[1]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[1]?.genre?.display
+                                    ? ' - ' + page?._hobbies[1]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[2]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[2]?.hobby?.display
+                                    ? page?._hobbies[2]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[2]?.genre?.display
+                                    ? ' - ' + page?._hobbies[2]?.genre?.display
+                                    : ''
+                                }${
+                                  page?._hobbies?.length > 3
+                                    ? ' (+' + (page?._hobbies?.length - 3) + ')'
+                                    : ''
+                                }`}
+                              </span>
+                            </>
                           )}
                         </div>
-                        <div className={styles.userDetails}>
-                          <div className={styles.userName}>{page?.title}</div>
-                          <div className={styles.userTagline}>
-                            {page?.tagline || '\u00a0'}
-                          </div>
-                          <div className={styles.userLocation}>
-                            {page.page_type +
+                        <div
+                          className={`${styles.userLocation} ${inter.className}`}
+                        >
+                          {page?.page_type?.map((pt: string, index: number) => {
+                            return `${index > 0 ? ' ' : ''}${pt}`
+                          }) +
+                            (page?.product_variant?.variations[0]?.value
+                              ? ` | ₹${page?.product_variant?.variations[0]?.value}`
+                              : ` | ₹0`) || '\u00a0'}
+                        </div>
+                      </div>
+                    </div>
+                  ),
+                )}
+                {showAllProducts && (
+                  <div className={styles.loaders}>
+                    {!hasNoMoreProductPages ? <SearchLoader /> : ''}
+                  </div>
+                )}
+                {showAllProducts
+                  ? undefined
+                  : (ProductResults ? (
+                      <div className={styles['view-more-btn-container']}>
+                        <button
+                          onClick={toggleShowAllproducts}
+                          className={`${styles['view-more-btn']} ${
+                            ProductResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={ProductResults.length <= 3}
+                        >
+                          View More
+                        </button>
+                        <button
+                          onClick={() =>
+                            setOpenExploreProduct(!openExploreProduct)
+                          }
+                          onMouseEnter={() => setExploreProductHoved(true)}
+                          onMouseLeave={() => setExploreProductHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!exploreProductHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreProduct
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreProduct
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExploreProduct ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PExplore
+                    categoryValue={defaultProductCategory}
+                    setCategoryValue={setDefaultProductCategory}
+                  />
+                </div>
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    hasNoMoreProductPages
+                      ? `${styles.visible} ${styles.singlePageExplore}`
+                      : styles.hidden
+                  } ${!filter ? styles.hidden : ''}`}
+                >
+                  <PExplore
+                    categoryValue={defaultProductCategory}
+                    setCategoryValue={setDefaultProductCategory}
+                  />
+                </div>
+              </div>
+            </section>
+          )}
+          {/* Classes  */}
+          {!HideClasses && searchLoading === false && (
+            <section className={styles.userSection}>
+              <div className={styles.peopleItemsContainer}>
+                {!isExplore && (
+                  <div className={styles.resultHeading}>Classes</div>
+                )}
+                {ClassesResults.slice(0, showAllClasses ? undefined : 3).map(
+                  (page, index) => (
+                    <div
+                      className={styles.peopleItem}
+                      key={index}
+                      onClick={() => navigateToProgramPage(page.page_url)}
+                      onMouseEnter={() => setHoveredClassIndex(index)}
+                      onMouseLeave={() => setHoveredClassIndex(-1)}
+                    >
+                      {hoveredClassIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+
+                      <div className={styles.peopleAvatar}>
+                        {page.profile_image ? (
+                          <img
+                            src={page.profile_image}
+                            alt={`${page.title}'s `}
+                            width={64}
+                            height={64}
+                            className={styles.peopleavatarImage}
+                          />
+                        ) : (
+                          <div
+                            className={`${styles['people-img']} default-program-listing-icon`}
+                          ></div>
+                        )}
+                      </div>
+                      <div className={styles.userDetails}>
+                        <div className={styles.userName}>{page?.title}</div>
+                        <div className={styles.userTagline}>
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._address?.society
+                                    ? page?._address?.society
+                                    : ''
+                                }`}
+                                {page?._address?.society &&
+                                page?._address?.locality
+                                  ? ', '
+                                  : ''}
+                                {`${
+                                  page?._address?.locality
+                                    ? page?._address?.locality
+                                    : ''
+                                }`}
+                                {page?._address?.locality &&
+                                page?._address?.city
+                                  ? ', '
+                                  : ''}
+                                {`${
+                                  page?._address?.city
+                                    ? page?._address?.city
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                        <div className={styles.blogAuthor}>
+                          <div className={styles.address}>
+                            {page?.page_type?.map(
+                              (pt: string, index: number) => {
+                                return `${index > 0 ? ' ' : ''}${pt}`
+                              },
+                            ) +
                               (page._address?.city
                                 ? ` | ${page._address?.city}`
                                 : '') || '\u00a0'}
                           </div>
+
+                          <>
+                            {page?.event_date_time &&
+                              page?.event_date_time.length !== 0 && (
+                                <span>
+                                  {' | '}
+                                  {formatDateRange(page?.event_date_time[0])}
+                                </span>
+                              )}
+                          </>
                         </div>
                       </div>
-                    ),
-                  )}
-                  <div className={styles['view-more-btn-container']}>
-                    {showAllRentals
-                      ? undefined
-                      : (RentalResults.length > 3 ? (
-                          <button
-                            onClick={toggleShowAllrentals}
-                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
-                          >
-                            View More
-                          </button>
-                        ) : (
-                          ''
-                        )) || ''}
-                  </div>
+                    </div>
+                  ),
+                )}
+                {showAllClasses
+                  ? undefined
+                  : (ClassesResults ? (
+                      <div className={styles['view-more-btn-container']}>
+                        <button
+                          onClick={toggleShowAllclasses}
+                          className={`${styles['view-more-btn']} ${
+                            ClassesResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={ClassesResults.length <= 3}
+                        >
+                          View More
+                        </button>
+                        <button
+                          onClick={() => setOpenExploreClass(!openExploreClass)}
+                          onMouseEnter={() => setExploreClassHoved(true)}
+                          onMouseLeave={() => setExploreClassHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!exploreClassHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreClass ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreClass ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExploreClass ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PExplore
+                    categoryValue={defaultClassCategory}
+                    setCategoryValue={setDefaultClassCategory}
+                  />
                 </div>
-              </section>
-            )}
+                {/* <div
+                  className={`${styles.userExploreContainer} ${hasNoMoreProgramPages ? `${styles.visible} ${styles.singlePageExplore}`:styles.hidden} ${!filter ? styles.hidden : ''}`}
+                >
+                  <PExplore
+                    categoryValue={defaultProgramCategory}
+                    setCategoryValue={setDefaultProgramCategory}
+                  />
+                </div> */}
+              </div>
+            </section>
+          )}
+          {/* Rentals  */}
+          {!HideRentals && searchLoading === false && (
+            <section className={styles.userSection}>
+              <div className={styles.peopleItemsContainer}>
+                {!isExplore && (
+                  <div className={styles.resultHeading}>Rentals</div>
+                )}
+                {RentalResults.slice(0, showAllRentals ? undefined : 3).map(
+                  (page, index) => (
+                    <div
+                      className={styles.peopleItem}
+                      key={index}
+                      onClick={() => navigateToProductPage(page.page_url)}
+                      onMouseEnter={() => setHoveredRentalIndex(index)}
+                      onMouseLeave={() => setHoveredRentalIndex(-1)}
+                    >
+                      {hoveredRentalIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+
+                      <div className={styles.peopleAvatar}>
+                        {page.profile_image ? (
+                          <img
+                            src={page.profile_image}
+                            alt={`${page.title}'s `}
+                            width={64}
+                            height={64}
+                            className={styles.peopleavatarImage}
+                          />
+                        ) : (
+                          <div
+                            className={`${styles['people-img']} default-product-listing-icon`}
+                          ></div>
+                        )}
+                      </div>
+                      <div className={styles.userDetails}>
+                        <div className={styles.userName}>{page?.title}</div>
+                        <div className={styles.userTagline}>
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <>
+                              <span>
+                                {`${
+                                  page?._hobbies[0]?.hobby?.display
+                                    ? page?._hobbies[0]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[0]?.genre?.display
+                                    ? ' - ' + page?._hobbies[0]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[1]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[1]?.hobby?.display
+                                    ? page?._hobbies[1]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[1]?.genre?.display
+                                    ? ' - ' + page?._hobbies[1]?.genre?.display
+                                    : ''
+                                }`}
+                                {page?._hobbies[2]?.hobby?.display ? ', ' : ''}
+                                {`${
+                                  page?._hobbies[2]?.hobby?.display
+                                    ? page?._hobbies[2]?.hobby?.display
+                                    : ''
+                                }${
+                                  page?._hobbies[2]?.genre?.display
+                                    ? ' - ' + page?._hobbies[2]?.genre?.display
+                                    : ''
+                                }`}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                        <div className={styles.userLocation}>
+                          {page?.page_type?.map((pt: string, index: number) => {
+                            return `${index > 0 ? ' ' : ''}${pt}`
+                          }) +
+                            (page._address?.city
+                              ? ` | ${page._address?.city}`
+                              : '') || '\u00a0'}
+                        </div>
+                      </div>
+                    </div>
+                  ),
+                )}
+                {showAllRentals
+                  ? undefined
+                  : (RentalResults ? (
+                      <div className={styles['view-more-btn-container']}>
+                        <button
+                          onClick={toggleShowAllrentals}
+                          className={`${styles['view-more-btn']} ${
+                            RentalResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={RentalResults.length <= 3}
+                        >
+                          View More
+                        </button>
+                        <button
+                          onClick={() =>
+                            setOpenExploreRental(!openExploreRental)
+                          }
+                          onMouseEnter={() => setExploreRentalHoved(true)}
+                          onMouseLeave={() => setExploreRentalHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!exploreRentalHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreRental
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExploreRental
+                                  ? `${styles.arrowRotated}`
+                                  : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExploreRental ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PExplore
+                    categoryValue={defaultRentalCategory}
+                    setCategoryValue={setDefaultRentalCategory}
+                  />
+                </div>
+                {/* <div
+                  className={`${styles.userExploreContainer} ${hasNoMoreProgramPages ? `${styles.visible} ${styles.singlePageExplore}`:styles.hidden} ${!filter ? styles.hidden : ''}`}
+                >
+                  <PExplore
+                    categoryValue={defaultProgramCategory}
+                    setCategoryValue={setDefaultProgramCategory}
+                  />
+                </div> */}
+              </div>
+            </section>
+          )}
           {/* Posts  */}
-          {!HidePosts && PostsResults.length > 0 && searchLoading === false && (
+          {!HidePosts && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 {!isExplore && (
@@ -2341,7 +3229,17 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToPosts(page._id)}
+                      onMouseEnter={() => setHoveredPostIndex(index)}
+                      onMouseLeave={() => setHoveredPostIndex(-1)}
                     >
+                      {hoveredPostIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+
                       <div
                         className={
                           page?.author_type === 'User'
@@ -2384,8 +3282,41 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             : page?._author?.title}
                         </div>
                         <div className={styles.userTagline}>
-                          {convertDateToString(page?.createdAt) || '\u00a0'}{' '}
-                          {' | ' + page?._hobby.display || '\u00a0'}{' '}
+                          {convertDateToString(page?.createdAt) || '\u00a0'}
+                          {' | '}
+                          {page?._allHobbies?._hobby1?.display ? (
+                            <>
+                              {`${page?._allHobbies?._hobby1?.display}${
+                                page?._allHobbies?._genre1?.display
+                                  ? ' - ' + page?._allHobbies?._genre1?.display
+                                  : ''
+                              }`}
+                              {page?._allHobbies?._hobby2?.display ? ', ' : ''}
+                              {`${
+                                page?._allHobbies?._hobby2?.display
+                                  ? page?._allHobbies?._hobby2?.display
+                                  : ''
+                              }${
+                                page?._allHobbies?._genre2?.display
+                                  ? ' - ' + page?._allHobbies?._genre2?.display
+                                  : ''
+                              }`}
+                              {page?._allHobbies?._hobby3?.display ? ', ' : ''}
+                              {`${
+                                page?._allHobbies?._hobby3?.display
+                                  ? page?._allHobbies?._hobby3?.display
+                                  : ''
+                              }${
+                                page?._allHobbies?._genre3?.display
+                                  ? ' - ' + page?._allHobbies?._genre3?.display
+                                  : ''
+                              }`}
+                            </>
+                          ) : (
+                            <span>{`${page?._hobby?.display}${
+                              page._genre ? ' - ' + page?._genre?.display : ''
+                            }`}</span>
+                          )}
                           {' | ' + page.visibility}
                         </div>
                         <div
@@ -2403,25 +3334,80 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMorePostsPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllPosts
-                    ? undefined
-                    : (PostsResults.length > 3 ? (
+                {showAllPosts
+                  ? undefined
+                  : (PostsResults ? (
+                      // toggleShowAllposts
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllposts}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']} ${
+                            PostsResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={PostsResults.length <= 3}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
+                        <button
+                          onClick={() => setOpenExplorePost(!openExplorePost)}
+                          onMouseEnter={() => setExplorePostHoved(true)}
+                          onMouseLeave={() => setExplorePostHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!explorePostHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePost ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrow} ${
+                                openExplorePost ? `${styles.arrowRotated}` : ''
+                              }`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    openExplorePost ? styles.visible : styles.hidden
+                  }`}
+                >
+                  <PostExplore
+                    currPostedBy={currPostedBy}
+                    setCurrPostedBy={setCurrPostedBy}
+                  />
+                </div>
+                <div
+                  className={`${styles.userExploreContainer} ${
+                    hasNoMorePostsPages
+                      ? `${styles.visible} ${styles.singlePageExplore}`
+                      : styles.hidden
+                  } ${!filter ? styles.hidden : ''}`}
+                >
+                  <PostExplore
+                    currPostedBy={currPostedBy}
+                    setCurrPostedBy={setCurrPostedBy}
+                  />
                 </div>
               </div>
             </section>
           )}
           {/* Blogs  */}
-          {!HideBlogs && BlogsResults.length > 0 && searchLoading === false && (
+          {!HideBlogs && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 {!isExplore && (
@@ -2433,7 +3419,17 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       className={styles.peopleItem}
                       key={index}
                       onClick={() => navigateToBlog(page.url)}
+                      onMouseEnter={() => setHoveredBlogIndex(index)}
+                      onMouseLeave={() => setHoveredBlogIndex(-1)}
                     >
+                      {hoveredBlogIndex === index ? (
+                        <div className={styles['bookmark']}>
+                          <BookmarkOnCards setSnackbar={setSnackbar} />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+
                       <div className={styles.peopleAvatar}>
                         {page.cover_pic ? (
                           <img
@@ -2454,11 +3450,15 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.userTagline}>
                           {page?.tagline || '\u00a0'}
                         </div>
-                        <div className={styles.userLocation}>
-                          {page?.author?.full_name}{' '}
-                          {page.createdAt
-                            ? ' | ' + formatDateTimeThree(page.createdAt)
-                            : ''}
+                        <div className={styles.blogAuthor}>
+                          <div className={styles.full_name}>
+                            {page?.author?.full_name}{' '}
+                          </div>
+                          <div>
+                            {page.createdAt
+                              ? ' | ' + formatDateTimeThree(page.createdAt)
+                              : ''}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2469,20 +3469,48 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     {!hasNoMoreBlogsPages ? <SearchLoader /> : ''}
                   </div>
                 )}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllBlogs
-                    ? undefined
-                    : (BlogsResults.length > 3 ? (
+                {showAllBlogs
+                  ? undefined
+                  : (BlogsResults ? (
+                      <div className={styles['view-more-btn-container']}>
                         <button
                           onClick={toggleShowAllblogs}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          className={`${styles['view-more-btn']} ${
+                            BlogsResults.length <= 3 ? styles.btnDisabled : ''
+                          }`}
+                          disabled={BlogsResults.length <= 3}
                         >
                           View More
                         </button>
-                      ) : (
-                        ''
-                      )) || ''}
-                </div>
+                        <button
+                          onClick={() => router.push('/blog')}
+                          onMouseEnter={() => setExploreBlogHoved(true)}
+                          onMouseLeave={() => setExploreBlogHoved(false)}
+                          className={`${styles['explore-btn']}`}
+                        >
+                          <span>Explore</span>
+                          {!exploreBlogHoved ? (
+                            <Image
+                              src={Dropdown}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrowRight}`}
+                            />
+                          ) : (
+                            <Image
+                              src={DropdownWhite}
+                              width={16}
+                              height={16}
+                              alt="Dropdown"
+                              className={`${styles.arrowRight}`}
+                            />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      ''
+                    )) || ''}
               </div>
             </section>
           )}
@@ -2496,236 +3524,6 @@ const MainContent: React.FC<SearchResultsProps> = ({
         </div>
       )}
     </main>
-  )
-}
-
-const FilterDropdown: React.FC<Props> = () => {
-  const router = useRouter()
-  const { q, filter } = router.query
-  const [activeFilter, setActiveFilter] = useState('all')
-  const dispatch = useDispatch()
-  const isExplore = useSelector((state: RootState) => state.search.explore)
-  // const showAll = useSelector((state: any) => state.search.showAll)
-  // const showAllUsers = useSelector((state: any) => state.search.showAllUsers)
-  // const showAllhobbies = useSelector(
-  //   (state: any) => state.search.showAllhobbies,
-  // )
-  // const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
-  // const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
-  // const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
-  // const showAllProducts = useSelector(
-  //   (state: any) => state.search.showAllProducts,
-  // )
-  // const showAllPosts = useSelector((state: any) => state.search.showAllPosts)
-  // const showAllBlogs = useSelector((state: any) => state.search.showAllBlogs)
-
-  const showAll = !filter || filter === 'all' || filter === ''
-  const showAllUsers = filter === 'users'
-  const showAllPeople = filter === 'people'
-  const showAllPlace = filter === 'places'
-  const showAllEvent = filter === 'programs'
-  const showAllProducts = filter === 'products'
-  const showAllPosts = filter === 'posts'
-  const showAllBlogs = filter === 'blogs'
-  const showAllHobbies = filter === 'hobby'
-
-  useEffect(() => {
-    if (showAll) {
-      setActiveFilter('all')
-    }
-  }, [showAll])
-  useEffect(() => {
-    if (showAllUsers) {
-      setActiveFilter('users')
-    }
-  }, [showAllUsers])
-  useEffect(() => {
-    if (showAllHobbies) {
-      setActiveFilter('hobby')
-    }
-  }, [showAllHobbies])
-  useEffect(() => {
-    if (showAllPeople) {
-      setActiveFilter('people')
-    }
-  }, [showAllPeople])
-  useEffect(() => {
-    if (showAllPlace) {
-      setActiveFilter('places')
-    }
-  }, [showAllPlace])
-  useEffect(() => {
-    if (showAllEvent) {
-      setActiveFilter('events')
-    }
-  }, [showAllEvent])
-  useEffect(() => {
-    if (showAllProducts) {
-      setActiveFilter('products')
-    }
-  }, [showAllProducts])
-  useEffect(() => {
-    if (showAllPosts) {
-      setActiveFilter('posts')
-    }
-  }, [showAllPosts])
-  useEffect(() => {
-    if (showAllBlogs) {
-      setActiveFilter('blogs')
-    }
-  }, [showAllBlogs])
-
-  useEffect(() => {
-    if (showAll === true) {
-      setActiveFilter('all')
-    } else if (showAllUsers === true) {
-      setActiveFilter('users')
-    } else if (showAllHobbies === true) {
-      setActiveFilter('hobby')
-    } else if (showAllPeople === true) {
-      setActiveFilter('people')
-    } else if (showAllPlace === true) {
-      setActiveFilter('places')
-    } else if (showAllEvent === true) {
-      setActiveFilter('events')
-    } else if (showAllProducts === true) {
-      setActiveFilter('products')
-    } else if (showAllBlogs === true) {
-      setActiveFilter('blogs')
-    } else if (showAllPosts === true) {
-      setActiveFilter('posts')
-    }
-  }, [
-    showAll,
-    showAllEvent,
-    showAllPeople,
-    showAllPlace,
-    showAllProducts,
-    showAllUsers,
-    showAllHobbies,
-    showAllBlogs,
-    showAllPosts,
-  ])
-
-  const handleFilterClick = (filterType: any) => {
-    if (activeFilter === filterType) {
-      setActiveFilter('all')
-      dispatch(showAllTrue())
-    } else {
-      setActiveFilter(filterType)
-      switch (filterType) {
-        case 'all':
-          dispatch(showAllTrue())
-          break
-        case 'users':
-          dispatch(toggleShowAllUsers())
-          break
-        case 'hobby':
-          dispatch(toggleShowAllHobbies())
-          break
-        case 'people':
-          dispatch(toggleShowAllPeople())
-          break
-        case 'places':
-          dispatch(toggleShowAllPlace())
-          break
-        case 'events':
-          dispatch(toggleShowAllEvent())
-          break
-        case 'products':
-          dispatch(toggleShowAllProducts())
-          break
-        case 'posts':
-          dispatch(toggleShowAllPosts())
-          break
-        case 'blogs':
-          dispatch(toggleShowAllBlogs())
-          break
-        default:
-          break
-      }
-    }
-    if (filterType === 'all') {
-      const { filter, ...rest } = router.query
-      router.push({
-        pathname: '/search',
-        query: {
-          ...rest,
-        },
-      })
-    } else {
-      router.push({
-        pathname: '/search',
-        query: {
-          ...router.query,
-          filter: filterType,
-        },
-      })
-    }
-  }
-
-  return (
-    <Select
-      disabled={isExplore}
-      className={styles.filterDropdown}
-      value={activeFilter}
-    >
-      <MenuItem
-        onClick={() => handleFilterClick('all')}
-        value="all"
-        // style={{ display: 'flex', alignItems: 'center', gap: 16 }}
-      >
-        <div className={styles.responsiveMenuItem}>
-          <Image src={hobbycue} alt="hobbycue" />
-          <span>All of HobbyCue</span>
-        </div>
-      </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('users')} value="users">
-        <div className={styles.responsiveMenuItem}>
-          <Image src={UserSvg} alt="User" />
-          <span>Users</span>
-        </div>
-      </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('hobby')} value="hobby">
-        <div className={styles.responsiveMenuItem}>
-          <Image src={Hobby} alt="hobby" />
-          <span>Hobbies</span>
-        </div>
-      </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('people')} value="people">
-        <div className={styles.responsiveMenuItem}>
-          <Image src={People} alt="People" />
-          <span>People Pages</span>
-        </div>
-      </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('places')} value="places">
-        <div className={styles.responsiveMenuItem}>
-          <Image src={Place} alt="Place" />
-          <span>Places</span>
-        </div>
-      </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('events')} value="events">
-        <div className={styles.responsiveMenuItem}>
-          <Image src={Program} alt="Program" />
-          <span>Programs</span>
-        </div>
-      </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('products')} value="products">
-        <div className={styles.responsiveMenuItem}>
-          <Image src={Product} alt="Product" />
-          <span>Products</span>
-        </div>
-      </MenuItem>
-      {/* <MenuItem onClick={() => handleFilterClick('posts')} value="posts">
-        Posts
-      </MenuItem> */}
-      <MenuItem onClick={() => handleFilterClick('blogs')} value="blogs">
-        <div className={styles.responsiveMenuItem}>
-          <Image src={Blogs} alt="Blogs" />
-          <span>Blogs</span>
-        </div>
-      </MenuItem>
-    </Select>
   )
 }
 
@@ -2780,6 +3578,12 @@ const Search: React.FC<Props> = ({ data, children }) => {
     (state: RootState) => state.search.hobbiesSearchResults.data,
   )
 
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 1100)
@@ -2808,6 +3612,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
   const showAllPosts = filter === 'posts'
   const showAllBlogs = filter === 'blogs'
   const showAllHobbies = filter === 'hobby'
+  const showAllClasses = filter === 'classes'
+  const showAllRentals = filter === 'rentals'
 
   const noResultsFound =
     (userSearchResults.length === 0 &&
@@ -2818,6 +3624,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
       ProductSearch.length === 0 &&
       PostsSearch.length === 0 &&
       BlogsSearch.length === 0 &&
+      ClassesSearch.length === 0 &&
+      RentalSearch.length === 0 &&
       showAll) ||
     (userSearchResults.length === 0 && showAllUsers) ||
     (hobbySearchResults.length === 0 && showAllHobbies) ||
@@ -2826,6 +3634,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
     (EventSearch.length === 0 && showAllEvent) ||
     (ProductSearch.length === 0 && showAllProducts) ||
     (PostsSearch.length === 0 && showAllPosts) ||
+    (ClassesSearch.length === 0 && showAllClasses) ||
+    (RentalSearch.length === 0 && showAllRentals) ||
     (BlogsSearch.length === 0 && showAllBlogs && searchLoading === false)
 
   return (
@@ -2871,7 +3681,18 @@ const Search: React.FC<Props> = ({ data, children }) => {
             RentalResults={RentalSearch || []}
             PostsResults={PostsSearch || []}
             BlogsResults={BlogsSearch || []}
+            setSnackbar={setSnackbar}
           />
+          {
+            <CustomSnackbar
+              message={snackbar.message}
+              triggerOpen={snackbar.display}
+              type={snackbar.type === 'success' ? 'success' : 'error'}
+              closeSnackbar={() => {
+                setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+              }}
+            />
+          }
         </main>
         {isMobile ? (
           <div
@@ -2886,10 +3707,12 @@ const Search: React.FC<Props> = ({ data, children }) => {
                 // href="/explore"
                 icon={<ExploreIcon />}
               />
-              <InterestedDiv
-                seeMoreWhatsNew={seeMoreWhatsNew}
-                setSeeMoreWhatsNew={setSeeMoreWhatsNew}
-              />
+              {noResultsFound && searchLoading === false && (
+                <InterestedDiv
+                  seeMoreWhatsNew={seeMoreWhatsNew}
+                  setSeeMoreWhatsNew={setSeeMoreWhatsNew}
+                />
+              )}
               <ExploreSidebarBtn
                 text="Help Center"
                 href="/help"
@@ -2900,10 +3723,12 @@ const Search: React.FC<Props> = ({ data, children }) => {
         ) : (
           <aside className={styles['aside-two']}>
             <ExploreMoreBtn text="Explore More" icon={<ExploreIcon />} />
-            <InterestedDiv
-              seeMoreWhatsNew={seeMoreWhatsNew}
-              setSeeMoreWhatsNew={setSeeMoreWhatsNew}
-            />
+            {noResultsFound && searchLoading === false && (
+              <InterestedDiv
+                seeMoreWhatsNew={seeMoreWhatsNew}
+                setSeeMoreWhatsNew={setSeeMoreWhatsNew}
+              />
+            )}
             <ExploreSidebarBtn
               text="Help Center"
               href="/help"

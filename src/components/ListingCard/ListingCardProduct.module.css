@@ -48,8 +48,15 @@
 .contentHead {
   display: flex;
   gap: 8px;
+  position: relative;
   /* margin-bottom: 17px; */
 }
+.bookmark {
+  position: absolute;
+  top: 5px;
+  left: 120px;
+}
+
 .contentImageContainer {
   /* width: 48px;
     height: 48px; */
@@ -247,6 +254,9 @@
   .contentHead {
     margin: 12px 0px 0 12px;
     gap: 12px;
+  }
+  .bookmark {
+    left: 140px;
   }
 }
 

@@ -29,10 +29,12 @@ const Places: React.FC<Props> = ({ data: initialData }) => {
   const [page, setPage] = useState(1) // Tracks the current page
   const [loading, setLoading] = useState(false) // Indicates if more data is being loaded
   const [hasMore, setHasMore] = useState(true) // Tracks if there are more listings to load
-  const [hasNoDataPerma, setHasNoDataPerma] = useState(false) 
+  const [hasNoDataPerma, setHasNoDataPerma] = useState(false)
   const [ShowAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const { isSearching } = useSelector((state: RootState) => state.explore)
+  const [hoverCardIndex, setHoveredCardIndex] = useState<number>(-1)
+
   const dispatch = useDispatch()
 
   const locationDropdownRef = useRef<HTMLDivElement>(null)
@@ -54,7 +56,10 @@ const Places: React.FC<Props> = ({ data: initialData }) => {
       queryString = `type=${encodeURIComponent(type.toString())}&` + queryString
     } else if (category) {
       queryString =
-        `page_type=${encodeURIComponent(category.toString())}&` + queryString
+        `type=2&page_type=${encodeURIComponent(category.toString())}&` +
+        queryString
+    } else {
+      queryString = `type=2&` + queryString
     }
 
     if (keyword) {
@@ -107,7 +112,7 @@ const Places: React.FC<Props> = ({ data: initialData }) => {
         window.innerHeight + document.documentElement.scrollTop >=
         document.documentElement.offsetHeight - 100
       ) {
-         if (!hasNoDataPerma) {
+        if (!hasNoDataPerma) {
           setHasMore(true)
         }
         fetchMoreData()
@@ -146,8 +151,8 @@ const Places: React.FC<Props> = ({ data: initialData }) => {
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
         />
-        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
-        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+        <meta property="og:image" content="/place_page.png" />
+        <meta property="og:image:secure_url" content="/place_page.png" />
         <title>HobbyCue - Explore</title>
       </Head>
       <ExploreSearchContainer
@@ -182,6 +187,8 @@ const Places: React.FC<Props> = ({ data: initialData }) => {
                 key={el._id}
                 data={el}
                 style={{ minWidth: 271, maxWidth: 700 }}
+                hoverCardIndex={hoverCardIndex}
+                setHoveredCardIndex={setHoveredCardIndex}
               />
             ))}
             <>{loading && <PagesLoader />}</>
@@ -190,7 +197,7 @@ const Places: React.FC<Props> = ({ data: initialData }) => {
             <>{loading && <PagesLoader />}</>
           </div>
         )}
-        
+
         {!hasMore && <p>No more listings available.</p>}
       </div>
     </>
@@ -212,8 +219,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     queryString = `type=${encodeURIComponent(type.toString())}&` + queryString
   } else if (query.category) {
     queryString =
-      `page_type=${encodeURIComponent(query.category.toString())}&` +
+      `type=2&page_type=${encodeURIComponent(query.category.toString())}&` +
       queryString
+  } else {
+    queryString = `type=2&` + queryString
   }
   if (query.keyword) {
     queryString =

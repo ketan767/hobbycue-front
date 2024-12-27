@@ -20,7 +20,7 @@ const CommunityTopDropdown: React.FC<Props> = ({
   const toggle = () => setactive(!active)
   const dropdownRef = useRef(null)
   const containerRef = useRef<HTMLDivElement>(null)
-console.log({variant})
+  //console.log({variant})
   useEffect(() => {
     const closeDropdown = () => {
       setactive(false)
@@ -60,11 +60,11 @@ console.log({variant})
       document.removeEventListener('mousedown', handleOutsideClick)
     }
   }, [])
-  console.log({ value })
+  //console.log({ value })
 
   return (
     <div
-    ref={containerRef}
+      ref={containerRef}
       className={`${variant === 'primary' && styles.primary} ${
         variant === 'secondary' && styles.secondary
       } ${className ? className : ''} ${styles.container}`}
@@ -83,7 +83,7 @@ console.log({variant})
             <path
               id="Vector"
               d="M10.5867 6.195L7.99999 8.78167L5.41332 6.195C5.15332 5.935 4.73332 5.935 4.47332 6.195C4.21332 6.455 4.21332 6.875 4.47332 7.135L7.53332 10.195C7.79332 10.455 8.21332 10.455 8.47332 10.195L11.5333 7.135C11.7933 6.875 11.7933 6.455 11.5333 6.195C11.2733 5.94167 10.8467 5.935 10.5867 6.195Z"
-              fill={variant === 'primary' ? '#ffffff' : '#6D747A'}
+              fill="#6D747A"
             />
           </g>
           <defs>

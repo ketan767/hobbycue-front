@@ -4,6 +4,7 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
   updateUserHobbyLevel,
+  updateUserpreferences,
 } from '@/services/user.service'
 import { CircularProgress, useMediaQuery } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
@@ -20,7 +21,11 @@ import addhobby from '@/assets/svg/addhobby.svg'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { showProfileError, updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
-import { SendHobbyRequest, getAllHobbies, getAllHobbiesWithoutPagi } from '@/services/hobby.service'
+import {
+  SendHobbyRequest,
+  getAllHobbies,
+  getAllHobbiesWithoutPagi,
+} from '@/services/hobby.service'
 import { isEmptyField } from '@/utils'
 import { FormControl, MenuItem, Select } from '@mui/material'
 import Image from 'next/image'
@@ -30,6 +35,7 @@ import { useRouter } from 'next/router'
 import AddHobby from '../../AddHobby/AddHobbyModal'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import AddGenre from '../../AddGenre/AddGenreModal'
+import { log } from 'console'
 
 type Props = {
   onComplete?: () => void
@@ -46,6 +52,15 @@ type Props = {
   setShowAddHobbyModal?: any
   CheckIsOnboarded?: any
   propData?: {
+    hobbyAndGenre?: boolean
+    selectedGenreToAdd?: {
+      _id: string
+      display: string
+      level: number
+      show: boolean
+      sub_category: any
+      genre: any
+    }
     selectedHobbyToAdd?: {
       _id: string
       display: string
@@ -72,7 +87,8 @@ type DropdownListItem = {
   _id: string
   display: string
   sub_category?: string
-  genre?: any
+  genre?: any;
+  related_hobbies ?: any;
 }
 
 type Snackbar = {
@@ -109,8 +125,9 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
-  const [errorOrmsg, setErrorOrmsg] = useState<string | null>(null)
-
+  const [errorOrmsg, setErrorOrmsg] = useState<string | null>(null);
+  const [simillar,setSimillar] = useState<string | null>(null)
+  console.warn('selectwwdhobb', propData)
   const [data, setData] = useState<ProfileHobbyData>({
     hobby: null,
     genre: null,
@@ -155,8 +172,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
   const handleGenreInputFocus = () => {
     setShowGenreDowpdown(true)
-    const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${hobbyInputValue}`
+    const query = `fields=display,genre&populate=category,sub_category,tags,related_hobbies&level=3&level=2&level=1&level=0&show=true&search=${hobbyInputValue}`
     getAllHobbies(query).then((result) => {
+      console.log("Hobbby results =>",result);
+      
       const sortedHobbies = result.res.data.hobbies.sort((a: any, b: any) => {
         const indexA = a.display
           ?.toLowerCase()
@@ -196,8 +215,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       return
     }
 
-    const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
-    const query2 = `fields=display,genre&level=5&level=4&level=3&level=2&level=1&level=0&search=${e.target.value}`
+    const query = `fields=display,genre&populate=category,sub_category,tags,related_hobbies&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
+    const query2 = `fields=display,genre&populate=category,sub_category,tags,related_hobbies&level=5&level=4&level=3&level=2&level=1&level=0&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
     const { err: err2, res: res2 } = await getAllHobbiesWithoutPagi(query2)
     if (err) return console.log(err)
@@ -234,6 +253,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
     setAllHobbiesList(allHobbies)
     console.log('res------------>', allHobbies)
+    console.log("Hobbies : ",sortedHobbies);
+    
     setHobbyDropdownList(sortedHobbies)
     setFocusedHobbyIndex(-1)
   }
@@ -276,8 +297,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       return { ...prev, genre: null }
     })
     if (isEmptyField(e.target.value)) return setGenreDropdownList([])
-    const query = `fields=display&show=true&genre=${genreid}&level=5`
-    const query2 = `fields=display,show&genre=${genreid}&level=5`
+    const query = `fields=display&populate=category,sub_category,tags,related_hobbies&show=true&genre=${genreid}&level=5`
+    const query2 = `fields=display,show&populate=category,sub_category,tags,related_hobbies&genre=${genreid}&level=5`
 
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
@@ -361,6 +382,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const handleHobbySelection = async (selectedHobby: DropdownListItem) => {
     setGenreId('')
     console.log(selectedHobby)
+    setSimillar(selectedHobby.related_hobbies[0]?.display??simillar)
 
     setData((prev) => ({ ...prev, hobby: selectedHobby }))
     setHobbyInputValue(selectedHobby?.display ?? hobbyInputValue)
@@ -372,7 +394,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     ) {
       setGenreId(selectedHobby.genre[0])
 
-      const query = `fields=display&show=true&genre=${selectedHobby.genre[0]}&level=5`
+      const query = `fields=display&populate=category,sub_category,tags,related_hobbies&show=true&genre=${selectedHobby.genre[0]}&level=5`
       const { err, res } = await getAllHobbies(query)
 
       if (!err) {
@@ -539,7 +561,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
         if (!hobbyInputValue.trim()) {
           if (userHobbies.length > 0) {
-            window.location.reload()
+            router.reload()
             handleClose()
             return
           } else {
@@ -657,18 +679,18 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             ) {
               const data = { is_onboarded: true }
               const { err, res } = await updateMyProfileDetail(data)
-              window.location.href = `/community`
+              router.push(`/community`)
             } else {
               dispatch(closeModal())
-              window.location.href = `/profile/${response?.data?.data?.user?.profile_url}`
+              router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
               dispatch(showProfileError(true))
             }
             return
           } else {
             if (user.is_onboarded) {
-              window.location.href = `/community`
+              router.push(`/community`)
             }
-            window.location.reload()
+            router.reload()
 
             dispatch(closeModal())
             return
@@ -689,26 +711,81 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       if (response?.data?.data?.user?.completed_onboarding_steps.length == 3) {
         const data = { is_onboarded: true }
         const { err, res } = await updateMyProfileDetail(data)
-        window.location.href = `/community`
+        router.push(`/community`)
       } else {
         dispatch(closeModal())
-        window.location.href = `/profile/${response?.data?.data?.user?.profile_url}`
+        router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
         dispatch(showProfileError(true))
       }
       return
     } else {
       if (!user.is_onboarded) {
-        window.location.href = `/profile/${user?.profile_url}`
+        router.push(`/profile/${user?.profile_url}`)
         dispatch(showProfileError(true))
       } else {
-        window.location.reload()
+        router.reload()
         dispatch(closeModal())
       }
       return
     }
   }
 
-  const handleDeleteHobby = async (id: string) => {
+  const updatePreference = async (preferences: any) => {
+    try {
+      const { res, err } = await updateUserpreferences({ preferences })
+      if (err) {
+        console.error('Error updating preferences:', err)
+      } else {
+        console.log('Preferences updated successfully:', res.data)
+        const user = await getMyProfileDetail()
+        dispatch(updateUser(user.res?.data?.data.user))
+        //window.location.reload();
+      }
+    } catch (error) {
+      console.error('Unexpected error:', error)
+    }
+  }
+
+  const handleDeleteHobby = async (id: string, hobby: any, index: number) => {
+    if (
+      hobby.hobby._id ===
+        user?.preferences?.create_post_pref?.preferred_hobby?.hobby?._id &&
+      (hobby.genre?.id
+        ? hobby.genre?.id ===
+          user?.preferences?.create_post_pref?.preferred_hobby?.genre?._id
+        : true)
+    ) {
+      const indexToUse = index === 0 ? 1 : 0
+      const updatedPreferences = {
+        community_view: {
+          preferred_hobby: {
+            hobby:
+              user.preferences.community_view.preferred_hobby?.hobby?._id ||
+              null,
+            genre:
+              user.preferences.community_view.preferred_hobby?.genre?._id ||
+              null,
+          },
+          preferred_location:
+            user?.preferences.community_view.preferred_location?._id ||
+            'All locations',
+        },
+        create_post_pref: {
+          preferred_hobby: {
+            hobby: user._hobbies[indexToUse]?.hobby?._id,
+            genre: user._hobbies[indexToUse]?.genre?._id || null,
+          },
+          preferred_location:
+            user.preferences.create_post_pref.preferred_location?._id ||
+            'All locations',
+        },
+        location_visibility: user.preferences.location_visibility || 'My City',
+        email_visibility: user.preferences.email_visibility || 'No one',
+        phone_visibility: user.preferences.phone_visibility || 'No one',
+      }
+      updatePreference(updatedPreferences)
+    }
+
     const { err, res } = await deleteUserHobby(id)
 
     if (err) {
@@ -906,7 +983,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     //   return {...prev}
     // })
     const AddToMine = async () => {
-      if (selectedHobbyToAdd && selectedHobbyToAdd?.level >= 5) {
+      if (
+        selectedHobbyToAdd &&
+        selectedHobbyToAdd?.level >= 5 &&
+        !propData?.hobbyAndGenre
+      ) {
         if (selectedHobbyToAdd.show === true) {
           setData((prev) => ({ ...prev, genre: selectedHobbyToAdd }))
           setData((prev) => ({
@@ -932,11 +1013,24 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         setHobbyInputValue(selectedHobbyToAdd?.sub_category?.display)
         setGenreInputValue(selectedHobbyToAdd.display)
         handleGenreInputChange
-      } else if (selectedHobbyToAdd && selectedHobbyToAdd?.level < 5) {
+      } else if (
+        selectedHobbyToAdd &&
+        selectedHobbyToAdd?.level < 5 &&
+        !propData?.hobbyAndGenre
+      ) {
         if (selectedHobbyToAdd.show === true) {
           setData((prev) => ({ ...prev, hobby: selectedHobbyToAdd }))
         }
         setHobbyInputValue(selectedHobbyToAdd.display)
+      } else if (propData?.hobbyAndGenre) {
+        setData((prev) => ({ ...prev, hobby: selectedHobbyToAdd || null }))
+        setData((prev) => ({
+          ...prev,
+          genre: propData.selectedGenreToAdd || null,
+        }))
+        setGenreId(selectedHobbyToAdd?.genre[0])
+        setHobbyInputValue(selectedHobbyToAdd?.display || '')
+        setGenreInputValue(propData?.selectedGenreToAdd?.display || '')
       }
     }
     AddToMine()
@@ -966,6 +1060,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
               user_type: 'user',
               hobby: hobbyInputValue,
               level: 'Hobby',
+              similar : simillar
             }
             const { err, res } = await SendHobbyRequest(jsonData)
             if (res?.data.success) {
@@ -1023,8 +1118,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             let jsonData = {
               user_id: user._id,
               user_type: 'user',
-              hobby: genreInputValue,
+              hobby: hobbyInputValue,
+              genre: genreInputValue,
               level: 'Genre',
+              similar : simillar
             }
             const { err, res } = await SendHobbyRequest(jsonData)
             if (res?.data.success) {
@@ -1104,7 +1201,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                     </tr>
                   </thead>
                   <tbody style={{ display: 'inline-table' }}>
-                    {userHobbies?.map((hobby: any) => {
+                    {userHobbies?.map((hobby: any, index: number) => {
                       return (
                         <tr key={hobby._id}>
                           <td>
@@ -1127,6 +1224,22 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               : ''} */}
                             <Select
                               value={hobby?.level}
+                              MenuProps={{
+                                anchorOrigin: {
+                                  vertical: 'top',
+                                  horizontal: 'center',
+                                },
+                                transformOrigin: {
+                                  vertical: isMobile
+                                    ? userHobbies?.length > 5
+                                      ? 'bottom'
+                                      : 'top'
+                                    : userHobbies?.length > 8
+                                    ? 'bottom'
+                                    : 'top',
+                                  horizontal: 'center',
+                                },
+                              }}
                               className={styles['hobby-dropdown']}
                               onChange={(e) => {
                                 let val: any = e?.target?.value
@@ -1177,10 +1290,12 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               viewBox="0 0 24 24"
                               fill="none"
                               className={styles['delete-hobby-btn']}
-                              onClick={() => handleDeleteHobby(hobby._id)}
+                              onClick={() =>
+                                handleDeleteHobby(hobby._id, hobby, index)
+                              }
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
-                                  handleDeleteHobby(hobby._id)
+                                  handleDeleteHobby(hobby._id, hobby, index)
                                 }
                               }}
                             >
@@ -1342,6 +1457,22 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                           ref={selectLevelRef}
                           value={levels[data.level - 1]?.name}
                           className={styles['hobby-dropdown']}
+                          MenuProps={{
+                            anchorOrigin: {
+                              vertical: 'top',
+                              horizontal: 'center',
+                            },
+                            transformOrigin: {
+                              vertical: isMobile
+                                ? userHobbies?.length > 5
+                                  ? 'bottom'
+                                  : 'top'
+                                : userHobbies?.length > 8
+                                ? 'bottom'
+                                : 'top',
+                              horizontal: 'center',
+                            },
+                          }}
                           onChange={(e) => {
                             console.log({ e })
                             let val: any = e?.target?.value

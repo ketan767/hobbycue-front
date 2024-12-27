@@ -47,8 +47,8 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
     setLoadingPosts(true)
     const queryParam =
       data?.level === 5
-        ? `_genre=${data._id}&populate=_author,_genre,_hobby&has_link=true&sort=-up_votes.count`
-        : `_hobby=${data._id}&populate=_author,_genre,_hobby&has_link=true&sort=-up_votes.count`
+        ? `_genre=${data._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3&has_link=true&sort=-up_votes.count`
+        : `_hobby=${data._id}&populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3&has_link=true&sort=-up_votes.count`
 
     const { err, res } = await getAllPosts(queryParam)
     setLoadingPosts(false)
@@ -177,12 +177,17 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
               isLoggedIn && (
                 <>
                   <div
-                   style={
-                    isMobile
-                      ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
-                      : undefined
-                  }
-                   className={styles['no-posts-container']}>
+                    style={
+                      isMobile
+                        ? {
+                            marginTop: '8px',
+                            height: '100px',
+                            borderRadius: '0px',
+                          }
+                        : undefined
+                    }
+                    className={styles['no-posts-container']}
+                  >
                     <p>No links available</p>
                   </div>
                   {!isMobile && (

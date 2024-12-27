@@ -47,6 +47,7 @@ type HobbyAboutData = {
   onboarding_step?: string
   completed_onboarding_steps?: any
   _id?: any
+  keywords?: string
 }
 
 const HobbyAboutEditModal: React.FC<Props> = ({
@@ -61,7 +62,7 @@ const HobbyAboutEditModal: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
-  const { } = useSelector((state: RootState) => state.site)
+  const {} = useSelector((state: RootState) => state.site)
   const [data, setData] = useState<HobbyAboutData>({
     description: '',
   })
@@ -88,6 +89,19 @@ const HobbyAboutEditModal: React.FC<Props> = ({
   const handleInputChange = (value: string) => {
     setData((prev) => ({ ...prev, description: value }))
     setInputErrs({ description: null })
+
+    const hasChanged = value !== initialData.description
+    setIsChanged(hasChanged)
+
+    if (onStatusChange) {
+      onStatusChange(hasChanged)
+    }
+  }
+  const handleKeywordInputChange: React.ChangeEventHandler<
+    HTMLInputElement
+  > = async (event) => {
+    const value = event.target.value
+    setData((prev) => ({ ...prev, keywords: value }))
 
     const hasChanged = value !== initialData.description
     setIsChanged(hasChanged)
@@ -242,7 +256,9 @@ const HobbyAboutEditModal: React.FC<Props> = ({
     setData((prev) => ({
       ...prev,
       description: res.data?.hobbies[0]?.description,
+      keywords: res.data?.hobbies[0]?.keywords,
     }))
+    console.warn('ressss', res)
     sethobbyId(res.data?.hobbies[0]?._id)
   }
 
@@ -352,8 +368,9 @@ const HobbyAboutEditModal: React.FC<Props> = ({
   return (
     <>
       <div
-        className={`${styles['modal-wrapper']} ${confirmationModal ? styles['ins-active'] : ''
-          }  `}
+        className={`${styles['modal-wrapper']} ${
+          confirmationModal ? styles['ins-active'] : ''
+        }  `}
       >
         <CloseIcon
           className={styles['modal-close-icon']}
@@ -379,15 +396,24 @@ const HobbyAboutEditModal: React.FC<Props> = ({
             {inputErrs.description && (
               <p className={styles['error-msg']}>{inputErrs.description}</p>
             )}
-            
-          <h3 className={styles['heading']} style={{
-            marginTop:10,
-            marginBottom:4
-          }}>{'Keywords'}</h3>
-          {!user.is_onboarded && showSkip ? skipSvg : null}
-        
-        
-            <input type='text'/>
+
+            <h3
+              className={styles['heading']}
+              style={{
+                marginTop: 10,
+                marginBottom: 4,
+              }}
+            >
+              {'Keywords'}
+            </h3>
+            {!user.is_onboarded && showSkip ? skipSvg : null}
+            <input
+              type="text"
+              autoComplete="new"
+              placeholder=""
+              onChange={handleKeywordInputChange}
+              value={data.keywords}
+            />
           </div>
         </section>
 

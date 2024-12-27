@@ -64,12 +64,11 @@ import { types } from 'util'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import UserReport from './EditProfile/ReportUser'
 import ListingReport from './EditListing/ListingReport'
-import ContactToOwner from './EditListing/ListingContactOwner'
 import ConfirmEmail from './ConfirmEmail/ConfirmEmail'
 import ListingSupportModal from './EditListing/ListingSupport'
 import SupportUserModal from './EditProfile/supportUser'
 import AddHobby from './AddHobby/AddHobbyModal'
-import ListingContactToOwner from './EditListing/ListingContactOwner'
+import ListingContactOwner from './EditListing/ListingContactOwner'
 import UserContactToOwner from './EditProfile/UserContactOwner'
 import { PostModal } from './PostModal/PostModal'
 import { setHasChanges } from '@/redux/slices/modal'
@@ -91,6 +90,7 @@ import SimpleOnboarding from './EditProfile/SimpleOnboarding'
 import ProductCategoryModal from './EditListing/ProductCategory/ProductCategory'
 import HobbyAboutEditModal from './EditHobby/About'
 import FBNoEmail from './FBNoEmail'
+import BlogPublish from './BlogPublish/BlogPublishModal'
 
 const CustomBackdrop: React.FC = () => {
   const { activeModal } = useSelector((state: RootState) => state.modal)
@@ -417,6 +417,9 @@ const ModalManager: React.FC = () => {
                     activeModal === 'User-Contact-To-Owner' ||
                     activeModal === 'ListingSupportModal' ||
                     activeModal === 'SupportUserModal' ||
+                    activeModal === 'claim-listing' ||
+                    activeModal === 'listing-cta-edit' ||
+                    activeModal === 'listing-product-purchase' ||
                     activeModal === 'CopyProfileDataModal') &&
                   styles['responsive-popup']
                 }`
@@ -446,7 +449,11 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'User-Contact-To-Owner' &&
                 activeModal !== 'ListingSupportModal' &&
                 activeModal !== 'SupportUserModal' &&
-                activeModal !== 'user-onboarding' && (
+                activeModal !== 'user-onboarding' &&
+                activeModal !== 'claim-listing' &&
+                activeModal !== 'listing-cta-edit' &&
+                activeModal !== 'listing-product-purchase' &&
+                !showAddHobbyModal && (
                   <>
                     <header className={styles['header']}>
                       <Image
@@ -464,6 +471,7 @@ const ModalManager: React.FC = () => {
                     </header>
                   </>
                 )}
+              {activeModal === 'blogPublish' && <BlogPublish {...props} />}
               {activeModal === 'FBNoEmail' && <FBNoEmail />}
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
@@ -474,13 +482,13 @@ const ModalManager: React.FC = () => {
               {activeModal === 'listing-onboarding' && (
                 <ListingOnboardingModal {...props} />
               )}
-              {activeModal === 'create-post' && (
-                <CreatePost propData={propData} />
-              )}
+              {activeModal === 'create-post' && <CreatePost {...props} />}
               {activeModal === 'update-post' && (
-                <CreatePost propData={propData} />
+                <CreatePost {...props} propData={propData} />
               )}
-              {activeModal === 'upload-image' && <UploadImageModal />}
+              {activeModal === 'upload-image' && (
+                <UploadImageModal {...props} />
+              )}
 
               {activeModal === 'profile-general-edit' && (
                 <ProfileGeneralEditModal {...props} />
@@ -563,7 +571,7 @@ const ModalManager: React.FC = () => {
                 <ListingReview {...props} />
               )}
               {activeModal === 'Listing-Contact-To-Owner' && (
-                <ListingContactToOwner {...props} />
+                <ListingContactOwner {...props} />
               )}
               {activeModal === 'User-Contact-To-Owner' && (
                 <UserContactToOwner {...props} />
@@ -582,11 +590,21 @@ const ModalManager: React.FC = () => {
               )}
 
               {activeModal === 'claim-listing' && (
-                <ClaimModal setSnackbar={setSnackbar} />
+                <ClaimModal {...props} setSnackbar={setSnackbar} />
               )}
-              {activeModal === 'upload-video-page' && <UploadVideoPage handleClose={handleClose} setConfirmationModal={setConfirmationModal} />}
+              {activeModal === 'upload-video-page' && (
+                <UploadVideoPage
+                  handleClose={handleClose}
+                  setConfirmationModal={setConfirmationModal}
+                />
+              )}
               {activeModal === 'upload-image-page' && <UploadImagePage />}
-              {activeModal === 'upload-video-user' && <UploadVideoUser handleClose={handleClose} setConfirmationModal={setConfirmationModal} />}
+              {activeModal === 'upload-video-user' && (
+                <UploadVideoUser
+                  handleClose={handleClose}
+                  setConfirmationModal={setConfirmationModal}
+                />
+              )}
               {activeModal === 'ExpiredPassword' && <ExpiredPassword />}
               {activeModal === 'social-media-edit' && (
                 <SocialMediaEditModal {...props} />
@@ -632,6 +650,8 @@ const ModalManager: React.FC = () => {
               {/* Modal Close Icon */}
               {closable &&
                 activeModal !== 'auth' &&
+                (!isMobile ? activeModal !== 'create-post' : true) &&
+                activeModal !== 'update-post' &&
                 activeModal !== 'social-media-share' &&
                 activeModal !== 'user-onboarding-welcome' &&
                 activeModal !== 'add-event' &&
@@ -644,6 +664,10 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'User-Contact-To-Owner' &&
                 activeModal !== 'ListingSupportModal' &&
                 activeModal !== 'SupportUserModal' &&
+                activeModal !== 'blogPublish' &&
+                activeModal !== 'claim-listing' &&
+                activeModal !== 'listing-cta-edit' &&
+                activeModal !== 'listing-product-purchase' &&
                 !showAddGenreModal &&
                 !showAddHobbyModal && (
                   <CloseIcon

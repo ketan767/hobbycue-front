@@ -755,7 +755,7 @@ const Contact: React.FC<Props> = ({}) => {
                       {showYouDropdown && (
                         <div
                           ref={YoudropdownRef}
-                          className={styles['options-container']}
+                          className={styles['options-container'] + " custom-scrollbar-two"}
                         >
                           <div className={styles['vertical-line']}></div>
                           {YouareData.map((item: any, idx) => (
@@ -865,7 +865,7 @@ const Contact: React.FC<Props> = ({}) => {
                       {showRegDropdown && (
                         <div
                           ref={RegdropdownRef}
-                          className={styles['options-container']}
+                          className={styles['options-container'] + " custom-scrollbar-two"}
                         >
                           <div className={styles['vertical-line']}></div>
                           {Regarding.map((item: any, idx) => (

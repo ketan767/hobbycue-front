@@ -12,12 +12,13 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 
 function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
   const [scrollPosition, setScrollPosition] = useState(0)
-
+  const queryClient = new QueryClient()
   const isAdminPage =
     router.pathname.startsWith('/server-sitemap.xml') ||
     router.pathname.startsWith('/sitemap') ||
@@ -71,22 +72,24 @@ function App({ Component, pageProps }: AppProps) {
         <title>HobbyCue - Your Hobby, Your Community</title>
       </Head>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-          <Provider store={store}>
-            {isAdminPage ? (
-              <SiteAdminLayout>
-                <Component {...pageProps} />
-              </SiteAdminLayout>
-            ) : (
-              <SiteMainLayout>
-                <>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <Provider store={store}>
+              {isAdminPage ? (
+                <SiteAdminLayout>
                   <Component {...pageProps} />
-                  <ScrollToTop />
-                </>
-              </SiteMainLayout>
-            )}
-          </Provider>
-        </ThemeProvider>
+                </SiteAdminLayout>
+              ) : (
+                <SiteMainLayout>
+                  <>
+                    <Component {...pageProps} />
+                    <ScrollToTop />
+                  </>
+                </SiteMainLayout>
+              )}
+            </Provider>
+          </ThemeProvider>
+        </QueryClientProvider>
       </StyledEngineProvider>
     </>
   )

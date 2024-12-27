@@ -13,12 +13,27 @@ export const getAllUserDetail = async (
   }
 }
 
+/** Get User Details `GET /api/user/byName?{query}`  */
+export const getUsersByName = async (
+  query: string,
+): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.get(`/user/byName?${query}`)
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 /** Get LoggedIn User Detail `GET /api/user/me/?{query}` */
 export const getMyProfileDetail = async () => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
+  // const query = 'populate=_hobbies,_addresses,primary_address,_listings,preferences.community_view.preferred_hobby.hobby,preferences.create_post_pref.preferred_hobby.hobby,preferences.community_view.preferred_location,preferences.create_post_pref.preferred_location'
 
-  const query = 'populate=_hobbies,_addresses,primary_address,_listings'
+  const query =
+    'populate=_hobbies,_addresses,primary_address,_listings,preferences.community_view.preferred_hobby.hobby,preferences.community_view.preferred_hobby.genre,preferences.create_post_pref.preferred_hobby.hobby,preferences.create_post_pref.preferred_hobby.genre,preferences.community_view.preferred_location,preferences.create_post_pref.preferred_location'
   try {
     const res = await axiosInstance.get(`/user/me?${query}`, { headers })
     return { res: res, err: null }
@@ -42,14 +57,17 @@ export const updateMyProfileDetail = async (data: UpdateProfilePayload) => {
   }
 }
 
-
 /** Update LoggedIn User Detail `PATCH /api/user/me/` */
-export const updateMyProfileUrl = async (id:any, data:any) => {
+export const updateMyProfileUrl = async (id: any, data: any) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.post(`/user/update-profile-url/${id}`, data, { headers })
+    const res = await axiosInstance.post(
+      `/user/update-profile-url/${id}`,
+      data,
+      { headers },
+    )
     return { res: res, err: null }
   } catch (error: any) {
     console.error(error)
@@ -186,6 +204,22 @@ export const updateUserProfile = async (formData: FormData) => {
   }
 }
 
+export const updateUserpreferences = async (
+  data: any,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.put(`/user/update-preferences`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 /** Update User Cover  `POST /user/me/cover-image`
  * - FormData Required Key: `user-cover` */
 export const updateUserCover = async (formData: FormData) => {
@@ -211,6 +245,27 @@ export const searchUsers = async (searchCriteria: any) => {
         queryParams.append(key, searchCriteria[key])
       }
     }
+
+    let url = `/user/user-search-advanced?${queryParams.toString()}`
+    console.log(url)
+    const response = await axiosInstance.get(url)
+    return { res: response.data, err: null }
+  } catch (error) {
+    console.error('Error searching for users:', error)
+    return { res: null, err: error }
+  }
+}
+
+export const searchUsersAdvanced = async (searchCriteria: any) => {
+  try {
+    const queryParams = new URLSearchParams()
+    for (const key in searchCriteria) {
+      if (searchCriteria.hasOwnProperty(key)) {
+        queryParams.append(key, searchCriteria[key])
+      }
+    }
+    console.log(`/user/user-search-advanced?${queryParams.toString()}`)
+
     const response = await axiosInstance.get(
       `/user/user-search-advanced?${queryParams.toString()}`,
     )
@@ -304,4 +359,3 @@ export const notifyMaintenance = async ({
     return { res: null, err }
   }
 }
-

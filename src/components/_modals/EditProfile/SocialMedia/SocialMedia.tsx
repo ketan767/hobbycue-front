@@ -17,6 +17,7 @@ import { RootState } from '@/redux/store'
 import SaveModal from '../../SaveModal/saveModal'
 import { getSocialNetworks } from '@/services/socialnetworks.service'
 import DropdownComponent from './Dropdown'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   data?: ProfilePageData['pageData']
@@ -201,6 +202,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
   const [isChanged, setIsChanged] = useState(false)
 
   useEffect(() => {
+    console.log("}, [user])")
     if (!user.social_media_urls) return
 
     let arr = []
@@ -212,108 +214,126 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
         switch (true) {
           case key.startsWith('facebook'):
             arr.push({
+              error: false,
               socialMedia: 'Facebook',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('instagram'):
             arr.push({
+              error: false,
               socialMedia: 'Instagram',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('twitter'):
             arr.push({
+              error: false,
               socialMedia: 'Twitter',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('youtube'):
             arr.push({
+              error: false,
               socialMedia: 'Youtube',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('soundcloud'):
             arr.push({
+              error: false,
               socialMedia: 'SoundCloud',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('pinterest'):
             arr.push({
+              error: false,
               socialMedia: 'Pinterest',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('medium'):
             arr.push({
+              error: false,
               socialMedia: 'Medium',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('telegram'):
             arr.push({
+              error: false,
               socialMedia: 'Telegram',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('tripadvisor'):
             arr.push({
+              error: false,
               socialMedia: 'TripAdvisor',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('ultimate_guitar'):
             arr.push({
+              error: false,
               socialMedia: 'Ultimate Guitar',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('strava'):
             arr.push({
+              error: false,
               socialMedia: 'Strava',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('deviantarts'):
             arr.push({
+              error: false,
               socialMedia: 'DeviantArts',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('behance'):
             arr.push({
+              error: false,
               socialMedia: 'Behance',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('goodreads'):
             arr.push({
+              error: false,
               socialMedia: 'GoodReads',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('smule'):
             arr.push({
+              error: false,
               socialMedia: 'Smule',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('chess'):
             arr.push({
+              error: false,
               socialMedia: 'Chess.com',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('bgg'):
             arr.push({
+              error: false,
               socialMedia: 'BGG',
               url: userSocialMediaUrls[key],
             })
             break
           case key.startsWith('others'):
             arr.push({
+              error: false,
               socialMedia: 'Others',
               url: userSocialMediaUrls[key],
             })
@@ -334,6 +354,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
     {
       socialMedia: '',
       url: '',
+      error: false,
     },
   ])
 
@@ -362,7 +383,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
   }
 
   const addSocialMedia = () => {
-    const newSocialMedia = { socialMedia: '', url: '' }
+    const newSocialMedia = { socialMedia: '', url: '', error: false }
     setMediaData((prevMediaData) => [...prevMediaData.slice(), newSocialMedia])
   }
 
@@ -384,7 +405,14 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
     }
   }
 
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+
   const handleSubmit = async () => {
+    let errorSaving = false
     setSubmitBtnLoading(true)
     let reqBody: any = {}
     let socialMediaCounts: { [key: string]: number } = {}
@@ -396,140 +424,165 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
       // Increment the count for the current social media
       socialMediaCounts[socialMedia] = (socialMediaCounts[socialMedia] || 0) + 1
 
-      let key
-      switch (socialMedia) {
-        case 'Facebook':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'facebook'
-              : `facebook${socialMediaCounts[socialMedia]}`
-          break
-        case 'Instagram':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'instagram'
-              : `instagram${socialMediaCounts[socialMedia]}`
-          break
-        case 'Twitter':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'twitter'
-              : `twitter${socialMediaCounts[socialMedia]}`
-          break
-        case 'Youtube':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'youtube'
-              : `youtube${socialMediaCounts[socialMedia]}`
-          break
-        case 'SoundCloud':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'soundcloud'
-              : `soundcloud${socialMediaCounts[socialMedia]}`
-          break
-        case 'Pinterest':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'pinterest'
-              : `pinterest${socialMediaCounts[socialMedia]}`
-          break
-        case 'Medium':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'medium'
-              : `medium${socialMediaCounts[socialMedia]}`
-          break
-        case 'Telegram':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'telegram'
-              : `telegram${socialMediaCounts[socialMedia]}`
-          break
-        case 'TripAdvisor':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'tripadvisor'
-              : `tripadvisor${socialMediaCounts[socialMedia]}`
-          break
-        case 'Ultimate Guitar':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'ultimate_guitar'
-              : `ultimate_guitar${socialMediaCounts[socialMedia]}`
-          break
-        case 'Strava':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'strava'
-              : `strava${socialMediaCounts[socialMedia]}`
-          break
-        case 'DeviantArts':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'deviantarts'
-              : `deviantarts${socialMediaCounts[socialMedia]}`
-          break
-        case 'Behance':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'behance'
-              : `behance${socialMediaCounts[socialMedia]}`
-          break
-        case 'GoodReads':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'goodreads'
-              : `goodreads${socialMediaCounts[socialMedia]}`
-          break
-        case 'Smule':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'smule'
-              : `smule${socialMediaCounts[socialMedia]}`
-          break
-        case 'Chess.com':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'chess'
-              : `chess${socialMediaCounts[socialMedia]}`
-          break
-        case 'BGG':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'bgg'
-              : `bgg${socialMediaCounts[socialMedia]}`
-          break
-        case 'Others':
-          key =
-            socialMediaCounts[socialMedia] === 1
-              ? 'others'
-              : `others${socialMediaCounts[socialMedia]}`
-          break
-        default:
-          break
+      const defaultURL =
+        defaultSocialMediaURLs[socialMedia as SocialMediaOption]
+      const isValidUrl =
+        url !== defaultURL &&
+        url.includes(defaultURL.split("//")[1]) &&
+        url.length > defaultURL.length
+
+      if (!isValidUrl) {
+        setMediaData((prev: any) => {
+          prev[i].error = true
+          return prev
+        })
+        errorSaving = true
+      } else {
+        let key
+        switch (socialMedia) {
+          case 'Facebook':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'facebook'
+                : `facebook${socialMediaCounts[socialMedia]}`
+            break
+          case 'Instagram':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'instagram'
+                : `instagram${socialMediaCounts[socialMedia]}`
+            break
+          case 'Twitter':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'twitter'
+                : `twitter${socialMediaCounts[socialMedia]}`
+            break
+          case 'YouTube':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'youtube'
+                : `youtube${socialMediaCounts[socialMedia]}`
+            break
+          case 'SoundCloud':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'soundcloud'
+                : `soundcloud${socialMediaCounts[socialMedia]}`
+            break
+          case 'Pinterest':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'pinterest'
+                : `pinterest${socialMediaCounts[socialMedia]}`
+            break
+          case 'Medium':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'medium'
+                : `medium${socialMediaCounts[socialMedia]}`
+            break
+          case 'Telegram':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'telegram'
+                : `telegram${socialMediaCounts[socialMedia]}`
+            break
+          case 'TripAdvisor':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'tripadvisor'
+                : `tripadvisor${socialMediaCounts[socialMedia]}`
+            break
+          case 'Ultimate Guitar':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'ultimate_guitar'
+                : `ultimate_guitar${socialMediaCounts[socialMedia]}`
+            break
+          case 'Strava':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'strava'
+                : `strava${socialMediaCounts[socialMedia]}`
+            break
+          case 'DeviantArts':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'deviantarts'
+                : `deviantarts${socialMediaCounts[socialMedia]}`
+            break
+          case 'Behance':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'behance'
+                : `behance${socialMediaCounts[socialMedia]}`
+            break
+          case 'GoodReads':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'goodreads'
+                : `goodreads${socialMediaCounts[socialMedia]}`
+            break
+          case 'Smule':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'smule'
+                : `smule${socialMediaCounts[socialMedia]}`
+            break
+          case 'Chess.com':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'chess'
+                : `chess${socialMediaCounts[socialMedia]}`
+            break
+          case 'BGG':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'bgg'
+                : `bgg${socialMediaCounts[socialMedia]}`
+            break
+          case 'Others':
+            key =
+              socialMediaCounts[socialMedia] === 1
+                ? 'others'
+                : `others${socialMediaCounts[socialMedia]}`
+            break
+          default:
+            break
+        }
+
+        if (key) {
+          reqBody[key] = url
+        }
       }
+    }
+    // if (errorSaving === true) {
+    //   setSubmitBtnLoading(false)
+    //   setSnackbar({
+    //     display: true,
+    //     type: 'warning',
+    //     message: 'Please enter a valid URL',
+    //   })
+    //   return console.log('Invalid URL')
+    // } else {
+      const { err, res } = await updateMyProfileDetail({
+        social_media_urls: reqBody,
+      })
 
-      if (key) {
-        reqBody[key] = url
+      // if (err) {
+      //   setSubmitBtnLoading(false)
+      //   return console.log(err)
+      // }
+
+      if (err) return console.log(err)
+      else if (res?.data.success) {
+        window.location.reload()
+        dispatch(closeModal())
       }
-    }
-    const { err, res } = await updateMyProfileDetail({
-      social_media_urls: reqBody,
-    })
-
-    if (err) {
-      setSubmitBtnLoading(false)
-      return console.log(err)
-    }
-
-    if (err) return console.log(err)
-    if (res?.data.success) {
-      console.log('res', res)
-      window.location.reload()
-      dispatch(closeModal())
-    }
+    // }
   }
+  console.warn('dataaa', mediaData)
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
     const handleKeyPress = (event: any) => {
@@ -544,7 +597,6 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
       window.removeEventListener('keydown', handleKeyPress)
     }
   }, [])
-  console.log(user)
 
   const searchref = useRef<HTMLInputElement | null>(null)
   const [showSocialMediaDowpdown, setShowSocialMediaDowpdown] = useState(false)
@@ -569,7 +621,6 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
             res.data.data as SocialMediaData1[],
           )
           setAllOptions(reorderedData)
-          console.log({ reorderedData })
         }
       })
       .catch((err) => {
@@ -579,14 +630,11 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
 
   const isMobile = useMediaQuery('(max-width:1100px)')
 
-  if (confirmationModal) {
-    return (
-      <SaveModal
-        handleClose={handleClose}
-        handleSubmit={handleSubmit}
-        setConfirmationModal={setConfirmationModal}
-      />
-    )
+  const handleFullKeyDown = (e: React.KeyboardEvent) => {
+    // if enter is pressed then it should submit the form
+    if (e.key === 'ENTER') {
+      handleSubmit()
+    }
   }
 
   const selectFieldRefs = useRef<(HTMLDivElement | null)[]>([]) // Array of refs for each Select
@@ -615,6 +663,17 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
       window.removeEventListener('resize', updateOptionsHeights)
     }
   }, [mediaData])
+
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
+  }
+
   return (
     <div className={styles['modal-wrapper']}>
       {/* Modal Header */}
@@ -652,81 +711,36 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
         {/* 700: Social media icon sequence */}
         {mediaData.map((item: any, idx: any) => {
           return (
-            <div ref={(el) => (selectFieldRefs.current[idx] = el)} className={styles.inputContainer} key={idx}>
-              {/* <Select
-                value={item.socialMedia}
-                onChange={(e) => {
-                  const selectedSocialMedia = e.target.value as SocialMediaOption;
-                  const defaultUrl = defaultSocialMediaURLs[selectedSocialMedia];
-                
-                  const updatedMediaData = [...mediaData];
-                  updatedMediaData[idx] = {
-                    ...item,
-                    socialMedia: selectedSocialMedia,
-                    url: defaultUrl,
-                  };
-                
-                  setMediaData(updatedMediaData);
-                }}
-                className={styles.dropdown}
-                inputProps={{ 'aria-label': 'Without label' }}
-                MenuProps={{
-                  PaperProps: {
-                    className:  'custom-scrollbar',
-                    style: {
-                      maxHeight: optionsHeight[idx] || 200, 
-                      overflowY: 'auto',
-                    },
-                  },
-                }}
-              >
-                {allOptions
-                  .filter((obj) => obj.Show === 'Y')
-                  .map((option, i) => {
-                    return (
-                      <MenuItem key={i} value={option.socialMedia}>
-                        <div className={styles['menu-item']}>
-                          <img
-                            src={
-                              socialMediaIcons[option.socialMedia as SocialMediaOption]
-                            }
-                            alt={option.socialMedia}
-                            width={24}
-                            height={24}
-                          />
-                          <p
-                            className={styles.iconText}
-                            style={{ marginLeft: '8px' }}
-                          >
-                            {option.socialMedia}
-                          </p>
-                        </div>
-                      </MenuItem>
-                    );
-                  })}
-              </Select> */}
-            <div style={{width:"184px", height:"40px"}}>
-              <DropdownComponent
-                options={allOptions}
-                placeholder={'Select Social Media'}
-                value={item.socialMedia}
-                onChange={(e) => {
-                  const selectedSocialMedia = e as SocialMediaOption;
-                  const defaultUrl = defaultSocialMediaURLs[selectedSocialMedia];
+            <div
+              ref={(el) => (selectFieldRefs.current[idx] = el)}
+              className={styles.inputContainer}
+              key={idx}
+            >
+              <div id='social-media-dropdown' style={{ width: '184px', height: '40px' }}>
+                <DropdownComponent
+                  key={idx}
+                  options={allOptions}
+                  placeholder={'Select Social Media'}
+                  value={item.socialMedia}
+                  onChange={(e) => {
+                    const selectedSocialMedia = e as SocialMediaOption
+                    const defaultUrl =
+                      defaultSocialMediaURLs[selectedSocialMedia]
 
-                  console.log({ e, selectedSocialMedia, defaultUrl });
-              
-                  const updatedMediaData = [...mediaData];
-                  updatedMediaData[idx] = {
-                    ...item,
-                    socialMedia: selectedSocialMedia,
-                    url: defaultUrl,
-                  };
-              
-                  setMediaData(updatedMediaData);
-                }}
-              />
-            </div>
+                    console.log({ e, selectedSocialMedia, defaultUrl })
+
+                    const updatedMediaData = [...mediaData]
+                    updatedMediaData[idx] = {
+                      ...item,
+                      socialMedia: selectedSocialMedia,
+                      url: defaultUrl,
+                      error: false,
+                    }
+                    console.log({ updatedMediaData })
+                    setMediaData(()=>updatedMediaData)
+                  }}
+                />
+              </div>
 
               <div className={styles['input-box']}>
                 <input
@@ -735,17 +749,60 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                   placeholder={`URL`}
                   value={item.url}
                   name="url"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && idx === mediaData.length - 1) {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      handleSubmit()
+                    } else if (
+                      e.key === 'Enter' &&
+                      idx !== mediaData.length - 1
+                    ) {
+                      const focusableElements: NodeListOf<HTMLElement> =
+                        document.querySelectorAll(
+                          'input, button, select, textarea, a[href], [tabindex]:not([tabindex="-1"])',
+                        )
+
+                      const activeElement: Element | null =
+                        document.activeElement
+
+                      if (activeElement instanceof HTMLElement) {
+                        const elementsArray = Array.from(focusableElements)
+                        const currentIndex =
+                          elementsArray.indexOf(activeElement)
+
+                        if (currentIndex !== -1) {
+                          const nextIndex =
+                            (currentIndex + 2) % elementsArray.length
+                          elementsArray[nextIndex]?.focus()
+                        }
+                      }
+                    }
+                  }}
                   onChange={(e) => {
                     let val = e.target.value
                     onChange(idx, 'url', val)
+                    setMediaData((prev: any) => {
+                      prev[idx].error = false
+                      return prev
+                    })
                   }}
+                  // style={item?.error === true ? { borderColor: 'red' } : {}}
                 />
               </div>
               <Image
+                tabIndex={0}
                 src={DeleteIcon}
                 alt="delete"
                 className={styles.deleteIcon}
                 onClick={() => handleDelete(item)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    handleDelete(item)
+                  }
+                }}
               />
             </div>
           )
@@ -777,6 +834,16 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
           )}
         </button>
       </footer>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </div>
   )
 }

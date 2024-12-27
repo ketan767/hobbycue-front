@@ -12,6 +12,8 @@ import quillEmoji from 'quill-emoji'
 import 'react-quill/dist/quill.snow.css'
 import 'quill-emoji/dist/quill-emoji.css'
 import Tooltip from '@/components/Tooltip/ToolTip'
+import { useDispatch } from 'react-redux'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 const { EmojiBlot, ShortNameEmoji, ToolbarEmoji, TextAreaEmoji } = quillEmoji
 
@@ -33,6 +35,9 @@ interface Props {
   data?: any
   error?: any
   hasLink?: boolean
+  onStatusChange?: (isChanged: boolean) => void
+  forWhichComponent?: string
+  setIsFocused?: (isFocused: boolean) => void
 }
 
 const CustomEditor: React.FC<Props> = ({
@@ -43,12 +48,16 @@ const CustomEditor: React.FC<Props> = ({
   setData,
   error,
   hasLink,
+  onStatusChange,
+  forWhichComponent,
+  setIsFocused,
 }) => {
-  const editorRef = useRef(null)
+  const editorRef = useRef<ReactQuill>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const inputVideoRef = useRef<HTMLInputElement>(null)
   const [imageIconAdded, setImageIconAdded] = useState(false)
   const [content, setContent] = useState('')
+  const dispatch = useDispatch()
   const handleEditorChange = useCallback(
     (event: any, editor: any) => {
       const data = editor.getData()
@@ -56,13 +65,24 @@ const CustomEditor: React.FC<Props> = ({
     },
     [onChange],
   )
+  const placeholderText = `Start something interesting...
+  
+Note: This post will be visible to all those having the selected hobby and location
+  `
   const onReady = () => {
     if (image && !imageIconAdded) {
       const toolbar = document.querySelector('.ql-toolbar.ql-snow')
-      const img = document.createElement('img')
-      img.src = '/image.svg'
-      img.addEventListener('click', openInput)
-      toolbar?.append(img)
+      // Check if an <img> already exists inside the toolbar
+      const existingImg = toolbar?.querySelector('img')
+
+      if (!existingImg) {
+        // Only append the new image if no img exists
+        const img = document.createElement('img')
+        img.src = '/image.svg'
+        img.addEventListener('click', openInput)
+        toolbar?.append(img)
+        setImageIconAdded(true)
+      }
     }
   }
 
@@ -72,6 +92,9 @@ const CustomEditor: React.FC<Props> = ({
   }, [])
 
   const handleImageChange = (e: any) => {
+    if (onStatusChange) {
+      onStatusChange(true)
+    }
     let images = [...e.target.files]
     // setData((prev: any) => ({ ...prev, media: [...prev.media, ...images] }))
     if (data.video_url !== '')
@@ -85,12 +108,17 @@ const CustomEditor: React.FC<Props> = ({
   }
 
   const handleImageUpload = async (image: any, isVideo: boolean) => {
+    dispatch(setShowPageLoader(true))
+    if (onStatusChange) {
+      onStatusChange(true)
+    }
     const formData = new FormData()
     formData.append('post', image)
     console.log('formData', formData)
     const { err, res } = await uploadImage(formData)
     if (err) return console.log(err)
     if (res?.data.success) {
+      dispatch(setShowPageLoader(false))
       console.log(res.data)
       const img = res.data.data.url
       if (isVideo) {
@@ -104,8 +132,34 @@ const CustomEditor: React.FC<Props> = ({
       }
       // window.location.reload()
       // dispatch(closeModal())
+    } else {
+      dispatch(setShowPageLoader(false))
     }
   }
+
+  useEffect(() => {
+    const handlePaste = async (event: ClipboardEvent) => {
+      if (event.clipboardData?.files.length) {
+        const imageFile = event.clipboardData.files[0]
+
+        if (imageFile.type.startsWith('image/')) {
+          event.preventDefault()
+          handleImageUpload(imageFile, false)
+        }
+      }
+    }
+
+    const editorElement = editorRef.current?.getEditor()?.root
+    if (editorElement) {
+      editorElement.addEventListener('paste', handlePaste)
+    }
+
+    return () => {
+      if (editorElement) {
+        editorElement.removeEventListener('paste', handlePaste)
+      }
+    }
+  }, [editorRef, handleImageUpload])
 
   const openInput = () => {
     inputRef.current?.click()
@@ -117,17 +171,73 @@ const CustomEditor: React.FC<Props> = ({
 
   return (
     <>
+      {/* <style>{`
+          .ql-editor.ql-indent-1{
+            padding-left:4px;
+          }
+          .ql-editor ul, 
+          .ql-editor ol {
+            font-family:'Poppins';
+            padding-left: 4px; 
+            font-size:14px;
+            text-align:left; 
+          }
+
+          .ql-editor a {
+            font-family:'Poppins';
+            color: rgb(128, 100, 162);  
+            text-decoration: none !important;
+            font-size:14px;
+            text-align:left;
+          }
+          .ql-editor p {
+            font-family:'Poppins';
+            font-size:14px;
+            text-align:left;
+          }
+          .ql-editor {
+            scrollbar-width: thin;
+            scrollbar-color: #777 #f1f1f1;
+          }
+      `}</style> */}
       <ReactQuill
         theme="snow"
         ref={editorRef}
         value={data.content}
+        onFocus={() => {
+          if (setIsFocused) {
+            setIsFocused(true)
+          }
+        }}
+        onBlur={() => {
+          if (setIsFocused) {
+            setIsFocused(false)
+          }
+        }}
         onChange={(updatedValue) => {
+          if (onStatusChange) {
+            if (updatedValue == '') {
+              onStatusChange(false)
+            } else {
+              onStatusChange(true)
+            }
+          }
+          console.log(`status is changed`)
+
           setData((prev: any) => ({ ...prev, content: updatedValue }))
         }}
-        className={`${styles.quill} ${error ? styles['quill-error'] : ''} ${
+        className={`${styles['border']} ${error ? styles['quill-error'] : ''} ${
           hasLink ? styles['quill-has-link'] : ''
         }`}
-        placeholder="Start something interesting..."
+        style={{
+          ...(forWhichComponent === 'createPost' ? { maxHeight: '100%' } : {}),
+          ...(hasLink
+            ? { maxHeight: '420px' }
+            : data?.media?.length > 0
+            ? { height: '250px' }
+            : { height: '490px' }),
+        }}
+        placeholder={placeholderText}
         modules={{
           toolbar: {
             container: [
@@ -152,7 +262,8 @@ const CustomEditor: React.FC<Props> = ({
 
                 // 'emoji',
               ],
-              [{ list: 'ordered' }, { list: 'bullet' }, 'link'],
+              [{ list: 'ordered' }, { list: 'bullet' }],
+              ['link'],
             ],
           },
           // 'emoji-toolbar': true,
@@ -161,17 +272,24 @@ const CustomEditor: React.FC<Props> = ({
         }}
       />
 
-      <input
-        type="file"
-        multiple
-        accept="image/png, image/gif, image/jpeg"
-        className={styles.hidden}
-        onChange={(e) => handleImageChange(e)}
-        ref={inputRef}
-      />
-
-      {error && <p className={styles['error-text']}>{error}</p>}
       <style>{`
+          ${
+            !hasLink &&
+            `
+            .ql-editor.ql-blank {
+                min-height: calc(100vh - 18rem) !important;
+            }
+            .ql-container {
+                height: calc(100vh - 18rem) !important;
+            }
+            `
+          }
+          .ql-toolbar.ql-snow {
+            border-radius: 8px 8px 0 0 !important;
+          }
+          .ql-container.ql-snow {
+            border:none !important;
+          }
           .ql-editor.ql-indent-1{
             padding-left:4px;
           }
@@ -195,8 +313,36 @@ const CustomEditor: React.FC<Props> = ({
             font-size:14px;
             text-align:left;
           }
+          .ql-editor {
+            min-height: 100px;
+          }
+          .ql-container{
+            border: 2px solid #000 !important;
+            border-radius: 5px;
+          }
+          ${
+            forWhichComponent === 'createPost' &&
+            `
+              .ql-editor {
+              overflow:none;
+                scrollbar-width: thin;
+                scrollbar-color: #777 #f1f1f1;
+              }
+            `
+          }
           
       `}</style>
+
+      <input
+        type="file"
+        multiple
+        accept="image/png, image/gif, image/jpeg"
+        className={styles.hidden}
+        onChange={(e) => handleImageChange(e)}
+        ref={inputRef}
+      />
+
+      {error && <p className={styles['error-text']}>{error}</p>}
     </>
   )
 }
