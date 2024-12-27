@@ -1,5 +1,10 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react'
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+// import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline'
 import styles from './style.module.css'
+import dynamic from 'next/dynamic'
+import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload'
 import { uploadImage } from '@/services/post.service'
 import ReactQuill, { Quill } from 'react-quill'
 // @ts-ignore
@@ -64,34 +69,20 @@ Note: This post will be visible to all those having the selected hobby and locat
   `
   const onReady = () => {
     if (image && !imageIconAdded) {
-      const toolbar = document.querySelector('.ql-toolbar.ql-snow');
-      
+      const toolbar = document.querySelector('.ql-toolbar.ql-snow')
       // Check if an <img> already exists inside the toolbar
-      const existingImg = toolbar?.querySelector('img');
-  
+      const existingImg = toolbar?.querySelector('img')
+
       if (!existingImg) {
-        // Only append the new button with an image if no image exists
-        const button = document.createElement('button');
-        button.classList.add(styles.imageButton); // Add a class for styling the button
-  
-        const img = document.createElement('img');
-        img.src = '/image.svg'; // Set the image source
-        img.alt = 'Image Button'; // Add alt text for accessibility
-  
-        // Append the image to the button
-        button.appendChild(img);
-  
-        // Optionally, you can add an event listener to the button
-        button.addEventListener('click', openInput);
-  
-        // Append the button to the toolbar
-        toolbar?.appendChild(button);
-  
-        setImageIconAdded(true);
+        // Only append the new image if no img exists
+        const img = document.createElement('img')
+        img.src = '/image.svg'
+        img.addEventListener('click', openInput)
+        toolbar?.append(img)
+        setImageIconAdded(true)
       }
     }
-  };
-  
+  }
 
   useEffect(() => {
     if (editorRef.current === undefined) return
@@ -178,7 +169,35 @@ Note: This post will be visible to all those having the selected hobby and locat
 
   return (
     <>
-      <CustomToolbar />
+      {/* <style>{`
+          .ql-editor.ql-indent-1{
+            padding-left:4px;
+          }
+          .ql-editor ul, 
+          .ql-editor ol {
+            font-family:'Poppins';
+            padding-left: 4px; 
+            font-size:14px;
+            text-align:left; 
+          }
+
+          .ql-editor a {
+            font-family:'Poppins';
+            color: rgb(128, 100, 162);  
+            text-decoration: none !important;
+            font-size:14px;
+            text-align:left;
+          }
+          .ql-editor p {
+            font-family:'Poppins';
+            font-size:14px;
+            text-align:left;
+          }
+          .ql-editor {
+            scrollbar-width: thin;
+            scrollbar-color: #777 #f1f1f1;
+          }
+      `}</style> */}
       <ReactQuill
         theme="snow"
         ref={editorRef}
@@ -191,6 +210,8 @@ Note: This post will be visible to all those having the selected hobby and locat
               onStatusChange(true)
             }
           }
+          console.log(`status is changed`)
+
           setData((prev: any) => ({ ...prev, content: updatedValue }))
         }}
         className={`${styles['border']} ${error ? styles['quill-error'] : ''} ${
@@ -207,8 +228,35 @@ Note: This post will be visible to all those having the selected hobby and locat
         placeholder={placeholderText}
         modules={{
           toolbar: {
-            container: '#toolbar',
+            container: [
+              [
+                {
+                  bold: {
+                    className: 'quill-toolbar-button',
+                    title: 'Bold',
+                    text: 'Bold Text',
+                    'data-tooltip': 'Bold Tooltip',
+                  },
+                },
+                {
+                  italic: {
+                    className: 'quill-toolbar-button',
+                    title: 'Italic',
+                    text: 'Italic Text',
+                    'data-tooltip': 'Italic Tooltip',
+                  },
+                },
+                'underline',
+
+                // 'emoji',
+              ],
+              [{ list: 'ordered' }, { list: 'bullet' }],
+              ['link'],
+            ],
           },
+          // 'emoji-toolbar': true,
+          // 'emoji-textarea': true,
+          // 'emoji-shortname': true,
         }}
       />
 
@@ -288,41 +336,3 @@ Note: This post will be visible to all those having the selected hobby and locat
 }
 
 export default CustomEditor
-
-const CustomToolbar = () => (
-  <div id="toolbar">
-    <Tooltip title="Bold">
-      <button className="ql-bold">
-        B
-      </button>
-    </Tooltip>
-    <Tooltip title="Italic">
-      <button className="ql-italic">
-        I
-      </button>
-    </Tooltip>
-    <Tooltip title="Underline">
-      <button className="ql-underline">
-        U
-      </button>
-    </Tooltip>
-
-    <Tooltip title="Ordered List">
-      <button className="ql-list" value="ordered">
-        O
-      </button>
-    </Tooltip>
-
-    <Tooltip title="Bullet List">
-      <button className="ql-list" value="bullet">
-        B
-        </button>
-    </Tooltip>
-
-    <Tooltip title="Link">
-      <button className="ql-link">
-        L
-      </button>
-    </Tooltip>
-  </div>
-);
