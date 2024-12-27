@@ -24,11 +24,10 @@
   height: 32px;
 
   border: transparent;
-  
+
   padding: 8px 6px;
   color: transparent;
   font-size: 12px;
-
 }
 
 .inputFieldTime:focus,
@@ -54,7 +53,7 @@
   padding: 8px 6px;
   text-align: left;
 }
-.date-input{
+.date-input {
   position: relative;
 }
 
@@ -69,14 +68,12 @@
   /* visibility: hidden; */
 }
 
-.listItem{
+.listItem {
   position: relative;
   display: flex;
-
 }
 
 .inputField {
-
   padding: 6px 8px;
   justify-content: space-between;
   align-items: center;
@@ -227,7 +224,6 @@
   line-height: 20px; /* 166.667% */
 }
 
-
 .showDate {
   display: flex;
   flex-direction: column;
@@ -236,4 +232,62 @@
 }
 .datePickerWrapper {
   position: relative;
+}
+
+.footerButtons {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .blogsSection {
+    width: 100%;
+    gap: 16px;
+    padding-bottom: 16px;
+  }
+
+  .filterHeader {
+    width: 100%;
+  }
+
+  .blogsTitle {
+    color: var(--Primary-Full, #8064a2);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+  }
+
+  .blogsTitleWrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .blogsSection hr {
+    margin-inline: -16px !important;
+    border: 0;
+    border-top: 1px solid #ced4da;
+    margin-top: 16px;
+  }
+
+  .footerButtons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .footerButtons > button {
+    height: 42px;
+    width: 100%;
+
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 16px;
+  }
 }
