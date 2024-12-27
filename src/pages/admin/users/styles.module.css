@@ -1,4 +1,7 @@
 /* styles.module.css */
+
+
+
 .admin-login-wrapper {
   display: flex;
   justify-content: center;
@@ -173,7 +176,9 @@
 .resultsContainer {
   max-height: calc(100vh - 140px);
   overflow-y: auto;
+  -ms-overflow-style: none;
 }
+
 .resultsContainer::-webkit-scrollbar {
   display: none; 
 }
