@@ -731,7 +731,52 @@
   column-gap: 24px;
 }
 
+.mobileFilter {
+  display: none;
+}
+
 @media (max-width: 1100px) {
+  .blog-container {
+    display: block;
+  }
+
+  .container {
+    padding-top: 8px;
+  }
+
+  .mobileFilterContainer {
+    background-color: white;
+    padding: 16px;
+  }
+
+  .mobileFilter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobileFilter > div:first-child {
+    color: var(--Purple-1, #8064a2);
+    font-family: Poppins;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+  }
+
+  .mobileFilter > div:nth-child(2) {
+    display: flex;
+  }
+
+  .filterContainer {
+    display: none;
+  }
+
+  .gridContainer {
+    display: flex;
+    flex-direction: column;
+  }
+
   .blogButtons {
     padding-right: 16px;
   }

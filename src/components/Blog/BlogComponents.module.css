@@ -14,10 +14,10 @@
   justify-content: center;
   cursor: pointer;
   outline: none;
+  background-color: #F7F5F9;
 }
 
 .actions button:disabled {
-  opacity: 70%;
   cursor: not-allowed;
 }
 
