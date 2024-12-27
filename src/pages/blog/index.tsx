@@ -141,7 +141,7 @@ const Explore: React.FC<Props> = ({ data }) => {
             item.title?.toLowerCase(),
             item.tagline?.toLowerCase(),
             ...item.keywords.map((k) => k.toLowerCase()),
-          ].some((field) => field.includes(filters.search!.toLowerCase()))
+          ].some((field) => field?.includes(filters?.search!.toLowerCase()))
         : true
 
       if (filters.search) {
