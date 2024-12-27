@@ -135,7 +135,9 @@ export default function useHandleSubmit(
           )
         }
         dispatch(increaseRefreshNum())
-        router.push('/community')
+        if (router.pathname === '/community') {
+          router.push('/community')
+        }
       }
       return
     }
@@ -196,7 +198,9 @@ export default function useHandleSubmit(
         )
       }
       dispatch(increaseRefreshNum())
-      router.push('/community')
+      if (router.pathname === '/community') {
+        router.push('/community')
+      }
     }
   }
   return handleSubmit

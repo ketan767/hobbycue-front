@@ -408,8 +408,8 @@ export const CreatePost: React.FC<Props> = ({
   const [genreDropdownList, setGenreDropdownList] = useState<
     DropdownListItem[]
   >([])
-  const [visibilityData, setVisibilityData] = useState(['public'])
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
+  const [visibilityData, setVisibilityData] = useState(['puCblic'])
+  const [isFocused, setIsFocused] = useState(false)
 
   const handleSubmit = useHandleSubmit(
     data,
@@ -425,22 +425,6 @@ export const CreatePost: React.FC<Props> = ({
   )
   const defaultFirstHobby = useGetDefaultHobby()
 
-  useEffect(() => {
-    const handleResize = () => {
-      const viewportHeight = window.innerHeight
-      const visualViewportHeight =
-        window.visualViewport?.height || viewportHeight
-
-      setIsKeyboardVisible(visualViewportHeight < viewportHeight * 0.8)
-    }
-
-    window.addEventListener('resize', handleResize)
-    handleResize()
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
   useEffect(() => {
     console.log('metaData', metaData)
   }, [metaData])
@@ -639,180 +623,6 @@ export const CreatePost: React.FC<Props> = ({
     setGenreDropdownList(genres)
   }
 
-  // const handleSubmit = async () => {
-  //   if (data.content === '' || data.content === '<p><br></p>') {
-  //     console.log(data.content)
-  //     if (editBoxRef.current) {
-  //       editBoxRef.current.scrollTo(0, 0)
-  //     }
-  //     return setErrors({
-  //       ...errors,
-  //       content: 'This field is required',
-  //     })
-  //   }
-  //   if (selectedHobbies.length === 0) {
-  //     setSnackbar({
-  //       display: true,
-  //       type: 'warning',
-  //       message: 'Please select atleast one hobby',
-  //     })
-  //     return
-  //   }
-  //   const allHobbyIds = selectedHobbies.map((h) => h.hobbyId)
-  //   const allGenreIds = selectedHobbies.map((h) => h.genreId)
-  //   console.log('allHobbyIds', allHobbyIds)
-  //   console.log('allGenreIds', allGenreIds)
-  //   console.log('propsdata', propData)
-
-  //   const jsonData: any = {
-  //     hobbyId1: allHobbyIds[0],
-  //     hobbyId2: allHobbyIds[1] ? allHobbyIds[1] : '',
-  //     hobbyId3: allHobbyIds[2] ? allHobbyIds[2] : '',
-  //     genreId1: allGenreIds[0] ? allGenreIds[0] : '',
-  //     genreId2: allGenreIds[1] ? allGenreIds[1] : '',
-  //     genreId3: allGenreIds[2] ? allGenreIds[2] : '',
-
-  //     content: DOMPurify.sanitize(data.content),
-  //     visibility: data.visibility,
-  //     media:
-  //       // hasLink && showMetaData ? [...data.media, metadataImg] :
-  //       data.media,
-  //     has_link: hasLink,
-  //     video_url: data.video_url ? data.video_url : null,
-  //   }
-
-  //   setSubmitBtnLoading(true)
-
-  //   if (data.type === 'listing') {
-  //     jsonData.listingId = data.data._id
-  //     const { err, res } = editing
-  //       ? await updateListingPost(jsonData, propData._id)
-  //       : await createListingPost(jsonData)
-  //     setSubmitBtnLoading(false)
-  //     if (err) {
-  //       return console.log(err)
-  //     }
-  //     if (res.data.success) {
-  //       // store.dispatch(
-  //       //   setFilters({
-  //       //     location: data.visibility !== '' ? data.visibility : null,
-  //       //     hobby: data.hobby?._id ?? '',
-  //       //     genre: data.genre?._id ?? '',
-  //       //   }),
-  //       // )
-  //       store.dispatch(
-  //         updateActiveProfile({ type: data.type, data: data.data }),
-  //       )
-  //       store.dispatch(closeModal())
-  //       // window.location.reload()
-  //       let seeMore = false
-  //       const selectedHobby = allHobbyIds[0]
-  //       const selectedGenre = allGenreIds[0]
-  //       user._hobbies?.forEach((hobb: any, index: number) => {
-  //         if (selectedGenre && selectedHobby) {
-  //           if (
-  //             hobb?.genre?._id === selectedGenre &&
-  //             hobb?.hobby?._id === selectedHobby &&
-  //             index > 2
-  //           ) {
-  //             seeMore = true
-  //           }
-  //         } else if (selectedHobby) {
-  //           if (hobb?.genre?._id) {
-  //           } else if (hobb?.hobby?._id === selectedHobby && index > 2) {
-  //             seeMore = true
-  //           }
-  //         }
-  //       })
-
-  //       if (allGenreIds[0]) {
-  //         console.log('genres')
-  //         dispatch(
-  //           setFilters({
-  //             hobby: allHobbyIds[0],
-  //             location: data.visibility,
-  //             genre: allGenreIds[0],
-  //             seeMoreHobbies: seeMore,
-  //           }),
-  //         )
-  //       } else {
-  //         console.log('hobby')
-
-  //         dispatch(
-  //           setFilters({
-  //             hobby: allHobbyIds[0],
-  //             location: data.visibility,
-  //             genre: 'No genre',
-  //             seeMoreHobbies: seeMore,
-  //           }),
-  //         )
-  //       }
-  //       store.dispatch(increaseRefreshNum())
-  //       router.push('/community')
-  //     }
-  //     return
-  //   }
-
-  //   const { err, res } = editing
-  //     ? await updateUserPost(jsonData, propData?._id)
-  //     : await createUserPost(jsonData)
-
-  //   setSubmitBtnLoading(false)
-
-  //   if (err) {
-  //     return console.log(err)
-  //   }
-  //   if (res.data.success) {
-  //     store.dispatch(updateActiveProfile({ type: data.type, data: data.data }))
-  //     store.dispatch(closeModal())
-  //     // window.location.reload()
-  //     let seeMore = false
-  //     const selectedHobby = allHobbyIds[0]
-  //     const selectedGenre = allGenreIds[0]
-  //     user._hobbies?.forEach((hobb: any, index: number) => {
-  //       if (selectedGenre && selectedHobby) {
-  //         if (
-  //           hobb?.genre?._id === selectedGenre &&
-  //           hobb?.hobby?._id === selectedHobby &&
-  //           index > 2
-  //         ) {
-  //           seeMore = true
-  //         }
-  //       } else if (selectedHobby) {
-  //         if (hobb?.genre?._id) {
-  //         } else if (hobb?.hobby?._id === selectedHobby && index > 2) {
-  //           seeMore = true
-  //         }
-  //       }
-  //     })
-
-  //     if (allGenreIds[0]) {
-  //       console.log('genres')
-  //       dispatch(
-  //         setFilters({
-  //           hobby: allHobbyIds[0],
-  //           location: data.visibility,
-  //           genre: allGenreIds[0],
-  //           seeMoreHobbies: seeMore,
-  //         }),
-  //       )
-  //     } else {
-  //       console.log('hobby')
-
-  //       dispatch(
-  //         setFilters({
-  //           hobby: allHobbyIds[0],
-  //           location: data.visibility,
-  //           genre: 'No genre',
-  //           seeMoreHobbies: seeMore,
-  //         }),
-  //       )
-  //     }
-  //     store.dispatch(increaseRefreshNum())
-  //     router.push('/community')
-  //   }
-  // }
-
   useEffect(() => {
     setErrors({
       content: '',
@@ -960,7 +770,7 @@ export const CreatePost: React.FC<Props> = ({
 
   return (
     <>
-      {isMobile && isKeyboardVisible && (
+      {isMobile && isFocused && (
         <div className={styles['relative']}>
           <div className={styles['post-button-mobile']}>
             <FilledButton
@@ -1336,6 +1146,7 @@ export const CreatePost: React.FC<Props> = ({
                 error={errors.content}
                 hasLink={hasLink && showMetaData}
                 onStatusChange={onStatusChange}
+                setIsFocused={setIsFocused}
               />
               {data.video_url && (
                 <div className={styles.videoWrapper}>
