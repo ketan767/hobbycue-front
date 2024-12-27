@@ -5,5 +5,12 @@
     translate: 0 116px;
     margin: 0 auto;
     padding-bottom: 20px;
+    position: relative;
+  }
+
+  .blogFilterParent > span {
+    position: absolute;
+    top: -15px;
+    right: 3px;
   }
 }

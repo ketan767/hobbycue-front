@@ -749,6 +749,34 @@
     padding: 16px;
   }
 
+  .filterIcon {
+    z-index: 1301;
+    background-color: white;
+    border-radius: 9px;
+  }
+
+  .selectedFilter {
+    margin-top: 16px;
+    margin-left: auto;
+    width: fit-content;
+    display: flex;
+    padding: 4px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 24px;
+    background: var(--Purple-3, #f7f5f9);
+
+    /* Typography */
+    color: var(--Purple-1, #8064a2);
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.12px;
+  }
+
   .mobileFilter {
     display: flex;
     align-items: center;
