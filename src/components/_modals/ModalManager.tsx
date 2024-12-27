@@ -90,7 +90,7 @@ import SimpleOnboarding from './EditProfile/SimpleOnboarding'
 import ProductCategoryModal from './EditListing/ProductCategory/ProductCategory'
 import HobbyAboutEditModal from './EditHobby/About'
 import FBNoEmail from './FBNoEmail'
-import BlogPublish from './BlogPublish'
+import BlogPublish from './BlogPublish/BlogPublishModal'
 
 const CustomBackdrop: React.FC = () => {
   const { activeModal } = useSelector((state: RootState) => state.modal)
@@ -417,6 +417,9 @@ const ModalManager: React.FC = () => {
                     activeModal === 'User-Contact-To-Owner' ||
                     activeModal === 'ListingSupportModal' ||
                     activeModal === 'SupportUserModal' ||
+                    activeModal === 'claim-listing' ||
+                    activeModal === 'listing-cta-edit' ||
+                    activeModal === 'listing-product-purchase' ||
                     activeModal === 'CopyProfileDataModal') &&
                   styles['responsive-popup']
                 }`
@@ -446,7 +449,11 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'User-Contact-To-Owner' &&
                 activeModal !== 'ListingSupportModal' &&
                 activeModal !== 'SupportUserModal' &&
-                activeModal !== 'user-onboarding' && (
+                activeModal !== 'user-onboarding' &&
+                activeModal !== 'claim-listing' &&
+                activeModal !== 'listing-cta-edit' &&
+                activeModal !== 'listing-product-purchase' &&
+                !showAddHobbyModal && (
                   <>
                     <header className={styles['header']}>
                       <Image
@@ -464,7 +471,7 @@ const ModalManager: React.FC = () => {
                     </header>
                   </>
                 )}
-              {activeModal === 'blogPublish' && <BlogPublish propData={propData} />}
+              {activeModal === 'blogPublish' && <BlogPublish {...props} />}
               {activeModal === 'FBNoEmail' && <FBNoEmail />}
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
@@ -477,7 +484,7 @@ const ModalManager: React.FC = () => {
               )}
               {activeModal === 'create-post' && <CreatePost {...props} />}
               {activeModal === 'update-post' && (
-                <CreatePost propData={propData} />
+                <CreatePost {...props} propData={propData} />
               )}
               {activeModal === 'upload-image' && (
                 <UploadImageModal {...props} />
@@ -643,6 +650,8 @@ const ModalManager: React.FC = () => {
               {/* Modal Close Icon */}
               {closable &&
                 activeModal !== 'auth' &&
+                (!isMobile ? activeModal !== 'create-post' : true) &&
+                activeModal !== 'update-post' &&
                 activeModal !== 'social-media-share' &&
                 activeModal !== 'user-onboarding-welcome' &&
                 activeModal !== 'add-event' &&
@@ -656,6 +665,9 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'ListingSupportModal' &&
                 activeModal !== 'SupportUserModal' &&
                 activeModal !== 'blogPublish' &&
+                activeModal !== 'claim-listing' &&
+                activeModal !== 'listing-cta-edit' &&
+                activeModal !== 'listing-product-purchase' &&
                 !showAddGenreModal &&
                 !showAddHobbyModal && (
                   <CloseIcon

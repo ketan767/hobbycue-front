@@ -172,6 +172,7 @@ cursor: not-allowed;
 
 .footer button{
   background-color: #8064A2;
+  border: none;
 }
 
 .footer button{
@@ -233,14 +234,19 @@ cursor: not-allowed;
 
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
-    width: auto;
-    height: 100%;
+    width: 91%;
+    height: 500px;
     border-radius: 0;
+    border-radius: 8px;
+    overflow: hidden;
   }
   .modal-wrapper .body {
     padding-left: 20px;
     padding-right: 20px;
   }
+  /* .footer {
+    box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.075);
+  } */
   .modal-hr{
     display: none;
   }

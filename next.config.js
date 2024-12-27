@@ -5,7 +5,7 @@ const nextConfig = {
   },
   reactStrictMode: true,
   images: {
-    domains: ['hobbycue.com', 'images.unsplash.com'],
+    domains: ['hobbycue.com', 'images.unsplash.com', 'blog.hobbycue.com'],
     remotePatterns: [
       {
         protocol: 'https',

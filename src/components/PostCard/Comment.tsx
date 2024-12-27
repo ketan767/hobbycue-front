@@ -47,14 +47,13 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
       document.removeEventListener('click', handleClickOutside)
     }
   }, [])
-  
-  
+
   const postedByMe =
     (comment?.author_type === 'User' &&
       comment?._author?.email === user?.email) ||
     (comment?.author_type === 'Listing' && comment?._author?.admin === user._id)
 
-    const commentUrl = `${window.location.origin}/comment/${comment._id}`
+  const commentUrl = `${window.location.origin}/comment/${comment._id}`
 
   const showFeatUnderDev = () => {
     setSnackbar({
@@ -82,41 +81,65 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
   const inputRef: any = useRef<HTMLTextAreaElement>(null)
 
   const handleInputChange = (e: any) => {
-    setEditCommentContent(e.target.value);
+    setEditCommentContent(e.target.value)
 
     // Adjust textarea height to fit content
-    const textarea = inputRef.current;
+    const textarea = inputRef.current
     if (textarea) {
-      textarea.style.height = 'auto'; // Reset height to calculate the new height
-      textarea.style.height = `${textarea.scrollHeight}px`; // Set to scrollHeight
+      textarea.style.height = 'auto' // Reset height to calculate the new height
+      textarea.style.height = `${textarea.scrollHeight}px` // Set to scrollHeight
     }
-  };
+  }
 
-  const [inputFocus, setInputFocus] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [inputFocus, setInputFocus] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const editCommentHandler = async (e: any) => {
-    e.preventDefault();
-    setLoading(true);
-    setEditComment(false);
+    e.preventDefault()
+    setLoading(true)
+    setEditComment(false)
 
     if (editCommentContent === comment.content) {
-      return;
+      return
     }
 
-    const { res, err } = await editPostComment(comment._id, editCommentContent);
+    const { res, err } = await editPostComment(comment._id, editCommentContent)
     if (err) {
-      console.log('Error in editPostComment', err);
+      console.log('Error in editPostComment', err)
       setSnackbar({
         type: 'error',
         display: true,
         message: 'Error editing comment.',
-      });
+      })
     }
 
-    fetchComments();
-    setLoading(false);
+    fetchComments()
+    setLoading(false)
   }
+
+  const pageUrlClass = styles.postUrl
+
+  /**
+   * CONVERTING THE STRING CONTENT INTO APPROPRIATE HTML
+   */
+  const processedContent = comment?.content
+    .replace(/<img\b[^>]*>/g, '')
+    .replace(/(https?:\/\/[^\s<]+)(?![^<]*<\/a>)/gi, (url: string) => {
+      const href =
+        url.startsWith('http://') || url.startsWith('https://')
+          ? url
+          : `https://${url}`
+      return `<a href="${href}" class="${pageUrlClass}" target="_blank" style="color: rgb(128, 100, 162);">${url}</a>`
+    })
+
+  const finalContent = processedContent
+    .replace(/<a\b([^>]*)>/gi, (match: any) => {
+      if (!match.includes('style=')) {
+        return match.replace('<a', '<a style="color: rgb(128, 100, 162);"')
+      }
+      return match
+    })
+    .replace(/\n/g, '<br>')
 
   return (
     <div key={comment._id} className={styles['comment']}>
@@ -152,7 +175,10 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
       <section className={styles['content-wrapper']}>
         {/* Header */}
         <header>
-          <p className={styles['author-name']}>
+          <p
+            style={{ maxWidth: 'calc(100% - 80px)' }}
+            className={styles['author-name']}
+          >
             {comment?.author_type === 'Listing'
               ? comment?._author?.title
               : comment?._author?.full_name}
@@ -163,9 +189,11 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
         </header>
 
         {/* Content */}
-        {
-          editComment ? (
-            <div style={{marginTop:"8px"}} className={styles['comment-input-wrapper']}>
+        {editComment ? (
+          <div
+            style={{ marginTop: '8px' }}
+            className={styles['comment-input-wrapper']}
+          >
             <form onSubmit={editCommentHandler}>
               <TextareaAutosize
                 value={editCommentContent}
@@ -183,157 +211,178 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
                 onBlur={() => setInputFocus(false)}
                 ref={inputRef}
                 maxRows={5}
-                style={{borderColor: inputFocus ? '#8064A2' : '#E0E0E0', marginLeft:"0"}}
+                style={{borderColor: inputFocus ? '#8064A2' : '#E0E0E0', marginLeft:"0", paddingRight:"80px",}}
               />
               <CustomTooltip title="Save">
+                <button
+                  type="submit"
+                  className={styles['submit-btn']}
+                  disabled={loading}
+                  onClick={editCommentHandler}
+                >
+                  <svg
+                    className={styles['submit-btn-svg']}
+                    width="14"
+                    height="12"
+                    viewBox="0 0 14 12"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1.26683 11.6003L12.9002 6.61367C13.4402 6.38034 13.4402 5.62034 12.9002 5.387L1.26683 0.400337C0.826829 0.207003 0.340163 0.53367 0.340163 1.007L0.333496 4.08034C0.333496 4.41367 0.580163 4.70034 0.913496 4.74034L10.3335 6.00034L0.913496 7.25367C0.580163 7.30034 0.333496 7.587 0.333496 7.92034L0.340163 10.9937C0.340163 11.467 0.826829 11.7937 1.26683 11.6003Z"
+                      fill="#8064A2"
+                    />
+                  </svg>
+                </button>
+              </CustomTooltip>
+              <CustomTooltip title="Cancel">
               <button
                 type="submit"
+                style={{right:"48px"}}
                 className={styles['submit-btn']}
-                disabled={loading}
-                onClick={editCommentHandler}
+                onClick={() => setEditComment(false)}
               >
-                <svg
-                  className={styles['submit-btn-svg']}
-                  width="14"
-                  height="12"
-                  viewBox="0 0 14 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M1.26683 11.6003L12.9002 6.61367C13.4402 6.38034 13.4402 5.62034 12.9002 5.387L1.26683 0.400337C0.826829 0.207003 0.340163 0.53367 0.340163 1.007L0.333496 4.08034C0.333496 4.41367 0.580163 4.70034 0.913496 4.74034L10.3335 6.00034L0.913496 7.25367C0.580163 7.30034 0.333496 7.587 0.333496 7.92034L0.340163 10.9937C0.340163 11.467 0.826829 11.7937 1.26683 11.6003Z"
-                    fill="#8064A2"
-                  />
+                <svg style={{transform:"rotate(45deg)"}} className={styles['submt-btn-svg']} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11.1429 6.85714H6.85714V11.1429C6.85714 11.6143 6.47143 12 6 12C5.52857 12 5.14286 11.6143 5.14286 11.1429V6.85714H0.857143C0.385714 6.85714 0 6.47143 0 6C0 5.52857 0.385714 5.14286 0.857143 5.14286H5.14286V0.857143C5.14286 0.385714 5.52857 0 6 0C6.47143 0 6.85714 0.385714 6.85714 0.857143V5.14286H11.1429C11.6143 5.14286 12 5.52857 12 6C12 6.47143 11.6143 6.85714 11.1429 6.85714Z" fill="#8064A2"/>
                 </svg>
+
               </button>
               </CustomTooltip>
             </form>
-            </div>
-          ) : (
-            <CommentCheckWithUrl>
-              {comment.content.split('\n').map((line: any, index: number) => (
-                <div key={index}>{line}</div>
-              ))}
-            </CommentCheckWithUrl>
-          )
-        }
+          </div>
+        ) : (
+          <>
+            {/* {comment.content.split('\n').map((line: any, index: number) => (
+              <CommentCheckWithUrl key={index}>{line}</CommentCheckWithUrl>
+            ))} */}
+            <div
+              dangerouslySetInnerHTML={{ __html: finalContent }}
+              style={{ fontSize: 14 }}
+            />
+          </>
+        )}
 
         {/* Footer */}
-        {
-          !editComment && (
-        <footer>
-          {/* Upvote and Downvote */}
-          <PostCommentVotes
-            comment={comment}
-            postData={data}
-            styles={styles}
-            updateComments={fetchComments}
-          />
+        {!editComment && (
+          <footer>
+            {/* Upvote and Downvote */}
+            <PostCommentVotes
+              comment={comment}
+              postData={data}
+              styles={styles}
+              updateComments={fetchComments}
+            />
 
-          {/* More Action Button */}
+            {/* More Action Button */}
 
-          <div
-            //   ref={editReportDeleteRef}
-            className={styles.actionIcon}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <CustomizedTooltips title="Bookmark">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                cursor="pointer"
-                onClick={() =>
-                  setSnackbar({
-                    display: true,
-                    message: 'This feature is under development',
-                    type: 'error',
-                  })
-                }
-              >
-                <g clip-path="url(#clip0_21161_283625)">
-                  <path
-                    d="M9.90066 14.7372L9.5835 14.5892L9.26633 14.7372L4.0835 17.1558V2.77794C4.0835 2.06131 4.61013 1.5835 5.11921 1.5835H14.0478C14.5569 1.5835 15.0835 2.06131 15.0835 2.77794V17.1558L9.90066 14.7372Z"
-                    stroke="#8064A2"
-                    stroke-width="1.5"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_21161_283625">
-                    <rect width="20" height="20" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
-            </CustomizedTooltips>
-            <CustomizedTooltips title="Options">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                onClick={() => {
-                  // showFeatureUnderDevelopment()
-                  setOpenAction(!openAction)
-                }}
-                cursor={'pointer'}
-              >
-                <g clip-path="url(#clip0_173_72884)">
-                  <path
-                    d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
-                    fill="#6D747A"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_173_72884">
-                    <rect width="24" height="24" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
-            </CustomizedTooltips>
+            <div
+              //   ref={editReportDeleteRef}
+              className={styles.actionIcon}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <CustomizedTooltips title="Bookmark">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  cursor="pointer"
+                  onClick={() =>
+                    setSnackbar({
+                      display: true,
+                      message: 'This feature is under development',
+                      type: 'error',
+                    })
+                  }
+                >
+                  <g clip-path="url(#clip0_21161_283625)">
+                    <path
+                      d="M9.90066 14.7372L9.5835 14.5892L9.26633 14.7372L4.0835 17.1558V2.77794C4.0835 2.06131 4.61013 1.5835 5.11921 1.5835H14.0478C14.5569 1.5835 15.0835 2.06131 15.0835 2.77794V17.1558L9.90066 14.7372Z"
+                      stroke="#8064A2"
+                      stroke-width="1.5"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_21161_283625">
+                      <rect width="20" height="20" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+              </CustomizedTooltips>
+              <CustomizedTooltips title="Options">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  onClick={() => {
+                    // showFeatureUnderDevelopment()
+                    setOpenAction(!openAction)
+                  }}
+                  cursor={'pointer'}
+                >
+                  <g clip-path="url(#clip0_173_72884)">
+                    <path
+                      d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
+                      fill="#6D747A"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_173_72884">
+                      <rect width="24" height="24" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+              </CustomizedTooltips>
 
-            {openAction === true && (
-              <div style={{ marginTop:"12px" }} className={styles.editReportDelete}>
-                {postedByMe && (
-                  <>
+              {openAction === true && (
+                <div
+                  style={{ marginTop: '12px' }}
+                  className={styles.editReportDelete}
+                >
+                  {postedByMe && (
+                    <>
+                      <button
+                        onClick={() => {
+                          setEditComment(true)
+                          setOpenAction(false)
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowDelModal(true)
+                          setOpenAction(false)
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
+                  {!postedByMe && (
                     <button
                       onClick={() => {
-                        setEditComment(true)
+                        dispatch(
+                          openModal({
+                            type: 'PostReportModal',
+                            closable: true,
+                            propData: { reported_url: commentUrl },
+                          }),
+                        )
                         setOpenAction(false)
                       }}
                     >
-                      Edit
+                      Report
                     </button>
-                    <button
-                      onClick={() => {
-                        setShowDelModal(true)
-                        setOpenAction(false)
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </>
-                )}
-                {!postedByMe && (
-                  <button onClick={() => {
-                    dispatch(
-                      openModal({
-                        type: 'PostReportModal',
-                        closable: true,
-                        propData: { reported_url: commentUrl },
-                      }),
-                    )
-                    setOpenAction(false)
-                  }}>Report</button>
-                )}
-              </div>
-            )}
-          </div>
-        </footer>
-          )
-        }
+                  )}
+                </div>
+              )}
+            </div>
+          </footer>
+        )}
       </section>
       {showDelModal && (
         <DeletePrompt

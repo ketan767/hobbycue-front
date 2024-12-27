@@ -130,6 +130,25 @@
   border: 1px solid #0096c8;
   border-right: none;
 }
+
+.notesInput:focus {
+  border: 1px solid #0096C8;
+  /* border-right: none; */
+}
+
+.filterBtn {
+  background: transparent;
+  display: flex;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.rotate-arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
 .searchButton {
   width: 40px;
   height: 40px;
@@ -245,22 +264,7 @@
 }
 
 .resultsTable tbody tr td {
-  padding: 0 8px 0 8px;
-}
-.resultsTable tbody tr {
-  padding: 0 8px 0 8px;
-  min-height: 48px;
-}
-.sortButtonWrapper {
-  background: none;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  justify-content: start;
-}
-.sortButton {
-  background: none;
-  border: none;
+  padding: 0 8px 0 24px; 
 }
 
 /* Avatar styles */
@@ -299,6 +303,24 @@
   text-decoration-skip-ink: none;
 
   /* 142.857% */
+}
+.resultsTable tbody tr td {
+  padding: 0 8px 0 8px;
+}
+.resultsTable tbody tr {
+  padding: 0 8px 0 8px;
+  min-height: 48px;
+}
+.sortButtonWrapper {
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: start;
+}
+.sortButton {
+  background: none;
+  border: none;
 }
 .userName {
   color: var(--Grey-Darkest, #08090a);
@@ -368,6 +390,7 @@
   justify-content: center;
   align-items: center;
   gap: 16px;
+
 }
 
 .actions svg {

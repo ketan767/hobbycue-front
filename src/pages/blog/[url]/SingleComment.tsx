@@ -55,6 +55,29 @@ const SingleComment: React.FC<Props> = ({
     }
   }
 
+  /**
+   * CONVERTING THE STRING CONTENT INTO APPROPRIATE HTML
+   */
+  const pageUrlClass = styles.postUrl
+  const processedContent = comment?.content
+    ?.replace(/<img\b[^>]*>/g, '')
+    ?.replace(/(https?:\/\/[^\s<]+)(?![^<]*<\/a>)/gi, (url: string) => {
+      const href =
+        url.startsWith('http://') || url.startsWith('https://')
+          ? url
+          : `https://${url}`
+      return `<a href="${href}" class="${pageUrlClass}" target="_blank" style="color: rgb(128, 100, 162);">${url}</a>`
+    })
+
+  const finalContent = processedContent
+    ?.replace(/<a\b([^>]*)>/gi, (match: any) => {
+      if (!match.includes('style=')) {
+        return match.replace('<a', '<a style="color: rgb(128, 100, 162);"')
+      }
+      return match
+    })
+    ?.replace(/\n/g, '<br>')
+
   useEffect(() => {
     const outsideClick = () => {
       setShowMoreDiv(false)
@@ -100,15 +123,10 @@ const SingleComment: React.FC<Props> = ({
         </header>
 
         {/* Content */}
-        <CommentCheckWithUrl>
-          {comment?.content ? (
-            comment.content
-              .split('\n')
-              .map((line: any, index: number) => <div key={index}>{line}</div>)
-          ) : (
-            <div>""</div>
-          )}
-        </CommentCheckWithUrl>
+        <div
+          dangerouslySetInnerHTML={{ __html: finalContent }}
+          style={{ fontSize: 14 }}
+        />
 
         {/* Footer */}
         <footer>

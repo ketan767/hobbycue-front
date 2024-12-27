@@ -1,3 +1,7 @@
+.main-container {
+  background-color: #f2f0f5;
+}
+
 .all button:focus-visible {
   outline: #8064a2 2px solid;
   border: white 1px solid;
@@ -13,20 +17,66 @@
   overflow: hidden;
 }
 
+.blog-container {
+  max-width: 1240px;
+  display: grid;
+  display: flex;
+  margin: auto;
+  column-gap: 12px;
+}
+
+.no-posts-div {
+  max-width: 508px;
+  width: 100%;
+  min-width: 250px;
+  position: relative;
+  max-height: 329px;
+  height: 100%;
+  background-color: #ffffff;
+  padding: 1.2rem;
+  border-radius: 8px;
+  border: 2px solid rgb(242, 242, 242);
+}
+
+.no-post-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6d747a;
+}
+
 .container {
   max-width: 1296px;
   margin: 0 auto;
-}
-.filterContainer {
-  max-width: 280px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-.main-container {
   background-color: #f2f0f5;
   padding-top: 12px;
   display: flex;
+}
+.container {
+  max-width: 1016px;
+  width: 100%;
+  margin: 0 auto;
+}
+.filterContainer {
+  padding-top: 12px;
+  max-width: 229px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  height: 90vh;
+  position: sticky;
+  top: calc(var(--navbar-height-desktop));
+  margin-bottom: var(--spacing-12);
+}
+
+.gridContainer {
+  margin: 0 auto;
+  max-width: 1016px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  row-gap: 12px;
+  column-gap: 24px;
 }
 .blog-header {
   max-width: 872px;
@@ -102,6 +152,16 @@
   padding: 18px 24px;
 }
 
+.blogContent p:has(+ ul) {
+  margin-bottom: 0px;
+}
+
+.blogContent > p > a > img {
+  aspect-ratio: auto !important;
+  width: auto;
+  height: auto;
+}
+
 .profileAndComment {
   padding-inline: 24px;
 }
@@ -113,16 +173,17 @@
 
 .blogContent img {
   max-width: 100%;
+  margin: auto;
 }
 
 .blogContent ol,
 .blogContent ul {
-  color: var(--Grey-Darkest, #08090a);
-  font-family: Cambria;
-  font-size: 16px !important;
+  color: var(--Grey-Darkest, #08090a) !important;
+  font-family: Cambria !important;
+  font-size: 18px !important;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px;
+  line-height: 26px !important;
 
   padding-left: 4px;
   margin-bottom: 11px;
@@ -141,10 +202,10 @@
 .blogContent p {
   color: var(--Grey-Darkest, #08090a);
   font-family: Cambria;
-  font-size: 16px !important;
+  font-size: 18px !important;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px;
+  line-height: 26px;
   margin-bottom: 11px;
 }
 
@@ -254,6 +315,13 @@
   text-align: left;
   margin-bottom: 11px;
   color: #6d747a;
+  max-width: inherit;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: unset;
 }
 
 .date-and-hobbies {
@@ -363,9 +431,51 @@
   padding-right: 15px !important;
 }
 
+.ql-editor table,
+.blogContent table {
+  border: none;
+  border-collapse: collapse;
+  width: 100%;
+
+  color: var(--Grey-Darkest, #08090a);
+  font-family: Cambria;
+  font-size: 16px !important;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.ql-editor tr,
+.blogContent tr {
+  border: none;
+}
+
+.ql-editor td,
+.blogContent td {
+  border: 1px solid black;
+  padding: 15px;
+}
+
+.ql-editor figure,
+.blogContent figure,
+.blogContent .ql-editor {
+  display: block;
+}
+
+.ql-editor figcaption,
+.blogContent figcaption {
+  text-align: center;
+  color: var(--Grey-Darkest, #08090a);
+  font-family: Poppins;
+  font-size: 16px !important;
+  font-style: normal;
+  line-height: 24px;
+}
+
 .ql-editor.ql-indent-1 {
   padding-left: 4px;
 }
+
 .ql-editor ul,
 .ql-editor ol {
   color: var(--Grey-Darkest, #08090a);
@@ -379,33 +489,33 @@
 }
 
 .ql-editor a {
-  color: rgb(128, 100, 162);
+  color: rgb(128, 100, 162) !important;
   text-decoration: none !important;
 }
 .ql-editor p {
-  color: var(--Grey-Darkest, #08090a);
-  font-family: Cambria;
-  font-size: 16px !important;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
-  margin-bottom: 11px;
+  color: var(--Grey-Darkest, #08090a) !important;
+  font-family: Cambria !important;
+  font-size: 18px !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: 26px !important;
+  margin-bottom: 11px !important;
 }
 .ql-editor h2 {
-  color: var(--Grey-Darkest, #08090a);
-  font-family: Poppins;
+  color: var(--Grey-Darkest, #08090a) !important;
+  font-family: Poppins !important;
   font-size: 16px !important;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 24px;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  line-height: 24px !important;
 }
 .ql-editor h1 {
-  color: #000;
-  font-family: Poppins;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 32px;
+  color: #000 !important;
+  font-family: Poppins !important;
+  font-size: 24px !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  line-height: 32px !important;
 }
 
 .iframe-container {
@@ -460,6 +570,14 @@
   letter-spacing: 0em;
   text-align: left;
   color: #6d747a;
+
+  max-width: inherit;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: unset;
 }
 .header-user > .title > p:last-child {
   font-size: 14px;
@@ -535,6 +653,18 @@
 }
 
 @media screen and (max-width: 1100px) {
+  .blogContent p,
+  .blogContent ul,
+  .quill p,
+  .quill ul {
+    font-size: 20px !important;
+  }
+
+  .blogContent img,
+  .quill img {
+    width: 100% !important;
+  }
+
   .buttonWrapper {
     position: static;
     margin-left: auto;
@@ -548,6 +678,13 @@
   .author-name {
     font-size: 16px;
     margin-bottom: 0;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .profile-title {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
   }
 
   .blogContent {
@@ -589,12 +726,85 @@
   margin: 0 auto;
   max-width: 1296px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   row-gap: 12px;
   column-gap: 24px;
 }
 
+.mobileFilter {
+  display: none;
+}
+
 @media (max-width: 1100px) {
+  .blog-container {
+    display: block;
+  }
+
+  .container {
+    padding-top: 8px;
+  }
+
+  .mobileFilterContainer {
+    background-color: white;
+    padding: 16px;
+  }
+
+  .filterIcon {
+    z-index: 1301;
+    background-color: white;
+    border-radius: 9px;
+  }
+
+  .selectedFilter {
+    margin-top: 16px;
+    margin-left: auto;
+    width: fit-content;
+    display: flex;
+    padding: 4px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 24px;
+    background: var(--Purple-3, #f7f5f9);
+
+    /* Typography */
+    color: var(--Purple-1, #8064a2);
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.12px;
+  }
+
+  .mobileFilter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobileFilter > div:first-child {
+    color: var(--Purple-1, #8064a2);
+    font-family: Poppins;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+  }
+
+  .mobileFilter > div:nth-child(2) {
+    display: flex;
+  }
+
+  .filterContainer {
+    display: none;
+  }
+
+  .gridContainer {
+    display: flex;
+    flex-direction: column;
+  }
+
   .blogButtons {
     padding-right: 16px;
   }
@@ -615,12 +825,14 @@
   .cover-image {
     height: 109.33px;
     margin-bottom: 8px;
+    width: 100vw;
+    border-radius: 0;
+    transform: translateX(-16px);
   }
 
   .gridContainer {
     background-color: #ebedf0;
     row-gap: 8px;
-    grid-template-columns: repeat(1, 1fr);
   }
 
   .flex-container {
@@ -640,7 +852,7 @@
 
   .blog-title {
     font-family: Poppins;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 500;
     line-height: 23.12px;
     text-align: center;
@@ -649,7 +861,7 @@
 
   .blog-desc {
     font-family: Poppins;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 500;
     line-height: 13.21px;
     text-align: center;

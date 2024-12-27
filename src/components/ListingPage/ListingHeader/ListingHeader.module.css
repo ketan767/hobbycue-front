@@ -1,3 +1,6 @@
+.noBoxShadow {
+  box-shadow: none !important;
+}
 .ql-editor.ql-indent-1{
   padding-left:4px;
 }

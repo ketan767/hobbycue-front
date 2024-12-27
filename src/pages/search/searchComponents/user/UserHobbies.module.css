@@ -1,0 +1,4 @@
+.truncate {
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+}

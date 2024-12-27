@@ -1,27 +1,28 @@
 import React, { useEffect, useRef, useState } from 'react'
 import CustomDateRangePicker from './DateRangePicker/DateRangePicker'
 import styles from './BlogFilter.module.css'
-import { FormValues } from '@/pages/blog'
 import {
   getAllHobbies,
   getAllHobbiesWithoutPagi,
 } from '@/services/hobby.service'
-import { isEmptyField } from '@/utils'
+import { isEmptyField, isMobile } from '@/utils'
 import { DropdownListItem } from '@/components/_modals/AdminModals/EditpostsModal'
+import CloseIcon from '@/assets/icons/CloseIcon'
+import { RootState } from '@/redux/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { initialFormValues, setFormValues } from '@/redux/slices/blog'
+import { closeModal } from '@/redux/slices/modal'
+import OutlinedButton from '@/components/_buttons/OutlinedButton'
+import FilledButton from '@/components/_buttons/FilledButton'
 
-interface BlogFilterProps {
-  setFormValues: React.Dispatch<React.SetStateAction<FormValues>>
-  formValues: FormValues
-}
-
-const BlogFilter: React.FC<BlogFilterProps> = ({
-  setFormValues,
-  formValues,
-}) => {
+const BlogFilter: React.FC = () => {
+  const { formValues } = useSelector((state: RootState) => state.blog)
+  const isMob = isMobile()
   const containerRef = useRef<HTMLDivElement | null>(null)
   const hobbyRef = useRef<HTMLParagraphElement | null>(null)
   const styleRef = useRef<HTMLParagraphElement | null>(null)
-
+  const [isSelectingStartDate, setIsSelectingStartDate] = useState(true)
+  const [focusTarget, setFocusTarget] = useState<any>('')
   const [showCalender, setShowCalender] = useState(false)
   const [showStyle, setShowStyle] = useState(false)
   const [showHobby, setShowHobby] = useState(false)
@@ -35,21 +36,44 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
   const [genreId, setGenreId] = useState('')
   const [focusedHobbyIndex, setFocusedHobbyIndex] = useState(-1)
   const [focusedGenreIndex, setFocusedGenreIndex] = useState(-1)
+  const [startDate, setStartDate] = useState('')
+  const today = new Date().toISOString().split('T')[0]
+  const dispatch = useDispatch()
+
   // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: type === 'radio' ? (checked ? value : prevValues.status) : value,
-    }))
+    dispatch(
+      setFormValues({
+        ...formValues,
+        [name]:
+          type === 'radio' ? (checked ? value : formValues.status) : value,
+      }),
+    )
   }
+
+  const handleChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target
+    dispatch(
+      setFormValues({
+        ...formValues,
+        search: value,
+      }),
+    )
+  }
+
+  console.warn('formValues', formValues)
 
   const handleHobbyInputChange = async (e: any) => {
     const { name, value, type, checked } = e.target
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: type === 'radio' ? (checked ? value : prevValues.status) : value,
-    }))
+    dispatch(
+      setFormValues({
+        ...formValues,
+        [name]:
+          type === 'radio' ? (checked ? value : formValues.status) : value,
+      }),
+    )
+
     setShowHobby(true)
     setHobbyInputValue(e.target.value)
     setGenreInputValue('')
@@ -62,7 +86,7 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
       return
     }
 
-    const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
+    const query = `fields=display,genre&level=5&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
     const query2 = `fields=display,genre&level=5&level=4&level=3&level=2&level=1&level=0&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
     const { err: err2, res: res2 } = await getAllHobbiesWithoutPagi(query2)
@@ -106,15 +130,19 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
 
   const handleGenreInputChange = async (e: any) => {
     const { name, value, type, checked } = e.target
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: type === 'radio' ? (checked ? value : prevValues.status) : value,
-    }))
+    dispatch(
+      setFormValues({
+        ...formValues,
+        [name]:
+          type === 'radio' ? (checked ? value : formValues.status) : value,
+      }),
+    )
+
     setGenreInputValue(e.target.value)
 
     if (isEmptyField(e.target.value)) return setGenreDropdownList([])
-    const query = `fields=display&show=true&genre=${genreId}&level=5`
-    const query2 = `fields=display,show&genre=${genreId}&level=5`
+    const query = `fields=display&show=true&level=5&search=${e.target.value}`
+    const query2 = `fields=display,show&level=5&search=${e.target.value}`
 
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
@@ -148,7 +176,7 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
 
     setGenreDropdownList(sortedGenres)
     setAllGenreList(allFilteredGenres)
-    console.log('all----------------->', allFilteredGenres)
+
     setFocusedGenreIndex(-1)
   }
 
@@ -172,18 +200,23 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
       } else {
       }
     }
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      hobby: selectedHobby?.display,
-    }))
+    dispatch(
+      setFormValues({
+        ...formValues,
+        hobby: selectedHobby?.display,
+      }),
+    )
+
     setShowHobby(false)
   }
 
   const handleGenreSelection = async (x: any) => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      genre: x?.display,
-    }))
+    dispatch(
+      setFormValues({
+        ...formValues,
+        genre: x?.display,
+      }),
+    )
     setShowStyle(false)
   }
 
@@ -212,10 +245,106 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
     }
   }, [])
 
+  useEffect(() => {
+    setShowCalender(false)
+  }, [formValues.startDate, formValues.endDate])
+
+  // Close calendar if clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const calendarElement = document.querySelector(
+        `.${styles.datePickerWrapper}`,
+      )
+      const datePickerContainer = document.querySelector(
+        `.${styles.datePickerContainer}`,
+      )
+      if (
+        calendarElement &&
+        datePickerContainer &&
+        !calendarElement.contains(event.target as Node) &&
+        !datePickerContainer.contains(event.target as Node)
+      ) {
+        setShowCalender(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+
+  const handleDateSelection = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    key: string,
+  ) => {
+    const updatedItem = event.target.value
+
+    if (key === 'from_date') {
+      const selectedStartDate = updatedItem
+      const updatedEndDate =
+        formValues.endDate &&
+        new Date(formValues.endDate) < new Date(selectedStartDate)
+          ? ''
+          : formValues.endDate
+      dispatch(
+        setFormValues({
+          ...formValues,
+          startDate: selectedStartDate,
+          endDate: updatedEndDate,
+        }),
+      )
+    } else if (key === 'to_date') {
+      const selectedEndDate = updatedItem
+      const updatedStartDate =
+        formValues.startDate &&
+        new Date(formValues.startDate) > new Date(selectedEndDate)
+          ? 'Start Date'
+          : formValues.startDate
+      dispatch(
+        setFormValues({
+          ...formValues,
+          endDate: selectedEndDate,
+          startDate: updatedStartDate,
+        }),
+      )
+    }
+  }
+
+  const handleClearFilters = () => {
+    dispatch(setFormValues(initialFormValues))
+    dispatch(closeModal())
+  }
+
+  const handleApplyFilters = () => {
+    dispatch(closeModal())
+  }
+
   return (
     <section className={styles.blogsSection} ref={containerRef}>
-      <h1 className={styles.blogsTitle}>Blogs</h1>
-      <h2 className={styles.filter}>Filter</h2>
+      <div className={styles.filterHeader}>
+        <div className={styles.blogsTitleWrapper}>
+          <h1 className={styles.blogsTitle}>Blogs</h1>
+          {isMob && <CloseIcon onClick={() => dispatch(closeModal())} />}
+        </div>
+        {isMob && <hr />}
+      </div>
+      {!isMob && <h2 className={styles.filter}>Filter</h2>}
 
       <form className={styles.blogsForm}>
         <div className={`${styles.formGroup} ${styles.position}`}>
@@ -280,10 +409,10 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
           <input
             type="text"
             name="keywords"
-            placeholder="Title,Tagline,Keyword"
+            placeholder="Title, Tagline, Keyword"
             className={styles.formInput}
-            value={formValues.keywords}
-            onChange={handleChange}
+            value={formValues.search}
+            onChange={handleChangeKeyword}
           />
         </div>
         <div className={styles.formGroup}>
@@ -333,22 +462,40 @@ const BlogFilter: React.FC<BlogFilterProps> = ({
             </label>
           </p>
         </div>
-
-        <div className={styles.datePickerContainer}>
-          <p onClick={() => setShowCalender((pre) => !pre)}>
-            <span className={styles.showDate}>{formValues.startDate}</span>
-            <span className={styles.showDate}>{formValues.endDate}</span>
-          </p>
-
-          {showCalender && (
-            <div className={styles.datePickerWrapper}>
-              <CustomDateRangePicker
-                setFormValues={setFormValues}
-                setShowCalender={setShowCalender}
+        <div className={styles['date-container']}>
+          <div>
+            <span className={styles.showDate}>
+              <input
+                autoComplete="new"
+                value={formValues.startDate}
+                className={styles.inputFieldTime + ` ${styles['date-input']}`}
+                type="date"
+                max={today}
+                onChange={(e: any) => handleDateSelection(e, 'from_date')}
               />
-            </div>
-          )}
+              <p className={styles['formatted-date']}>{formValues.startDate}</p>
+            </span>
+          </div>
+          <p className={styles['dash-between-calender']}>-</p>
+          <div>
+            <span className={styles.showDate}>
+              <input
+                autoComplete="new"
+                value={formValues.endDate}
+                className={styles.inputFieldTime + ` ${styles['date-input']}`}
+                type="date"
+                max={today}
+                min={formValues.startDate}
+                onChange={(e: any) => handleDateSelection(e, 'to_date')}
+              />
+              <p className={styles['formatted-date']}>{formValues.endDate}</p>
+            </span>
+          </div>
         </div>
+      </div>
+      <div className={styles.footerButtons}>
+        <OutlinedButton onClick={handleClearFilters}>Clear</OutlinedButton>
+        <FilledButton onClick={handleApplyFilters}>Apply</FilledButton>
       </div>
     </section>
   )

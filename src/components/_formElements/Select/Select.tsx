@@ -17,6 +17,13 @@ type Props = {
   optionsContainerUnactiveClass?: string
   type?: 'page'
   img?: string
+  openDropdown?: boolean
+  setOpenDropdown?: (val: boolean) => void
+  style?: any
+  singleActiveMode?: boolean
+  openDropdownId?: string | null
+  setOpenDropdownId?: React.Dispatch<React.SetStateAction<string | null|undefined>>
+  id?:string
 }
 
 const InputSelect: React.FC<Props> = ({
@@ -30,17 +37,41 @@ const InputSelect: React.FC<Props> = ({
   optionsContainerUnactiveClass,
   type,
   img,
+  openDropdown,
+  setOpenDropdown,
+  style,
+  singleActiveMode = false, // New optional prop
+  openDropdownId,
+  setOpenDropdownId,
+  id
 }) => {
-  const [active, setactive] = useState(false)
-  const toggle = () => setactive(!active)
+  const [active, setActive] = useState(false)
+
+  const isSingleModeActive = singleActiveMode && openDropdownId === id
+
+  const toggle = () => {
+    if (singleActiveMode && setOpenDropdownId) {
+      setOpenDropdownId(isSingleModeActive ? null : id)
+    } else if (openDropdown && setOpenDropdown) {
+      setOpenDropdown(!openDropdown)
+    } else {
+      setActive(!active)
+    }
+  }
+
   const dropdownRef = useRef(null)
 
   useEffect(() => {
     const closeDropdown = () => {
-      setactive(false)
+      if (singleActiveMode && setOpenDropdownId) {
+        setOpenDropdownId(null)
+      } else {
+        setActive(false)
+        if (setOpenDropdown) setOpenDropdown(false)
+      }
     }
 
-    if (active) {
+    if ((singleActiveMode && isSingleModeActive) || active) {
       document.addEventListener('click', closeDropdown)
     } else {
       document.removeEventListener('click', closeDropdown)
@@ -49,7 +80,13 @@ const InputSelect: React.FC<Props> = ({
     return () => {
       document.removeEventListener('click', closeDropdown)
     }
-  }, [active])
+  }, [active, isSingleModeActive, singleActiveMode])
+
+  useEffect(() => {
+    if (!singleActiveMode && openDropdown) {
+      setActive(true)
+    }
+  }, [openDropdown, singleActiveMode])
 
   const handleHeaderClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation()
@@ -57,32 +94,51 @@ const InputSelect: React.FC<Props> = ({
   }
 
   const handleChildClick = () => {
-    setactive(false)
+    if (singleActiveMode && setOpenDropdownId) {
+      setOpenDropdownId(null)
+    } else {
+      setActive(false)
+      if (openDropdown && setOpenDropdown) {
+        setOpenDropdown(false)
+      }
+    }
   }
 
-  const notSelected = value == "All Locations" && value == "Select..." && value == null && value == undefined && value == "All Hobbies"
+  const notSelected =
+    value == 'All Locations' &&
+    value == 'Select...' &&
+    value == null &&
+    value == undefined &&
+    value == 'All Hobbies'
 
   return (
-    <div style={{backgroundColor : `${notSelected && "#8064a2"}`}} className={`${styles.container} ${className ? className : ''}`}>
+    <div
+      style={{ backgroundColor: `${notSelected && '#8064a2'}`, ...style }}
+      className={`${styles.container} ${className || ''}`}
+    >
       <header className={styles.header} onClick={handleHeaderClick}>
-        {type && type === 'page' ? (
+        {type === 'page' ? (
           <div className={styles['page-type']}>
             {value && <img src={img ?? DefaultPageImage.src} alt="" />}
-            <p>{value ? value : selectText ?? 'Select...'}</p>
+            <p>{value || selectText || 'Select...'}</p>
           </div>
         ) : (
-          <p>{value ? value : selectText ?? 'Select...'}</p>
+          <p>{value || selectText || 'Select...'}</p>
         )}
-        {/* <Image src={ChevronDown} alt="arrow" /> */}
         <svg
           width="16"
           height="16"
           viewBox="0 0 16 16"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          style={{ rotate: active ? '180deg' : '0deg' }}
+          style={{
+            rotate:
+              (singleActiveMode && isSingleModeActive) || active
+                ? '180deg'
+                : '0deg',
+          }}
         >
-          <g id="expand_more_black_24dp 1" clip-path="url(#clip0_173_70421)">
+          <g id="expand_more_black_24dp 1" clipPath="url(#clip0_173_70421)">
             <path
               id="Vector"
               d="M10.5867 6.195L7.99999 8.78167L5.41332 6.195C5.15332 5.935 4.73332 5.935 4.47332 6.195C4.21332 6.455 4.21332 6.875 4.47332 7.135L7.53332 10.195C7.79332 10.455 8.21332 10.455 8.47332 10.195L11.5333 7.135C11.7933 6.875 11.7933 6.455 11.5333 6.195C11.2733 5.94167 10.8467 5.935 10.5867 6.195Z"
@@ -99,12 +155,14 @@ const InputSelect: React.FC<Props> = ({
       <div
         ref={dropdownRef}
         className={`${styles['options-container']} ${
-          active ? styles['active'] : ''
-        }
-        ${optionsContainerUnactiveClass ?? ''}
-        ${active ? optionsContainerClass ?? '' : ''} 
-        ${className ? className : ''} 
-        `}
+          (singleActiveMode && isSingleModeActive) || active
+            ? styles['active']
+            : ''
+        } ${optionsContainerUnactiveClass || ''} ${
+          (singleActiveMode && isSingleModeActive) || active
+            ? optionsContainerClass || ''
+            : ''
+        } ${className || ''}`}
       >
         {React.Children.map(children, (child) =>
           React.cloneElement(child, { onClick: handleChildClick }),

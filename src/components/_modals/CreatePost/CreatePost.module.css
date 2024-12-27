@@ -5,7 +5,7 @@
   mix-blend-mode: normal;
   border-radius: var(--spacing-8);
   max-height: 50rem;
-  height: calc(100vh - 6rem);
+  height: calc(100vh - 2rem);
 }
 
 .changedWidth {
@@ -28,13 +28,14 @@
   gap: 16px;
   padding: 0 var(--spacing-24);
   width: 100%;
+  height: calc(100% - 4rem);
 }
 
 .create-post-modal > section {
   flex-grow: 1;
   height: calc(100vh - 20rem);
-  max-height: 485px;
-  border-radius: 8px;
+  max-height: 585px;
+  /* border-radius: 8px; */
 }
 
 .image-posting-as {
@@ -64,7 +65,7 @@
 }
 
 .image-posting-as > aside div {
-  /* display: grid; */
+  display: grid;
   flex-direction: column;
   gap: var(--spacing-4);
   /* background-color: #ffffff; */
@@ -219,6 +220,20 @@
   margin-bottom: 16px;
 }
 
+.create-post-btn2 {
+  border: none;
+  width: 99px;
+  height: 40px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  color: #ffffff;
+
+  background: #8064a2;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 .imgWrapper {
   max-height: 50%;
 
@@ -242,7 +257,7 @@
   width: 100%;
   display: flex;
   align-items: center;
-  height: 210%;
+
 }
 .imgContainer > img {
   height: 100%;
@@ -255,18 +270,21 @@
   top: 0;
   left: 0;
 }
+.no-scroll::-webkit-scrollbar {
+  width: 0;
+}
+
+.scroll-width {
+  width: 685px !important;
+}
+.no-scroll-width {
+  width: 671px !important;
+}
 .editor-container {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  /* max-width: calc(100% + 17px) ; */
-  /* width: 703.4px !important; */
-  width: 671px !important;
   overflow: auto;
-}
-
-.editor-container::-webkit-scrollbar {
-  width: 0px;
 }
 
 .editor-container::-webkit-scrollbar-track {
@@ -303,14 +321,16 @@
   padding: 16px;
   align-items: center;
   gap: 24px;
+  height: 116px;
 }
 
 .metadata-content > img {
-  width: 80px;
-  height: 80px;
+  width: 98.4px;
+  height: 98.4px;
   flex-shrink: 0;
   border-radius: 5px;
-  object-fit: cover;
+  object-fit: contain;
+  background-color: #000;
 }
 
 /* .metadata-content>div {
@@ -464,14 +484,42 @@
   width: 100%;
   height: 410px;
 }
+/* .relative{
+  position: relative;
+} */
+.post-button-mobile {
+  position: absolute;
+  top: -38px;
+  right: -4px;
+  z-index: 1001;
+}
+.nav-post-btn {
+  position: absolute;
+  border: none;
+  width: 80px;
+  height: 32px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  color: #ffffff;
+  background: #8064a2;
+  border-radius: 30px;
+  cursor: pointer;
+  right: 47px;
+}
 
 @media screen and (max-width: 1100px) {
+  .modal-wrapper {
+    max-height: 95vh;
+  }
+
   .create-post-modal {
     flex-direction: column;
     padding-left: 1rem;
     padding-right: 1rem;
     gap: 16px;
     overflow-y: scroll;
+    height: calc(100% - 4rem);
   }
 
   .image-posting-as > img {
@@ -499,12 +547,16 @@
     /* max-width: 350px; */
     width: 100vw !important;
     border-radius: 0;
-    height: 100%;
+    /* height: 100%; */
   }
 
   .create-post-btn {
+    width: 92.5%;
+
+  }
+  .create-post-btn2 {
     width: 100%;
-    height: 80%; /*added*/
+    /* height: 80%; */
   }
 
   .background {
@@ -513,6 +565,9 @@
 
   .modal-heading::before {
     display: none !important;
+  }
+  .modal-heading {
+    padding-top: 0;
   }
 
   .image-posting-as > aside {
@@ -533,8 +588,8 @@
   }
 
   .profile-switcher-parent {
-    height: 42px !important;
-    padding: 8px 12px !important;
+    height: 48px !important;
+    padding: 8px 8px 8px 12px !important;
   }
 
   .full-width-all {
@@ -546,10 +601,12 @@
   }
 
   .input-select {
-    height: 40px !important;
     display: flex !important;
     justify-content: center !important;
     align-items: stretch !important;
+  }
+  .options-container-class {
+    max-height: 300px !important;
   }
 
   .input-select > header > p {
@@ -618,13 +675,23 @@
     width: 100%;
   }
   .create-post-modal > section {
-    height: calc(100vh - 18rem);
+    height: 40vh;
   }
   .img-cancel-icon {
     right: 8px;
   }
   .image-posting-as > aside > div {
     grid-column: span 2 / span 2;
+  }
+  .create-post-btn {
+    margin-top: auto;
+    position: absolute;
+    padding-top: 8px;
+    bottom: 0;
+    z-index: 2;
+  }
+  .listing-profile-img {
+    display: none;
   }
 }
 

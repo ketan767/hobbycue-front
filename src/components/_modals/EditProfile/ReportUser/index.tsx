@@ -13,7 +13,7 @@ import styles from './styles.module.css'
 import { isEmpty, isEmptyField, isMobile } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, setHasChanges } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
@@ -72,6 +72,7 @@ const UserReport: React.FC<Props> = ({
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [isError, setIsError] = useState(false)
@@ -90,7 +91,6 @@ const UserReport: React.FC<Props> = ({
     reported_user_email: currprofile?.public_email,
     for_url: propData?.reported_url ? propData?.reported_url : currentUrl,
   })
-  const [isChanged, setIsChanged] = useState(false)
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -243,6 +243,16 @@ const UserReport: React.FC<Props> = ({
     }
   }, [textAreaRef.current])
 
+  useEffect(() => {
+    if (data.description) {
+      dispatch(setHasChanges(true))
+    } else {
+      dispatch(setHasChanges(false))
+    }
+  }, [data])
+
+  // const isMob = isMobile()
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -250,17 +260,17 @@ const UserReport: React.FC<Props> = ({
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
+        content="Would you like to submit your report before exit?"
       />
     )
   }
-  const isMob = isMobile()
 
   return (
     <>
       <div
         className={`${styles['modal-wrapper']} ${
           confirmationModal ? styles['ins-active'] : ''
-        }  `}
+        } ${isKeyboardOpen ? styles['keyboard-open'] : ``} `}
       >
         {/* Modal Header */}
         <header className={styles['header']}>
@@ -268,9 +278,7 @@ const UserReport: React.FC<Props> = ({
           {true && (
             <CloseIcon
               className={styles['modal-close-icon']}
-              onClick={() =>
-                isChanged ? setConfirmationModal(true) : handleClose()
-              }
+              onClick={() => handleClose()}
             />
           )}
         </header>
@@ -285,13 +293,17 @@ const UserReport: React.FC<Props> = ({
               }`}
             >
               <textarea
-                className={styles['long-input-box']}
+                className={`${styles['long-input-box']} ${
+                  isKeyboardOpen ? styles['short-input-box'] : ``
+                }`}
                 required
                 placeholder="Report the issue to the admin for their action."
                 name="message"
                 onChange={handleInputChange}
                 value={data.description}
                 ref={textAreaRef}
+                onFocus={() => setIsKeyboardOpen(true)}
+                onBlur={() => setIsKeyboardOpen(false)}
               />
             </div>
             {inputErrs.error ? (

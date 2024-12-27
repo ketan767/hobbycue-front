@@ -30,6 +30,7 @@
   transition: all;
   transition-duration: 300ms;
   transition-timing-function: ease;
+  overflow: hidden;
   height: 198px;
 }
 
@@ -362,6 +363,10 @@
 /* Trending Hobby Wrapper */
 .trending-hobbies-side-wrapper {
   margin-bottom: var(--spacing-16);
+  transition: all;
+  transition-duration: 300ms;
+  transition-timing-function: ease;
+  overflow: hidden;
 }
 .trending-hobbies-side-wrapper header {
   padding: var(--spacing-16) var(--spacing-16) var(--spacing-8);
@@ -421,9 +426,84 @@
   gap: 12px;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
-.start-post-btn-container :hover {
+.start-post-btn-container img {
+  object-fit: contain;
+}
+
+.account-active {
+  background: rgba(223, 216, 231, 1);
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  color: rgba(var(--primary-100-rgb));
+}
+
+.profile-switcher-dropdown {
+  position: absolute;
+  top: 55px;
+  left: 16px;
+  background-color: #fff;
+  width: 229px;
+  max-width: 229px;
+  max-height: 242px;
+  padding: 8px;
+  gap: 0px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 12px 0px rgba(147, 156, 163, 0.4);
+  z-index: 50;
+  overflow-y: auto;
+  overflow-x: hidden;
+  animation: fadeDown 0.3s ease forwards;
+}
+
+.profile-switcher-dropdown > ul {
+  list-style: none;
+}
+
+.profile-switcher-dropdown > ul > li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+}
+
+.profile-switcher-dropdown > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 209px;
+  height: 24px;
+  padding: 6px;
+  margin: 8px auto 0;
+  border: 1px solid rgba(128, 100, 162, 1);
+  font-size: 12px;
+  color: rgba(128, 100, 162, 1);
+  background-color: #ffffff;
+  gap: 10px;
+  border-radius: 100px;
+}
+
+.sidemenu-name{
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 20px;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+}
+
+
+.start-post-btn:hover {
   background-color: #8064a2;
   color: white;
   transition: 0.3s;
@@ -763,6 +843,10 @@
 }
 
 @media screen and (max-width: 1100px) {
+  .parentSection {
+    padding-top: 0.1px;
+  }
+  
   .whatsNewImg img {
     height: 32px;
     width: 32px;
@@ -836,7 +920,7 @@
     animation: fadeDown 0.3s ease forwards;
   }
   .dropdowns-panel > * {
-    padding: 0 12px;
+    padding: 0 16px;
   }
 
   /* .dropdowns-panel input {
@@ -916,14 +1000,14 @@
     padding: 0px 14px 0px 16px;
     flex-direction: column;
     align-items: flex-end;
-    gap: 16px;
+    gap: 12px;
     align-self: stretch;
     transition: all 0.3s ease;
     animation: fadeDown 0.3s ease forwards;
   }
 
   .dropdowns-panel .parent-list .no-gap {
-    gap: 16px;
+    gap: 7px;
   }
   .dropdowns-panel .parent-list .no-padding {
     padding: 0;
@@ -1024,9 +1108,10 @@
   }
   .navigation-links ul li {
     padding: 8px 0px !important;
-    min-width: 60px !important;
-    max-width: 30px !important;
+    min-width: 50px !important;
+    max-width: 25px !important;
     width: 100%;
+    margin-left: 5px;
     height: auto;
   }
   .navigation-links ul li:first-of-type {
@@ -1041,8 +1126,8 @@
     transform: translateY(calc(0 * var(--navbar-height-desktop)));
     z-index: 2;
     background-color: white;
-    padding: 8px 0;
-    /* position: relative; */
+    padding: 8px 0 0 0;
+    position: relative;
   }
   .community-header .top-margin-card {
     height: 0;
@@ -1057,7 +1142,7 @@
   }
   .navigation-links {
     /* right: 8px; */
-    padding-inline: 16px;
+    padding-inline: 12px;
   }
 
   .navigation-links ul li {
@@ -1115,6 +1200,7 @@
   .img-listing {
     display: block !important;
     width: 45px;
+    min-width: 45px;
     height: 40px;
     border-radius: 4px;
     border: 1px solid rgb(var(--primary-100-rgb));
@@ -1184,9 +1270,9 @@
 .modal-container {
   
   position: absolute;
-  top: 94%; /* Position below the input */
-  left: 0;
-  width: 100%; /* Match input width */
+  top: 81%; /* Position below the input */
+  
+  width: 94%; /* Match input width */
   background-color: white;
   border: 1px solid #ccc;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);

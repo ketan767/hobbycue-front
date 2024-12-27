@@ -20,7 +20,7 @@ import {
   updateListingPost,
   updateUserPost,
 } from '@/services/post.service'
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, setHasChanges } from '@/redux/slices/modal'
 import CrossIcon from '@/assets/svg/cross.svg'
 
 import DOMPurify from 'dompurify'
@@ -46,6 +46,8 @@ import { updateActiveProfile } from '@/redux/slices/user'
 import defaultImg from '@/assets/svg/default-images/default-user-icon.svg'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import ReactPlayer from 'react-player'
+import useGetDefaultHobby from './components/hobby/useDefaultHobby'
+import useHandleSubmit from './components/handleSubmit/useHandleSubmit'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -121,7 +123,23 @@ export const CreatePost: React.FC<Props> = ({
     video_url: '',
   })
   const [showMetaData, setShowMetaData] = useState(true)
+  const [openDropdown, setOpenDropdown] = useState(false)
   const editBoxRef = useRef<HTMLDivElement | null>(null)
+  const [needsScroll, setNeedsScroll] = useState(false)
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (editBoxRef.current) {
+        const hasOverflow =
+          editBoxRef.current.scrollHeight > editBoxRef.current.clientHeight
+        setNeedsScroll(hasOverflow)
+      }
+    }
+
+    checkOverflow()
+    window.addEventListener('resize', checkOverflow)
+
+    return () => window.removeEventListener('resize', checkOverflow)
+  }, [data])
 
   const removeSelectedHobby = (hobbyToRemove: any) => {
     const newHobbyData = selectedHobbies.filter((hobbyData) => {
@@ -304,7 +322,6 @@ export const CreatePost: React.FC<Props> = ({
       }
       setData((prev) => {
         if (selectedHobby) {
-
           return {
             ...prev,
             hobby: {
@@ -332,7 +349,7 @@ export const CreatePost: React.FC<Props> = ({
                 : null,
             }
           } else {
-            return { ...prev}
+            return { ...prev }
           }
         }
       })
@@ -381,6 +398,9 @@ export const CreatePost: React.FC<Props> = ({
   const hobbyRef = useRef<HTMLInputElement>(null)
   const genreRef = useRef<HTMLInputElement>(null)
   const [metadataImg, setMetaDataImg] = useState('')
+  const [openDropdownId, setOpenDropdownId] = useState<
+    string | null | undefined
+  >(null)
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     DropdownListItem[]
@@ -389,7 +409,38 @@ export const CreatePost: React.FC<Props> = ({
     DropdownListItem[]
   >([])
   const [visibilityData, setVisibilityData] = useState(['public'])
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
 
+  const handleSubmit = useHandleSubmit(
+    data,
+    editBoxRef,
+    errors,
+    setErrors,
+    setSnackbar,
+    selectedHobbies,
+    propData,
+    hasLink,
+    setSubmitBtnLoading,
+    editing,
+  )
+  const defaultFirstHobby = useGetDefaultHobby()
+
+  useEffect(() => {
+    const handleResize = () => {
+      const viewportHeight = window.innerHeight
+      const visualViewportHeight =
+        window.visualViewport?.height || viewportHeight
+
+      setIsKeyboardVisible(visualViewportHeight < viewportHeight * 0.8)
+    }
+
+    window.addEventListener('resize', handleResize)
+    handleResize()
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
   useEffect(() => {
     console.log('metaData', metaData)
   }, [metaData])
@@ -588,179 +639,179 @@ export const CreatePost: React.FC<Props> = ({
     setGenreDropdownList(genres)
   }
 
-  const handleSubmit = async () => {
-    if (data.content === '' || data.content === '<p><br></p>') {
-      console.log(data.content)
-      if (editBoxRef.current) {
-        editBoxRef.current.scrollTo(0, 0)
-      }
-      return setErrors({
-        ...errors,
-        content: 'This field is required',
-      })
-    }
-    if (selectedHobbies.length === 0) {
-      setSnackbar({
-        display: true,
-        type: 'warning',
-        message: 'Please select atleast one hobby',
-      })
-      return
-    }
-    const allHobbyIds = selectedHobbies.map((h) => h.hobbyId)
-    const allGenreIds = selectedHobbies.map((h) => h.genreId)
-    console.log('allHobbyIds', allHobbyIds)
-    console.log('allGenreIds', allGenreIds)
-    console.log('propsdata', propData)
+  // const handleSubmit = async () => {
+  //   if (data.content === '' || data.content === '<p><br></p>') {
+  //     console.log(data.content)
+  //     if (editBoxRef.current) {
+  //       editBoxRef.current.scrollTo(0, 0)
+  //     }
+  //     return setErrors({
+  //       ...errors,
+  //       content: 'This field is required',
+  //     })
+  //   }
+  //   if (selectedHobbies.length === 0) {
+  //     setSnackbar({
+  //       display: true,
+  //       type: 'warning',
+  //       message: 'Please select atleast one hobby',
+  //     })
+  //     return
+  //   }
+  //   const allHobbyIds = selectedHobbies.map((h) => h.hobbyId)
+  //   const allGenreIds = selectedHobbies.map((h) => h.genreId)
+  //   console.log('allHobbyIds', allHobbyIds)
+  //   console.log('allGenreIds', allGenreIds)
+  //   console.log('propsdata', propData)
 
-    const jsonData: any = {
-      hobbyId1: allHobbyIds[0],
-      hobbyId2: allHobbyIds[1] ? allHobbyIds[1] : '',
-      hobbyId3: allHobbyIds[2] ? allHobbyIds[2] : '',
-      genreId1: allGenreIds[0] ? allGenreIds[0] : '',
-      genreId2: allGenreIds[1] ? allGenreIds[1] : '',
-      genreId3: allGenreIds[2] ? allGenreIds[2] : '',
+  //   const jsonData: any = {
+  //     hobbyId1: allHobbyIds[0],
+  //     hobbyId2: allHobbyIds[1] ? allHobbyIds[1] : '',
+  //     hobbyId3: allHobbyIds[2] ? allHobbyIds[2] : '',
+  //     genreId1: allGenreIds[0] ? allGenreIds[0] : '',
+  //     genreId2: allGenreIds[1] ? allGenreIds[1] : '',
+  //     genreId3: allGenreIds[2] ? allGenreIds[2] : '',
 
-      content: DOMPurify.sanitize(data.content),
-      visibility: data.visibility,
-      media:
-        // hasLink && showMetaData ? [...data.media, metadataImg] :
-        data.media,
-      has_link: hasLink,
-      video_url: data.video_url ? data.video_url : null,
-    }
+  //     content: DOMPurify.sanitize(data.content),
+  //     visibility: data.visibility,
+  //     media:
+  //       // hasLink && showMetaData ? [...data.media, metadataImg] :
+  //       data.media,
+  //     has_link: hasLink,
+  //     video_url: data.video_url ? data.video_url : null,
+  //   }
 
-    setSubmitBtnLoading(true)
+  //   setSubmitBtnLoading(true)
 
-    if (data.type === 'listing') {
-      jsonData.listingId = data.data._id
-      const { err, res } = editing
-        ? await updateListingPost(jsonData, propData._id)
-        : await createListingPost(jsonData)
-      setSubmitBtnLoading(false)
-      if (err) {
-        return console.log(err)
-      }
-      if (res.data.success) {
-        // store.dispatch(
-        //   setFilters({
-        //     location: data.visibility !== '' ? data.visibility : null,
-        //     hobby: data.hobby?._id ?? '',
-        //     genre: data.genre?._id ?? '',
-        //   }),
-        // )
-        store.dispatch(
-          updateActiveProfile({ type: data.type, data: data.data }),
-        )
-        store.dispatch(closeModal())
-        // window.location.reload()
-        let seeMore = false
-        const selectedHobby = allHobbyIds[0]
-        const selectedGenre = allGenreIds[0]
-        user._hobbies?.forEach((hobb: any, index: number) => {
-          if (selectedGenre && selectedHobby) {
-            if (
-              hobb?.genre?._id === selectedGenre &&
-              hobb?.hobby?._id === selectedHobby &&
-              index > 2
-            ) {
-              seeMore = true
-            }
-          } else if (selectedHobby) {
-            if (hobb?.genre?._id) {
-            } else if (hobb?.hobby?._id === selectedHobby && index > 2) {
-              seeMore = true
-            }
-          }
-        })
+  //   if (data.type === 'listing') {
+  //     jsonData.listingId = data.data._id
+  //     const { err, res } = editing
+  //       ? await updateListingPost(jsonData, propData._id)
+  //       : await createListingPost(jsonData)
+  //     setSubmitBtnLoading(false)
+  //     if (err) {
+  //       return console.log(err)
+  //     }
+  //     if (res.data.success) {
+  //       // store.dispatch(
+  //       //   setFilters({
+  //       //     location: data.visibility !== '' ? data.visibility : null,
+  //       //     hobby: data.hobby?._id ?? '',
+  //       //     genre: data.genre?._id ?? '',
+  //       //   }),
+  //       // )
+  //       store.dispatch(
+  //         updateActiveProfile({ type: data.type, data: data.data }),
+  //       )
+  //       store.dispatch(closeModal())
+  //       // window.location.reload()
+  //       let seeMore = false
+  //       const selectedHobby = allHobbyIds[0]
+  //       const selectedGenre = allGenreIds[0]
+  //       user._hobbies?.forEach((hobb: any, index: number) => {
+  //         if (selectedGenre && selectedHobby) {
+  //           if (
+  //             hobb?.genre?._id === selectedGenre &&
+  //             hobb?.hobby?._id === selectedHobby &&
+  //             index > 2
+  //           ) {
+  //             seeMore = true
+  //           }
+  //         } else if (selectedHobby) {
+  //           if (hobb?.genre?._id) {
+  //           } else if (hobb?.hobby?._id === selectedHobby && index > 2) {
+  //             seeMore = true
+  //           }
+  //         }
+  //       })
 
-        if (allGenreIds[0]) {
-          console.log('genres')
-          dispatch(
-            setFilters({
-              hobby: allHobbyIds[0],
-              location: data.visibility,
-              genre: allGenreIds[0],
-              seeMoreHobbies: seeMore,
-            }),
-          )
-        } else {
-          console.log('hobby')
+  //       if (allGenreIds[0]) {
+  //         console.log('genres')
+  //         dispatch(
+  //           setFilters({
+  //             hobby: allHobbyIds[0],
+  //             location: data.visibility,
+  //             genre: allGenreIds[0],
+  //             seeMoreHobbies: seeMore,
+  //           }),
+  //         )
+  //       } else {
+  //         console.log('hobby')
 
-          dispatch(
-            setFilters({
-              hobby: allHobbyIds[0],
-              location: data.visibility,
-              genre: 'No genre',
-              seeMoreHobbies: seeMore,
-            }),
-          )
-        }
-        store.dispatch(increaseRefreshNum())
-        router.push('/community')
-      }
-      return
-    }
+  //         dispatch(
+  //           setFilters({
+  //             hobby: allHobbyIds[0],
+  //             location: data.visibility,
+  //             genre: 'No genre',
+  //             seeMoreHobbies: seeMore,
+  //           }),
+  //         )
+  //       }
+  //       store.dispatch(increaseRefreshNum())
+  //       router.push('/community')
+  //     }
+  //     return
+  //   }
 
-    const { err, res } = editing
-      ? await updateUserPost(jsonData, propData?._id)
-      : await createUserPost(jsonData)
+  //   const { err, res } = editing
+  //     ? await updateUserPost(jsonData, propData?._id)
+  //     : await createUserPost(jsonData)
 
-    setSubmitBtnLoading(false)
+  //   setSubmitBtnLoading(false)
 
-    if (err) {
-      return console.log(err)
-    }
-    if (res.data.success) {
-      store.dispatch(updateActiveProfile({ type: data.type, data: data.data }))
-      store.dispatch(closeModal())
-      // window.location.reload()
-      let seeMore = false
-      const selectedHobby = allHobbyIds[0]
-      const selectedGenre = allGenreIds[0]
-      user._hobbies?.forEach((hobb: any, index: number) => {
-        if (selectedGenre && selectedHobby) {
-          if (
-            hobb?.genre?._id === selectedGenre &&
-            hobb?.hobby?._id === selectedHobby &&
-            index > 2
-          ) {
-            seeMore = true
-          }
-        } else if (selectedHobby) {
-          if (hobb?.genre?._id) {
-          } else if (hobb?.hobby?._id === selectedHobby && index > 2) {
-            seeMore = true
-          }
-        }
-      })
+  //   if (err) {
+  //     return console.log(err)
+  //   }
+  //   if (res.data.success) {
+  //     store.dispatch(updateActiveProfile({ type: data.type, data: data.data }))
+  //     store.dispatch(closeModal())
+  //     // window.location.reload()
+  //     let seeMore = false
+  //     const selectedHobby = allHobbyIds[0]
+  //     const selectedGenre = allGenreIds[0]
+  //     user._hobbies?.forEach((hobb: any, index: number) => {
+  //       if (selectedGenre && selectedHobby) {
+  //         if (
+  //           hobb?.genre?._id === selectedGenre &&
+  //           hobb?.hobby?._id === selectedHobby &&
+  //           index > 2
+  //         ) {
+  //           seeMore = true
+  //         }
+  //       } else if (selectedHobby) {
+  //         if (hobb?.genre?._id) {
+  //         } else if (hobb?.hobby?._id === selectedHobby && index > 2) {
+  //           seeMore = true
+  //         }
+  //       }
+  //     })
 
-      if (allGenreIds[0]) {
-        console.log('genres')
-        dispatch(
-          setFilters({
-            hobby: allHobbyIds[0],
-            location: data.visibility,
-            genre: allGenreIds[0],
-            seeMoreHobbies: seeMore,
-          }),
-        )
-      } else {
-        console.log('hobby')
+  //     if (allGenreIds[0]) {
+  //       console.log('genres')
+  //       dispatch(
+  //         setFilters({
+  //           hobby: allHobbyIds[0],
+  //           location: data.visibility,
+  //           genre: allGenreIds[0],
+  //           seeMoreHobbies: seeMore,
+  //         }),
+  //       )
+  //     } else {
+  //       console.log('hobby')
 
-        dispatch(
-          setFilters({
-            hobby: allHobbyIds[0],
-            location: data.visibility,
-            genre: 'No genre',
-            seeMoreHobbies: seeMore,
-          }),
-        )
-      }
-      store.dispatch(increaseRefreshNum())
-      router.push('/community')
-    }
-  }
+  //       dispatch(
+  //         setFilters({
+  //           hobby: allHobbyIds[0],
+  //           location: data.visibility,
+  //           genre: 'No genre',
+  //           seeMoreHobbies: seeMore,
+  //         }),
+  //       )
+  //     }
+  //     store.dispatch(increaseRefreshNum())
+  //     router.push('/community')
+  //   }
+  // }
 
   useEffect(() => {
     setErrors({
@@ -808,22 +859,8 @@ export const CreatePost: React.FC<Props> = ({
       }
       setSelectedHobbies(existingHobbies)
     } else {
-      const firstHobby =
-        activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
-          ?.hobby?.display
-      const firstGenre =
-        activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
-          ?.genre?.display
-      const firstHobbyId = activeProfile?.data?.preferences?.create_post_pref
-        ?.preferred_hobby?.hobby?._id
-        ? activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
-            ?.hobby?._id
-        : undefined
-      const firstGenreId = activeProfile?.data?.preferences?.create_post_pref
-        ?.preferred_hobby?.genre?._id
-        ? activeProfile?.data?.preferences?.create_post_pref?.preferred_hobby
-            ?.genre?._id
-        : undefined
+      const { firstHobby, firstGenre, firstHobbyId, firstGenreId } =
+        defaultFirstHobby()
 
       const preferredLocation =
         user?.preferences?.create_post_pref?.preferred_location?.city?.split(
@@ -874,18 +911,8 @@ export const CreatePost: React.FC<Props> = ({
     setData((prev: any) => ({ ...prev, visibility: value }))
   }
 
+  const isReelBreakpoint = useMediaQuery('(max-width:600px)')
   const isMobile = useMediaQuery('(max-width:1100px)')
-  if (confirmationModal) {
-    return (
-      <SaveModal
-        handleClose={handleClose}
-        handleSubmit={handleSubmit}
-        setConfirmationModal={setConfirmationModal}
-        isError={isError}
-        content={'Would you like to post before exit ?'}
-      />
-    )
-  }
 
   const alreadyContains = (item: any) => {
     const alreadyContains = selectedHobbies.some((hobbyData) => {
@@ -908,14 +935,56 @@ export const CreatePost: React.FC<Props> = ({
     return match ? match[1] : null
   }
 
+  const handleEmptyHobbyClick = (e: any) => {
+    if (selectedHobbies.length === 0) {
+      setOpenDropdown(!openDropdown)
+    }
+  }
+
+  useEffect(() => {
+    if (data.content !== propData?.defaultValue) dispatch(setHasChanges(true))
+    else dispatch(setHasChanges(false))
+  }, [data])
+
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+        isError={isError}
+        content={'Would you like to post before exit ?'}
+      />
+    )
+  }
+
   return (
     <>
+      {isMobile && isKeyboardVisible && (
+        <div className={styles['relative']}>
+          <div className={styles['post-button-mobile']}>
+            <FilledButton
+              disabled={submitBtnLoading}
+              onClick={handleSubmit}
+              className={styles['nav-post-btn']}
+              loading={submitBtnLoading}
+            >
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'16px'} />
+              ) : (
+                'Post'
+              )}
+            </FilledButton>
+          </div>
+        </div>
+      )}
       <div
         className={`${styles['modal-wrapper']} ${
           confirmationModal ? styles['ins-active'] : ''
         } ${data?.media?.length && !isMobile ? styles['changedWidth'] : ''}`}
       >
         {/* Modal Header */}
+
         <div
           style={{ width: '671px' }}
           className={`${styles['modal-wrapper']} ${
@@ -923,7 +992,7 @@ export const CreatePost: React.FC<Props> = ({
           }`}
         >
           <h3 className={styles['modal-heading']}>
-            {editing ? 'Update Post' : 'Create Post'}
+            {/* {editing ? 'Update Post' : 'Create Post'} */}
           </h3>
           <div className={styles['create-post-modal']}>
             <div className={styles['image-posting-as']}>
@@ -956,16 +1025,37 @@ export const CreatePost: React.FC<Props> = ({
               )}
 
               <aside>
-                <div className={styles1.z20}>
+                <div
+                  className={styles1.z20}
+                  style={{ display: 'flex', flexDirection: 'row', gap: '16px' }}
+                >
                   <CreatePostProfileSwitcher
                     data={data}
                     setData={setData}
                     setHobbies={setHobbies}
                     classForShowDropdown={styles['full-width-all']}
                     className={styles['profile-switcher-parent']}
+                    setSelectedHobbies={setSelectedHobbies}
                   />
+                  {!isMobile && (
+                    <FilledButton
+                      disabled={submitBtnLoading}
+                      onClick={handleSubmit}
+                      className={styles['create-post-btn2']}
+                      loading={submitBtnLoading}
+                    >
+                      {submitBtnLoading ? (
+                        <CircularProgress color="inherit" size={'16px'} />
+                      ) : (
+                        'Post'
+                      )}
+                    </FilledButton>
+                  )}
                 </div>
-                <section className={styles1.z10}>
+                <section
+                  className={styles1.z10}
+                  onClick={handleEmptyHobbyClick}
+                >
                   {selectedHobbies && (
                     <section className={styles1.hobbyInput}>
                       {selectedHobbies?.map((item: any) => {
@@ -1022,10 +1112,17 @@ export const CreatePost: React.FC<Props> = ({
                     optionsContainerUnactiveClass={
                       styles['optionsContainerUnactiveClass']
                     }
+                    style={!isMobile ? { width: '354px' } : {}}
                     className={styles['input-select']}
+                    openDropdown={openDropdown}
+                    setOpenDropdown={setOpenDropdown}
+                    singleActiveMode={true}
+                    openDropdownId={openDropdownId}
+                    setOpenDropdownId={setOpenDropdownId}
+                    id={'hobbyCreatePost'}
                   >
                     <>
-                      {hobbies.length > 0 && (
+                      {hobbies?.length > 0 && (
                         <>
                           {hobbies?.map((item: any, idx) => {
                             return (
@@ -1046,20 +1143,9 @@ export const CreatePost: React.FC<Props> = ({
                                   }
                                   options={null}
                                   key={idx}
-                                  // selected={
-                                  //   item.hobby?._id === data.hobby?._id &&
-                                  //   (data.genre
-                                  //     ? item.genre?._id === data.genre?._id
-                                  //     : item.genre
-                                  //     ? false
-                                  //     : true)
-                                  // }
                                   selected={alreadyContains(item)}
                                   item={item}
                                   onChange={(e: any) => {
-                                    // const selected = user._hobbies.find(
-                                    //   (item: any) => item.hobby?._id === val,
-                                    // )
                                     const alreadyContains =
                                       selectedHobbies.some((hobbyData) => {
                                         console.log(
@@ -1098,13 +1184,6 @@ export const CreatePost: React.FC<Props> = ({
                                         }
                                       })
 
-                                    // selectedHobbies.forEach((hobb) => {
-                                    //   console.log('Hobby', hobb.hobby)
-                                    //   console.log('hobbyId', hobb.hobbyId)
-                                    //   console.log('genre', hobb.genre)
-                                    //   console.log('genreId', hobb.genreId)
-                                    // })
-
                                     const newHobbyData =
                                       alreadyContains ||
                                       selectedHobbies.length >= 3
@@ -1122,10 +1201,7 @@ export const CreatePost: React.FC<Props> = ({
                                                 : undefined,
                                             },
                                           ]
-                                    console.log(
-                                      'selectedHobbies--->',
-                                      newHobbyData,
-                                    )
+
                                     setSelectedHobbies(newHobbyData)
                                     if (selectedHobbies.length >= 3) {
                                       setSnackbar({
@@ -1173,8 +1249,13 @@ export const CreatePost: React.FC<Props> = ({
                       optionsContainerUnactiveClass={
                         styles['optionsContainerUnactiveClass']
                       }
+                      style={{ width: '229px', marginLeft: '62px' }}
                       // inputProps={{ 'aria-label': 'Without label' }}
                       // className={` ${styles['visibility-dropdown']}`}
+                      singleActiveMode={true}
+                      openDropdownId={openDropdownId}
+                      setOpenDropdownId={setOpenDropdownId}
+                      id={'locationCreatePost'}
                     >
                       {visibilityData?.map((item: any, idx) => {
                         return (
@@ -1205,6 +1286,10 @@ export const CreatePost: React.FC<Props> = ({
                       }
                       // inputProps={{ 'aria-label': 'Without label' }}
                       // className={` ${styles['visibility-dropdown']}`}
+                      singleActiveMode={true}
+                      openDropdownId={openDropdownId}
+                      setOpenDropdownId={setOpenDropdownId}
+                      id={'locationCreatePost'}
                     >
                       {visibilityData?.map((item: any, idx: number) => {
                         return (
@@ -1224,10 +1309,21 @@ export const CreatePost: React.FC<Props> = ({
               </aside>
             </div>
             <section
-              className={styles['editor-container'] + ' btnOutlinePurple'}
+              className={
+                styles['editor-container'] +
+                ` btnOutlinePurple ${
+                  !isMobile &&
+                  `${
+                    needsScroll
+                      ? styles['scroll-width']
+                      : styles['no-scroll-width']
+                  }`
+                }`
+              }
               ref={editBoxRef}
             >
               <CustomEditor
+                forWhichComponent="createPost"
                 value={data?.content}
                 onChange={(value) => {
                   setData((prev) => {
@@ -1290,55 +1386,106 @@ export const CreatePost: React.FC<Props> = ({
                       />
                     </div>
                   ) : isInstagramReelLink(url) ? (
-                    <div
-                      onClick={() => window.open(url, '_blank')}
-                      style={{
-                        background: '#fff',
-                        display: 'flex',
-                        justifyContent: 'between',
-                        alignItems: 'center',
-                        gap: '8px',
-                        cursor: 'pointer',
-                      }}
-                    >
+                    !isReelBreakpoint ? (
                       <div
+                        onClick={() => window.open(url, '_blank')}
                         style={{
-                          width: '230.63px',
-                          height: '410px',
+                          background: '#fff',
                           display: 'flex',
+                          justifyContent: 'between',
                           alignItems: 'center',
+                          gap: '16px',
+                          cursor: 'pointer',
+                          maxWidth: '637.4',
                         }}
                       >
-                        <img
-                          style={{ cursor: 'pointer', maxHeight: '410px' }}
-                          onClick={() => window.open(url, '_blank')}
-                          width="230.63px"
-                          src={
-                            (typeof metaData?.image === 'string' &&
-                              metaData.image) ||
-                            (typeof metaData?.icon === 'string' &&
-                              metaData.icon) ||
-                            defaultImg
-                          }
-                          alt=""
-                        />
+                        <div
+                          style={{
+                            width: '230.63px',
+                            height: '376.31px',
+                            display: 'flex',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <img
+                            style={{ cursor: 'pointer', maxHeight: '376.31px' }}
+                            onClick={() => window.open(url, '_blank')}
+                            width="230.63px"
+                            src={
+                              (typeof metaData?.image === 'string' &&
+                                metaData.image) ||
+                              (typeof metaData?.icon === 'string' &&
+                                metaData.icon) ||
+                              defaultImg
+                            }
+                            alt=""
+                          />
+                        </div>
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '16px',
+                            fontSize: '15px',
+                            justifyContent: 'start',
+                            height: '100%',
+                          }}
+                        >
+                          <p style={{ fontWeight: '500' }}>{metaData?.title}</p>
+                          <p style={{ color: '#333' }}>
+                            {metaData?.description?.split(':')[0]}
+                          </p>
+                        </div>
                       </div>
+                    ) : (
                       <div
+                        onClick={() => window.open(url, '_blank')}
                         style={{
                           display: 'flex',
+                          justifyContent: 'between',
+                          alignItems: 'center',
+                          gap: '8px',
+                          cursor: 'pointer',
                           flexDirection: 'column',
-                          gap: '16px',
-                          fontSize: '15px',
-                          justifyContent: 'start',
-                          height: '100%',
                         }}
                       >
-                        <p style={{ fontWeight: '500' }}>{metaData?.title}</p>
-                        <p style={{ color: '#333' }}>
-                          {metaData?.description?.split(':')[0]}
-                        </p>
+                        <div
+                          style={{
+                            width: 'calc(100%)',
+                          }}
+                        >
+                          <img
+                            style={{
+                              cursor: 'pointer',
+                            }}
+                            width="100%"
+                            onClick={() => window.open(url, '_blank')}
+                            src={
+                              (typeof metaData?.image === 'string' &&
+                                metaData.image) ||
+                              (typeof metaData?.icon === 'string' &&
+                                metaData.icon) ||
+                              defaultImg
+                            }
+                            alt=""
+                          />
+                        </div>
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '16px',
+                            fontSize: '15px',
+                            justifyContent: 'start',
+                          }}
+                        >
+                          <p style={{ fontWeight: '500' }}>{metaData?.title}</p>
+                          <p style={{ color: '#333' }}>
+                            {metaData?.description?.split(':')[0]}
+                          </p>
+                        </div>
                       </div>
-                    </div>
+                    )
                   ) : (
                     <div className={styles['show-metadata']}>
                       <svg
@@ -1398,36 +1545,48 @@ export const CreatePost: React.FC<Props> = ({
                             </p>
                           )}
                           {!isMobile && metaData?.url && (
-                            <p className={styles['metadata-url']}>
-                              {metaData?.description}
-                            </p>
+                            <>
+                              <p className={styles['metadata-url']}>
+                                {metaData?.description?.split(';')[0]}
+                              </p>
+                              <p className={styles['metadata-url']}>
+                                {metaData?.description?.split(';')[1]}
+                              </p>
+                            </>
                           )}
                         </div>
                       </div>
                       {isMobile && (
-                        <p className={styles['metadata-url']}>
-                          {' '}
-                          {metaData?.description}{' '}
-                        </p>
+                        <>
+                          <p className={styles['metadata-url']}>
+                            {' '}
+                            {metaData?.description?.split(';')[0]}
+                          </p>
+                          <p className={styles['metadata-url']}>
+                            {' '}
+                            {metaData?.description?.split(';')[1]}
+                          </p>
+                        </>
                       )}
                     </div>
                   )}
                 </>
               )}
             </section>
-
-            <FilledButton
-              disabled={submitBtnLoading}
-              onClick={handleSubmit}
-              className={styles['create-post-btn']}
-              loading={submitBtnLoading}
-            >
-              {submitBtnLoading ? (
-                <CircularProgress color="inherit" size={'16px'} />
-              ) : (
-                'Post'
-              )}
-            </FilledButton>
+            {isMobile && (
+              <FilledButton
+                disabled={submitBtnLoading}
+                onClick={handleSubmit}
+                className={styles['create-post-btn']}
+                loading={submitBtnLoading}
+              >
+                {submitBtnLoading ? (
+                  <CircularProgress color="inherit" size={'16px'} />
+                ) : (
+                  'Post'
+                )}
+              </FilledButton>
+            )}
           </div>
         </div>
       </div>

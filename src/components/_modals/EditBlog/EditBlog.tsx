@@ -1,7 +1,11 @@
+/**
+ * NOT USED. WILL DELETE LATER.
+ */
+
 import React, { use, useEffect, useState } from 'react'
 import styles from './EditBlog.module.css'
 import Image from 'next/image'
-import EditBlogHobbyModal from './EditHobby'
+import EditBlogHobbyModal from '../BlogPublish/Components/EditBlogHobbyModal'
 import { useRouter } from 'next/router'
 import { useGetBlogById } from '@/services/blog.services'
 import { BlogHobby } from '@/types/blog'
@@ -9,17 +13,19 @@ import axiosInstance from '@/services/_axios'
 import { CircularProgress } from '@mui/material'
 import FilledButton from '@/components/_buttons/FilledButton'
 import { useDispatch, useSelector } from 'react-redux'
-import { closeModal, openModal } from '@/redux/slices/modal'
+import { closeModal, openModal, setHasChanges } from '@/redux/slices/modal'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import BlogCard from '@/components/BlogCard/BlogCard'
 import { RootState } from '@/redux/store'
 import Link from 'next/link'
+import { setRefetch } from '@/redux/slices/blog'
+import SaveModal from '../SaveModal/saveModal'
 
-interface Props {
-  propData: any
-  // setIsModalOpen: any
-  // data: any
-}
+// interface Props {
+//   propData: any
+//   // setIsModalOpen: any
+//   // data: any
+// }
 
 const penIcon = (
   <svg
@@ -76,10 +82,7 @@ function formatDate(isoDate: any) {
 
   return `${day} ${month} ${year}`
 }
-const EditBlog: React.FC<Props> = ({
-  // setIsModalOpen
-  propData,
-}) => {
+const EditBlog: React.FC = (props: any) => {
   const router = useRouter()
 
   // const {
@@ -94,27 +97,20 @@ const EditBlog: React.FC<Props> = ({
   // }
 
   // const blog = data?.blog_url || {}
-  const { blog } = useSelector((state: RootState) => state.blog)
-  const { setIsEditing } = propData
+  const { blog, refetch } = useSelector((state: RootState) => state.blog)
   const author = blog?.author
   const [editHobby, setEditHobby] = useState(false)
   const [urlText, setUrlText] = useState('')
   const [urlError, setUrlError] = useState('')
-  const [keyWords, setKeyWords] = useState('')
+  const [keywords, setKeywords] = useState('')
   const [saveBtnLoading, setSaveBtnLoading] = useState(false)
   const [publishBtnLoading, setPublishBtnLoading] = useState(false)
+  // const [hasChanges, setHasChanges] = useState(false)
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    if (blog) {
-      setUrlText(blog?.url)
-      setKeyWords(blog.keywords)
-    }
-  }, [blog])
-
-  const handleClose = () => {
-    setEditHobby(false)
-  }
+  // const handleClose = () => {
+  //   setEditHobby(false)
+  // }
 
   const handleURLUpdate = (e: any) => {
     setUrlError('')
@@ -141,7 +137,10 @@ const EditBlog: React.FC<Props> = ({
       setSaveBtnLoading(true)
       let updatedFields = {
         url: urlText?.trim(),
-        keywords: keyWords,
+        keywords: keywords
+          ?.trim()
+          .split(/[\s,]+/)
+          .map((item: any) => item.trim()),
       }
       const token = localStorage.getItem('token')
 
@@ -165,6 +164,7 @@ const EditBlog: React.FC<Props> = ({
       setUrlError('')
       router.push(`/blog/${urlText}`)
       console.log('Blog updated successfully:', data)
+      props?.handleClose()
       return data
     } catch (err: any) {
       if (err?.response?.data?.message === 'Blog with this url already exists!')
@@ -199,6 +199,7 @@ const EditBlog: React.FC<Props> = ({
       setPublishBtnLoading(false)
       if (data) {
         // refetch()
+        dispatch(setRefetch(refetch + 1))
         console.log(data)
       }
     } catch (err) {
@@ -206,9 +207,9 @@ const EditBlog: React.FC<Props> = ({
     }
   }
 
-  let props = {
+  let propsHobby = {
     setEditHobby,
-    handleClose,
+    // handleClose,
     // refetch
   }
 
@@ -218,18 +219,39 @@ const EditBlog: React.FC<Props> = ({
   // }
 
   useEffect(() => {
+    if (blog) {
+      setUrlText(blog?.url)
+      setKeywords(blog.keywords?.join(', '))
+    }
+  }, [blog])
+
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        if (editHobby) {
-          setEditHobby(false)
-          e.stopPropagation()
-          return
-        }
+      if (e.key === 'Escape' && editHobby) {
+        setEditHobby(false)
+        e.stopPropagation()
       }
     }
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [])
+    document.body.addEventListener('keydown', handleKeyDown)
+    return () => document.body.removeEventListener('keydown', handleKeyDown)
+  }, [editHobby])
+
+  useEffect(() => {
+    const initialData = {
+      url: blog?.url,
+      keywords: blog?.keywords?.join(', '),
+    }
+    const newData = {
+      url: urlText,
+      keywords: keywords,
+    }
+
+    if (JSON.stringify(initialData) !== JSON.stringify(newData)) {
+      dispatch(setHasChanges(true))
+    } else {
+      dispatch(setHasChanges(false))
+    }
+  }, [urlText, keywords, blog])
 
   return (
     <>
@@ -276,7 +298,7 @@ const EditBlog: React.FC<Props> = ({
               </div>
             </header>
             {editHobby ? (
-              <EditBlogHobbyModal {...props} />
+              <EditBlogHobbyModal {...propsHobby} />
             ) : (
               <>
                 {/* blogURL */}
@@ -374,12 +396,12 @@ const EditBlog: React.FC<Props> = ({
                       <span className={styles.blogCardText}>Blog Card pic</span>
                       :<span className={styles.blogCardType}>Cover</span>
                     </h4> */}
-                    <h3 className={styles.keywordsHeader}>KeyWords</h3>
+                    <h3 className={styles.keywordsHeader}>Keywords</h3>
                     <textarea
                       className={styles.keywordsTextarea}
                       rows={10}
-                      value={keyWords}
-                      onChange={(e) => setKeyWords(e.target.value)}
+                      value={keywords}
+                      onChange={(e) => setKeywords(e.target.value)}
                     ></textarea>
                     <div className={styles.hobbiesSection}>
                       <h2 className={styles.hobbiesHeader}>
@@ -409,10 +431,10 @@ const EditBlog: React.FC<Props> = ({
             <OutlinedButton
               className={styles.backButton}
               onClick={() =>
-                editHobby ? setEditHobby(false) : dispatch(closeModal())
+                editHobby ? setEditHobby(false) : props?.handleClose()
               }
             >
-              Back
+              {editHobby ? `Back` : `Cancel`}
             </OutlinedButton>
             <FilledButton
               onClick={() =>

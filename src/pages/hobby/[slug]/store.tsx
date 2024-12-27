@@ -176,12 +176,13 @@ const HobbyStorePage: React.FC<Props> = (props) => {
           </section>
           {!loadingPosts && products.length === 0 && (
             <div
-            style={
-              isMobile
-                ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
-                : undefined
-            }
-            className={styles['dual-section-wrapper']}>
+              style={
+                isMobile
+                  ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
+                  : undefined
+              }
+              className={styles['dual-section-wrapper']}
+            >
               <div className={styles['no-posts-container']}>
                 <p>No products available</p>
               </div>

@@ -19,7 +19,7 @@ type Props = {
   noHandler?: () => void
   closeHandler?: () => void
   _id?: string
-  text?:string
+  text?: string
 }
 
 const DeletePrompt: React.FC<Props> = ({
@@ -28,7 +28,7 @@ const DeletePrompt: React.FC<Props> = ({
   noHandler,
   closeHandler,
   _id,
-  text
+  text,
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const isMobile = useMediaQuery('(max-width:1100px)')
@@ -56,6 +56,18 @@ const DeletePrompt: React.FC<Props> = ({
     }
   }, [])
 
+  useEffect(() => {
+    const handleDefaultKeydown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.stopPropagation()
+        noHandler?.()
+      }
+    }
+    document.body.addEventListener('keydown', handleDefaultKeydown)
+    return () =>
+      document.body.removeEventListener('keydown', handleDefaultKeydown)
+  }, [])
+
   // useEffect(() => {
   //   if (triggerOpen) {
   //     document.documentElement.style.overflow = 'hidden'
@@ -69,17 +81,12 @@ const DeletePrompt: React.FC<Props> = ({
         <div className={styles['modal-wrapper']}>
           <div ref={wrapperRef} className={`${styles['confirmation-modal']}`}>
             <div className={styles['confirmation-modal-body']}>
-              <p> Are you sure you want to delete this {text??''}? </p>
+              <p> Are you sure you want to delete this {text ?? ''}? </p>
               <div className={styles['buttons']}>
-                <FilledButton
-                  className={styles['button1']}
-                  onClick={noHandler}
-                >
+                <FilledButton className={styles['button1']} onClick={noHandler}>
                   Cancel
                 </FilledButton>
-                <OutlinedButton
-                  onClick={handleYesClick}
-                >
+                <OutlinedButton onClick={handleYesClick}>
                   {YesBtnLoading ? (
                     <CircularProgress
                       color="inherit"

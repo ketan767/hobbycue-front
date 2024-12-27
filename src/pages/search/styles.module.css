@@ -96,6 +96,7 @@
 }
 
 .peopleItem {
+  position: relative;
   display: flex;
   width: 100%;
   padding: 13px 24px;
@@ -104,6 +105,7 @@
   border-bottom: 1px solid var(--grey-light, #ced4da);
   align-items: center;
   cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
 .userAvatar {
@@ -157,6 +159,9 @@
   height: 100%;
 }
 .view-more-btn-container {
+  display: flex;
+  /* justify-content: space-between; */
+  gap: 10px;
   padding: var(--spacing-16) var(--spacing-24);
 }
 
@@ -219,6 +224,36 @@
 
 .userLocation {
   display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  font-size: 14px;
+  color: #666;
+}
+.blogAuthor {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  font-size: 14px;
+  color: #666;
+  /* max-width: 100vw; */
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-between; */
+}
+
+.singlePageExplore {
+  margin-top: 24px;
+}
+.programDetails {
+  display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -227,6 +262,26 @@
   word-break: break-word;
   font-size: 14px;
   color: #666;
+  /* max-width: 100vw; */
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-between; */
+}
+.full_name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  text-wrap: nowrap;
+  max-width: 30.5vw;
+  margin-right: 5px;
+}
+.address {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  text-wrap: nowrap;
+  max-width: 29vw;
+  margin-right: 5px;
 }
 
 .hobbydescription {
@@ -248,12 +303,40 @@
   cursor: pointer;
 
   display: block;
-  width: 100%;
+  width: 80%;
+  max-width: 489px;
+  max-height: 40px;
   text-align: center;
   font-size: 14px;
   font-family: 'Poppins';
   font-weight: 600;
   border: 1px solid var(--Purple-1, #8064a2);
+}
+/* .view-more-btn:disabled {
+  opacity: 50%;
+} */
+.explore-btn {
+  background-color: white;
+  color: #8064a2;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  /* display: block; */
+  width: 30%;
+  max-height: 40px;
+  max-width: 124px;
+  text-align: center;
+  font-size: 14px;
+  font-family: 'Poppins';
+  font-weight: 600;
+  border: 1px solid var(--Purple-1, #8064a2);
+  transition: all 300ms ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .view-more-btn:hover {
@@ -261,7 +344,29 @@
   color: white;
   transition: 0.3s;
 }
+.explore-btn:hover {
+  background-color: #8064a2;
+  color: white;
+  transition: 0.3s;
+}
+.arrow {
+  margin-left: 8px;
+  cursor: pointer;
+  transition: all 300ms ease-in-out;
+}
 
+.arrowRight {
+  margin-left: 8px;
+  cursor: pointer;
+  transform: rotate(-90deg);
+  transition: all 300ms ease-in-out;
+}
+.arrowRotated {
+  transform: rotate(-180deg);
+}
+.accordianPosition {
+  margin-top: 4px;
+}
 .resultHeading {
   display: flex;
   width: 100%;
@@ -397,6 +502,79 @@
   box-shadow: 0px -8px 12px rgba(147, 156, 163, 0.12),
     0px 8px 12px rgba(147, 156, 163, 0.12);
 }
+.siteExploreParent {
+  height: 62px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: -12px;
+  margin-bottom: 12px;
+  padding-inline: 24px;
+}
+
+@keyframes slideDown {
+  from {
+    max-height: 0;
+    opacity: 0;
+    visibility: hidden;
+  }
+  to {
+    max-height: 500px;
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    max-height: 500px;
+    opacity: 1;
+    visibility: visible;
+  }
+  to {
+    max-height: 0;
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.userExploreContainer {
+  max-height: 0;
+  /* overflow: hidden; */
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+  display: none;
+}
+
+.visible {
+  display: block;
+  max-height: 500px;
+  opacity: 1;
+  visibility: visible;
+  /* animation: slideDown 0.01s ease-in-out forwards; */
+}
+
+.hidden {
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  display: none;
+  /* animation: slideUp 0.01s ease-in-out forwards; */
+}
+
+/* .userExploreContainer.open {
+  max-height: 300px; 
+  opacity: 1;
+  visibility: visible;
+}
+
+.userExploreContainer.closed {
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+
+} */
 
 .inputDiv {
   position: relative;
@@ -594,7 +772,7 @@
   max-width: 210px;
   width: 100%;
   position: absolute;
-  max-height: 280px;
+  max-height: 240px;
   overflow-y: auto;
   left: 0;
   background: #ffffff;
@@ -604,6 +782,11 @@
   filter: drop-shadow(0px 0px 2px rgba(147, 156, 163, 0.36))
     drop-shadow(0px 8px 12px rgba(147, 156, 163, 0.12));
   z-index: 500;
+  /* transition: all 0.3s ease-in-out; */
+}
+.dropdownHobby-below-70vh {
+  top: auto;
+  bottom: 50px;
 }
 
 .dropdownHobby p {
@@ -618,6 +801,7 @@
   color: #6d747a;
   cursor: pointer;
   text-align: left;
+  opacity: 1;
 }
 
 .dropdownHobby p:hover {
@@ -636,6 +820,11 @@
   justify-content: space-between;
   gap: 32px;
 }
+.inputExploreContainer {
+  position: relative;
+  display: flex;
+  gap: 23px;
+}
 .dropdown-option-focus {
   background: #f7f5f9;
   color: #8064a2;
@@ -648,7 +837,6 @@
   position: absolute;
   margin-top: 22px;
 }
-
 .dropdown {
   top: 46px;
   width: 360px;
@@ -663,6 +851,10 @@
   filter: drop-shadow(0px 0px 2px rgba(147, 156, 163, 0.36))
     drop-shadow(0px 8px 12px rgba(147, 156, 163, 0.12));
   z-index: 500;
+}
+.dropdownLocation-below-70vh {
+  top: auto;
+  bottom: 50px;
 }
 
 .dropdown p {
@@ -707,9 +899,23 @@
 }
 
 .btnDisabled {
-  background: var(--Primary-Half, rgba(128, 100, 162, 0.5)) !important;
-  color: white !important;
-  border: none !important;
+  color: #ccc1da !important;
+  border: 1px solid #ccc1da !important;
+}
+.btnDisabled:hover {
+  background-color: #fff;
+}
+
+.laptopHidden {
+  display: none;
+}
+.mt-4px {
+  margin-top: 4px;
+}
+.bookmark {
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 
 @media screen and (max-width: 1100px) {
@@ -815,6 +1021,10 @@
   }
 
   .filterParent {
+    padding: 15px 0;
+    height: auto;
+  }
+  .siteExploreParent {
     padding: 15px 16px;
     height: auto;
   }
@@ -846,11 +1056,17 @@
     width: 100%;
   }
   .view-more-btn-container {
+    display: flex;
     padding: var(--spacing-16) var(--spacing-16);
   }
 
   .view-more-btn {
-    width: 100%;
+    width: 70%;
+    max-width: 1000px;
+  }
+  .explore-btn {
+    width: 30%;
+    max-width: 500px;
   }
 
   .peopleItem {
@@ -865,6 +1081,15 @@
   }
   .userLocation {
     font-size: 12px;
+  }
+  .blogAuthor {
+    font-size: 12px;
+  }
+  .programDetails {
+    font-size: 12px;
+  }
+  .full_name {
+    max-width: 38vw;
   }
   .userName {
     white-space: nowrap;
@@ -881,9 +1106,7 @@
   .hobbySuggestion {
     width: 100%;
   }
-  .categorySuggestion {
-    width: 100%;
-  }
+
   .hobbySearch {
     width: 100%;
   }
@@ -892,6 +1115,10 @@
     position: absolute;
     top: 30px;
     z-index: 10;
+  }
+  .dropdownHobby-below-70vh {
+    top: auto;
+    bottom: 50px;
   }
   .dropdownHobby p {
     text-align: left;
@@ -910,10 +1137,65 @@
     width: 180px;
     left: -16px;
     position: absolute;
-    top: 30px;
+    top: 45px;
     z-index: 500;
   }
   .dropdown p {
     text-align: left;
+  }
+  .arrow {
+    top: 12px;
+    right: 4px;
+  }
+  .arrowRight {
+    top: 12px;
+    right: 4px;
+  }
+  .mobileHidden {
+    display: none;
+  }
+  .inputExploreContainer {
+    position: relative;
+    display: flex;
+    width: 100%;
+    gap: 23px;
+  }
+  .inputExploreContainerWithBtn {
+    position: relative;
+    display: flex;
+    width: 100%;
+    gap: 23px;
+  }
+  .categorySuggestion {
+    width: 100%;
+    max-width: 100%;
+  }
+  .locationSearch {
+    width: 100%;
+  }
+  .laptopHidden {
+    display: flex;
+  }
+  .submitMobile {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .accordianPositionMobile {
+    width: 50%;
+  }
+  .dropdownLocation-below-70vh {
+    top: auto;
+    bottom: 45px;
+  }
+  .submitButtonMobile {
+    width: 114px;
+    max-width: 114px;
+  }
+}
+
+@media screen and (min-width: 1390px) {
+  .full_name {
+    max-width: 400px;
   }
 }

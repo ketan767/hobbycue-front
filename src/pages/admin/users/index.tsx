@@ -1,40 +1,34 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { getAllUserDetail, searchUsers } from '../../../services/user.service'
 import styles from './styles.module.css'
 import Image from 'next/image'
 import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
-import { forgotPassword } from '@/services/auth.service'
-import {
-  closeModal,
-  openModal,
-  updateForgotPasswordEmail,
-} from '@/redux/slices/modal'
-import { RootState } from '@/redux/store'
-import AdminNavbar from '@/components/AdminNavbar/AdminNavbar'
 import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { deleteUserByAdmin } from '@/services/admin.service'
 import { extractPlatform, formatDateTime, formatDateTimeTwo } from '@/utils'
+import pc from '@/assets/svg/admin/Device-Desktop.png'
+import phone from '@/assets/svg/admin/Device-Mobile.png'
 import phoneIcon from '@/assets/svg/admin_phone.svg'
 import emailIcon from '@/assets/svg/admin_gmail.svg'
 import GoogleIcon from '@/assets/svg/admin_google.svg'
 import MailIcon from '@/assets/svg/admin_email.svg'
 import FacebookIcon from '@/assets/svg/admin_facebook.svg'
 import ToggleButton from '@/components/_buttons/ToggleButton'
-
 import ModalWrapper from '@/components/Modal'
-import UserFilter from '@/components/AdminPage/Modal/UserFilterModal/UserFilter'
+import UserFilter from '@/components/AdminPage/Filters/UserFilter/UserFilter'
 import EditUser from '@/components/AdminPage/Modal/UserEditModal/UserEditModal'
 import { setShowPageLoader } from '@/redux/slices/site'
-interface ModalProps {
-  isModalOpen: boolean
-  setIsModalOpen: (value: boolean) => void
-}
-
+import DisplayState from '@/components/AdminPage/Users/DisplayState/DisplayState'
+import x from '@/assets/icons/Filter-On.png'
+import sortAscending from '@/assets/icons/Sort-Ascending-On.png'
+import sortDescending from '@/assets/icons/Sort-Ascending-Off.png'
+import { User } from '@/types/user'
+import { Data } from '@react-google-maps/api'
 export interface ModalState {
   onboarded: string
   joined: { start: string; end: string }
@@ -45,7 +39,9 @@ export interface ModalState {
 type SearchInput = {
   search: InputData<string>
 }
-const filterSvg = (
+export const filterIcon = x
+
+export const filterSvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="40"
@@ -61,7 +57,7 @@ const filterSvg = (
   </svg>
 )
 
-const searchSvg = (
+export const searchSvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="19"
@@ -75,8 +71,7 @@ const searchSvg = (
     />
   </svg>
 )
-
-const pencilSvg = (
+export const pencilSvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="25"
@@ -98,7 +93,7 @@ const pencilSvg = (
   </svg>
 )
 
-const deleteSvg = (
+export const deleteSvg = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="25"
@@ -114,29 +109,34 @@ const deleteSvg = (
     />
   </svg>
 )
-const formatDate = (date: string): string => {
-  if (!date) return ''
-  const options: Intl.DateTimeFormatOptions = {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  }
-  const dateObj = new Date(date)
-  return new Intl.DateTimeFormat('en-GB', options).format(dateObj) // 'en-GB' for DD MMM YYYY format
-}
+
 const AdminDashboard: React.FC = () => {
-  const router = useRouter()
+  const dispatch = useDispatch()
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [email, setEmail] = useState('')
-  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [searchResults, setSearchResults] = useState<User[]>([])
   const [pageNumber, setPageNumber] = useState<number>(0)
+  const [loginSort, setLoginSort] = useState<boolean>(true)
+  const [joinedSort, setJoinedSort] = useState<boolean>(true)
+  const [NameSort, setNameSort] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(false)
+   const [count, setCount] = useState(0)
+  const [isError, setIsError] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<String>('')
+  const [isSearching, setIsSearching] = useState<boolean>(false)
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
-    setData((prev) => ({ ...prev, search: { value, error: null } }))
+    const isValid = /^[a-zA-Z\s]*$/.test(value)
+    setData((prev) => ({
+      ...prev,
+      search: {
+        value: isValid ? value : '',
+        error: isValid ? null : 'Only text is allowed',
+      },
+    }))
   }
   const [page, setPage] = useState(1)
   const [pagelimit, setPagelimit] = useState(25)
@@ -167,10 +167,11 @@ const AdminDashboard: React.FC = () => {
     const searchValue = data.search.value.trim()
     event.preventDefault()
     let searchCriteria = {
-      full_name: searchValue,
+      name: searchValue,
     }
 
     const { res, err } = await searchUsers(searchCriteria)
+
     if (err) {
       console.log('An error', err)
     } else {
@@ -189,53 +190,72 @@ const AdminDashboard: React.FC = () => {
     // router.push(`/admin/users/edit/${profile_url}`)
   }
 
-  const fetchSearchResults = async () => {
+  const fetchSearchResults = useCallback(async () => {
+    setIsSearching(true)
+    setLoading(true)
+    dispatch(setShowPageLoader(true))
     const searchValue = data.search.value.trim()
     let searchCriteria = {
-      full_name: searchValue,
+      name: searchValue,
     }
-
     const { res, err } = await searchUsers(searchCriteria)
+    console.log(res)
     if (err) {
       console.log('An error', err)
-      setPageNumber(0)
+      setPageNumber(1)
+      setIsError(true)
+      setErrorMessage('No users found')
     } else {
       setSearchResults(res.data)
-
-      // Calculate total number of pages based on search results length
-      const totalPages = Math.ceil(res.data.length / 50)
-      const pages = []
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i)
-      }
-      setPageNumber(res?.data?.length > 0 ? res?.data?.length : 0)
+      setCount(res.data.length || 0)
+      setIsError(false)
+      setLoading(false)
+      setPageNumber(res?.data?.length > 0 ? res?.data?.length : 1)
     }
-  }
+    dispatch(setShowPageLoader(false))
+    setLoading(false)
+  }, [data.search.value, dispatch])
 
-  const dispatch = useDispatch()
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
+    setIsSearching(false)
+
     dispatch(setShowPageLoader(true))
     setPageNumber(0)
+
+    setLoading(true)
     const { res, err } = await getAllUserDetail(
       `limit=${pagelimit}&sort=-last_login&page=${page}&populate=sessions`,
     )
     if (err) {
       console.log('An error', err)
       dispatch(setShowPageLoader(false))
+      setIsError(true)
+      setErrorMessage('No users found')
     } else {
       // console.log('fetchUsers', res.data)
+      setIsError(false)
+      setLoading(false)
       setSearchResults(res.data.data.users)
+      setCount(res.data.data.no_of_users)
       dispatch(setShowPageLoader(false))
     }
-  }
+    setLoading(false)
+  }, [dispatch, pagelimit, page])
   useEffect(() => {
-    if (data.search.value.length > 0) {
+    if (data.search.value.trim()) {
       fetchSearchResults()
     } else if (page) {
       fetchUsers()
     }
-  }, [data.search.value, page])
-  const filterUsers = (users: object[], criteria: ModalState) => {
+  }, [
+    data.search.value,
+    page,
+    pagelimit,
+    isSearching,
+    fetchSearchResults,
+    fetchUsers,
+  ])
+  const filterUsers = (users: User[], criteria: ModalState) => {
     const { onboarded, joined, loginModes, pageCount, status } = criteria
 
     return users.filter((user: any) => {
@@ -288,7 +308,7 @@ const AdminDashboard: React.FC = () => {
     })
   }
 
-  const filteredUsers = filterUsers(searchResults, modalState) || []
+  const filteredUsers: User[] = filterUsers(searchResults, modalState) || []
 
   const goToPreviousPage = () => {
     setPage(page - 1)
@@ -316,7 +336,7 @@ const AdminDashboard: React.FC = () => {
         display: true,
         message: 'User deleted successfully',
       })
-      window.location.reload()
+      isSearching ? fetchSearchResults() : fetchUsers()
     } else {
       setSnackbar({
         type: 'warning',
@@ -324,13 +344,55 @@ const AdminDashboard: React.FC = () => {
         message: 'Some error occured',
       })
     }
+
+    setDeleteData({ open: false, _id: undefined })
   }
+  const hasNonEmptyValues = (state: ModalState) => {
+    return !Object.entries(state).every(
+      ([_, value]) =>
+        !value ||
+        (Array.isArray(value) && value.length === 0) ||
+        (typeof value === 'object' &&
+          Object.values(value).every((v) => v === '')),
+    )
+  }
+  const handleLoginSort = () => {
+    setLoginSort((prev) => !prev)
+    setJoinedSort(false)
+    setNameSort(false)
+  }
+  const handleNameSort = () => {
+    setNameSort((prev) => !prev)
+    setLoginSort(false)
+    setJoinedSort(false)
+  }
+  const handleJoinedSort = () => {
+    setJoinedSort((prev) => !prev)
+    setLoginSort(false)
+    setNameSort(false)
+  }
+
+  useEffect(() => {
+    if (hasNonEmptyValues(modalState)) {
+      setPagelimit(1000)
+    } else {
+      setPagelimit(25)
+    }
+  }, [modalState])
 
   return (
     <>
       <AdminLayout>
         <div className={styles.searchContainer}>
           {/* <div className={styles.admintitle}>Admin Search</div> */}
+          {data.search.error && (
+            <div
+              className={styles.error}
+              style={{ color: 'red', margin: '0px' }}
+            >
+              {data.search.error}
+            </div>
+          )}
           <div className={styles.searchAndFilter}>
             <form onSubmit={handleSearch} className={styles.searchForm}>
               <input
@@ -345,30 +407,129 @@ const AdminDashboard: React.FC = () => {
                 {searchSvg}
               </button>
             </form>
-            <button
-              className={styles.filterBtn}
-              onClick={() => setIsModalOpen(true)}
-            >
-              {filterSvg}
-            </button>
+            <span className={styles.countText}>Count: <span style={{ color:"#0096c8", fontWeight:"500"}}>{count}</span></span>
+            {hasNonEmptyValues(modalState) && (
+              <DisplayState modalState={modalState} />
+            )}
+           
+            {hasNonEmptyValues(modalState) ? (
+              <button
+                className={styles.filterBtn}
+                onClick={() => setIsModalOpen(!isModalOpen)}
+              >
+                <Image src={filterIcon} width={40} height={40} alt="filter" />
+              </button>
+            ) : (
+              <button
+                className={styles.filterBtn}
+                onClick={() => setIsModalOpen(!isModalOpen)}
+              >
+                {filterSvg}
+              </button>
+            )}
+
+            {isModalOpen && (
+              <UserFilter
+                modalState={modalState}
+                setModalState={setModalState}
+                setIsModalOpen={setIsModalOpen}
+                setApplyFilter={setApplyFilter}
+              />
+            )}
           </div>
 
           <div className={styles.resultsContainer}>
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '20.06%' }}>User</th>
-                  <th style={{ width: '4.48%' }}>Contact</th>
-                  <th style={{ width: '16.48%' }}>Last Login</th>
+                  <th style={{ width: '20.06%' }}>
+                    <div className={styles.sortButtonWrapper}>
+                      User
+                      <button
+                        className={styles.sortButton}
+                        onClick={handleNameSort}
+                      >
+                        {NameSort ? (
+                          <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                          />
+                        ) : (
+                          <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                            style={{ transform: 'rotate(180deg)' }}
+                          />
+                        )}
+                      </button>
+                    </div>
+                  </th>
+                  <th style={{ width: '8.48%' }}>
+                    <span style={{ marginLeft: '-10px' }}>Contact</span>
+                  </th>
+                  <th style={{ width: '16.48%' }}>
+                    <div className={styles.sortButtonWrapper}>
+                      <span style={{ marginLeft: '-10px' }}>Last Login</span>
 
-                  <th style={{ width: '6.163%' }}>Modes</th>
+                      <button
+                        className={styles.sortButton}
+                        onClick={handleLoginSort}
+                      >
+                        {loginSort ? (
+                          <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                          />
+                        ) : (
+                          <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                            style={{ transform: 'rotate(180deg)' }}
+                          />
+                        )}
+                      </button>
+                    </div>
+                  </th>
+
+                  <th style={{ width: '.163%' }}>Modes</th>
                   <th
                     style={{
                       width: '12.54%',
                       paddingRight: '16px',
                     }}
                   >
-                    Joined
+                    <div className={styles.sortButtonWrapper}>
+                      <span style={{ marginLeft: '-15px' }}>Joined</span>
+                      <button
+                        className={styles.sortButton}
+                        onClick={handleJoinedSort}
+                      >
+                        {joinedSort ? (
+                          <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                          />
+                        ) : (
+                          <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                            style={{ transform: 'rotate(180deg)' }}
+                          />
+                        )}
+                      </button>
+                    </div>
                   </th>
                   <th style={{ width: '5.939%' }}>Onb</th>
                   <th style={{ width: '4.939%', paddingRight: '16px' }}>
@@ -384,230 +545,251 @@ const AdminDashboard: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredUsers?.length > 0 &&
-                  filteredUsers?.map((user: any, index) => (
-                    <tr key={index}>
-                      <td>
-                        <Link
-                          href={`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${user.profile_url}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <div className={styles.resultItem}>
-                            <div className={styles.avatarContainer}>
-                              {user.profile_image ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img
-                                  src={user.profile_image}
-                                  alt={`${user.full_name}'s profile`}
-                                  width={40}
-                                  height={40}
-                                  className={styles.avatarImage}
-                                />
-                              ) : (
-                                <Image
-                                  className={styles['img']}
-                                  src={DefaultProfile}
-                                  alt="profile"
-                                  width={40}
-                                  height={40}
-                                />
-                              )}
-                            </div>
-                            <div
-                              className={styles.detailsContainer}
-                              title={
-                                user?.full_name?.length > 25
-                                  ? user?.full_name
-                                  : ''
-                              }
-                            >
-                              {user?.full_name?.slice(0, 25)}
-                            </div>
-                          </div>
-                        </Link>
-                      </td>
-                      <td className={styles.LoginType}>
-                        <div className={styles.loginIcon}>
-                          {user?.phone?.number && (
-                            <Link
-                              href={`tel:${
-                                user.phone.prefix + user.phone.number
-                              }`}
-                            >
-                              <Image alt={user?.full_name} src={phoneIcon} />
-                            </Link>
-                          )}
-                          {user?.email && (
-                            <Link href={`mailto:${user.public_email}`}>
-                              <Image alt={user?.full_name} src={emailIcon} />
-                            </Link>
-                          )}
-                        </div>
-                      </td>
-                      <td>
-                        <div className={styles.lastLoggedIn}>
-                          {user?.last_loggedIn_via === 'google' ? (
-                            <Image
-                              src={GoogleIcon}
-                              alt="Google Icon"
-                              className={styles.icon}
-                            />
-                          ) : user?.last_loggedIn_via === 'facebook' ? (
-                            <Image
-                              src={FacebookIcon}
-                              alt="Facebook Icon"
-                              className={styles.icon}
-                            />
-                          ) : user?.last_loggedIn_via === 'mail' ? (
-                            <Image
-                              src={MailIcon}
-                              alt="Mail Icon"
-                              className={styles.icon}
-                            />
-                          ) : (
-                            ''
-                          )}
-                          {` ` + formatDateTimeTwo(user?.last_login)}
-                          {user?._sessions[0]?.device
-                            ? ' | ' + user?._sessions[0]?.device.split(' ')[0]
-                            : ''}
-                        </div>
-                      </td>
+                {!loading &&
+                  filteredUsers?.length > 0 &&
+                  filteredUsers
+                    ?.sort((a, b) => {
+                      if (NameSort) {
+                        return NameSort
+                          ? (a.full_name || '').localeCompare(b.full_name || '') // Ascending order
+                          : b.full_name.localeCompare(a.full_name) // Descending order
+                      }
+                      if (loginSort) {
+                        return loginSort
+                          ? new Date(a.last_login).getTime() -
+                              new Date(b.last_login).getTime()
+                          : new Date(b.last_login).getTime() -
+                              new Date(a.last_login).getTime()
+                      }
 
-                      <td className={styles.LoginType}>
-                        <div className={styles.loginIcon}>
-                          {user.facebook.id &&
-                            user.google.id &&
-                            user.is_password && (
-                              <>
+                      if (joinedSort) {
+                        return joinedSort
+                          ? new Date(a.createdAt).getTime() -
+                              new Date(b.createdAt).getTime()
+                          : new Date(b.createdAt).getTime() -
+                              new Date(a.createdAt).getTime()
+                      }
+
+                      return 0
+                    })
+                    ?.map((user: any) => (
+                      <tr key={user._id}>
+                        {/* user */}
+                        <td>
+                          <Link
+                            href={`/profile/${user.profile_url}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <div className={styles.resultItem}>
+                              <div className={styles.avatarContainer}>
+                                {user.profile_image ? (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <img
+                                    src={user.profile_image}
+                                    alt={`${user.full_name}'s profile`}
+                                    width={40}
+                                    height={40}
+                                    className={styles.avatarImage}
+                                  />
+                                ) : (
+                                  <Image
+                                    className={styles['img']}
+                                    src={DefaultProfile}
+                                    alt="profile"
+                                    width={32}
+                                    height={32}
+                                  />
+                                )}
+                              </div>
+                              <div
+                                className={styles.detailsContainer}
+                                title={
+                                  user?.full_name?.length > 25
+                                    ? user?.full_name
+                                    : ''
+                                }
+                              >
+                                <h6 className={styles.avatarName}>
+                                  {user?.full_name?.slice(0, 25)}
+                                </h6>
+                              </div>
+                            </div>
+                          </Link>
+                        </td>
+                        {/* contact */}
+                        <td className={styles.LoginType}>
+                          <div className={styles.loginIcon}>
+                            {user?.phone?.number && (
+                              <Link
+                                href={`tel:${
+                                  user.phone.prefix + user.phone.number
+                                }`}
+                              >
                                 <Image
-                                  src={GoogleIcon}
-                                  alt="Google Icon"
-                                  className={styles.icon}
+                                  alt={user?.full_name}
+                                  src={phoneIcon}
+                                  width={24}
+                                  height={24}
                                 />
+                              </Link>
+                            )}
+                            {user?.email && (
+                              <Link href={`mailto:${user.public_email}`}>
                                 <Image
-                                  src={FacebookIcon}
-                                  alt="Facebook Icon"
-                                  className={styles.icon}
-                                />
-                                <Image
+                                  alt={user?.full_name}
                                   src={MailIcon}
-                                  alt="Mail Icon"
-                                  className={styles.icon}
+                                  width={24}
+                                  height={24}
                                 />
-                              </>
+                              </Link>
                             )}
-                          {user.facebook.id &&
-                            user.google.id &&
-                            !user.is_password && (
-                              <>
-                                <Image
-                                  src={GoogleIcon}
-                                  alt="Google Icon"
-                                  className={styles.icon}
-                                />
-                                <Image
-                                  src={FacebookIcon}
-                                  alt="Facebook Icon"
-                                  className={styles.icon}
-                                />
-                              </>
-                            )}
-                          {user.facebook.id &&
-                            !user.google.id &&
-                            user.is_password && (
-                              <>
-                                <Image
-                                  src={FacebookIcon}
-                                  alt="Facebook Icon"
-                                  className={styles.icon}
-                                />
-                                <Image
-                                  src={MailIcon}
-                                  alt="Mail Icon"
-                                  className={styles.icon}
-                                />
-                              </>
-                            )}
-                          {!user.facebook.id &&
-                            user.google.id &&
-                            user.is_password && (
-                              <>
-                                <Image
-                                  src={GoogleIcon}
-                                  alt="Google Icon"
-                                  className={styles.icon}
-                                />
-                                <Image
-                                  src={MailIcon}
-                                  alt="Mail Icon"
-                                  className={styles.icon}
-                                />
-                              </>
-                            )}
-                          {user.facebook.id &&
-                            !user.google.id &&
-                            !user.is_password && (
-                              <Image
-                                src={FacebookIcon}
-                                alt="Facebook Icon"
-                                className={styles.icon}
-                              />
-                            )}
-                          {!user.facebook.id &&
-                            user.google.id &&
-                            !user.is_password && (
+                          </div>
+                        </td>
+                        {/* last login */}
+                        <td>
+                          <div className={styles.lastLoggedIn}>
+                            {user?.last_loggedIn_via === 'google' ? (
                               <Image
                                 src={GoogleIcon}
                                 alt="Google Icon"
                                 className={styles.icon}
+                                width={24}
+                                height={24}
                               />
-                            )}
-                          {!user.facebook.id &&
-                            !user.google.id &&
-                            user.is_password && (
+                            ) : user?.last_loggedIn_via === 'facebook' ? (
                               <Image
-                                src={MailIcon}
+                                src={FacebookIcon}
+                                alt="Facebook Icon"
+                                className={styles.icon}
+                                width={24}
+                                height={24}
+                              />
+                            ) : user?.last_loggedIn_via === 'mail' ? (
+                              <Image
+                                src={emailIcon}
                                 alt="Mail Icon"
                                 className={styles.icon}
+                                width={24}
+                                height={24}
+                              />
+                            ) : (
+                              ''
+                            )}
+                            {` ` + formatDateTimeTwo(user?.last_login)}
+                            {user?._sessions[0]?.device ? (
+                              ' | ' +
+                                user?._sessions[0]?.device.split(' ')[0] ===
+                              'Desktop' ? (
+                                <Image
+                                  src={pc}
+                                  alt=""
+                                  width={25}
+                                  height={16}
+                                  style={{ marginLeft: '5px' }}
+                                />
+                              ) : (
+                                <Image
+                                  src={phone}
+                                  alt=""
+                                  width={14}
+                                  height={24}
+                                  style={{ marginLeft: '5px' }}
+                                />
+                              )
+                            ) : (
+                              ''
+                            )}
+                          </div>
+                        </td>
+                        {/* login via */}
+                        <td className={styles.LoginType}>
+                          <div
+                            className={styles.loginIcon}
+                            style={{ paddingLeft: '10px' }}
+                          >
+                            {user.facebook.id && (
+                              <Image
+                                src={FacebookIcon}
+                                alt="Facebook Icon"
+                                className={styles.icon}
+                                width={24}
+                                height={24}
                               />
                             )}
-                        </div>
-                      </td>
-                      <td className={styles.userName}>
-                        <div>{formatDateTime(user?.createdAt)}</div>
-                      </td>
-                      <td className={styles.pagesLength}>
-                        {user.is_onboarded ? 'Y' : 'N'}
-                      </td>
-                      <td className={styles.pagesLength}>
-                        {pagesLength(user)}
-                      </td>
-                      <td className={styles.pagesLength}>
-                        {/* posts not in logs */}0
-                      </td>
-                      <td>
-                        <div className={styles.accountStatus}>
-                          <ToggleButton isOn={user.is_account_activated} />
-                        </div>
-
-                        {/* {user.is_account_activated ? 'Active' : 'Deactivated'} */}
-                      </td>
-                      <td>
-                        <div className={styles.actions}>
-                          <div onClick={() => handleEdit(user.profile_url)}>
-                            {pencilSvg}
+                            {user.google.id && (
+                              <Image
+                                src={GoogleIcon}
+                                alt="Google Icon"
+                                className={styles.icon}
+                                width={24}
+                                height={24}
+                              />
+                            )}
+                            {user.is_password && (
+                              <Image
+                                src={emailIcon}
+                                alt="Mail Icon"
+                                className={styles.icon}
+                                width={24}
+                                height={24}
+                              />
+                            )}
                           </div>
-                          <div onClick={() => handleDelete(user._id)}>
-                            {deleteSvg}
+                        </td>
+                        <td className={styles.userName}>
+                          <div>{formatDateTime(user?.createdAt)}</div>
+                        </td>
+                        <td className={styles.pagesLength}>
+                          {user.is_onboarded ? 'Y' : 'N'}
+                        </td>
+                        <td className={styles.pagesLength}>
+                          {pagesLength(user)}
+                        </td>
+                        <td className={styles.pagesLength}>
+                          {/* posts not in logs */}0
+                        </td>
+                        <td>
+                          <div className={styles.accountStatus}>
+                            <ToggleButton
+                              isOn={user.is_account_activated}
+                              data={user}
+                              handleToggle={() =>
+                                isSearching
+                                  ? fetchSearchResults()
+                                  : fetchUsers()
+                              }
+                            />
                           </div>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td>
+                          <div className={styles.actions}>
+                            <div onClick={() => handleEdit(user.profile_url)}>
+                              {pencilSvg}
+                            </div>
+                            <div onClick={() => handleDelete(user._id)}>
+                              {deleteSvg}
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
 
-                {filteredUsers?.length === 0 && <p>No result found</p>}
+                {loading && (
+                  <p style={{ display: 'inline', margin: 'auto' }}>
+                    Loading...
+                  </p>
+                )}
+                {!loading && filteredUsers.length === 0 && (
+                  <p style={{ display: 'inline', margin: 'auto' }}>
+                    No user found
+                  </p>
+                )}
+                {!loading && isError && (
+                  <p style={{ display: 'inline', margin: 'auto' }}>
+                    {errorMessage}
+                  </p>
+                )}
               </tbody>
             </table>
           </div>
@@ -617,15 +799,15 @@ const AdminDashboard: React.FC = () => {
 
               <button
                 disabled={page <= 1}
-                className="admin-next-btn"
+                className="users-next-btn"
                 onClick={goToPreviousPage}
               >
-                Previous
+                Prev
               </button>
 
               <button
                 disabled={searchResults.length !== pagelimit}
-                className="admin-next-btn"
+                className="users-next-btn"
                 onClick={goToNextPage}
               >
                 Next
@@ -636,21 +818,14 @@ const AdminDashboard: React.FC = () => {
 
         <div>
           <ModalWrapper
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-          >
-            <UserFilter
-              modalState={modalState}
-              setModalState={setModalState}
-              setIsModalOpen={setIsModalOpen}
-              setApplyFilter={setApplyFilter}
-            />
-          </ModalWrapper>
-          <ModalWrapper
             isOpen={isEditModalOpen}
             onClose={() => setIsEditModalOpen(false)}
           >
-            <EditUser id={userId} setIsEditModalOpen={setIsEditModalOpen} />
+            <EditUser
+              id={userId}
+              setIsEditModalOpen={setIsEditModalOpen}
+              fetchUsers={fetchUsers}
+            />
           </ModalWrapper>
         </div>
       </AdminLayout>

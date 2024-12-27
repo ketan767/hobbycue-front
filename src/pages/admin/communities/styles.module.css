@@ -10,7 +10,19 @@
 .input-box label {
   font: "poppins";
 }
-
+.sortButtonWrapper {
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sortButton {
+  background: none;
+  border: none;
+}
+.sortButton img {
+  transform: rotate(180deg);
+}
 .input-box {
   display: flex;
   flex-direction: column;

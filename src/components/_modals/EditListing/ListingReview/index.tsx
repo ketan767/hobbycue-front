@@ -44,7 +44,7 @@ const ListingReview: React.FC<Props> = ({
     user_id: user._id,
     description: '',
   })
-  // const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -189,7 +189,7 @@ const ListingReview: React.FC<Props> = ({
       <div
         className={`${styles['modal-wrapper']} ${
           confirmationModal ? styles['ins-active'] : ''
-        } `}
+        } ${isKeyboardOpen ? styles['keyboard-open'] : ``}`}
       >
         {/* Modal Header */}
         <header className={styles['header']}>
@@ -213,13 +213,16 @@ const ListingReview: React.FC<Props> = ({
             >
               <textarea
                 ref={textareaRef}
-                className={styles['long-input-box']}
+                className={`${styles['long-input-box']} ${
+                  isKeyboardOpen ? styles['short-input-box'] : ``
+                }`}
                 required
                 placeholder="Write your review.  It will be sent to the page admin for their approval to publish."
                 name="message"
                 onChange={handleInputChange}
                 value={data.description}
-                // onFocus={() => setIsKeyboardOpen(true)}
+                onFocus={() => setIsKeyboardOpen(true)}
+                onBlur={() => setIsKeyboardOpen(false)}
               />
             </div>
             {inputErrs.error ? (

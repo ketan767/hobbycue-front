@@ -4,8 +4,7 @@ import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import { admindashboard } from '@/services/admin.service'
 import Link from 'next/link'
 import Image from 'next/image'
-import logo from '@/assets/image/Switch-Role-to-User.png';
-
+import logo from '@/assets/image/Switch-Role-to-User.png'
 
 export default function Index() {
   interface IconProps {
@@ -79,7 +78,7 @@ export default function Index() {
         console.error('Error:', err)
       } else {
         setData(res?.data.data)
-        console.log('Dashboard data:', res)
+        // console.log('Dashboard data:', res)
       }
     }
     getDashboardDetails()
@@ -151,7 +150,7 @@ export default function Index() {
             <div style={{ width: '20px' }} />
             <div className={styles.label}>
               <Link href={`/admin/posts`}>
-                Posts : <span>{data?.postCount||462}</span>
+                Posts : <span>{data?.postCount || 462}</span>
               </Link>
             </div>
           </div>

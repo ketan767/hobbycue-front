@@ -83,21 +83,23 @@
 .searchAndFilter {
   display: flex;
   width: 100%;
+  gap: 5px;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 19px;
+  position: relative;
 }
 
 /* Search form styles */
 .searchForm {
   display: flex;
   gap: 0;
-  width: 418.354px;
+  width: 457.354px;
   height: 40px;
 }
 
 .searchInput {
-  padding: 10px;
+  padding: 9px;
   height: 40px;
   font-family: Poppins;
   font-size: 12px;
@@ -128,15 +130,6 @@
   border: 1px solid #0096c8;
   border-right: none;
 }
-
-.filterBtn {
-  background: transparent;
-  display: flex;
-  border: none;
-  outline: none;
-  cursor: pointer;
-}
-
 .searchButton {
   width: 40px;
   height: 40px;
@@ -150,10 +143,29 @@
   outline: none;
   transition: all 0.3s;
 }
+.searchButton svg {
+  width: 15px;
+  height: 14px;
+}
 
 .searchButton:hover {
   background-color: #0056b3;
   transition: all 0.3s;
+}
+.filterBtn {
+  background: transparent;
+  display: flex;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+.filterBtn img {
+  width: 40px;
+  height: 40px;
+  gap: 0px;
+  border-radius: 8.89px;
+  border: 1.11px solid #0096c8;
+  padding: 8px;
 }
 
 /* Results table styles */
@@ -162,12 +174,17 @@
   max-height: calc(100vh - 140px);
   overflow-y: auto;
 }
+.resultsContainer::-webkit-scrollbar {
+  display: none; 
+}
 
 .resultsTable {
   width: 100%;
+  min-height: 100px;
   border-collapse: collapse;
   border-radius: 8px;
 }
+
 
 .resultsTable thead {
   position: sticky;
@@ -181,13 +198,13 @@
 }
 .resultsTable th,
 .resultsTable td {
-  padding: 8px 12px; /* Consistent padding */
   text-align: left; /* Default alignment for text */
   vertical-align: middle; /* Aligns content vertically */
   box-sizing: border-box; /* Ensures width includes padding and border */
 }
 .resultsTable tbody {
   border: 1px solid var(--Grey-Lighter, #ebedf0);
+  height: auto;
 }
 
 .resultsTable tbody td {
@@ -201,14 +218,8 @@
   /* 142.857% */
 }
 
-/* .resultsTable td {
-  padding: 12px;
-  border: 1px solid #ddd;
-  text-align: left;
-} */
-
 .resultsTable th {
-  padding: 12px 8px 12px 24px;
+  padding: 11px 8px 11px 24px;
   border-bottom: 1px solid var(--Grey-Lighter, #ebedf0);
   background: var(--Blue1, #0096c8);
   color: var(--Base-White, var(--background-white, #fff));
@@ -217,7 +228,7 @@
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
-  line-height: 18px;
+  line-height: 15px;
 }
 
 .resultsTable th:first-of-type {
@@ -240,10 +251,36 @@
 .resultsTable tbody tr td {
   padding: 0 8px 0 8px;
 }
+.resultsTable tbody tr {
+  padding: 0 8px 0 8px;
+  min-height: 48px;
+}
+.sortButtonWrapper {
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: start;
+}
+.sortButton {
+  background: none;
+  border: none;
+}
+
+.countText {
+  margin-left: 10px;
+  white-space: nowrap; 
+  position: relative; 
+  margin-right: 40%;
+}
 
 /* Avatar styles */
 .avatarImage {
   border-radius: 50%;
+  border: 1px solid #0096c8;
+  height: 32px;
+  width: 32px;
+  margin: auto;
 }
 
 /* User details container styles */
@@ -253,24 +290,36 @@
 }
 
 .avatarContainer {
+  margin-left: 24px;
   margin-right: 10px;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
 }
 
 .detailsContainer {
   display: flex;
   flex-direction: column;
 }
+.avatarName {
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
 
+  /* 142.857% */
+}
 .userName {
   color: var(--Grey-Darkest, #08090a);
   font-feature-settings: 'clig' off, 'liga' off;
   font-family: 'Poppins';
   font-size: 14px;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 20px;
+
   /* 142.857% */
 }
 
@@ -293,10 +342,13 @@
   color: #000000;
 }
 .loginIcon {
+  width: auto;
+
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 3px;
+  padding: 2px 5px;
 }
 
 .lastLoggedIn {
@@ -310,20 +362,20 @@
 
 .pagesLength {
   text-align: center !important;
-  padding-right: 16px !important;
 }
 
 .accountStatus {
+  padding: 12px 8px 12px 24px;
   height: 100%;
   display: flex;
-  justify-content: center;
+
   align-items: center;
 }
 /* Responsive styles (optional) */
 
 .actions {
   display: flex;
-  padding: 24px 5px;
+  padding: 10px 5px;
   justify-content: center;
   align-items: center;
   gap: 16px;
@@ -333,9 +385,10 @@
   cursor: pointer;
 }
 .pagination {
-  width: 180px;
+  width: 280px;
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
+  gap: 20px;
   padding: 10px 12px;
   margin-left: auto;
 }

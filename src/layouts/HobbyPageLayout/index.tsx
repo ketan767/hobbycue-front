@@ -34,9 +34,9 @@ type Props = {
   data: any
   children: React.ReactNode
   setExpandAll: (value: boolean) => void
-  expandAll?: boolean;
-  onclickEdit?: () => void;
-  onclickmemberEdit?: () => void;
+  expandAll?: boolean
+  onclickEdit?: () => void
+  onclickmemberEdit?: () => void
 }
 
 const HobbyPageLayout: React.FC<Props> = ({
@@ -46,7 +46,7 @@ const HobbyPageLayout: React.FC<Props> = ({
   expandAll,
   setExpandAll,
   onclickEdit,
-  onclickmemberEdit
+  onclickmemberEdit,
 }) => {
   console.warn({ tags: data.tags })
   const dispatch = useDispatch()
@@ -96,11 +96,11 @@ const HobbyPageLayout: React.FC<Props> = ({
     if (scrollValue >= 308) setShowSmallHeader(true)
     else setShowSmallHeader(false)
   }
-  console.log('setmem', members)
+  // console.log('setmem', members)
   const getMembers = async () => {
     setLoading(true)
     const { err, res } = await getHobbyMembers(`${data._id}`)
-    console.log('mem', res?.data)
+    // console.log('mem', res?.data)
     if (err) return console.log(err)
     if (res?.data) {
       if (res?.data?.users) {
@@ -152,7 +152,6 @@ const HobbyPageLayout: React.FC<Props> = ({
   const toggleMembers = () => {
     setSeeAll(!seeAll)
   }
-  console.log('dataonhobbbypage', data)
   const handleMemberClick = (user: any) => {
     if (isLoggedIn) {
       router.push(`/profile/${user.profile_url}`)
@@ -165,9 +164,13 @@ const HobbyPageLayout: React.FC<Props> = ({
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
-      <HobbyPageHeader data={data} activeTab={activeTab} onclickEdit={onclickEdit}/>
+      <HobbyPageHeader
+        data={data}
+        activeTab={activeTab}
+        onclickEdit={onclickEdit}
+      />
       {showSmallHeader && (
-        <HobbyPageHeaderSmall data={data} activeTab={activeTab}/>
+        <HobbyPageHeaderSmall data={data} activeTab={activeTab} />
       )}
 
       <div className={`${styles['display-mobile']}`}>
@@ -307,14 +310,13 @@ const HobbyPageLayout: React.FC<Props> = ({
                       className={styles['pencil-edit']}
                       src={EditIcon}
                       alt="edit"
-                      onClick={() =>{
-                        if(onclickEdit){
+                      onClick={() => {
+                        if (onclickEdit) {
                           onclickEdit()
-                        }else{
+                        } else {
                           router.push(`/admin/hobby/edit/${data?.slug}`)
                         }
-                      }
-                      }
+                      }}
                     />
                   )}
                 </h4>
@@ -323,12 +325,18 @@ const HobbyPageLayout: React.FC<Props> = ({
                     showkeywords ? ' ' + styles['display-mobile'] : ''
                   }`}
                 >
-                  <ul 
-                  style={isMobile ? {marginTop:"16px"} : {}}
-                  className={styles['classification-items']}>
+                  <ul
+                    style={isMobile ? { marginTop: '16px' } : {}}
+                    className={styles['classification-items']}
+                  >
                     {data?.keywords &&
                       data?.keywords.map((tag: any, idx: number) => {
-                        return tag ? <span>{tag} {`${idx != data?.keywords.length - 1 ? ", " : ""}`}</span> : null
+                        return tag ? (
+                          <span>
+                            {tag}{' '}
+                            {`${idx != data?.keywords.length - 1 ? ', ' : ''}`}
+                          </span>
+                        ) : null
                       })}
                     <li className={styles['active']}></li>
                   </ul>
@@ -347,25 +355,23 @@ const HobbyPageLayout: React.FC<Props> = ({
               <aside>
                 <div className={styles['members']}>
                   <div className={styles['heading']}>
-                  <div style={{
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                  }}>
-                    <h4 style={{
-                      fontWeight: '600',
-                    }}>
-                      Members
-                    </h4>
-                    {user?.is_admin && (
-                      <Image
-                        className={styles['pencil-edit']}
-                        src={EditIcon}
-                        alt="edit"
-                        onClick={onclickmemberEdit}
-                      />
-                    )}
-                  </div>
+                    <div className={styles['members-pencil-container']}>
+                      <h4
+                        style={{
+                          fontWeight: '600',
+                        }}
+                      >
+                        Members
+                      </h4>
+                      {user?.is_admin && (
+                        <Image
+                          className={styles['pencil-edit']}
+                          src={EditIcon}
+                          alt="edit"
+                          onClick={onclickmemberEdit}
+                        />
+                      )}
+                    </div>
                     <Image
                       src={ChevronDown}
                       alt=""
@@ -419,18 +425,20 @@ const HobbyPageLayout: React.FC<Props> = ({
                                       alt=""
                                     />
                                   )}
-                                  <div className='truncateOneLine'>{user.full_name}</div>
+                                  <div className="truncateOneLine">
+                                    {user.full_name}
+                                  </div>
                                 </div>
                               </div>
                             </p>
                           ))}
                         {members.length > 5 && !seeAll && (
                           <p
-                            style={{textAlign: 'center'}}
+                            style={{ textAlign: 'center' }}
                             className={styles.seeAllBtn}
                             onClick={toggleMembers}
                           >
-                            See More
+                            See more
                           </p>
                         )}
                       </>
@@ -441,7 +449,6 @@ const HobbyPageLayout: React.FC<Props> = ({
                         </p>
                       </>
                     )}
-                    
                   </div>
                 </div>
               </aside>

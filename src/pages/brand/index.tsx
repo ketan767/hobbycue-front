@@ -2,11 +2,20 @@ import { FC, useEffect, useState } from 'react'
 import styles from '@/styles/Brand.module.css'
 import Image from 'next/image'
 import Head from 'next/head'
-import QuillEditor from './QuillEditor'
+
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { getBrand, updateBrand } from '@/services/admin.service'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import dynamic from 'next/dynamic'
+
+const QuillEditor = dynamic(
+  () => import('@/components/QuillEditor/QuillEditor'),
+  {
+    ssr: false,
+    loading: () => <h1>Loading...</h1>,
+  },
+)
 
 interface indexProps {}
 
@@ -37,7 +46,7 @@ const index: FC<indexProps> = ({}) => {
         setSnackbar({
           display: true,
           type: 'success',
-          message: 'Brand updated successfully',
+          message: 'Page updated successfully',
         })
         setIsEditing(false)
       }
@@ -88,7 +97,6 @@ const index: FC<indexProps> = ({}) => {
       const currId = result.res.data[0] ? result.res.data[0]._id : ''
       setContent(currContent)
       setId(currId)
-
     }
     fetchBrands()
   }, [])
@@ -145,7 +153,14 @@ const index: FC<indexProps> = ({}) => {
 
                         }
                         .ql-editor p {
-                          text-align:justify;
+                          color: var(--Grey-Darkest, #08090a);
+                          font-family: Cambria;
+                          font-size: 16px !important;
+                          font-style: normal;
+                          font-weight: 400;
+                          line-height: 24px;
+                          margin-bottom: 11px;
+}
                         }
                          @media screen and (max-width:1100px) {
                           .ql-editor{

@@ -618,7 +618,7 @@ const AuthForm: React.FC<Props> = (props) => {
             callback={handleFacebookAuth}
             redirectUri={redirectURI}
             fields="name,email,picture"
-            disableMobileRedirect={false}
+            disableMobileRedirect={true}
             onFailure={(err) => console.log('Error in Facebook login', err)}
             render={(renderProps: any) => (
               <Button

@@ -19,10 +19,11 @@
 }
 .header {
   position: relative;
-  margin: 0 30px 0;
-  padding: 14px 0;
+  margin: 0 24px 0;
+  padding: 16px 0;
   display: flex;
- 
+  align-items: center;
+  justify-content: space-between;
 }
 .header > p {
   font-size: 18px;
@@ -31,7 +32,8 @@
   text-align: left;
 }
 .content {
-  padding: 30px;
+  padding: 24px;
+  padding-block: 16px;
 }
 .content > p {
   font-size: 14px;
@@ -54,11 +56,11 @@
 }
 .modal-close-icon {
   /* display: none; */
-position: absolute;
-right: -17px;
-top: 11.8px;
-border-radius: 100%;
-cursor: pointer;
+  /* position: absolute;
+right: 0px;
+top: 11.8px; */
+  border-radius: 100%;
+  cursor: pointer;
 }
 .modal-close-icon:hover {
   background: #ddd;
@@ -68,6 +70,7 @@ cursor: pointer;
   .add-hobby {
     margin-top: 50vh;
     transform: translate(0, -50%);
+    width: 91%;
   }
   .modal-close-icon {
     display: initial;
@@ -78,8 +81,15 @@ cursor: pointer;
     border-radius: 100%;
     z-index: 10;
   }
-  .modal-hr{
+  /* .modal-hr{
     display: none;
+  } */
+  .header {
+    margin-inline: 24px;
+    padding-block: 14px;
   }
-
+  .content {
+    padding: 24px;
+    padding-top: 16px;
+  }
 }

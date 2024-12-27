@@ -1,0 +1,38 @@
+.hidden {
+    display: none;
+  }
+  .quill {
+    display: flex;
+    flex-direction: column-reverse;
+    padding-bottom: 8px;
+    flex: 1;
+  }
+  .quill .ql-container {
+    border-top: 1px solid #ccc;
+  }
+  
+  .ql-editor.ql-indent-1 {
+    padding-left: 4px;
+  }
+  .ql-editor ul,
+  .ql-editor ol {
+    font-family: 'Poppins';
+  
+    padding-left: 4px;
+    font-size: 14px;
+    text-align: justify;
+  }
+  
+  .ql-editor a {
+    font-family: 'Poppins';
+  
+    color: rgb(128, 100, 162);
+    text-decoration: none !important;
+    font-size: 14px;
+    text-align: left;
+  }
+  .ql-editor p {
+    font-family: 'Poppins';
+    font-size: 14px;
+    text-align: left;
+  }

@@ -4,11 +4,12 @@ import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
-
+import PlusIcon from '@/assets/svg/add.svg'
 import { updateActiveProfile } from '@/redux/slices/user'
 import { updateListingModalData } from '@/redux/slices/site'
 import { setFilters } from '@/redux/slices/post'
 import { openModal } from '@/redux/slices/modal'
+import { useRouter } from 'next/router'
 
 type Props = {
   className?: string
@@ -22,7 +23,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
   )
   const dispatch = useDispatch()
   const filteredListing = listing.filter((item: any) => item.is_published)
-
+  const router = useRouter()
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
   const dropdownRef = useRef(null)
 
@@ -187,6 +188,13 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
                   </li>
                 )
               })}
+              <li
+                onClick={() => router.push('/add-listing')}
+                className={styles['add-listing-btn']}
+              >
+                <Image src={PlusIcon} alt="plus" />
+                Add Listing
+              </li>
             </ul>
           </div>
         )}

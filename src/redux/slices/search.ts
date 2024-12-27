@@ -9,9 +9,10 @@ export interface User {
   profile_image: string
   full_name: string
   tagline: string
-  primary_address: { city: string }
+  primary_address: { society: string; locality: string; city: string }
   profile_url: string
   _hobbies: any[]
+  preferences: any
 }
 
 export interface Page {
@@ -20,12 +21,13 @@ export interface Page {
   profile_image: string
   title: string
   tagline: string
-  _address: { city: string }
+  _address: { society: string; city: string; locality: string }
   page_url: string
   page_type: []
   event_date_time: any
   event_weekdays: any
   product_variant: any
+  _hobbies: any[]
 }
 
 export interface hobbies {

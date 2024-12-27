@@ -10,7 +10,7 @@
   align-items: center;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
-  z-index: 1000;
+  z-index: 999;
 }
 
 .modalOverlay.showOverlay {
@@ -19,13 +19,37 @@
 
 .modalContent {
   background: white;
-
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-
   position: relative;
+  max-height: 90vh; /* Maximum height to adjust based on viewport height */
+  overflow-y: auto; /* Enables scrollbar for content overflow */
   transform: translateY(-100%);
   transition: transform 0.3s ease-in-out;
+  padding: 20px; /* Optional padding for spacing */
+  scrollbar-width: thin;
+}
+/* Styling the scrollbar container */
+.modalContent::-webkit-scrollbar {
+  width: 8px; /* Width of the vertical scrollbar */
+  height: 8px; /* Height of the horizontal scrollbar */
+}
+
+/* Styling the scrollbar track (background) */
+.modalContent::-webkit-scrollbar-track {
+  background: #f0f0f0; /* Light gray background */
+  border-radius: 10px; /* Rounded corners */
+}
+
+/* Styling the scrollbar thumb (the draggable part) */
+.modalContent::-webkit-scrollbar-thumb {
+  background: #c0c0c0; /* Gray thumb color */
+  border-radius: 10px; /* Rounded corners */
+}
+
+/* Adding hover effect on the scrollbar thumb */
+.modalContent::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0; /* Darker gray on hover */
 }
 
 .slideIn {

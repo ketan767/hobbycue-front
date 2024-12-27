@@ -184,12 +184,13 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
           </section>
           {pages.length === 0 && !loading && (
             <div
-            style={
-              isMobile
-                ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
-                : undefined
-            }
-             className={styles['dual-section-wrapper']}>
+              style={
+                isMobile
+                  ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
+                  : undefined
+              }
+              className={styles['dual-section-wrapper']}
+            >
               <div className={styles['no-posts-container']}>
                 <p>No pages available</p>
               </div>

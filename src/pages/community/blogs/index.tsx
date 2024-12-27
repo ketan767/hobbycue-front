@@ -50,30 +50,38 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
     const { err, res } = await getAllBlogs(`${params}`)
     if (err) return console.log(err)
     if (res?.data.success) {
-      const hobbyDisplayNames = activeProfile.data._hobbies.map(
-        (hobby: any) => hobby.hobby.display,
-      )
+      // const hobbyDisplayNames = activeProfile.data._hobbies.map(
+      //   (hobby: any) => hobby.hobby.display,
+      // )
+      // activeProfile.data._hobbies.map((hobby: any) => {
+      //   console.log('hobby.hobby.display', hobby.hobby.display)
+      //   console.log('hobby.hobby._id', hobby.hobby._id)
+      // })
 
-      const filteredBlogs = filterBlogsByHobbyDisplayNames(
-        res.data.data.blog,
-        hobbyDisplayNames,
-      )
-      console.warn('filteredblogsssssssss', filteredBlogs)
-      store.dispatch(updateBlogs(filteredBlogs))
+      // const filteredBlogs = filterBlogsByHobbyDisplayNames(
+      //   res.data.data.blog,
+      //   hobbyDisplayNames,
+      // )
+      // console.warn('filteredblogsssssssss', filteredBlogs)
+      store.dispatch(updateBlogs(res.data.data.blog))
       store.dispatch(updatePagesLoading(false))
     }
   }
 
   useEffect(() => {
     getPost()
-  })
+  }, [activeProfile])
 
   const isMobile = useMediaQuery('(max-width:1100px)')
 
   return (
     <>
       <CommunityPageLayout activeTab="blogs">
-        <section className={styles['blog-container']}>
+        <></>
+        <section
+          style={isMobile ? { marginTop: '8px' } : {}}
+          className={styles['blog-container']}
+        >
           {pagesLoading ? (
             <>
               <BlogLoader />
@@ -86,12 +94,13 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
           ) : allBlogs?.length === 0 ? (
             <>
               <div
-              style={
-                isMobile
-                  ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
-                  : undefined
-              }
-              className={styles['no-posts-div']}>
+                style={
+                  isMobile
+                    ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
+                    : undefined
+                }
+                className={styles['no-posts-div']}
+              >
                 <p className={styles['no-posts-text']}>No Blogs available</p>
                 <div
                   style={{
@@ -102,12 +111,13 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
                 ></div>
               </div>
               <div
-              style={
-                isMobile
-                  ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
-                  : undefined
-              }
-              className={styles['no-posts-div']}>
+                style={
+                  isMobile
+                    ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
+                    : undefined
+                }
+                className={styles['no-posts-div']}
+              >
                 <p className={styles['no-posts-text']}>No Blogs available</p>
                 <div
                   style={{

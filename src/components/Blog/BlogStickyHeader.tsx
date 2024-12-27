@@ -2,11 +2,13 @@ import React from 'react'
 import styles from './BlogComponents.module.css'
 import BlogContainer from './BlogContainer'
 import BlogActionBar from './BlogActionBar'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 type Props = {
   data: any
-  isEditing: boolean
-  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
+  // isEditing: boolean
+  // setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
   isAuthor: boolean
   vote: { up: boolean; down: boolean }
   setVote: React.Dispatch<
@@ -19,8 +21,8 @@ type Props = {
 
 const BlogStickyHeader: React.FC<Props> = ({
   data,
-  isEditing,
-  setIsEditing,
+  // isEditing,
+  // setIsEditing,
   isAuthor,
   vote,
   setVote,
@@ -34,9 +36,7 @@ const BlogStickyHeader: React.FC<Props> = ({
             data={data}
             vote={vote}
             setVote={setVote}
-            isEditing={isEditing}
             isAuthor={isAuthor}
-            setIsEditing={setIsEditing}
           />
         </div>
       </BlogContainer>

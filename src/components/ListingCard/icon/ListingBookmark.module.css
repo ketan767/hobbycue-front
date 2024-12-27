@@ -1,0 +1,18 @@
+.action-btn {
+  /* background-color: #f7f5f9; */
+  background-color: #fff;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+/* .action-btn:hover {
+  background-color: #ccc1da;
+  transition: 0.3s;
+} */
+/* .action-btn img {
+  border-radius: 8px;
+} */

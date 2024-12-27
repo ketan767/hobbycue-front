@@ -334,7 +334,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
               {submitBtnLoading ? (
                 <CircularProgress color="inherit" size={'14px'} />
               ) : (
-                'Save'
+                'Next'
               )}
             </button>
           )}

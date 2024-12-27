@@ -22,6 +22,19 @@
   }
 }
 
+.sidemenu-name{
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+}
+
 .container {
   position: fixed;
   top: 0;

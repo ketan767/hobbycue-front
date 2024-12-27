@@ -7,6 +7,16 @@ import useOutsideAlerter from '@/hooks/useOutsideAlerter'
 
 import { updateActiveProfile } from '@/redux/slices/user'
 import { listingTypes } from '@/constants/constant'
+import { isMobile } from '@/utils'
+import { useMediaQuery } from '@mui/material'
+import useGetDefaultHobby from '../components/hobby/useDefaultHobby'
+
+type HobbyData = {
+  hobby: string
+  genre: string
+  hobbyId: string
+  genreId: string
+}
 
 type Props = {
   data: any
@@ -14,6 +24,7 @@ type Props = {
   setHobbies: any
   classForShowDropdown?: string
   className?: string
+  setSelectedHobbies: React.Dispatch<React.SetStateAction<HobbyData[]>>
 }
 
 const ProfileSwitcher: React.FC<Props> = ({
@@ -22,6 +33,7 @@ const ProfileSwitcher: React.FC<Props> = ({
   setHobbies,
   classForShowDropdown,
   className,
+  setSelectedHobbies,
 }) => {
   const { user, listing } = useSelector((state: RootState) => state.user)
   const filteredListing = listing.filter((item: any) => item.is_published)
@@ -29,6 +41,8 @@ const ProfileSwitcher: React.FC<Props> = ({
   const dropdownRef = useRef(null)
 
   useOutsideAlerter(dropdownRef, () => setShowDropdown(false))
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  const defaultFirstHobby = useGetDefaultHobby()
 
   const handleUpdateActiveProfile = (type: 'user' | 'listing', data: any) => {
     setData((prev: any) => {
@@ -36,6 +50,43 @@ const ProfileSwitcher: React.FC<Props> = ({
     })
     setHobbies(data?._hobbies)
     setShowDropdown(false)
+    if (type === 'listing') {
+      setSelectedHobbies([
+        {
+          hobby: data?._hobbies[0]?.hobby?.display,
+          genre: data?._hobbies[0]?.genre?.display
+            ? data?._hobbies[0]?.genre?.display
+            : null,
+          hobbyId: data?._hobbies[0]?.hobby?._id,
+          genreId: data?._hobbies[0]?.genre?._id
+            ? data?._hobbies[0]?.genre?._id
+            : null,
+        },
+      ])
+    } else {
+      const { firstHobby, firstGenre, firstHobbyId, firstGenreId } =
+        defaultFirstHobby()
+
+      const preferredLocation =
+        user?.preferences?.create_post_pref?.preferred_location?.city?.split(
+          ' ',
+        )[0]
+          ? user?.preferences?.create_post_pref?.preferred_location?.city?.split(
+              ' ',
+            )[0]
+          : 'All Locations'
+
+      setSelectedHobbies([
+        {
+          hobby: firstHobby,
+          genre: firstGenre,
+          hobbyId: firstHobbyId,
+          genreId: firstGenreId,
+        },
+      ])
+
+      setData((prev: any) => ({ ...prev, visibility: preferredLocation }))
+    }
   }
 
   const getClass = (type: any) => {
@@ -62,17 +113,18 @@ const ProfileSwitcher: React.FC<Props> = ({
         ref={dropdownRef}
         onClick={() => setShowDropdown((prev) => !prev)}
       >
-        {/* {activeProfile?.data?.profile_image ? (
-          <img
-            data-profile-type={activeProfile.type}
-            src={activeProfile.data?.profile_image}
-            alt=""
-            width={32}
-            height={32}
-          />
-        ) : (
-          <div
-            className={`${styles['profile-image']}  
+        {isMobile &&
+          (activeProfile?.data?.profile_image ? (
+            <img
+              data-profile-type={activeProfile.type}
+              src={activeProfile.data?.profile_image}
+              alt=""
+              width={32}
+              height={32}
+            />
+          ) : (
+            <div
+              className={`${styles['profile-image']}  
             ${activeProfile.type === 'user' && 'default-user-icon'}
             ${
               activeProfile.type === 'listing' && activeProfile?.data?.type == 1
@@ -86,37 +138,32 @@ const ProfileSwitcher: React.FC<Props> = ({
                 : `${styles['default-img']} default-user-icon`
             }
             `}
-            data-profile-type={activeProfile.type}
-          ></div>
-        )} */}
+              data-profile-type={activeProfile.type}
+            ></div>
+          ))}
         <p className={styles['name']}>
           {activeProfile.type === 'listing'
             ? activeProfile.data.title
             : activeProfile.data?.full_name}
         </p>
-
         <svg
+          width="20"
+          height="20"
+          viewBox="0 0 16 16"
+          fill="none"
           xmlns="http://www.w3.org/2000/svg"
           style={{ rotate: showDropdown ? '180deg' : '0deg' }}
-          width="17"
-          height="17"
-          viewBox="0 0 17 17"
-          fill="none"
         >
-          <g clip-path="url(#clip0_14316_102457)">
+          <g id="expand_more_black_24dp 1" clip-path="url(#clip0_173_70421)">
             <path
-              d="M11.0876 6.695L8.50096 9.28167L5.9143 6.695C5.6543 6.435 5.2343 6.435 4.9743 6.695C4.7143 6.955 4.7143 7.375 4.9743 7.635L8.0343 10.695C8.2943 10.955 8.7143 10.955 8.9743 10.695L12.0343 7.635C12.2943 7.375 12.2943 6.955 12.0343 6.695C11.7743 6.44167 11.3476 6.435 11.0876 6.695Z"
+              id="Vector"
+              d="M10.5867 6.195L7.99999 8.78167L5.41332 6.195C5.15332 5.935 4.73332 5.935 4.47332 6.195C4.21332 6.455 4.21332 6.875 4.47332 7.135L7.53332 10.195C7.79332 10.455 8.21332 10.455 8.47332 10.195L11.5333 7.135C11.7933 6.875 11.7933 6.455 11.5333 6.195C11.2733 5.94167 10.8467 5.935 10.5867 6.195Z"
               fill="#6D747A"
             />
           </g>
           <defs>
-            <clipPath id="clip0_14316_102457">
-              <rect
-                width="16"
-                height="16"
-                fill="white"
-                transform="translate(0.5 0.5)"
-              />
+            <clipPath id="clip0_173_70421">
+              <rect width="16" height="16" fill="white" />
             </clipPath>
           </defs>
         </svg>

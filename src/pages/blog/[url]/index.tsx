@@ -31,7 +31,7 @@ import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import { updatePhotoEditModalData } from '@/redux/slices/site'
 import CameraIcon from '@/assets/icons/CameraIcon'
 import BlogContainer from '@/components/Blog/BlogContainer'
-import QuillEditor from '@/pages/brand/QuillEditor'
+import QuillEditor from '@/components/QuillEditor/QuillEditor'
 import dynamic from 'next/dynamic'
 import FilledButton from '@/components/_buttons/FilledButton'
 
@@ -40,10 +40,17 @@ import { CircularProgress } from '@mui/material'
 import ModalWrapper from '@/components/Modal'
 import EditBlog from '@/components/_modals/EditBlog/EditBlog'
 import { Blog } from '@/types/blog'
-import { setBlog, setPreview } from '@/redux/slices/blog'
+import {
+  setBlog,
+  setIsEditing,
+  setPreview,
+  setRefetch,
+} from '@/redux/slices/blog'
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
-
+const BlogEditor = dynamic(() => import('@/components/BlogEditor/BlogEditor'), {
+  ssr: false,
+  loading: () => <h1>Loading...</h1>,
+})
 type Props = {
   data: {
     blog_url?: any
@@ -67,12 +74,12 @@ export const downarrow = (
   </svg>
 )
 const BlogPage: React.FC<Props> = ({ data }) => {
+  const quillRef = useRef<any>(null)
+
   const [isAuthor, setIsAuthor] = useState(false)
   const [isAuthorizedToView, setIsAuthorizedToView] = useState(false)
-  const [isEditing, setIsEditing] = useState(false) // to check if the author is shown the editable interface
 
   const [hasChanged, setHasChanged] = useState(false)
-  // const [blog, setBlog] = useState(data?.blog_url || {})
 
   const titleRef = useRef<HTMLTextAreaElement | null>(null)
   const taglineRef = useRef<HTMLTextAreaElement | null>(null)
@@ -94,7 +101,9 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   const { user, isLoggedIn, isUserDataLoaded } = useSelector(
     (state: RootState) => state.user,
   )
-  const { blog, refetch } = useSelector((state: RootState) => state.blog)
+  const { blog, refetch, isEditing } = useSelector(
+    (state: RootState) => state.blog,
+  )
 
   const fetchBlog = async () => {
     const { err, res } = await getAllBlogs(
@@ -103,10 +112,6 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     if (err) console.log('Error while fetching blog: ', err)
     dispatch(setBlog(res?.data?.data?.blog?.[0]))
   }
-
-  useEffect(() => {
-    dispatch(setBlog(data?.blog_url))
-  }, [data])
 
   useEffect(() => {
     if (refetch > 0) {
@@ -119,12 +124,10 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     switch (type) {
       case 'title':
         if (value?.length > 100) return
-        // setBlog((prev: any) => ({ ...prev, title: value }))
         dispatch(setBlog({ ...blog, title: value }))
         break
       case 'tagline':
         if (value?.length > 100) return
-        // setBlog((prev: any) => ({ ...prev, tagline: value }))
         dispatch(setBlog({ ...blog, tagline: value }))
         break
       default:
@@ -138,7 +141,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     let response: any = {}
     switch (type) {
       case 'title':
-        if (!blog.title) return
+        if (!blog?.title) return
         response = await updateBlog({
           blogId: blog._id,
           title: blog.title,
@@ -150,7 +153,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         break
 
       case 'tagline':
-        if (!blog.tagline) return
+        if (!blog?.tagline) return
         response = await updateBlog({
           blogId: blog._id,
           tagline: blog.tagline,
@@ -159,7 +162,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         break
 
       case 'content':
-        if (!blog.content) return
+        if (!blog?.content) return
         setBtnLoading(true)
         response = await updateBlog({
           blogId: blog._id,
@@ -172,6 +175,8 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         console.log('Wrong type passed in handleEditBlog()!')
         break
     }
+
+    dispatch(setRefetch(refetch + 1))
 
     if (response?.err || !response?.res?.data?.success) {
       console.log('Error in handleEditBlog()!', response.err)
@@ -209,11 +214,15 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     const { err, res } = await uploadBlogImage(formData, data.blog_url._id)
     if (err) return console.log('Error in uploadImageToServer(): ', err)
     if (res?.data.success) {
-      // setBlog({ ...blog, cover_pic: res?.data?.data.cover_pic })
-      dispatch(setBlog({ ...blog, cover_pic: res?.data?.data.cover_pic }))
+      dispatch(setBlog({ ...blog, cover_pic: res?.data?.data.img_url }))
       dispatch(closeModal())
     }
   }
+
+  useEffect(() => {
+    /** The redux state here is not set on mount, hence the issue of showing previous blog in a new URL */
+    dispatch(setBlog(data?.blog_url))
+  }, [])
 
   useEffect(() => {
     if (blog?.content !== data?.blog_url?.content) {
@@ -264,15 +273,13 @@ const BlogPage: React.FC<Props> = ({ data }) => {
           }
         }
         if (isDraft && authorCheck) {
-          setIsEditing(true)
+          dispatch(setIsEditing(true))
         }
       }
     }
   }, [user, isLoggedIn, isUserDataLoaded])
 
-  /**
-   * Set upvote, downvote state initially from the DB
-   */
+  /** Set upvote, downvote state initially from the DB */
   useEffect(() => {
     const initialUpvote = data?.blog_url?.up_votes?._users?.some(
       (id: any) => id === user._id,
@@ -291,7 +298,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     const { preview: previewQuery } = router.query
     if (previewQuery) {
       dispatch(setPreview(true))
-      setIsEditing(false)
+      dispatch(setIsEditing(false))
       setIsAuthor(false)
     } else {
       dispatch(setPreview(false))
@@ -326,7 +333,6 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                         openModal({
                           type: 'blogPublish',
                           closable: true,
-                          propData: { blog, setIsEditing },
                         }),
                       )
                     }
@@ -365,7 +371,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
               <textarea
                 className={styles['blog-desc'] + ' ' + styles.editInput}
                 placeholder="Tagline"
-                value={blog.tagline}
+                value={blog?.tagline || ''}
                 name="tagline"
                 onChange={(e) => handleChange(e, 'tagline')}
                 onBlur={() => handleEditBlog('tagline')}
@@ -399,13 +405,13 @@ const BlogPage: React.FC<Props> = ({ data }) => {
               >
                 <img
                   // src={data?.blog_url?.cover_pic}
-                  src={blog.cover_pic ?? ''}
+                  src={blog?.cover_pic ?? ''}
                   className={styles.coverBlur}
                   alt="cover image"
                 />
                 <img
                   // src={data?.blog_url?.cover_pic}
-                  src={blog.cover_pic ?? ''}
+                  src={blog?.cover_pic ?? ''}
                   className={styles.coverPic}
                   alt="cover image"
                 />
@@ -470,25 +476,28 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   </Link>
                   <div className={styles['date-and-hobbies']}>
                     <p>
-                      {dateFormatwithYear?.format(
-                        new Date(data?.blog_url?.createdAt),
-                      )}
+                      {data?.blog_url?.publish_date
+                        ? dateFormatwithYear?.format(
+                            new Date(data?.blog_url?.publish_date),
+                          )
+                        : dateFormatwithYear?.format(
+                            new Date(data?.blog_url?.createdAt),
+                          )}
                     </p>
                     &#183;
-                    <p>{calculateReadingTime(blog?.content)} min read</p>
+                    <p>
+                      {blog?.content ? calculateReadingTime(blog?.content) : 0}{' '}
+                      min read
+                    </p>
                     {!isMobileScreen && (
                       <>
-                        &#183;
-                        {data?.blog_url?._hobbies?.map(
-                          (hobby: any, idx: any) => (
-                            <span key={idx}>
-                              {hobby?.hobby?.display}
-                              {idx !== data?.blog_url?._hobbies?.length - 1
-                                ? ', '
-                                : ''}
-                            </span>
-                          ),
-                        )}
+                        {blog?._hobbies?.length !== 0 && <>&#183;</>}
+                        {blog?._hobbies?.map((hobby: any, idx: any) => (
+                          <span key={idx}>
+                            {hobby?.hobby?.display}
+                            {idx !== blog?._hobbies?.length - 1 ? ', ' : ''}
+                          </span>
+                        ))}
                       </>
                     )}
                   </div>
@@ -502,12 +511,10 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   <div
                     className={`${styles['date-and-hobbies']} ${styles.res}`}
                   >
-                    {data?.blog_url?._hobbies?.map((hobby: any, idx: any) => (
+                    {blog?._hobbies?.map((hobby: any, idx: any) => (
                       <span key={idx}>
                         {hobby?.hobby?.display}
-                        {idx !== data?.blog_url?._hobbies?.length - 1
-                          ? ', '
-                          : ''}
+                        {idx !== blog?._hobbies?.length - 1 ? ', ' : ''}
                       </span>
                     ))}
                   </div>
@@ -520,8 +527,6 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                     data={data}
                     vote={vote}
                     setVote={setVote}
-                    isEditing={isEditing}
-                    setIsEditing={setIsEditing}
                     isAuthor={isAuthor}
                   />
                 </div>
@@ -535,20 +540,16 @@ const BlogPage: React.FC<Props> = ({ data }) => {
               data={data}
               vote={vote}
               setVote={setVote}
-              isEditing={isEditing}
-              setIsEditing={setIsEditing}
               isAuthor={isAuthor}
             />
           )}
 
           {/** Sticky header */}
-          {!isMobileScreen && showStickyHeader && (
+          {!isMobileScreen && showStickyHeader && !isEditing && (
             <BlogStickyHeader
               data={data}
               vote={vote}
               setVote={setVote}
-              isEditing={isEditing}
-              setIsEditing={setIsEditing}
               isAuthor={isAuthor}
             />
           )}
@@ -559,40 +560,18 @@ const BlogPage: React.FC<Props> = ({ data }) => {
               {/* <div className={styles.blogWrapper}> */}
               {isEditing ? (
                 <div className={styles.blogEditor}>
-                  <ReactQuill
-                    theme="snow"
-                    value={blog.content}
-                    onChange={(updatedValue) => {
-                      // setBlog((prev: any) => ({
-                      //   ...prev,
-                      //   content: updatedValue,
-                      // }))
+                  <BlogEditor
+                    placeholder=""
+                    value={blog?.content}
+                    onChange={(updatedValue: any) => {
                       dispatch(setBlog({ ...blog, content: updatedValue }))
                     }}
-                    // onBlur={() => handleEditBlog('content')}
-                    className={`${styles.quill} ${styles['ql-editor']} blog-quill`}
-                    placeholder={'Text'}
-                    modules={{
-                      toolbar: {
-                        container: [
-                          [
-                            'bold',
-                            'italic',
-                            'underline',
-                            { list: 'ordered' },
-                            { list: 'bullet' },
-                            { header: '1' },
-                            { header: '2' },
-                          ],
-                          ['link', 'image'],
-                        ],
-                      },
-                    }}
+                    // onFocus={(e: any, editor: any) => setQuillInstance(editor)}
                   />
                   <div className={styles.blogButtons}>
                     <FilledButton
                       className={styles.blogSaveButton}
-                      onClick={() => setIsEditing(false)}
+                      onClick={() => dispatch(setIsEditing(false))}
                     >
                       Cancel
                     </FilledButton>
@@ -668,6 +647,16 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   </div>
 
                   <ul className={styles['hobby-list']}>
+                    <div
+                      style={{
+                        height: '28px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <HobbyIconHexagon size={20} />
+                    </div>
                     {data?.blog_url?._hobbies?.map((item: any) => {
                       if (typeof item === 'string') return
                       return (

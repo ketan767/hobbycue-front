@@ -25,6 +25,7 @@ type Props = {
   showAllComments?: boolean
   getInput?: (x: string) => void
   hideSeeMore?: boolean
+  activeCommentBox?: boolean
 }
 
 const PostComments = ({
@@ -34,6 +35,7 @@ const PostComments = ({
   showAllComments,
   getInput,
   hideSeeMore,
+  activeCommentBox,
 }: Props) => {
   const router = useRouter()
   const dispatch = useDispatch()
@@ -125,29 +127,12 @@ const PostComments = ({
       dispatch(openModal({ type: 'auth', closable: true }))
     }
   }
-  const editReportDeleteRef: any = useRef(null)
-  // useEffect(() => {
-  //   function handleClickOutside(event: Event) {
-  //     if (
-  //       editReportDeleteRef.current &&
-  //       !editReportDeleteRef.current.contains(event.target)
-  //     ) {
-  //       setOpenAction(false)
-  //     }
-  //   }
 
-  //   // Bind the event listener
-  //   document.addEventListener('click', handleClickOutside)
-
-  //   // Unbind the event listener on cleanup
-  //   return () => {
-  //     document.removeEventListener('click', handleClickOutside)
-  //   }
-  // }, [])
-
-  const handleShowDelete = (postid: string) => {
-    setDeleteData({ open: true, _id: postid })
-  }
+  useEffect(() => {
+    if (activeCommentBox) {
+      inputRef.current.focus()
+    }
+  }, [activeCommentBox])
 
   useEffect(() => {
     if (showAllComments !== null && showAllComments !== undefined) {
@@ -158,6 +143,8 @@ const PostComments = ({
   useEffect(() => {
     fetchComments()
   }, [])
+
+  const showGoToTop = router.asPath.includes('/post/') || activeModal === 'post'
 
   return (
     <>
@@ -202,29 +189,29 @@ const PostComments = ({
                 onBlur={() => setInputFocus(false)}
                 ref={inputRef}
                 maxRows={5}
-                style={{borderColor: inputFocus ? '#8064A2' : '#E0E0E0'}}
+                style={{ borderColor: inputFocus ? '#8064A2' : '#E0E0E0' }}
               />
               <CustomTooltip title="Send">
-              <button
-                type="submit"
-                className={styles['submit-btn']}
-                disabled={loading}
-                onClick={addComment}
-              >
-                <svg
-                  className={styles['submit-btn-svg']}
-                  width="14"
-                  height="12"
-                  viewBox="0 0 14 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+                <button
+                  type="submit"
+                  className={styles['submit-btn']}
+                  disabled={loading}
+                  onClick={addComment}
                 >
-                  <path
-                    d="M1.26683 11.6003L12.9002 6.61367C13.4402 6.38034 13.4402 5.62034 12.9002 5.387L1.26683 0.400337C0.826829 0.207003 0.340163 0.53367 0.340163 1.007L0.333496 4.08034C0.333496 4.41367 0.580163 4.70034 0.913496 4.74034L10.3335 6.00034L0.913496 7.25367C0.580163 7.30034 0.333496 7.587 0.333496 7.92034L0.340163 10.9937C0.340163 11.467 0.826829 11.7937 1.26683 11.6003Z"
-                    fill="#8064A2"
-                  />
-                </svg>
-              </button>
+                  <svg
+                    className={styles['submit-btn-svg']}
+                    width="14"
+                    height="12"
+                    viewBox="0 0 14 12"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1.26683 11.6003L12.9002 6.61367C13.4402 6.38034 13.4402 5.62034 12.9002 5.387L1.26683 0.400337C0.826829 0.207003 0.340163 0.53367 0.340163 1.007L0.333496 4.08034C0.333496 4.41367 0.580163 4.70034 0.913496 4.74034L10.3335 6.00034L0.913496 7.25367C0.580163 7.30034 0.333496 7.587 0.333496 7.92034L0.340163 10.9937C0.340163 11.467 0.826829 11.7937 1.26683 11.6003Z"
+                      fill="#8064A2"
+                    />
+                  </svg>
+                </button>
               </CustomTooltip>
             </form>
           </div>
@@ -234,7 +221,7 @@ const PostComments = ({
         {comments.length > 0 && (
           <section className={styles['all-comment-container']}>
             {router.pathname === '/post/[post_id]' || displayMoreComments ? (
-              comments.map((comment: any, idx: number) => {
+              [...comments].reverse().map((comment: any, idx: number) => {
                 return (
                   <Comment
                     comment={comment}
@@ -247,7 +234,7 @@ const PostComments = ({
             ) : (
               <>
                 <Comment
-                  comment={comments[0]}
+                  comment={comments[comments.length - 1]}
                   data={data}
                   fetchComments={fetchComments}
                 />
@@ -279,16 +266,15 @@ const PostComments = ({
             )}
           </section>
         )}
-        {/* {displayMoreComments && !hideSeeMore && (
+        {showGoToTop && comments?.length > 0 && (
           <p
             className={styles['see-more-comments']}
-            onClick={() => {
-              if (onMoreComments) onMoreComments()
-            }}
+            onClick={() => inputRef.current?.focus()}
+            style={{ marginBottom: 12 }}
           >
-            See less comments
+            Go to Top
           </p>
-        )} */}
+        )}
       </div>
       {
         <CustomSnackbar

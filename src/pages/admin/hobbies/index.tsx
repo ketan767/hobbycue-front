@@ -1,18 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllUserDetail, searchUsers } from '../../../services/user.service'
+
 import styles from './styles.module.css'
 import Image from 'next/image'
 import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
-import { forgotPassword } from '@/services/auth.service'
-import {
-  closeModal,
-  openModal,
-  updateForgotPasswordEmail,
-} from '@/redux/slices/modal'
-import { RootState } from '@/redux/store'
-import AdminNavbar from '@/components/AdminNavbar/AdminNavbar'
+import HobbiesFilter from '@/components/AdminPage/Modal/HobbiesFilterModal/HobbiesFilter'
+
 import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
@@ -22,21 +16,36 @@ import {
   deleteUserByAdmin,
   getHobbyRequests,
 } from '@/services/admin.service'
-import { formatDateTime, pageType } from '@/utils'
+import { pageType } from '@/utils'
 
 import AdminActionModal from '@/components/_modals/AdminModals/ActionModal'
-import { Fade, Modal} from '@mui/material'
-import { log } from 'console'
+import { Fade, Modal } from '@mui/material'
+
 import { formatDate } from '@/utils/Date'
 import StatusDropdown from '@/components/_formElements/AdminStatusDropdown'
 import PreLoader from '@/components/PreLoader'
 import { setShowPageLoader } from '@/redux/slices/site'
 import ToggleButton from '@/components/_buttons/ToggleButton'
 
+import HobbiesNotesModal from '@/components/AdminPage/Modal/HobbiesFilterModal/HobbiesNotesModal'
 type SearchInput = {
   search: InputData<string>
 }
 
+export interface AdminNoteModalData {
+  adminNotes: String
+  status: String
+  emailUser: boolean
+  userId: string
+}
+
+export interface ModalState {
+  onboarded: string
+  joined: { start: string; end: string }
+  loginModes: string[]
+  pageCount: { min: string; max: string }
+  status: string
+}
 const HobbiesRequest: React.FC = () => {
   const router = useRouter();
   const [showPreLoader, setShowPreLoader] = useState(true);
@@ -44,15 +53,36 @@ const HobbiesRequest: React.FC = () => {
     search: { value: '', error: null },
   })
   const [email, setEmail] = useState('')
+  const [count, setCount] = useState(0)
+   const [isModalOpen, setIsModalOpen] = useState(false)
   const [notes, setNotes] = useState<{ [key: string]: string }>({})
   const [searchResults, setSearchResults] = useState<any[]>([])
+  const [singleData, setSingleData] = useState({})
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const [showAdminActionModal, setShowAdminActionModal] = useState(false)
   const dispatch = useDispatch()
+  const [createdAtSort, setCreatedAtSort] = useState(false);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
   }
+  const [modalState, setModalState] = useState<ModalState>({
+      onboarded: '',
+      joined: { start: '', end: '' },
+      loginModes: [],
+      pageCount: { min: '', max: '' },
+      status: '',
+    })
+const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
+     const [adminNoteModalData, setAdminNoteModalData] =
+        useState<AdminNoteModalData>({
+          adminNotes: 'Admin Note',
+          status: 'in_progress',
+          emailUser: false,
+          userId: '',
+        })
+
+  const [applyFilter, setApplyFilter] = useState<boolean>(false)
   const [page, setPage] = useState(1)
   const [pagelimit, setPagelimit] = useState(25)
   const [deleteData, setDeleteData] = useState<{
@@ -74,23 +104,19 @@ const HobbiesRequest: React.FC = () => {
     user_id: '',
     listing_id: '',
   })
-  const [createdAtSort, setCreatedAtSort] = useState(false);
+  // const [createdAtSort, setCreatedAtSort] = useState(false);
 
-  const handleSearch = async (event: any) => {
-    const searchValue = data.search.value.trim()
-    event.preventDefault()
-    let searchCriteria = {
-      full_name: searchValue,
+  const handleSearch = async (event: React.FormEvent) => {
+    event.preventDefault(); 
+    const searchValue = data.search.value.trim();
+  
+    if (!searchValue) {
+      setSearchResults([]);
+      setPageNumber([]);
+      setCount(0);
+      return;
     }
-
-    const { res, err } = await searchUsers(searchCriteria)
-    if (err) {
-      console.log('An error', err)
-    } else {
-      setSearchResults(res.data)
-      console.log('res', res)
-    }
-  }
+  };
 
   const filterSvg = (
     <svg
@@ -167,42 +193,37 @@ const HobbiesRequest: React.FC = () => {
     </svg>
   )
   console.warn({ searchResults })
-  const fullNumber = (user: any) => {
-    if (user?.phone?.prefix && user?.phone?.number) {
-      return user?.phone?.prefix + user?.phone?.number
-    } else {
-      return 'No number'
-    }
-  }
-
-  const pagesLength = (user: any) => {
-    return user?._listings?.length || 0
-  }
-  const handleEdit = (profile_url: any) => {
-    router.push(`/admin/users/edit/${profile_url}`)
-  }
+  // const fullNumber = (user: any) => {
+  //   if (user?.phone?.prefix && user?.phone?.number) {
+  //     return user?.phone?.prefix + user?.phone?.number
+  //   } else {
+  //     return 'No number'
+  //   }
+  // }
 
   const fetchSearchResults = async () => {
-    const searchValue = data.search.value.trim()
-    let searchCriteria = {
-      full_name: searchValue,
-    }
-
-    const { res, err } = await searchUsers(searchCriteria)
+    const searchValue = data.search.value.trim();
+    if (!searchValue) return;
+  
+    const queryString = `limit=${pagelimit}&sort=-createdAt&page=${page}&populate=user_id,listing_id&search=${encodeURIComponent(searchValue)}`;
+    const { res, err } = await getHobbyRequests(queryString);
     if (err) {
-      console.log('An error', err)
+      console.error('Error fetching search results:', err);
     } else {
-      setSearchResults(res.data)
-
-      // Calculate total number of pages based on search results length
-      const totalPages = Math.ceil(res.data.length / 50)
-      const pages = []
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i)
-      }
-      setPageNumber(pages)
+      setSearchResults(res.data.data.hobbyreq || []);
+      setCount(res.data.data.no_of_requests || 0);
+  
+      const totalPages = Math.ceil(res.data.data.no_of_requests / 50);
+      setPageNumber(Array.from({ length: totalPages }, (_, i) => i + 1));
     }
-  }
+  };
+
+  const handleCreatedAtSort = () => {
+    setCreatedAtSort((prev) => !prev);
+  };
+
+
+  
   const FetchHobbyReq = async () => {
     dispatch(setShowPageLoader(true))
     const { res, err } = await getHobbyRequests(
@@ -213,10 +234,28 @@ const HobbiesRequest: React.FC = () => {
       dispatch(setShowPageLoader(false))
     } else {
       console.log('FetchHobbyReq', res.data)
-      setSearchResults(res.data.data.hobbyreq)
+      let filteredResults = res.data.data.hobbyreq;
+
+      if (modalState.onboarded === 'Yes') {
+        filteredResults = filteredResults.filter(
+          (hobbyreq : any) => hobbyreq?.user_id?.is_onboarded === true
+        );
+      } else if (modalState.onboarded === 'No') {
+        filteredResults = filteredResults.filter(
+          (hobbyreq : any) => hobbyreq?.user_id?.is_onboarded === false
+        );
+      }
+      setSearchResults(filteredResults);
+      setCount(filteredResults.length);
       dispatch(setShowPageLoader(false))
     }
   }
+  const handleModalSubmit = async (updatedData: any) => {
+    await FetchHobbyReq();
+    setAdminNoteModal(false);
+  };
+
+
   useEffect(() => {
     setShowPreLoader(true)
     if (data.search.value) {
@@ -225,7 +264,7 @@ const HobbiesRequest: React.FC = () => {
       FetchHobbyReq()
     }
     setShowPreLoader(false)
-  }, [data.search.value, page])
+  }, [data.search.value, page, modalState.onboarded])
 
   useEffect(() => {
     const initialNotes: { [key: string]: string } = {}
@@ -237,15 +276,9 @@ const HobbiesRequest: React.FC = () => {
     setNotes(initialNotes)
   }, [searchResults, page])
 
-  const getUserName = async (_id: any) => {
-    const { res, err } = await getAllUserDetail(`_id=${_id}`)
-    return res?.data.data.users[0].full_name
-  }
 
-  const goToPage = (page: number) => {
-    // Logic to navigate to specific page
-  }
 
+  
   const goToPreviousPage = () => {
     setPage(page - 1)
   }
@@ -254,9 +287,7 @@ const HobbiesRequest: React.FC = () => {
     setPage(page + 1)
   }
 
-  const handleDelete = (user_id: string) => {
-    setDeleteData({ open: true, _id: user_id })
-  }
+
 
   const deleteFunc = async (user_id: string) => {
     const { err, res } = await deleteUserByAdmin(user_id)
@@ -317,6 +348,8 @@ const HobbiesRequest: React.FC = () => {
     }
   }
 
+  
+
   const handleSubmit = async () => {
     let jsondata = {
       user_id: hobbyData?.user_id,
@@ -354,9 +387,9 @@ const HobbiesRequest: React.FC = () => {
       description: hobbyreq?.description,
       status: hobbyreq?.status,
     })
-    console.log('Hobby data received')
-
-    console.log(hobbyData, 10000)
+    
+    setSingleData(hobbyreq)
+    setAdminNoteModal(true)
 
     //setShowAdminActionModal(true)
   }
@@ -365,9 +398,9 @@ const HobbiesRequest: React.FC = () => {
     return <div className={styles['custom-backdrop']}></div>
   }
 
-  const handleCreatedAtSort = () => {
-    setCreatedAtSort((prev) => !prev);
-  };
+  // const handleCreatedAtSort = () => {
+  //   setCreatedAtSort((prev) => !prev);
+  // };
 
   const sortedResults = searchResults
     ?.slice() 
@@ -377,6 +410,14 @@ const HobbiesRequest: React.FC = () => {
         : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
 
+  
+  // const sortedResults = searchResults
+  //   ?.slice() 
+  //   ?.sort((a, b) => {
+  //     return createdAtSort
+  //       ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+  //       : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  //   });
 
 
   return (
@@ -424,18 +465,30 @@ const HobbiesRequest: React.FC = () => {
                 {searchSvg}
               </button>
             </form>
-            <button className={styles.filterBtn}>{filterSvg}</button>
-          </div>
+
+            <div className={styles.countAndFilter}>
+            <span className={styles.countText}>Count: <span style={{ color:"#0096c8", fontWeight:"500"}}>{count}</span></span>
+          
+            <button className={styles.filterBtn} onClick={() => setIsModalOpen(!isModalOpen)}>{filterSvg}</button>
+            {isModalOpen && ( 
+              <HobbiesFilter
+                modalState={modalState}
+                setModalState={setModalState}
+                setIsModalOpen={setIsModalOpen}
+                setApplyFilter={setApplyFilter}
+              />
+              )}
+        </div>
+      </div>
 
           <div className={styles.resultsContainer}>
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '8.06%' }}>Hobby</th>
-                  <th style={{ width: '8%' }}>Genre/Style</th>
+                  <th style={{ width: '8.06%', padding:'1px' }}>Hobby</th>
+                  <th style={{ width: '8%', padding:'1px' }}>Genre/Style</th>
 
                   <th style={{ width: '12.163%' }}>Requested By</th>
-                  {/* <th style={{ width: '12.163%' }}>On ▼</th> */}
                   <th style={{ width: '12.163%', cursor:"pointer" }} onClick={handleCreatedAtSort}>On {" "}
                   <span
                   style={{
@@ -637,6 +690,13 @@ const HobbiesRequest: React.FC = () => {
           }}
         />
       }
+      <HobbiesNotesModal
+        data={singleData}
+        pageName={'HobbyRequest'}
+        setAdminNoteModalData={handleModalSubmit}
+        setIsModalOpen={setAdminNoteModal}
+        isModalOpen={adminNoteModal}
+      />
     </>
   )
 }
