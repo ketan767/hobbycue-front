@@ -111,7 +111,7 @@ export default function Index() {
     <>
       <AdminLayout>
         <div className={styles.container}>
-          <div className={styles.allLabels}>
+          <div className={styles.allLabels} style={{marginTop:-18}}>
             <div className={styles.label}>
               <p>
                 Version : <span>0.9.1c</span>
@@ -124,13 +124,15 @@ export default function Index() {
             </div>
             <div style={{ marginLeft: '48px' }}>
             <Link href={`/community`}>
-      
-        <Image
+      <div style={{marginLeft:22,marginTop:5}}>
+      <Image
           src={logo}
           alt="Logo"
-          width={50} 
-          height={50}
+          width={48} 
+          height={48}
         />
+      </div>
+        
       
     </Link>
             </div>

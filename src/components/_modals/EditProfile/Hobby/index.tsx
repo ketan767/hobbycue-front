@@ -34,6 +34,7 @@ import { useRouter } from 'next/router'
 import AddHobby from '../../AddHobby/AddHobbyModal'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import AddGenre from '../../AddGenre/AddGenreModal'
+import { log } from 'console'
 
 type Props = {
   onComplete?: () => void
@@ -113,7 +114,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
-  const [errorOrmsg, setErrorOrmsg] = useState<string | null>(null)
+  const [errorOrmsg, setErrorOrmsg] = useState<string | null>(null);
+  const [simillar,setSimillar] = useState<string | null>(null)
 
   const [data, setData] = useState<ProfileHobbyData>({
     hobby: null,
@@ -159,8 +161,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
   const handleGenreInputFocus = () => {
     setShowGenreDowpdown(true)
-    const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${hobbyInputValue}`
+    const query = `fields=display,genre&populate=category,sub_category,tags,related_hobbies&level=3&level=2&level=1&level=0&show=true&search=${hobbyInputValue}`
     getAllHobbies(query).then((result) => {
+      console.log("Hobbby results =>",result);
+      
       const sortedHobbies = result.res.data.hobbies.sort((a: any, b: any) => {
         const indexA = a.display
           ?.toLowerCase()
@@ -200,8 +204,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       return
     }
 
-    const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
-    const query2 = `fields=display,genre&level=5&level=4&level=3&level=2&level=1&level=0&search=${e.target.value}`
+    const query = `fields=display,genre&populate=category,sub_category,tags,related_hobbies&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
+    const query2 = `fields=display,genre&populate=category,sub_category,tags,related_hobbies&level=5&level=4&level=3&level=2&level=1&level=0&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
     const { err: err2, res: res2 } = await getAllHobbiesWithoutPagi(query2)
     if (err) return console.log(err)
@@ -238,6 +242,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
     setAllHobbiesList(allHobbies)
     console.log('res------------>', allHobbies)
+    console.log("Hobbies : ",sortedHobbies);
+    
     setHobbyDropdownList(sortedHobbies)
     setFocusedHobbyIndex(-1)
   }
@@ -280,8 +286,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       return { ...prev, genre: null }
     })
     if (isEmptyField(e.target.value)) return setGenreDropdownList([])
-    const query = `fields=display&show=true&genre=${genreid}&level=5`
-    const query2 = `fields=display,show&genre=${genreid}&level=5`
+    const query = `fields=display&populate=category,sub_category,tags,related_hobbies&show=true&genre=${genreid}&level=5`
+    const query2 = `fields=display,show&populate=category,sub_category,tags,related_hobbies&genre=${genreid}&level=5`
 
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
@@ -365,6 +371,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const handleHobbySelection = async (selectedHobby: DropdownListItem) => {
     setGenreId('')
     console.log(selectedHobby)
+    setSimillar(selectedHobby.related_hobbies[0]?.display??simillar)
 
     setData((prev) => ({ ...prev, hobby: selectedHobby }))
     setHobbyInputValue(selectedHobby?.display ?? hobbyInputValue)
@@ -376,7 +383,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     ) {
       setGenreId(selectedHobby.genre[0])
 
-      const query = `fields=display&show=true&genre=${selectedHobby.genre[0]}&level=5`
+      const query = `fields=display&populate=category,sub_category,tags,related_hobbies&show=true&genre=${selectedHobby.genre[0]}&level=5`
       const { err, res } = await getAllHobbies(query)
 
       if (!err) {
@@ -970,6 +977,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
               user_type: 'user',
               hobby: hobbyInputValue,
               level: 'Hobby',
+              similar : simillar
             }
             const { err, res } = await SendHobbyRequest(jsonData)
             if (res?.data.success) {
@@ -1027,8 +1035,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             let jsonData = {
               user_id: user._id,
               user_type: 'user',
-              hobby: genreInputValue,
+              hobby: hobbyInputValue,
+              genre: genreInputValue,
               level: 'Genre',
+              similar : simillar
             }
             const { err, res } = await SendHobbyRequest(jsonData)
             if (res?.data.success) {

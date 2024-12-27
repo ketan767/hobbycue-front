@@ -25,12 +25,13 @@ import {
 import { formatDateTime, pageType } from '@/utils'
 
 import AdminActionModal from '@/components/_modals/AdminModals/ActionModal'
-import { Fade, Modal } from '@mui/material'
+import { Fade, Modal} from '@mui/material'
 import { log } from 'console'
 import { formatDate } from '@/utils/Date'
 import StatusDropdown from '@/components/_formElements/AdminStatusDropdown'
 import PreLoader from '@/components/PreLoader'
 import { setShowPageLoader } from '@/redux/slices/site'
+import ToggleButton from '@/components/_buttons/ToggleButton'
 
 type SearchInput = {
   search: InputData<string>
@@ -73,6 +74,7 @@ const HobbiesRequest: React.FC = () => {
     user_id: '',
     listing_id: '',
   })
+  const [createdAtSort, setCreatedAtSort] = useState(false);
 
   const handleSearch = async (event: any) => {
     const searchValue = data.search.value.trim()
@@ -363,6 +365,18 @@ const HobbiesRequest: React.FC = () => {
     return <div className={styles['custom-backdrop']}></div>
   }
 
+  const handleCreatedAtSort = () => {
+    setCreatedAtSort((prev) => !prev);
+  };
+
+  const sortedResults = searchResults
+    ?.slice() 
+    ?.sort((a, b) => {
+      return createdAtSort
+        ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+
 
 
   return (
@@ -392,6 +406,7 @@ const HobbiesRequest: React.FC = () => {
           </Fade>
         </Modal>
       )}
+
       <AdminLayout>
         <div className={styles.searchContainer}>
           {/* <div className={styles.admintitle}>Admin Search</div> */}
@@ -417,10 +432,21 @@ const HobbiesRequest: React.FC = () => {
               <thead>
                 <tr>
                   <th style={{ width: '8.06%' }}>Hobby</th>
-                  <th style={{ width: '8%' }}>Level</th>
+                  <th style={{ width: '8%' }}>Genre/Style</th>
 
                   <th style={{ width: '12.163%' }}>Requested By</th>
-                  <th style={{ width: '12.163%' }}>On ▼</th>
+                  {/* <th style={{ width: '12.163%' }}>On ▼</th> */}
+                  <th style={{ width: '12.163%', cursor:"pointer" }} onClick={handleCreatedAtSort}>On {" "}
+                  <span
+                  style={{
+                    display: "inline-block",
+                    transform: createdAtSort ? "rotate(180deg)" : "rotate(0deg)",
+                    transition: "transform 0.3s ease",
+                  }}
+                >
+                  ▼
+                </span>
+                  </th>
                   <th
                     style={{
                       width: '20%',
@@ -439,7 +465,7 @@ const HobbiesRequest: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {searchResults?.map((hobbyreq, index) => (
+                {sortedResults?.map((hobbyreq, index) => (
                   <tr key={index}>
                     <td>
                       <div className={styles.resultItem}>
@@ -454,28 +480,67 @@ const HobbiesRequest: React.FC = () => {
                       </div>
                     </td>
                     <td className={styles.userName}>
-                      <div>{hobbyreq?.level}</div>
+                      <div>{hobbyreq?.genre}</div>
                     </td>
 
-                    <td className={styles.LoginType}>
-                      <Link
-                        href={
-                          hobbyreq.user_type == 'user'
-                            ? `/profile/${hobbyreq.user_id?.profile_url}`
-                            : `/${pageType(hobbyreq?.listing_id?.type)}/${
-                                hobbyreq.listing_id?.page_url
-                              }`
-                        }
-                      >
-                        {hobbyreq.user_type == 'user'
-                          ? hobbyreq.user_id?.full_name
+                    <td>
+                        <Link
+                           href={
+                            hobbyreq.user_type == 'user'
+                              ? `/profile/${hobbyreq.user_id?.profile_url}`
+                              : `/${pageType(hobbyreq?.listing_id?.type)}/${
+                                  hobbyreq.listing_id?.page_url
+                                }`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <div className={styles.resultItem}>
+                            <div className={styles.avatarContainer}>
+                              {hobbyreq?.user_id?.profile_image ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                  src={hobbyreq?.user_id?.profile_image}
+                                  alt={`${hobbyreq?.user_id?.full_name}'s profile`}
+                                  width={40}
+                                  height={40}
+                                  className={styles.avatarImage}
+                                />
+                              ) : (
+                                <Image
+                                  className={styles['img']}
+                                  src={DefaultProfile}
+                                  alt="profile"
+                                  width={40}
+                                  height={40}
+                                />
+                              )}
+                            </div>
+                            <div
+                              className={styles.detailsContainer}
+                              title={
+                                // hobbyreq?.user_id?.full_name?.length > 25
+                                //   ? hobbyreq?.user_id?.full_name
+                                //   : ''
+                                hobbyreq.user_type == 'user'
+                          ? hobbyreq.user_id?.full_name.slice(0,25)
+                          : hobbyreq.listing_id?.title
+                              }
+                              style={{whiteSpace: 'nowrap'}}
+                            >
+                              {hobbyreq.user_type == 'user'
+                          ? hobbyreq.user_id?.full_name.slice(0,25)
                           : hobbyreq.listing_id?.title}
-                      </Link>
-                    </td>
+                            </div>
+                          </div>
+                        </Link>
+                      </td>
                     <td className={styles.userName}>
                       <div>{formatDate(hobbyreq?.createdAt)}</div>
                     </td>
-                    <td className={styles.lastLoggedIn}>{hobbyreq?.similar}</td>
+                    <td className={styles.userName}>
+                      <div>{hobbyreq?.similar}</div>
+                      </td>
 
                     <td className={styles.pagesLength}>
                       <input
@@ -500,7 +565,9 @@ const HobbiesRequest: React.FC = () => {
                         
                         className={styles.actions}
                       >
-                        {pencilSvg}
+                        <div onClick={()=>{
+                          setShowAdminActionModal(true)
+                        }}>{pencilSvg}</div>
                           <StatusDropdown
                             status={hobbyreq?.status}
                             onStatusChange={async (newStatus) => {

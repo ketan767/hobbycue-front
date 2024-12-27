@@ -1030,7 +1030,7 @@ const SimpleOnboarding: React.FC<Props> = ({
       return
     }
 
-    const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
+    const query = `fields=display,genre&populate=category,sub_category,tags,related_hobbies&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
     if (err) {
       console.log(err)
