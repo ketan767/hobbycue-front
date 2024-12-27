@@ -14,7 +14,9 @@
   background-color: white;
   border-radius: var(--spacing-8);
   max-width: 50rem;
-  width: 38rem;
+  width: 45rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .long-input-box {

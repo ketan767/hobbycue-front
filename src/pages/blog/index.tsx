@@ -20,6 +20,7 @@ import {
   initialFormValues,
   setFormValues,
 } from '@/redux/slices/blog'
+import { useMediaQuery } from '@mui/material'
 type Hobby = {
   _id: string
   blog_id: string
@@ -124,7 +125,7 @@ const Explore: React.FC<Props> = ({ data }) => {
 
   const { formValues } = useSelector((state: RootState) => state.blog)
   const { activeModal } = useSelector((state: RootState) => state.modal)
-
+  const isMobile = useMediaQuery('(max-width:1100px)')
   const filterBlogs = (data: Blog[], filters: FormValues): Blog[] => {
     if (
       Object.values(filters).every(
@@ -264,7 +265,7 @@ const Explore: React.FC<Props> = ({ data }) => {
                   : blogFilterIconFilled}
               </div>
             </div>
-            {formValues.hobby ? (
+            {isMobile && formValues.hobby ? (
               <div
                 className={styles.selectedFilter}
                 onClick={() =>

@@ -277,6 +277,12 @@
   color: #8064a2;
   cursor: pointer;
 }
+
+.members-pencil-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
 /* Post Page */
 
 .posts-container {
@@ -561,6 +567,11 @@
   .pages-container {
     /* margin-top: 8px; */
     grid-template-columns: 1fr !important;
+  }
+  .members-pencil-container {
+    width: 100%;
+    display: flex;
+    justify-content: normal;
   }
 }
 

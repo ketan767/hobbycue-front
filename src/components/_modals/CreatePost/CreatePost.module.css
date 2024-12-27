@@ -5,7 +5,7 @@
   mix-blend-mode: normal;
   border-radius: var(--spacing-8);
   max-height: 50rem;
-  height: calc(100vh - 3rem);
+  height: calc(100vh - 2rem);
 }
 
 .changedWidth {
@@ -260,9 +260,9 @@
 
 }
 .imgContainer > img {
-  height: 100%;
+ 
   width: 100%;
-  aspect-ratio: 16 / 9;
+  max-height: 376.53px;
   object-fit: contain;
   transition: 0.3s ease-in-out;
   position: relative;

@@ -121,7 +121,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
   const handleGenreInputFocus = () => {
     setShowGenreDropdown(true)
-    const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${hobbyInputValue}`
+    const query = `fields=display,genre&populate=category,sub_category,tags,related_hobbies&level=3&level=2&level=1&level=0&show=true&search=${hobbyInputValue}`
     getAllHobbies(query).then((result) => {
       const sortedHobbies = result.res.data.hobbies.sort((a: any, b: any) => {
         const indexA = a.display
@@ -759,7 +759,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({
             let jsonData = {
               listing_id: listingModalData._id,
               user_type: 'listing',
-              hobby: genreInputValue,
+              genre: genreInputValue,
+              hobby : hobbyInputValue,
               level: 'Genre',
             }
             const { err, res } = await SendHobbyRequest(jsonData)
