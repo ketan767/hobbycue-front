@@ -33,8 +33,8 @@ const Programs: React.FC<Props> = ({ data: initialData }) => {
   const [ShowAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const { isSearching } = useSelector((state: RootState) => state.explore)
-    const [hoverCardIndex,setHoveredCardIndex] = useState<number>(-1);
-  
+  const [hoverCardIndex, setHoveredCardIndex] = useState<number>(-1)
+
   const dispatch = useDispatch()
 
   const locationDropdownRef = useRef<HTMLDivElement>(null)
@@ -152,8 +152,8 @@ const Programs: React.FC<Props> = ({ data: initialData }) => {
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
         />
-        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
-        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+        <meta property="og:image" content="/program_page.png" />
+        <meta property="og:image:secure_url" content="/program_page.png" />
         <title>HobbyCue - Explore</title>
       </Head>
       <ExploreSearchContainer
@@ -188,7 +188,7 @@ const Programs: React.FC<Props> = ({ data: initialData }) => {
                 key={el._id}
                 data={el}
                 style={{ minWidth: 271, maxWidth: 700 }}
-                  hoverCardIndex={hoverCardIndex}
+                hoverCardIndex={hoverCardIndex}
                 setHoveredCardIndex={setHoveredCardIndex}
               />
             ))}
