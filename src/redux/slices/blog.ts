@@ -21,23 +21,25 @@ interface BlogState {
   formValues: FormValues
 }
 
-export const initialState: BlogState = {
+export const initialFormValues: FormValues = {
+  hobby: '',
+  genre: '',
+  keywords: '',
+  author: '',
+  status: '',
+  startDate: 'Start Date',
+  endDate: 'End Date',
+  search: '',
+  title: '',
+  tagline: '',
+}
+
+const initialState: BlogState = {
   blog: {},
   refetch: 0,
   preview: false,
   isEditing: false,
-  formValues: {
-    hobby: '',
-    genre: '',
-    keywords: '',
-    author: '',
-    status: '',
-    startDate: 'Start Date',
-    endDate: 'End Date',
-    search: '',
-    title: '',
-    tagline: '',
-  },
+  formValues: initialFormValues,
 }
 
 const blogSlice = createSlice({

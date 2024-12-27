@@ -10,7 +10,7 @@ import { DropdownListItem } from '@/components/_modals/AdminModals/EditpostsModa
 import CloseIcon from '@/assets/icons/CloseIcon'
 import { RootState } from '@/redux/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { setFormValues } from '@/redux/slices/blog'
+import { initialFormValues, setFormValues } from '@/redux/slices/blog'
 import { closeModal } from '@/redux/slices/modal'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import FilledButton from '@/components/_buttons/FilledButton'
@@ -327,20 +327,7 @@ const BlogFilter: React.FC = () => {
   }
 
   const handleClearFilters = () => {
-    dispatch(
-      setFormValues({
-        hobby: '',
-        genre: '',
-        keywords: '',
-        author: '',
-        status: '',
-        startDate: 'Start Date',
-        endDate: 'End Date',
-        search: '',
-        title: '',
-        tagline: '',
-      }),
-    )
+    dispatch(setFormValues(initialFormValues))
     dispatch(closeModal())
   }
 

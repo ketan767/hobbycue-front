@@ -15,7 +15,11 @@ import BlogFilter from '@/components/Blog/Filter/BlogFilter'
 import { useDispatch, useSelector } from 'react-redux'
 import { openModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
-import { FormValues } from '@/redux/slices/blog'
+import {
+  FormValues,
+  initialFormValues,
+  setFormValues,
+} from '@/redux/slices/blog'
 type Hobby = {
   _id: string
   blog_id: string
@@ -75,12 +79,51 @@ const blogFilterIcon = (
   </svg>
 )
 
+const blogFilterIconFilled = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="36"
+    height="36"
+    viewBox="0 0 36 36"
+    fill="none"
+  >
+    <rect x="0.5" y="0.5" width="35" height="35" rx="7.5" stroke="#8064A2" />
+    <path
+      d="M13.4379 15.2643C12.9606 14.5683 12.4885 13.8788 12.016 13.1895C11.2909 12.1319 10.5634 11.0759 9.84145 10.0162C9.62539 9.69902 9.60881 9.3568 9.78614 9.01805C9.96418 8.67792 10.2573 8.5025 10.6416 8.50181C12.2577 8.49891 13.8738 8.50037 15.4899 8.50035C18.768 8.5003 22.0461 8.50024 25.3242 8.50043C25.8219 8.50046 26.1956 8.78498 26.3084 9.2595C26.3713 9.52449 26.3267 9.77899 26.1725 10.0043C25.2327 11.3775 24.29 12.7487 23.3484 14.1207C22.6207 15.181 21.8931 16.2414 21.1656 17.3018C20.7382 17.9248 20.3131 18.5494 19.8827 19.1702C19.7446 19.3695 19.6809 19.5842 19.6818 19.8255C19.688 21.5027 19.6946 23.1799 19.6937 24.8571C19.6934 25.4873 19.6779 26.1177 19.6594 26.7477C19.6545 26.914 19.6269 27.0831 19.5842 27.2442C19.5237 27.4721 19.3851 27.5391 19.1559 27.4793C18.8891 27.4096 18.6585 27.2665 18.4329 27.1161C17.8805 26.7478 17.3337 26.3709 16.7787 26.0065C16.4622 25.7986 16.3198 25.5141 16.3204 25.1398C16.3234 23.3861 16.3182 21.6324 16.3253 19.8788C16.3266 19.5679 16.2244 19.3109 16.0516 19.0614C15.1785 17.8004 14.3118 16.5348 13.4379 15.2643Z"
+      fill="#8064A2"
+    />
+  </svg>
+)
+
+const crossIconSelectedFilter = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="14"
+    viewBox="0 0 14 14"
+    fill="none"
+  >
+    <g clip-path="url(#clip0_24684_84222)">
+      <path
+        d="M10.6749 3.33076C10.4474 3.10326 10.0799 3.10326 9.85242 3.33076L6.99992 6.17742L4.14742 3.32492C3.91992 3.09742 3.55242 3.09742 3.32492 3.32492C3.09742 3.55242 3.09742 3.91992 3.32492 4.14742L6.17742 6.99992L3.32492 9.85242C3.09742 10.0799 3.09742 10.4474 3.32492 10.6749C3.55242 10.9024 3.91992 10.9024 4.14742 10.6749L6.99992 7.82242L9.85242 10.6749C10.0799 10.9024 10.4474 10.9024 10.6749 10.6749C10.9024 10.4474 10.9024 10.0799 10.6749 9.85242L7.82242 6.99992L10.6749 4.14742C10.8966 3.92576 10.8966 3.55242 10.6749 3.33076Z"
+        fill="#8064A2"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_24684_84222">
+        <rect width="14" height="14" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+)
+
 const Explore: React.FC<Props> = ({ data }) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const { type } = router.query
 
   const { formValues } = useSelector((state: RootState) => state.blog)
+  const { activeModal } = useSelector((state: RootState) => state.modal)
 
   const filterBlogs = (data: Blog[], filters: FormValues): Blog[] => {
     if (
@@ -209,10 +252,31 @@ const Explore: React.FC<Props> = ({ data }) => {
                     }),
                   )
                 }
+                className={
+                  activeModal === 'BlogFilterMobileModal'
+                    ? styles.filterIcon
+                    : ''
+                }
               >
-                {blogFilterIcon}
+                {JSON.stringify(formValues) ===
+                JSON.stringify(initialFormValues)
+                  ? blogFilterIcon
+                  : blogFilterIconFilled}
               </div>
             </div>
+            {formValues.hobby ? (
+              <div
+                className={styles.selectedFilter}
+                onClick={() =>
+                  dispatch(setFormValues({ ...formValues, hobby: '' }))
+                }
+              >
+                {formValues.hobby}
+                {crossIconSelectedFilter}
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
 
           {/**
