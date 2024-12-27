@@ -408,8 +408,8 @@ export const CreatePost: React.FC<Props> = ({
   const [genreDropdownList, setGenreDropdownList] = useState<
     DropdownListItem[]
   >([])
-  const [visibilityData, setVisibilityData] = useState(['public'])
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
+  const [visibilityData, setVisibilityData] = useState(['puCblic'])
+  const [isFocused, setIsFocused] = useState(false)
 
   const handleSubmit = useHandleSubmit(
     data,
@@ -425,22 +425,6 @@ export const CreatePost: React.FC<Props> = ({
   )
   const defaultFirstHobby = useGetDefaultHobby()
 
-  useEffect(() => {
-    const handleResize = () => {
-      const viewportHeight = window.innerHeight
-      const visualViewportHeight =
-        window.visualViewport?.height || viewportHeight
-
-      setIsKeyboardVisible(visualViewportHeight < viewportHeight * 0.8)
-    }
-
-    window.addEventListener('resize', handleResize)
-    handleResize()
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
   useEffect(() => {
     console.log('metaData', metaData)
   }, [metaData])
@@ -960,7 +944,7 @@ export const CreatePost: React.FC<Props> = ({
 
   return (
     <>
-      {isMobile && isKeyboardVisible && (
+      {isMobile && isFocused && (
         <div className={styles['relative']}>
           <div className={styles['post-button-mobile']}>
             <FilledButton
@@ -1336,6 +1320,7 @@ export const CreatePost: React.FC<Props> = ({
                 error={errors.content}
                 hasLink={hasLink && showMetaData}
                 onStatusChange={onStatusChange}
+                setIsFocused={setIsFocused}
               />
               {data.video_url && (
                 <div className={styles.videoWrapper}>
