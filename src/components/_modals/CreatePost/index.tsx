@@ -960,7 +960,7 @@ export const CreatePost: React.FC<Props> = ({
 
   return (
     <>
-      {isMobile && isKeyboardVisible && (
+      {isMobile && (
         <div className={styles['relative']}>
           <div className={styles['post-button-mobile']}>
             <FilledButton
