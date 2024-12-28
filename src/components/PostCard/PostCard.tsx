@@ -36,6 +36,7 @@ import LinkPreviewLoader from '../LinkPreviewLoader'
 import DeletePrompt from '../DeletePrompt/DeletePrompt'
 import ReactPlayer from 'react-player'
 import VerticalBar from '@/assets/icons/VerticalBar'
+import AllHobbies from './components/hobbies/AllHobbies'
 type Props = {
   postData: any
   fromProfile?: boolean
@@ -396,60 +397,7 @@ const PostCard: React.FC<Props> = (props) => {
                   {dateFormat.format(new Date(postData.createdAt))}
                   {' | '}
                 </span>
-
-                {postData?._allHobbies?._hobby1?.display ? (
-                  <>
-                    <span>
-                      {`${postData?._allHobbies?._hobby1?.display}${
-                        postData?._allHobbies?._genre1?.display
-                          ? ' - ' + postData?._allHobbies?._genre1?.display
-                          : ''
-                      }`}
-                      {postData?._allHobbies?._hobby2?.display ? ', ' : ''}
-                      {`${
-                        postData?._allHobbies?._hobby2?.display
-                          ? postData?._allHobbies?._hobby2?.display
-                          : ''
-                      }${
-                        postData?._allHobbies?._genre2?.display
-                          ? ' - ' + postData?._allHobbies?._genre2?.display
-                          : ''
-                      }`}
-                      {postData?._allHobbies?._hobby3?.display ? ', ' : ''}
-                      {`${
-                        postData?._allHobbies?._hobby3?.display
-                          ? postData?._allHobbies?._hobby3?.display
-                          : ''
-                      }${
-                        postData?._allHobbies?._genre3?.display
-                          ? ' - ' + postData?._allHobbies?._genre3?.display
-                          : ''
-                      }`}
-                    </span>
-                  </>
-                ) : (
-                  <span>{`${postData?._hobby?.display}${
-                    postData._genre ? ' - ' + postData?._genre?.display : ''
-                  }`}</span>
-                )}
-                {/* {postData?._allHobbies?.length > 0 ? (
-                  postData?._allHobbies?.map((hobby: any, index: number) => {
-                    return (
-                      <span key={index}>
-                        {`${hobby?.display}${
-                          postData?._allGenres[index]?.display
-                            ? ' - ' + postData?._allGenres[index]?.display
-                            : ''
-                        }`}
-                        {index < postData?._allHobbies?.length - 1 ? ', ' : ''}
-                      </span>
-                    )
-                  })
-                ) : (
-                  <span>{`${postData?._hobby?.display}${
-                    postData._genre ? ' - ' + postData?._genre?.display : ''
-                  }`}</span>
-                )} */}
+                <AllHobbies postData={props.postData} />
                 <span>
                   {postData?.visibility ? ` | ${postData?.visibility}` : ''}
                 </span>
@@ -918,34 +866,7 @@ const PostCard: React.FC<Props> = (props) => {
                 </div>
                 <div className={styles['meta-author']}>
                   <p className={styles['date']}>
-                    {' '}
-                    <span>
-                      {`${postData?._allHobbies?._hobby1?.display}${
-                        postData?._allHobbies?._genre1?.display
-                          ? ' - ' + postData?._allHobbies?._genre1?.display
-                          : ''
-                      }`}
-                      {postData?._allHobbies?._hobby2?.display ? ', ' : ''}
-                      {`${
-                        postData?._allHobbies?._hobby2?.display
-                          ? postData?._allHobbies?._hobby2?.display
-                          : ''
-                      }${
-                        postData?._allHobbies?._genre2?.display
-                          ? ' - ' + postData?._allHobbies?._genre2?.display
-                          : ''
-                      }`}
-                      {postData?._allHobbies?._hobby3?.display ? ', ' : ''}
-                      {`${
-                        postData?._allHobbies?._hobby3?.display
-                          ? postData?._allHobbies?._hobby3?.display
-                          : ''
-                      }${
-                        postData?._allHobbies?._genre3?.display
-                          ? ' - ' + postData?._allHobbies?._genre3?.display
-                          : ''
-                      }`}
-                    </span>
+                    <AllHobbies postData={props.postData} />
                   </p>
 
                   <p className={styles['date']}>

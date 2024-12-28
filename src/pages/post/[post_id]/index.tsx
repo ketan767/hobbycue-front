@@ -474,18 +474,43 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       </main>
     )
   }
-  const hobbiesInTitle = data.postsData?._allHobbies[0]?.display
-    ? data.postsData?._allHobbies[1]?.display
-      ? data.postsData?._allHobbies[2]?.display
-        ? `${data.postsData?._allHobbies[0]?.display}, ${data.postsData?._allHobbies[1]?.display}, ${data.postsData?._allHobbies[2]?.display}`
-        : `${data.postsData?._allHobbies[0]?.display}, ${data.postsData?._allHobbies[1]?.display}`
-      : `${data.postsData?._allHobbies[0]?.display}`
-    : data.postsData?._hobby?.display
+  // const hobbiesInTitle = data.postsData?._allHobbies[0]?.display
+  //   ? data.postsData?._allHobbies[1]?.display
+  //     ? data.postsData?._allHobbies[2]?.display
+  //       ? `${data.postsData?._allHobbies[0]?.display}, ${data.postsData?._allHobbies[1]?.display}, ${data.postsData?._allHobbies[2]?.display}`
+  //       : `${data.postsData?._allHobbies[0]?.display}, ${data.postsData?._allHobbies[1]?.display}`
+  //     : `${data.postsData?._allHobbies[0]?.display}`
+  //   : data.postsData?._hobby?.display
 
-  const singleHobbyInTitle = data.postsData?._allHobbies[0]?.display
-    ? data.postsData?._allHobbies[0]?.display
+  const hobbiesInTitle = data.postsData?._allHobbies?._hobby1?.display
+    ? `${data.postsData._allHobbies._hobby1.display}${
+        data.postsData._allHobbies._genre1?.display
+          ? ' - ' + data.postsData._allHobbies._genre1.display
+          : ''
+      }${data.postsData._allHobbies._hobby2?.display ? ', ' : ''}${
+        data.postsData._allHobbies._hobby2?.display
+          ? data.postsData._allHobbies._hobby2.display
+          : ''
+      }${
+        data.postsData._allHobbies._genre2?.display
+          ? ' - ' + data.postsData._allHobbies._genre2.display
+          : ''
+      }${data.postsData._allHobbies._hobby3?.display ? ', ' : ''}${
+        data.postsData._allHobbies._hobby3?.display
+          ? data.postsData._allHobbies._hobby3.display
+          : ''
+      }${
+        data.postsData._allHobbies._genre3?.display
+          ? ' - ' + data.postsData._allHobbies._genre3.display
+          : ''
+      }`
+    : `${data.postsData?._hobby?.display}${
+        data.postsData._genre ? ' - ' + data.postsData?._genre?.display : ''
+      }`
+
+  const singleHobbyInTitle = data.postsData?._allHobbies?._hobby?.display
+    ? data.postsData?._allHobbies?._hobby?.display
     : data.postsData?._hobby?.display
-  console.warn('postcontentttttttttttttttttt', data.postcontent)
   return (
     <>
       <Head>
@@ -510,7 +535,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
             data?.postsData?.author_type === 'User'
               ? data.postsData?._author?.full_name
               : data.postsData?._author?.title
-          } - ${singleHobbyInTitle} at ${data.postsData?.visibility}`}`}
+          } - ${hobbiesInTitle} at ${data.postsData?.visibility}`}`}
         </title>
       </Head>
       <CommunityPageLayout activeTab="posts" singlePostPage={false} hide={true}>
