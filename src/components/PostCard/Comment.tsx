@@ -276,7 +276,7 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
             ))} */}
             <div
               dangerouslySetInnerHTML={{ __html: finalContent }}
-              style={{ fontSize: 14, marginTop: 4 }}
+              style={{ fontSize: 14, marginTop: 12 }}
             />
           </>
         )}
