@@ -900,9 +900,6 @@ export const CreatePost: React.FC<Props> = ({
                           </button>
                         )
                       })}
-                      {selectedHobbies.length === 0 && (
-                        <p>Please select atleast one hobby</p>
-                      )}
                     </section>
                   )}
                 </section>
@@ -913,9 +910,11 @@ export const CreatePost: React.FC<Props> = ({
                   } `}
                 >
                   <InputSelect
-                    value={`${data.hobby?.display ?? ''}${
-                      data.genre?.display ? ' - ' : ''
-                    }${data.genre?.display ?? ''}`}
+                    value={
+                      selectedHobbies.length > 0
+                        ? ''
+                        : 'Please select at least one hobby'
+                    }
                     onChange={(e: any) => {}}
                     selectText=""
                     optionsContainerClass={styles['options-container-class']}
