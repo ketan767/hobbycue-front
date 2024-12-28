@@ -35,14 +35,7 @@ type Props = {
   >
 }
 
-const BlogActionBar: React.FC<Props> = ({
-  data,
-  // setIsEditing,
-  // isEditing,
-  isAuthor,
-  vote,
-  setVote,
-}) => {
+const BlogActionBar: React.FC<Props> = ({ data, isAuthor, vote, setVote }) => {
   const [openDeletePrompt, setOpenDeletePrompt] = useState(false)
   const [snackbar, setSnackbar] = useState({
     type: 'success',
@@ -180,7 +173,7 @@ const BlogActionBar: React.FC<Props> = ({
     if (preview) return true
     if (data?.blog_url?.status === 'Published') return false
     // For Unpublished status
-    if (['delete', 'support', 'bookmark'].includes(btn)) return false // never disabled
+    if (['edit', 'delete', 'support', 'bookmark'].includes(btn)) return false // never disabled
     return true // for upvote, downvote, share in Unpublihed status
   }
 

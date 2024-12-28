@@ -220,8 +220,10 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   }
 
   useEffect(() => {
-    /** The redux state here is not set on mount, hence the issue of showing previous blog in a new URL */
     dispatch(setBlog(data?.blog_url))
+    return () => {
+      dispatch(setRefetch(0))  // important
+    }
   }, [])
 
   useEffect(() => {
@@ -312,7 +314,11 @@ const BlogPage: React.FC<Props> = ({ data }) => {
       titleRef.current.style.height = 'auto'
       titleRef.current.style.height = titleRef.current.scrollHeight + 'px'
     }
-  }, [titleRef.current, isEditing])
+    if (taglineRef.current) {
+      taglineRef.current.style.height = 'auto'
+      taglineRef.current.style.height = taglineRef.current.scrollHeight + 'px'
+    }
+  }, [titleRef.current, taglineRef.current, isEditing])
 
   return (
     <>
@@ -390,6 +396,12 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                 onKeyDown={(e) =>
                   e.key === 'Enter' && taglineRef.current?.blur()
                 }
+                rows={1}
+                onInput={function (e) {
+                  const target = e.target as HTMLTextAreaElement
+                  target.style.height = 'auto'
+                  target.style.height = target.scrollHeight + 'px'
+                }}
               />
             ) : (
               data?.blog_url?.tagline && (
