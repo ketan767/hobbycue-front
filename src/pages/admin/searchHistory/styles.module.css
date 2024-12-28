@@ -11,6 +11,13 @@
   font: 'poppins';
 }
 
+.countText {
+  margin-left: 10px;
+  white-space: nowrap; 
+  position: relative; 
+ 
+}
+
 .input-box {
   display: flex;
   flex-direction: column;
@@ -164,6 +171,10 @@
   overflow-y: auto;
 }
 
+.resultsContainer::-webkit-scrollbar{
+  display: none;
+}
+
 .resultsTable {
   width: 100%;
   border-collapse: collapse;
@@ -225,7 +236,7 @@
 }
 
 .resultsTable tbody tr td {
-  padding: 0 8px 0 24px;
+  padding: 10px 8px 10px 24px;
 }
 
 /* Avatar styles */
@@ -260,6 +271,19 @@
   font-style: normal;
   font-weight: 500;
   line-height: 20px;
+}
+
+.sortButtonWrapper {
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: start;
+}
+.sortButton {
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .userEmail {

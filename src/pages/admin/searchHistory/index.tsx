@@ -17,7 +17,8 @@ import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { deleteUserByAdmin, getsearchHistory } from '@/services/admin.service'
 import { formatDateTime } from '@/utils'
-
+import sortAscending from '@/assets/icons/Sort-Ascending-On.png'
+import sortDescending from '@/assets/icons/Sort-Ascending-Off.png'
 import { setShowPageLoader } from '@/redux/slices/site'
 import { filterIcon, filterSvg, pencilSvg, searchSvg } from '../users'
 import SearchFilter from '@/components/AdminPage/Filters/SearchPageFilter/SearchFilter'
@@ -55,6 +56,9 @@ const SearchHistory: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [applyFilter, setApplyFilter] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
+  const [TimeSort, setTimeSort] = useState<boolean>(true);
+  const [count, setCount] = useState(0);
+  const [filteredResults, setFilteredResults] = useState<any[]>([]);
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,7 +144,13 @@ const SearchHistory: React.FC = () => {
       console.log('An error', err)
     } else {
       console.log('fetchUsers', res.data)
-      setSearchResults(res.data.data.search_history)
+      const sortedData = res.data.data.search_history.sort((a: any, b: any) => {
+        const timeA = new Date(a.createdAt).getTime();
+        const timeB = new Date(b.createdAt).getTime();
+        return timeB - timeA; 
+      });
+      setCount(res.data.data.no_of_histories);
+      setSearchResults(sortedData)
     }
     setLoading(false)
   }, [filterState.user])
@@ -200,13 +210,26 @@ const SearchHistory: React.FC = () => {
     }
   }
 
-  const filteredResults = searchResults?.filter((x) => {
-    if (filterState.keyword) {
-      return x.search_input.includes(filterState.keyword)
-    }
+  const handleTimeSort = () => {
+    setTimeSort((prev) => !prev);
+    const sortedResults = [...filteredResults].sort((a : any, b : any) => {
+      const timeA = new Date(a.createdAt).getTime();
+      const timeB = new Date(b.createdAt).getTime();
+      return TimeSort ? timeA - timeB : timeB - timeA;
+    });
+    setFilteredResults(sortedResults);
+  };
 
-    return x
-  })
+  useEffect(() => {
+    const results = searchResults.filter((x) => {
+      if (filterState.keyword) {
+        return x.search_input.includes(filterState.keyword);
+      }
+      return true;
+    });
+    setFilteredResults(results);
+  }, [searchResults, filterState.keyword]);
+
   const contextValue = { filterState, setFilterState }
   return (
     <SearchPageContext.Provider value={contextValue}>
@@ -226,7 +249,7 @@ const SearchHistory: React.FC = () => {
                 {searchSvg}
               </button>
             </form>
-
+            <span className={styles.countText}>Count: <span style={{ color:"#0096c8", fontWeight:"500"}}>{count}</span></span>
             <button
               className={styles.filterBtn}
               onClick={() => setIsModalOpen(!isModalOpen)}
@@ -248,19 +271,52 @@ const SearchHistory: React.FC = () => {
                   <tr>
                     <th>User</th>
                     <th>Search key</th>
-                    <th>Time</th>
+                    <th>
+                    <div className={styles.sortButtonWrapper}>  
+                    Time
+                    <button
+                        className={styles.sortButton}
+                        onClick={handleTimeSort}
+                      >
+                        {TimeSort ? (
+                          <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                            style={{  marginTop: '3px', transform: 'rotate(180deg)' }}
+                          />
+                        ) : (
+                          <Image
+                            src={sortDescending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                           style={{  marginTop: '3px', transform: 'rotate(180deg)' }}
+                          />
+                        )}
+                      </button>
+                      </div>
+                    </th>
 
-                    <th>pages</th>
+                    <th >Pages</th>
 
-                    <th style={{ textAlign: 'center' }}>Actions</th>
+                    {/* <th style={{ textAlign: 'center' }}>Actions</th> */}
                   </tr>
                 </thead>
                 <tbody>
                   {filteredResults?.map((user, index) => (
                     <tr key={index}>
                       <td>
+                      <Link
+                              href={`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${user.user_id?.profile_url}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={styles.userName}
+                            >
                         <div className={styles.resultItem}>
                           <div className={styles.avatarContainer}>
+                          
                             {user?.user_id?.profile_image ? (
                               <Image
                                 src={user?.user_id?.profile_image}
@@ -287,18 +343,15 @@ const SearchHistory: React.FC = () => {
                                 : ''
                             }
                           >
-                            <Link
-                              href={`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${user.user_id?.profile_url}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className={styles.userName}
-                            >
+                           
                               {user?.user_id?.full_name?.length > 60
                                 ? user?.user_id?.full_name.slice(0, 40)
                                 : user?.user_id?.full_name ?? 'anonymous user'}
-                            </Link>
+                            
                           </div>
+                       
                         </div>
+                        </Link>
                       </td>
                       <td className={styles.userName}>
                         <div>{user?.search_input.slice(0, 60)}</div>
@@ -311,9 +364,7 @@ const SearchHistory: React.FC = () => {
                         <div>{user?.no_of_pages}</div>
                       </td>
 
-                      <td>
-                        <div className={styles.actions}>{pencilSvg}</div>
-                      </td>
+                     
                     </tr>
                   ))}
                 </tbody>

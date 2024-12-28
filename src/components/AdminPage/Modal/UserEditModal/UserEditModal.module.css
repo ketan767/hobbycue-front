@@ -305,3 +305,28 @@
   text-decoration-skip-ink: none;
   color: #6d747a;
 }
+
+.auditFields {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 16px; 
+  margin-top: 16px; 
+  border-top: 1px solid #0096c8; 
+  padding-top: 16px; 
+}
+
+.auditField {
+  display: flex;
+  flex-direction: column; 
+}
+
+.auditField .label {
+  font-weight: 400;
+  color: #0096c8; 
+  margin-bottom: 4px; 
+}
+
+.auditField .value {
+  font-size: 14px;
+  color: #333;
+}

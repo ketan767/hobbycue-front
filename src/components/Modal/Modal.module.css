@@ -22,17 +22,17 @@
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   position: relative;
-  max-height: 90vh; /* Maximum height to adjust based on viewport height */
-  overflow-y: auto; /* Enables scrollbar for content overflow */
+  max-height: 90vh;
+  overflow-y: auto; 
   transform: translateY(-100%);
   transition: transform 0.3s ease-in-out;
-  padding: 20px; /* Optional padding for spacing */
-  scrollbar-width: thin;
+  padding: 20px;
+  scrollbar-width: none; 
 }
-/* Styling the scrollbar container */
+
+
 .modalContent::-webkit-scrollbar {
-  width: 8px; /* Width of the vertical scrollbar */
-  height: 8px; /* Height of the horizontal scrollbar */
+  display: none;
 }
 
 /* Styling the scrollbar track (background) */
