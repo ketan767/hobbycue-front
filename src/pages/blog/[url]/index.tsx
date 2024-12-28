@@ -309,7 +309,6 @@ const BlogPage: React.FC<Props> = ({ data }) => {
 
   useEffect(() => {
     if (titleRef.current) {
-      console.log('asifs obj hi')
       titleRef.current.style.height = 'auto'
       titleRef.current.style.height = titleRef.current.scrollHeight + 'px'
     }
