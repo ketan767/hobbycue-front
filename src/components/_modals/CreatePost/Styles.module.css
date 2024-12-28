@@ -1,5 +1,6 @@
 .hobbyInput {
   /* align-self: flex-start; */
+  max-width: 45%;
   z-index: 9;
   top: 55px;
   left: 3px;
