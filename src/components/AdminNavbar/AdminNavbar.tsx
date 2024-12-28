@@ -557,23 +557,22 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
       e.preventDefault()
       setLoading(true)
       router.push(url)
-      setTimeout(() => setLoading(false), 500)
     }
 
     return (
-      <a
+      <Link
         href={url}
         onClick={handleClick}
         className={
           styles['nav-item'] + ` ${router.pathname === url && styles['active']}`
         }
       >
-        <span>
+        <div>
           <Icon active={router.pathname === url} />
-        </span>
+        </div>
         {admin_nav && <p className={styles['nav-item-para']}>{name}</p>}
         {loading && <span className={styles.loader}></span>} {/* Loader */}
-      </a>
+      </Link>
     )
   }
 

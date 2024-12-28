@@ -731,11 +731,6 @@ export const CreatePost: React.FC<Props> = ({
     }
   }
 
-  useEffect(() => {
-    if (data.content !== propData?.defaultValue) dispatch(setHasChanges(true))
-    else dispatch(setHasChanges(false))
-  }, [data])
-
   if (confirmationModal) {
     return (
       <SaveModal
@@ -981,10 +976,15 @@ export const CreatePost: React.FC<Props> = ({
                                         genre: item?.genre?.display
                                           ? item?.genre?.display
                                           : null,
-                                          hobbyId:item?.hobby?._id,
-                                          genreId:item?.genre?._id?item?.genre?._id:null
+                                        hobbyId: item?.hobby?._id,
+                                        genreId: item?.genre?._id
+                                          ? item?.genre?._id
+                                          : null,
                                       }
-                                      filteredHobbies = removeHobbyOption(hobby,selectedHobbies)
+                                      filteredHobbies = removeHobbyOption(
+                                        hobby,
+                                        selectedHobbies,
+                                      )
                                     }
 
                                     const newHobbyData = alreadyContains
