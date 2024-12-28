@@ -51,7 +51,7 @@ const AdminActionModal: React.FC<Props> = ({
   }
 
   return (
-    <section className={styles.mainContainer}>
+    <>
       <div className={`${styles['modal-wrapper']}  `}>
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Admin Notes'}</h4>
@@ -66,11 +66,10 @@ const AdminActionModal: React.FC<Props> = ({
         <section className={styles['body']}>
           <div className={styles['input-box']}>
             <div
-              className={` ${
-                inputErrs.error
+              className={` ${inputErrs.error
                   ? styles['input-box-error']
                   : styles['street-input-container']
-              }`}
+                }`}
             >
               <textarea
                 className={styles['long-input-box']}
@@ -87,12 +86,21 @@ const AdminActionModal: React.FC<Props> = ({
               <p className={styles['error-msg']}>&nbsp;</p> // Render an empty <p> element
             )}
           </div>
-          <div>
+          <div style={{ display: 'flex', alignItems: 'center',justifyContent:'space-between' }}>
             <StatusDropdown
               status={data?.status}
               onStatusChange={handleStatusChange}
             />
+            <label style={{ marginLeft: '10px', display: 'flex', alignItems: 'center' }}>
+              <input
+                type="checkbox"
+                // onChange={handleEmailUserChange} 
+                style={{ marginRight: '5px' }}
+              />
+              Email User
+            </label>
           </div>
+
         </section>
         <footer className={styles['footer']}>
           <button
@@ -129,7 +137,7 @@ const AdminActionModal: React.FC<Props> = ({
           setSnackbar((prevValue) => ({ ...prevValue, display: false }))
         }}
       />
-    </section>
+    </>
   )
 }
 

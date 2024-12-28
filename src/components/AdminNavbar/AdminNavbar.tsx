@@ -556,7 +556,7 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
     ) => {
       e.preventDefault()
       setLoading(true)
-      router.push(url)
+      router.replace(url)
       setTimeout(() => setLoading(false), 500)
     }
 

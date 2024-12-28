@@ -462,6 +462,12 @@
   position: relative;
 }
 
+.countAndFilter{
+  display: flex;
+  gap: 25px;
+  align-items: center;
+}
+
 .pagination {
   display: flex;
   position: absolute;
