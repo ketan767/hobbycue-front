@@ -54,7 +54,6 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
     setLoadingPosts(false)
     if (err) return console.log(err)
     if (res.data.success) {
-      console.log('posts', res.data)
       if (res.data.data.posts) {
         setPosts(res.data.data.posts)
       }
