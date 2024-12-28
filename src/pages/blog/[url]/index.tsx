@@ -274,6 +274,8 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         }
         if (isDraft && authorCheck) {
           dispatch(setIsEditing(true))
+        } else {
+          dispatch(setIsEditing(false))
         }
       }
     }
@@ -305,6 +307,14 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     }
   })
 
+  useEffect(() => {
+    if (titleRef.current) {
+      console.log('asifs obj hi')
+      titleRef.current.style.height = 'auto'
+      titleRef.current.style.height = titleRef.current.scrollHeight + 'px'
+    }
+  }, [titleRef.current, isEditing])
+
   return (
     <>
       <Head>
@@ -325,7 +335,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         <div className={styles.all}>
           <div className={styles['blog-header']}>
             <div className={styles.wrapper}>
-              {isAuthor && (
+              {isAuthor && isEditing && (
                 <div className={styles.buttonWrapper}>
                   <button
                     onClick={() =>
@@ -342,6 +352,8 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   </button>
                 </div>
               )}
+
+              {/* TITLE */}
               {isEditing ? (
                 <textarea
                   className={styles['blog-title'] + ' ' + styles.editInput}
@@ -354,12 +366,12 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   onKeyDown={(e) =>
                     e.key === 'Enter' && titleRef.current?.blur()
                   }
-                  rows={3}
-                  // onInput={function (e) {
-                  //   const target = e.target as HTMLTextAreaElement
-                  //   target.style.height = 'auto'
-                  //   target.style.height = target.scrollHeight + 'px'
-                  // }}
+                  rows={1}
+                  onInput={function (e) {
+                    const target = e.target as HTMLTextAreaElement
+                    target.style.height = 'auto'
+                    target.style.height = target.scrollHeight + 'px'
+                  }}
                 />
               ) : (
                 <h1 className={styles['blog-title']}>

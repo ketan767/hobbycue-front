@@ -98,7 +98,7 @@ const BlogCard: React.FC<Props> = ({ data }) => {
   )
 
   const router = useRouter()
-  const routeRegex = /^\/profile\/\d+\/blogs$/
+  const routeRegex = /^\/profile\/[^\/]+\/blogs$/
   const itsMe =
     data?.author?._id === user?._id && routeRegex.test(router.asPath)
 

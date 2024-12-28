@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import axiosInstance from '@/services/_axios'
-import { setRefetch } from '@/redux/slices/blog'
+import { setBlog, setRefetch } from '@/redux/slices/blog'
 import { closeModal, setHasChanges } from '@/redux/slices/modal'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { CircularProgress } from '@mui/material'
@@ -87,6 +87,7 @@ const BlogPublish = (props: any) => {
   const handleURLUpdate = (e: any) => {
     setUrlError('')
     let value = e.target.value
+    if (value && value.includes('/')) return
 
     // Replace spaces with hyphens
     value = value.replace(/\s+/g, '-')
@@ -105,10 +106,18 @@ const BlogPublish = (props: any) => {
   }
 
   const updateBlog = async (blogId: String) => {
+    let processedUrl = urlText?.trim()
+    if (processedUrl) {
+      // Remove leading/trailing hyphens
+      processedUrl = processedUrl.replace(/^-+|-+$/g, '')
+    }
+    if (!processedUrl) {
+      return setUrlError('Please enter a valid url')
+    }
     try {
       setSaveBtnLoading(true)
       let updatedFields = {
-        url: urlText?.trim(),
+        url: processedUrl,
         keywords: keywords
           ?.trim()
           .split(/[\s,]+/)
@@ -134,9 +143,11 @@ const BlogPublish = (props: any) => {
         return null
       }
       setUrlError('')
-      router.push(`/blog/${urlText}`)
-      console.log('Blog updated successfully:', data)
+      dispatch(setBlog({ ...blog, ...updatedFields }))
+      dispatch(setRefetch(refetch + 1))
       dispatch(closeModal())
+      router.push(`/blog/${updatedFields.url}`)
+      console.log('Blog updated successfully:', data)
     } catch (err: any) {
       if (err?.response?.data?.message === 'Blog with this url already exists!')
         setUrlError('Blog with this url already exists!')
@@ -302,7 +313,7 @@ const BlogPublish = (props: any) => {
               <div className={styles.middleWrapper}>
                 <BlogCard data={blog} />
 
-                {/* right */}
+                {/* right - KEYWORDS */}
                 <div className={styles.rightContent}>
                   <h3 className={styles.keywordsHeader}>Keywords</h3>
                   <textarea
@@ -310,6 +321,7 @@ const BlogPublish = (props: any) => {
                     rows={10}
                     value={keywords}
                     onChange={(e) => setKeywords(e.target.value)}
+                    placeholder="Photography, Travel"
                   ></textarea>
                   <div className={styles.hobbiesSection}>
                     <h2 className={styles.hobbiesHeader}>
