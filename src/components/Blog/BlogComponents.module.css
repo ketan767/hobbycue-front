@@ -17,6 +17,10 @@
   background-color: #F7F5F9;
 }
 
+.bookmark svg {
+  cursor: unset;
+}
+
 .actions button:disabled {
   cursor: not-allowed;
 }
