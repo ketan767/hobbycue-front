@@ -48,6 +48,7 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import ReactPlayer from 'react-player'
 import useGetDefaultHobby from './components/hobby/useDefaultHobby'
 import useHandleSubmit from './components/handleSubmit/useHandleSubmit'
+import removeHobbyOption from './utils/removeHobbyOption'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -161,28 +162,7 @@ export const CreatePost: React.FC<Props> = ({
         }
       }
     })
-    setSelectedHobbies((prev) =>
-      prev.filter((hobbyData) => {
-        if (hobbyData.genre && hobbyToRemove.genre) {
-          if (hobbyData.genre === hobbyToRemove.genre) {
-            return false
-          } else {
-            return true
-          }
-        } else if (hobbyData.genre && !hobbyToRemove.genre) {
-          return true
-        } else if (!hobbyData.genre && hobbyToRemove.genre) {
-          return true
-        } else {
-          if (hobbyData.hobby === hobbyToRemove.hobby) {
-            return false
-          } else {
-            return true
-          }
-        }
-      }),
-    )
-    console.log('selectedHobbies--->', newHobbyData)
+    setSelectedHobbies(newHobbyData)
   }
   useEffect(() => {
     console.log('hasChanges', hasChanges)
@@ -751,11 +731,6 @@ export const CreatePost: React.FC<Props> = ({
     }
   }
 
-  useEffect(() => {
-    if (data.content !== propData?.defaultValue) dispatch(setHasChanges(true))
-    else dispatch(setHasChanges(false))
-  }, [data])
-
   if (confirmationModal) {
     return (
       <SaveModal
@@ -900,9 +875,6 @@ export const CreatePost: React.FC<Props> = ({
                           </button>
                         )
                       })}
-                      {selectedHobbies.length === 0 && (
-                        <p>Please select atleast one hobby</p>
-                      )}
                     </section>
                   )}
                 </section>
@@ -913,9 +885,11 @@ export const CreatePost: React.FC<Props> = ({
                   } `}
                 >
                   <InputSelect
-                    value={`${data.hobby?.display ?? ''}${
-                      data.genre?.display ? ' - ' : ''
-                    }${data.genre?.display ?? ''}`}
+                    value={
+                      selectedHobbies.length > 0
+                        ? ''
+                        : 'Please select at least one hobby'
+                    }
                     onChange={(e: any) => {}}
                     selectText=""
                     optionsContainerClass={styles['options-container-class']}
@@ -994,26 +968,48 @@ export const CreatePost: React.FC<Props> = ({
                                         }
                                       })
 
-                                    const newHobbyData =
-                                      alreadyContains ||
-                                      selectedHobbies.length >= 3
-                                        ? selectedHobbies
-                                        : [
-                                            ...selectedHobbies,
-                                            {
-                                              hobby: e?.hobby?.display ?? null,
-                                              genre: e?.genre?.display ?? null,
-                                              hobbyId: e?.hobby?._id
-                                                ? e?.hobby?._id
-                                                : undefined,
-                                              genreId: e?.genre?._id
-                                                ? e?.genre?._id
-                                                : undefined,
-                                            },
-                                          ]
+                                    let filteredHobbies: HobbyData[] = []
+
+                                    if (alreadyContains) {
+                                      const hobby = {
+                                        hobby: item?.hobby?.display,
+                                        genre: item?.genre?.display
+                                          ? item?.genre?.display
+                                          : null,
+                                        hobbyId: item?.hobby?._id,
+                                        genreId: item?.genre?._id
+                                          ? item?.genre?._id
+                                          : null,
+                                      }
+                                      filteredHobbies = removeHobbyOption(
+                                        hobby,
+                                        selectedHobbies,
+                                      )
+                                    }
+
+                                    const newHobbyData = alreadyContains
+                                      ? filteredHobbies
+                                      : selectedHobbies.length >= 3
+                                      ? selectedHobbies
+                                      : [
+                                          ...selectedHobbies,
+                                          {
+                                            hobby: e?.hobby?.display ?? null,
+                                            genre: e?.genre?.display ?? null,
+                                            hobbyId: e?.hobby?._id
+                                              ? e?.hobby?._id
+                                              : undefined,
+                                            genreId: e?.genre?._id
+                                              ? e?.genre?._id
+                                              : undefined,
+                                          },
+                                        ]
 
                                     setSelectedHobbies(newHobbyData)
-                                    if (selectedHobbies.length >= 3) {
+                                    if (
+                                      !alreadyContains &&
+                                      selectedHobbies.length >= 3
+                                    ) {
                                       setSnackbar({
                                         display: true,
                                         type: 'warning',

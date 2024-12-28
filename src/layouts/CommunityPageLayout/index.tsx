@@ -413,11 +413,7 @@ const CommunityLayout: React.FC<Props> = ({
           let content = post.content.replace(/<img .*?>/g, '')
           return { ...post, content }
         })
-        if (page === 1) {
-          dispatch(updatePostsWithLink(posts))
-        } else {
-          dispatch(appendPostsWithLink(posts))
-        }
+        dispatch(updatePostsWithLink(posts))
       }
 
       dispatch(updateHasMore(posts.length === 10))
