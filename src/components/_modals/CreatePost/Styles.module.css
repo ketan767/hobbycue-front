@@ -1,12 +1,12 @@
 .hobbyInput {
   /* align-self: flex-start; */
-  width: 324px;
+  max-width: 45%;
   z-index: 9;
   top: 55px;
   left: 3px;
   background-color: #fff;
   min-height: 35px;
-  min-width: 6.25rem;
+  width: fit-content;
   position: absolute;
   display: flex;
   align-items: center;
@@ -54,13 +54,13 @@
 
 @media screen and (max-width: 1100px) {
   .hobbyInput {
-    width: 84%;
+    max-width: 84%;
     z-index: 10;
     top: 66px;
     left: 3px;
     background-color: #fff;
     min-height: 35px;
-    min-width: 6.25rem;
+    width: fit-content;
     position: absolute;
     display: flex;
     align-items: center;
