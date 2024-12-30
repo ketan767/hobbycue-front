@@ -811,7 +811,7 @@ background: rgba(128, 100, 162, 0.25);
   width: 100%;
 }
 .reactplayer {
-  /* height: 208px !important; */
+  height: 208px !important;
 }
 .post-card-wrapper > header {
   padding-bottom: 0;

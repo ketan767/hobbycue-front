@@ -474,7 +474,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                 />
               </div>
             ) : (
-              <></>
+              <div className={styles['blank-cover-image']}></div>
             )}
 
             {/* Author */}

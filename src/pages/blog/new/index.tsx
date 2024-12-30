@@ -47,6 +47,7 @@ import {
   setPreview,
   setRefetch,
 } from '@/redux/slices/blog'
+import { uploadImage } from '@/services/post.service'
 
 const BlogEditor = dynamic(() => import('@/components/BlogEditor/BlogEditor'), {
   ssr: false,
@@ -151,10 +152,11 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     let response: any = {}
 
     response = await createBlog({
-      title: blog.title,
-      blogId: blog._id,
-      tagline: blog.tagline,
-      content: blog.content,
+      title: blog?.title,
+      blogId: blog?._id,
+      tagline: blog?.tagline,
+      content: blog?.content,
+      cover_pic: blog?.cover_pic,
     })
     if (response?.res?.data?.success) {
       const newUrl = response?.res?.data?.data?.url
@@ -195,11 +197,11 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     const blob = await response.blob()
 
     const formData = new FormData()
-    formData.append('blog-image', blob)
-    const { err, res } = await uploadBlogImage(formData, data?.blog_url._id)
+    formData.append('post', blob)
+    const { err, res } = await uploadImage(formData)
     if (err) return console.log('Error in uploadImageToServer(): ', err)
     if (res?.data.success) {
-      dispatch(setBlog({ ...blog, cover_pic: res?.data?.data.img_url }))
+      dispatch(setBlog({ ...blog, cover_pic: res?.data?.data?.url }))
       dispatch(closeModal())
     }
   }

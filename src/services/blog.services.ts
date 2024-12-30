@@ -103,10 +103,11 @@ export const createBlog = async ({
   title,
   tagline,
   content,
+  cover_pic,
   ...args
 }: UpdateBlogArgsType) => {
   try {
-    const body = { title, tagline, content }
+    const body = { title, tagline, content, cover_pic }
     const token = localStorage.getItem(`token`)
     const headers = { Authorization: `Bearer ${token}` }
     const res = await axiosInstance.post(`/blogs/create`, body, {
@@ -123,7 +124,8 @@ interface UpdateBlogArgsType {
   title?: string
   tagline?: string
   content?: string
-  blogId: string
+  blogId?: string
+  cover_pic?:string
 }
 
 export const updateBlog = async ({

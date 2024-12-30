@@ -726,7 +726,7 @@ const PostCard: React.FC<Props> = (props) => {
                                 {metaData?.description
                                   ?.split(':')[0]
                                   .slice(0, 600) +
-                                  (metaData?.description.length > 600
+                                  (metaData?.description?.length > 600
                                     ? '...'
                                     : '')}
                               </p>
