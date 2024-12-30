@@ -469,7 +469,8 @@
   cursor: pointer;
 }
 .backButton {
-  padding: 11px 31.5px;
+  padding: 11px 0;
+  width: 99px;
   min-width: 0;
   /* Texl lg/Text sm/Semibold */
   font-family: Poppins;

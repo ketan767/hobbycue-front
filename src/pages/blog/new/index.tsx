@@ -154,7 +154,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
       router.push(`/blog/${newUrl}`)
     }
 
-    dispatch(setRefetch(refetch + 1))
+    // dispatch(setRefetch(refetch + 1))
 
     if (response?.err || !response?.res?.data?.success) {
       console.log('Error in handleEditBlog()!', response.err)
@@ -509,7 +509,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
 
         {/* Content */}
         <div className={styles.blogContainerParent}>
-          <BlogContainer className={styles.blogWrapper}>
+          <BlogContainer className={styles.blogWrapper + ' ' + styles.newPage}>
             {/* <div className={styles.blogWrapper}> */}
             {isEditing ? (
               <div className={styles.blogEditor}>
@@ -524,7 +524,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                 <div className={styles.blogButtons}>
                   <FilledButton
                     className={styles.blogSaveButton}
-                    onClick={() => dispatch(setIsEditing(false))}
+                    onClick={() => router.back()}
                   >
                     Cancel
                   </FilledButton>
@@ -549,7 +549,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                 }}
               />
             )}
-            <div className={styles.profileAndComment}>
+            {/* <div className={styles.profileAndComment}>
               <div className={styles['profile-wrapper']}>
                 <div className={`${styles['header-user']}`}>
                   {user?.profile_image ? (
@@ -654,7 +654,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   <BlogComments data={data?.blog_url} />
                 </div>
               </div>
-            </div>
+            </div> */}
             {/* </div> */}
           </BlogContainer>
         </div>
