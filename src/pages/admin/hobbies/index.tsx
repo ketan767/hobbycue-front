@@ -358,9 +358,11 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
       status: hobbyData?.status,
       description: hobbyData?.description,
     }
-    console.log(jsondata)
+    console.log("jsonData",jsondata)
     const { err, res } = await UpdateHobbyreq(jsondata)
     if (err) {
+      console.log(err.response.data);
+      
       throw new Error()
     } else {
       window.location.reload()
@@ -389,7 +391,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
     })
     
     setSingleData(hobbyreq)
-    setAdminNoteModal(true)
+    // setAdminNoteModal(true)
 
     //setShowAdminActionModal(true)
   }
@@ -465,9 +467,9 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                 {searchSvg}
               </button>
             </form>
-
-            <div className={styles.countAndFilter}>
             <span className={styles.countText}>Count: <span style={{ color:"#0096c8", fontWeight:"500"}}>{count}</span></span>
+            <div className={styles.countAndFilter}>
+            
           
             <button className={styles.filterBtn} onClick={() => setIsModalOpen(!isModalOpen)}>{filterSvg}</button>
             {isModalOpen && ( 
@@ -588,7 +590,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                           </div>
                         </Link>
                       </td>
-                    <td className={styles.userName}>
+                    <td className={styles.userName} style={{whiteSpace: 'nowrap'}}>
                       <div>{formatDate(hobbyreq?.createdAt)}</div>
                     </td>
                     <td className={styles.userName}>
@@ -619,6 +621,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                         className={styles.actions}
                       >
                         <div onClick={()=>{
+                          handleAction(hobbyreq);
                           setShowAdminActionModal(true)
                         }}>{pencilSvg}</div>
                           <StatusDropdown
