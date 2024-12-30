@@ -142,7 +142,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
               // <div className={styles['three-column-grid-blogs']}>
               <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 3 }}>
                 <Masonry
-                  gutter={isMobile ? `8px` : `24px`}
+                  gutter={isMobile ? `8px` : `12px`}
                   style={
                     isMobile
                       ? { columnGap: '24px', rowGap: '12px', marginTop: '8px' }
