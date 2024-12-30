@@ -19,7 +19,7 @@ import DownvoteIcon from '@/assets/icons/DownvoteIcon'
 import RepostIconBlog from '@/assets/icons/RepostIconBlog'
 import { CircularProgress } from '@mui/material'
 import DeletePrompt from '../DeletePrompt/DeletePrompt'
-import { setIsEditing } from '@/redux/slices/blog'
+import { setBlog, setIsEditing } from '@/redux/slices/blog'
 
 type Props = {
   data: any
@@ -183,6 +183,7 @@ const BlogActionBar: React.FC<Props> = ({ data, isAuthor, vote, setVote }) => {
     if (res?.data?.success) {
       setOpenDeletePrompt(false)
       router.push(`/profile/${user.profile_url}/blogs`)
+      dispatch(setBlog({}))
     }
   }
 

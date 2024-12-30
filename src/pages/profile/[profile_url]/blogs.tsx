@@ -90,17 +90,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
       dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
       return
     }
-    try {
-      const { res, err } = await createBlog()
-      if (err) throw err
-      if (!res?.data?.success)
-        throw new Error(res?.data?.message || 'Error creating blog!')
-      const url = res?.data?.data?.url
-      if (url) router.push(`/blog/${url}`)
-      else throw new Error('Unsuccessful!')
-    } catch (err) {
-      console.log('Error while creating blog at handleAddBlog()!', err)
-    }
+    router.push('/blog/new')
   }
 
   return (
@@ -149,7 +139,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
                       : { columnGap: '24px', rowGap: '24px' }
                   }
                 >
-                  {/* {profileLayoutMode === 'edit' && (
+                  {profileLayoutMode === 'edit' && (
                     <div
                       className={styles.uploadButtonDescktop}
                       onClick={handleAddBlog}
@@ -157,7 +147,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
                       <div className={styles.newTag}>ADD NEW</div>
                       <PlusIcon />
                     </div>
-                  )} */}
+                  )}
                   {data?.blogsData.map((blog: any) => {
                     return <BlogCard key={blog._id} data={blog} />
                   })}
@@ -174,7 +164,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
                   }
                   className={styles['dual-section-wrapper']}
                 >
-                  {/* {profileLayoutMode === 'edit' ? (
+                  {profileLayoutMode === 'edit' ? (
                     <div
                       className={styles.uploadButtonDescktop}
                       onClick={handleAddBlog}
@@ -199,7 +189,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
                         No Blogs Available
                       </p>
                     </div>
-                  )} */}
+                  )}
                   {/* {!isMobile && ( */}
                   <div
                     style={

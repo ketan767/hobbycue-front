@@ -104,10 +104,10 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   const { blog, refetch, isEditing } = useSelector(
     (state: RootState) => state.blog,
   )
-
+  console.warn('blogdataa', blog)
   const fetchBlog = async () => {
     const { err, res } = await getAllBlogs(
-      `url=${blog?.url}&populate=author,_hobbies`,
+      `url=${data?.blog_url?.url}&populate=author,_hobbies`,
     )
     if (err) console.log('Error while fetching blog: ', err)
     dispatch(setBlog(res?.data?.data?.blog?.[0]))
@@ -222,7 +222,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   useEffect(() => {
     dispatch(setBlog(data?.blog_url))
     return () => {
-      dispatch(setRefetch(0))  // important
+      dispatch(setRefetch(0)) // important
     }
   }, [])
 
