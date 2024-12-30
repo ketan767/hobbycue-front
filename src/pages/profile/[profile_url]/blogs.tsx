@@ -90,17 +90,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
       dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
       return
     }
-    try {
-      const { res, err } = await createBlog()
-      if (err) throw err
-      if (!res?.data?.success)
-        throw new Error(res?.data?.message || 'Error creating blog!')
-      const url = res?.data?.data?.url
-      if (url) router.push(`/blog/${url}`)
-      else throw new Error('Unsuccessful!')
-    } catch (err) {
-      console.log('Error while creating blog at handleAddBlog()!', err)
-    }
+    router.push('/blog/new')
   }
 
   return (
@@ -142,7 +132,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
               // <div className={styles['three-column-grid-blogs']}>
               <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 3 }}>
                 <Masonry
-                  gutter={isMobile ? `8px` : `24px`}
+                  gutter={isMobile ? `8px` : `12px`}
                   style={
                     isMobile
                       ? { columnGap: '24px', rowGap: '12px', marginTop: '8px' }

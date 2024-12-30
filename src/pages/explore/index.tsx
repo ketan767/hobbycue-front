@@ -33,7 +33,7 @@ const Explore: React.FC<Props> = ({ data: initialData, isBlog }) => {
   const [ShowAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const { isSearching } = useSelector((state: RootState) => state.explore)
-  const [hoverCardIndex,setHoveredCardIndex] = useState<number>(-1);
+  const [hoverCardIndex, setHoveredCardIndex] = useState<number>(-1)
   const dispatch = useDispatch()
 
   const locationDropdownRef = useRef<HTMLDivElement>(null)

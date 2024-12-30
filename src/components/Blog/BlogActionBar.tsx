@@ -11,7 +11,7 @@ import { openModal, updateShareUrl } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
 import { isMobile } from '@/utils'
 import { RootState } from '@/redux/store'
-import { downvoteBlog, upvoteBlog } from '@/services/blog.services'
+import { deleteBlog, downvoteBlog, upvoteBlog } from '@/services/blog.services'
 import RepostIcon from '@/assets/icons/RepostIcon'
 import CommentIcon from '@/assets/icons/CommentIcon'
 import ReportIcon from '@/assets/icons/ReportIcon'
@@ -19,7 +19,7 @@ import DownvoteIcon from '@/assets/icons/DownvoteIcon'
 import RepostIconBlog from '@/assets/icons/RepostIconBlog'
 import { CircularProgress } from '@mui/material'
 import DeletePrompt from '../DeletePrompt/DeletePrompt'
-import { setIsEditing } from '@/redux/slices/blog'
+import { setBlog, setIsEditing } from '@/redux/slices/blog'
 
 type Props = {
   data: any
@@ -35,14 +35,8 @@ type Props = {
   >
 }
 
-const BlogActionBar: React.FC<Props> = ({
-  data,
-  // setIsEditing,
-  // isEditing,
-  isAuthor,
-  vote,
-  setVote,
-}) => {
+const BlogActionBar: React.FC<Props> = ({ data, isAuthor, vote, setVote }) => {
+  const [openDeletePrompt, setOpenDeletePrompt] = useState(false)
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -54,7 +48,9 @@ const BlogActionBar: React.FC<Props> = ({
   const dispatch = useDispatch()
   const router = useRouter()
   const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
-  const { preview, isEditing } = useSelector((state: RootState) => state.blog)
+  const { preview, isEditing, blog } = useSelector(
+    (state: RootState) => state.blog,
+  )
 
   const showFeatUnderDev = () => {
     setSnackbar({
@@ -143,8 +139,7 @@ const BlogActionBar: React.FC<Props> = ({
         dispatch(openModal({ type: 'PostReportModal', closable: true }))
         break
       case 'delete':
-        // <DeletePrompt triggerOpen={true}  /> make a delete states
-        showFeatUnderDev()
+        setOpenDeletePrompt(true)
         break
     }
 
@@ -169,11 +164,6 @@ const BlogActionBar: React.FC<Props> = ({
     setShowMenu(false)
   }
 
-  useEffect(() => {
-    window.addEventListener('click', () => setShowMenu(false))
-    return () => window.removeEventListener('click', () => setShowMenu(false))
-  }, [])
-
   const isMob = isMobile()
 
   const isDraft = data?.blog_url?.status === 'Draft'
@@ -183,10 +173,24 @@ const BlogActionBar: React.FC<Props> = ({
     if (preview) return true
     if (data?.blog_url?.status === 'Published') return false
     // For Unpublished status
-    if (btn === 'edit') return isEditing
-    if (['delete', 'support', 'bookmark'].includes(btn)) return false // never disabled
+    if (['edit', 'delete', 'support', 'bookmark'].includes(btn)) return false // never disabled
     return true // for upvote, downvote, share in Unpublihed status
   }
+
+  const handleDeleteBlog = async (blogId: string) => {
+    const { res, err } = await deleteBlog(blogId)
+    if (err) console.log('Error while deleting blog @handleDeleteBlog(): ', err)
+    if (res?.data?.success) {
+      setOpenDeletePrompt(false)
+      router.push(`/profile/${user.profile_url}/blogs`)
+      dispatch(setBlog({}))
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('click', () => setShowMenu(false))
+    return () => window.removeEventListener('click', () => setShowMenu(false))
+  }, [])
 
   return (
     <div className={styles.actions} onClick={(e) => e.stopPropagation()}>
@@ -206,6 +210,7 @@ const BlogActionBar: React.FC<Props> = ({
         <button
           onClick={() => handleActionsWithAuth('bookmark')}
           disabled={btnDisabled('bookmark')}
+          className={styles.bookmark}
         >
           <BookmarkIcon />
         </button>
@@ -230,17 +235,19 @@ const BlogActionBar: React.FC<Props> = ({
         </CustomizedTooltips>
         {showMenu && (
           <div className={`${styles.menu}`}>
-            {isAuthor || user.is_admin ? (
+            {(isAuthor || user.is_admin) && !preview ? (
               <>
-                <button
-                  onClick={() => {
-                    dispatch(setIsEditing(true))
-                    setShowMenu(false)
-                  }}
-                  disabled={btnDisabled('edit')}
-                >
-                  Edit
-                </button>
+                {!isEditing && (
+                  <button
+                    onClick={() => {
+                      dispatch(setIsEditing(true))
+                      setShowMenu(false)
+                    }}
+                    disabled={btnDisabled('edit')}
+                  >
+                    Edit
+                  </button>
+                )}
                 <button
                   onClick={() =>
                     dispatch(
@@ -307,6 +314,14 @@ const BlogActionBar: React.FC<Props> = ({
           Comments
         </a>
       )}
+      <DeletePrompt
+        triggerOpen={openDeletePrompt}
+        closeHandler={() => setOpenDeletePrompt(false)}
+        yesHandler={handleDeleteBlog}
+        noHandler={() => setOpenDeletePrompt(false)}
+        text="blog"
+        _id={blog?._id}
+      />
       <CustomSnackbar
         message={snackbar.message}
         triggerOpen={snackbar.display}

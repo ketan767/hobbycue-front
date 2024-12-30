@@ -127,6 +127,7 @@ const AdminDashboard: React.FC = () => {
   const [isError, setIsError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<String>('')
   const [isSearching, setIsSearching] = useState<boolean>(false)
+  
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     const isValid = /^[a-zA-Z\s]*$/.test(value)
@@ -373,6 +374,12 @@ const AdminDashboard: React.FC = () => {
   }
 
   useEffect(() => {
+    setLoginSort(false);
+    setJoinedSort(false);
+    setNameSort(false);
+  }, []);
+
+  useEffect(() => {
     if (hasNonEmptyValues(modalState)) {
       setPagelimit(1000)
     } else {
@@ -400,7 +407,7 @@ const AdminDashboard: React.FC = () => {
                 autoComplete="new"
                 value={data.search.value}
                 onChange={handleInputChange}
-                placeholder="Search users..."
+                placeholder="Search here..."
                 className={styles.searchInput}
               />
               <button type="submit" className={styles.searchButton}>
@@ -455,14 +462,15 @@ const AdminDashboard: React.FC = () => {
                             width={15}
                             height={15}
                             alt="sort"
+                            style={{  marginTop: '3px' }}
                           />
                         ) : (
                           <Image
-                            src={sortAscending}
+                            src={sortDescending}
                             width={15}
                             height={15}
                             alt="sort"
-                            style={{ transform: 'rotate(180deg)' }}
+                           style={{  marginTop: '3px' }}
                           />
                         )}
                       </button>
@@ -479,22 +487,23 @@ const AdminDashboard: React.FC = () => {
                         className={styles.sortButton}
                         onClick={handleLoginSort}
                       >
-                        {loginSort ? (
-                          <Image
-                            src={sortAscending}
-                            width={15}
-                            height={15}
-                            alt="sort"
-                          />
-                        ) : (
-                          <Image
-                            src={sortAscending}
-                            width={15}
-                            height={15}
-                            alt="sort"
-                            style={{ transform: 'rotate(180deg)' }}
-                          />
-                        )}
+                       {!loginSort ? (
+                        <Image
+                          src={sortAscending}
+                          width={15}
+                          height={15}
+                          alt="sort"
+                          style={{ transform: 'rotate(180deg)' }}
+                        />
+                      ) : (
+                        <Image
+                          src={sortDescending}
+                          width={15}
+                          height={15}
+                          alt="sort"
+                          style={{ transform: 'rotate(180deg)' }}
+                        />
+                      )}
                       </button>
                     </div>
                   </th>
@@ -512,12 +521,13 @@ const AdminDashboard: React.FC = () => {
                         className={styles.sortButton}
                         onClick={handleJoinedSort}
                       >
-                        {joinedSort ? (
+                       {!joinedSort ? (
                           <Image
-                            src={sortAscending}
+                            src={sortDescending}
                             width={15}
                             height={15}
                             alt="sort"
+                            style={{ transform: 'rotate(180deg)' }}
                           />
                         ) : (
                           <Image
@@ -676,26 +686,29 @@ const AdminDashboard: React.FC = () => {
                             ) : (
                               ''
                             )}
-                            {` ` + formatDateTimeTwo(user?.last_login)}
+                           {` ` + formatDateTimeTwo(user?.last_login)}
                             {user?._sessions[0]?.device ? (
-                              ' | ' +
-                                user?._sessions[0]?.device.split(' ')[0] ===
-                              'Desktop' ? (
-                                <Image
-                                  src={pc}
-                                  alt=""
-                                  width={25}
-                                  height={16}
-                                  style={{ marginLeft: '5px' }}
-                                />
+                              user?._sessions[0]?.device.split(' ')[0] === 'Desktop' ? (
+                                <>
+                                  
+                                  <Image
+                                    src={pc}
+                                    alt=""
+                                    width={25}
+                                    height={16}
+                                    style={{ marginLeft: '5px' }}
+                                  />
+                                </>
                               ) : (
-                                <Image
-                                  src={phone}
-                                  alt=""
-                                  width={14}
-                                  height={24}
-                                  style={{ marginLeft: '5px' }}
-                                />
+                                <>
+                                  <Image
+                                    src={phone}
+                                    alt=""
+                                    width={14}
+                                    height={24}
+                                    style={{ marginLeft: '5px' }}
+                                  />
+                                </>
                               )
                             ) : (
                               ''

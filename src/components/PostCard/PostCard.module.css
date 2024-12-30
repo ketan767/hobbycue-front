@@ -663,15 +663,19 @@ background: rgba(128, 100, 162, 0.25);
 }
 
 .post-image {
-  height: 100%;
+  max-height: 376.53px;
   width: 100%;
-  aspect-ratio: 16 / 9;
+ 
   object-fit: contain;
   transition: 0.3s ease-in-out;
   position: relative; 
   background-color: #1e1e1e;
   top: 0;
   left: 0;
+}
+
+.cursor-pointer{
+  cursor: pointer;
 }
 
 @media screen and (max-width: 1100px) {

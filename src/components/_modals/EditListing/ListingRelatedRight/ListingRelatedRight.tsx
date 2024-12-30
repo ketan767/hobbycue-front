@@ -172,8 +172,12 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   const handleSearchPages = async (e: any) => {
     setShowDropdown(true)
     setDropdownLoading(true)
-    const { res, err } = await searchPagesRelated({
-      title: pageInputValue,
+
+    const { res, err } = await searchPages({
+      searchValue: pageInputValue.toString(),
+      page: 1,
+      limit: 50,
+
     })
     console.log(res)
 

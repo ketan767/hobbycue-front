@@ -797,13 +797,12 @@ const ListingHeader: React.FC<Props> = ({
         <div className={styles.mobileViewAs}>
           <div>
             {viewAs === 'print' ? (
-              // <FilledButton
-              //   className={styles.viewButtonPrint}
-              //   onClick={() => window.print()}
-              // >
-              //   <PrintIcon /> Print
-              // </FilledButton>
-              <></>
+              <FilledButton
+                className={styles.viewButtonPrint}
+                onClick={() => window.print()}
+              >
+                <PrintIcon /> Print
+              </FilledButton>
             ) : (
               <div className={styles.viewingAs}>
                 You are viewing this page as a{' '}

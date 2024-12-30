@@ -260,9 +260,9 @@
 
 }
 .imgContainer > img {
-  height: 100%;
+ 
   width: 100%;
-  aspect-ratio: 16 / 9;
+  max-height: 376.53px;
   object-fit: contain;
   transition: 0.3s ease-in-out;
   position: relative;

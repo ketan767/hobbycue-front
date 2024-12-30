@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { Height } from '@mui/icons-material'
 import { updateListingLayoutMode } from '@/redux/slices/site'
+import { useRouter } from 'next/router'
 
 type Props = {
   data: any
@@ -96,7 +97,11 @@ const BlogCard: React.FC<Props> = ({ data }) => {
     </svg>
   )
 
-  const itsMe = data?.author?._id === user?._id
+  const router = useRouter()
+  const routeRegex = /^\/profile\/[^\/]+\/blogs$/
+  const itsMe =
+    data?.author?._id === user?._id && routeRegex.test(router.asPath)
+
   const isMobile = useMediaQuery('(max-width:1100px)')
 
   return (
@@ -106,20 +111,6 @@ const BlogCard: React.FC<Props> = ({ data }) => {
         href={`/blog/${data?.url}`}
         className={styles.container}
       >
-        {/* {itsMe ? (
-          <div
-            className={`${
-              data.is_published
-                ? styles['published-mark']
-                : styles['unpublished-mark']
-            }`}
-          >
-            <p>{data.is_published ? 'PUBLISHED' : 'UNPUBLISHED'}</p>
-          </div>
-        ) : (
-          ''
-        )} */}
-
         <div className={styles.imgContainer}>
           {itsMe && (
             <div

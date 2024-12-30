@@ -104,10 +104,10 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   const { blog, refetch, isEditing } = useSelector(
     (state: RootState) => state.blog,
   )
-
+  console.warn('blogdataa', blog)
   const fetchBlog = async () => {
     const { err, res } = await getAllBlogs(
-      `url=${blog?.url}&populate=author,_hobbies`,
+      `url=${data?.blog_url?.url}&populate=author,_hobbies`,
     )
     if (err) console.log('Error while fetching blog: ', err)
     dispatch(setBlog(res?.data?.data?.blog?.[0]))
@@ -220,8 +220,11 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   }
 
   useEffect(() => {
-    /** The redux state here is not set on mount, hence the issue of showing previous blog in a new URL */
     dispatch(setBlog(data?.blog_url))
+    return () => {
+      dispatch(setRefetch(0)) // important
+      dispatch(setBlog(null))
+    }
   }, [])
 
   useEffect(() => {
@@ -274,6 +277,8 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         }
         if (isDraft && authorCheck) {
           dispatch(setIsEditing(true))
+        } else {
+          dispatch(setIsEditing(false))
         }
       }
     }
@@ -305,6 +310,17 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     }
   })
 
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.style.height = 'auto'
+      titleRef.current.style.height = titleRef.current.scrollHeight + 'px'
+    }
+    if (taglineRef.current) {
+      taglineRef.current.style.height = 'auto'
+      taglineRef.current.style.height = taglineRef.current.scrollHeight + 'px'
+    }
+  }, [titleRef.current, taglineRef.current, isEditing])
+
   return (
     <>
       <Head>
@@ -325,7 +341,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         <div className={styles.all}>
           <div className={styles['blog-header']}>
             <div className={styles.wrapper}>
-              {isAuthor && (
+              {isAuthor && isEditing && (
                 <div className={styles.buttonWrapper}>
                   <button
                     onClick={() =>
@@ -342,6 +358,8 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   </button>
                 </div>
               )}
+
+              {/* TITLE */}
               {isEditing ? (
                 <textarea
                   className={styles['blog-title'] + ' ' + styles.editInput}
@@ -354,12 +372,12 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   onKeyDown={(e) =>
                     e.key === 'Enter' && titleRef.current?.blur()
                   }
-                  rows={3}
-                  // onInput={function (e) {
-                  //   const target = e.target as HTMLTextAreaElement
-                  //   target.style.height = 'auto'
-                  //   target.style.height = target.scrollHeight + 'px'
-                  // }}
+                  rows={1}
+                  onInput={function (e) {
+                    const target = e.target as HTMLTextAreaElement
+                    target.style.height = 'auto'
+                    target.style.height = target.scrollHeight + 'px'
+                  }}
                 />
               ) : (
                 <h1 className={styles['blog-title']}>
@@ -379,6 +397,12 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                 onKeyDown={(e) =>
                   e.key === 'Enter' && taglineRef.current?.blur()
                 }
+                rows={1}
+                onInput={function (e) {
+                  const target = e.target as HTMLTextAreaElement
+                  target.style.height = 'auto'
+                  target.style.height = target.scrollHeight + 'px'
+                }}
               />
             ) : (
               data?.blog_url?.tagline && (
