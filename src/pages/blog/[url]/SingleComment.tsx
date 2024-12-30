@@ -86,7 +86,6 @@ const SingleComment: React.FC<Props> = ({
     window.addEventListener('click', outsideClick)
     return () => window.removeEventListener('click', outsideClick)
   }, [])
-  console.log('asifs obj', comment)
 
   return (
     <div key={comment?._id} className={styles['comment']}>
