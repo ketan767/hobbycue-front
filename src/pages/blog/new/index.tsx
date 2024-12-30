@@ -154,7 +154,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
       router.push(`/blog/${newUrl}`)
     }
 
-    dispatch(setRefetch(refetch + 1))
+    // dispatch(setRefetch(refetch + 1))
 
     if (response?.err || !response?.res?.data?.success) {
       console.log('Error in handleEditBlog()!', response.err)
@@ -524,7 +524,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                 <div className={styles.blogButtons}>
                   <FilledButton
                     className={styles.blogSaveButton}
-                    onClick={() => dispatch(setIsEditing(false))}
+                    onClick={() => router.back()}
                   >
                     Cancel
                   </FilledButton>

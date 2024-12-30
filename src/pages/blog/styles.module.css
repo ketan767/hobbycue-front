@@ -141,15 +141,13 @@
   background-color: white;
   border-radius: 8px 8px 0 0;
   border: 1px solid var(--Grey-Lighter, #ebedf0);
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .blogContent {
-  /* border-radius: 8px 8px 0px 0px;
-  border: 1px solid var(--Grey-Lighter, #ebedf0);
-  border-bottom: none; */
   background: var(--Base-White, #fff);
   padding: 18px 24px;
+  border-radius: 8px 8px 0 0;
 }
 
 .blogContent p:has(+ ul) {
@@ -164,6 +162,7 @@
 
 .profileAndComment {
   padding-inline: 24px;
+  background-color: white;
 }
 
 .blogEditor {
