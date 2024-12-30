@@ -140,7 +140,14 @@ const BlogPage: React.FC<Props> = ({ data }) => {
 
   const handleAddBlog = async () => {
     if (!isEditing || !blog) return
-
+    if (!blog?.title) {
+      setSnackbar({
+        display: true,
+        type: 'error',
+        message: 'Title is required',
+      })
+      return
+    }
     let response: any = {}
 
     response = await createBlog({
@@ -531,7 +538,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   <FilledButton
                     className={styles.blogSaveButton}
                     onClick={() => handleAddBlog()}
-                    disabled={!hasChanged || btnLoading}
+                    disabled={btnLoading}
                   >
                     {btnLoading ? (
                       <CircularProgress color="inherit" size={'14px'} />
