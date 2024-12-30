@@ -47,13 +47,14 @@ const StatusDropdown: React.FC<{
   return (
     <div className={styles.dropdown} onClick={toggleDropdown}>
       <button className={styles.dropdownButton} onClick={toggleDropdown}>
-        <span style={{ color: selectedStatus.color }}>
+        <span style={{ color: selectedStatus.color}}>
           <Image
             src={selectedStatus.icon}
             alt={selectedStatus.label}
             // width={24}
             // height={24}
           />
+          <span className={styles["status-text"]}>{status}</span>
         </span>
         <svg
           xmlns="http://www.w3.org/2000/svg"

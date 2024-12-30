@@ -440,6 +440,7 @@
 .modal-wrapper {
   display: grid;
   place-items: center;
+  background-color: black;
   height: 100%;
   overflow: auto;
   padding: 1rem;

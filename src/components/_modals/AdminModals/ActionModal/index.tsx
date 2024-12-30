@@ -3,11 +3,12 @@ import { Button, CircularProgress } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
-import StatusDropdown from '@/components/_formElements/StatusDropdown'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import styles from './styles.module.css'
 import Image from 'next/image'
+import StatusDropdown from '@/components/_formElements/StatusDropdown'
+// import StatusDropdown from '@/components/_formElements/AdminStatusDropdown'
 
 type Props = {
   data?: any
@@ -22,6 +23,8 @@ const AdminActionModal: React.FC<Props> = ({
   handleSubmit,
   handleClose,
 }) => {
+  
+  
   const dispatch = useDispatch()
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
@@ -54,7 +57,7 @@ const AdminActionModal: React.FC<Props> = ({
     <>
       <div className={`${styles['modal-wrapper']}  `}>
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Admin Notes'}</h4>
+          <h4 className={styles['heading']}>{'Admin Notes and Status'}</h4>
           <CloseIcon
             className={styles['modal-close-icon']}
             onClick={handleClose}
@@ -74,33 +77,34 @@ const AdminActionModal: React.FC<Props> = ({
               <textarea
                 className={styles['long-input-box']}
                 required
-                placeholder=""
+                placeholder="Internal Notes or Notes for the User"
                 name="message"
                 onChange={handleInputChange}
                 value={data.description}
               />
             </div>
-            {inputErrs.error ? (
+            {inputErrs.error && (
               <p className={styles['error-msg']}>{inputErrs.error}</p>
-            ) : (
-              <p className={styles['error-msg']}>&nbsp;</p> // Render an empty <p> element
-            )}
+            ) }
           </div>
+          <p className={styles['status-text']}>Status</p>
           <div style={{ display: 'flex', alignItems: 'center',justifyContent:'space-between' }}>
             <StatusDropdown
               status={data?.status}
               onStatusChange={handleStatusChange}
             />
-            <label style={{ marginLeft: '10px', display: 'flex', alignItems: 'center' }}>
+            <label className={styles.label}>
+            Email User
               <input
                 type="checkbox"
                 // onChange={handleEmailUserChange} 
-                style={{ marginRight: '5px' }}
+                style={{ marginLeft: '5px',position: 'relative', top: '2px'  }}
               />
-              Email User
+             
             </label>
+            <div/>
           </div>
-
+          
         </section>
         <footer className={styles['footer']}>
           <button
@@ -112,7 +116,7 @@ const AdminActionModal: React.FC<Props> = ({
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
             ) : (
-              'Submit'
+              'Save'
             )}
           </button>
           <button
@@ -124,7 +128,7 @@ const AdminActionModal: React.FC<Props> = ({
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'14px'} />
             ) : (
-              'Submit'
+              'Save'
             )}
           </button>
         </footer>
