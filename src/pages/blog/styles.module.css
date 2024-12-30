@@ -1,3 +1,7 @@
+.newPage {
+  padding-bottom: 12px;
+}
+
 .main-container {
   background-color: #f2f0f5;
 }
@@ -735,6 +739,10 @@
 }
 
 @media (max-width: 1100px) {
+  .blogContainerParent {
+    padding-top: 8px;
+  }
+
   .blog-container {
     display: block;
   }

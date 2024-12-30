@@ -350,7 +350,7 @@ select:-webkit-autofill {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  position: sticky;
+  position: sticky !important;
   top: 80px;
   z-index: 1;
 }
@@ -477,6 +477,10 @@ select:-webkit-autofill {
 }
 
 @media screen and (max-width: 1100px) {
+  .blog-quill .ql-toolbar {
+    top: 47px;
+  }
+
   .content-box-wrapper {
     border: none;
   }

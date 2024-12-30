@@ -509,7 +509,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
 
         {/* Content */}
         <div className={styles.blogContainerParent}>
-          <BlogContainer className={styles.blogWrapper}>
+          <BlogContainer className={styles.blogWrapper + ' ' + styles.newPage}>
             {/* <div className={styles.blogWrapper}> */}
             {isEditing ? (
               <div className={styles.blogEditor}>
@@ -549,7 +549,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                 }}
               />
             )}
-            <div className={styles.profileAndComment}>
+            {/* <div className={styles.profileAndComment}>
               <div className={styles['profile-wrapper']}>
                 <div className={`${styles['header-user']}`}>
                   {user?.profile_image ? (
@@ -654,7 +654,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   <BlogComments data={data?.blog_url} />
                 </div>
               </div>
-            </div>
+            </div> */}
             {/* </div> */}
           </BlogContainer>
         </div>
