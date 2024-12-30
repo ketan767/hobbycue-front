@@ -177,6 +177,7 @@
   border-radius: 100%;
   aspect-ratio: 1/1;
   border: 1px solid #8064a2;
+  object-fit: contain;
 }
 
 .user-menu-dropdown {

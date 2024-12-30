@@ -28,13 +28,15 @@
   height: var(--spacing-40);
   border-radius: 100%;
   border: 1px solid #8064a2;
+  object-fit: contain;
 }
 .profile-switcher .profile-image[data-profile-type='listing'] {
   max-width: var(--spacing-40);
   width: 100%;
   height: var(--spacing-40);
   border-radius: var(--spacing-4);
-  border: 1px solid #8064A2
+  border: 1px solid #8064A2;
+  object-fit: contain;
 }
 .profile-switcher .name {
   font-weight: 500;
@@ -97,13 +99,15 @@
   width: 100%;
   height: var(--spacing-32);
   border: 1px solid #8064A2;
+  object-fit: contain;
 }
 .dd-list .dd-item .img[data-profile-type='listing'] {
   border-radius: var(--spacing-4);
   max-width: var(--spacing-32);
   width: 100%;
   height: var(--spacing-32);
-  border: 1px solid #8064A2
+  border: 1px solid #8064A2;
+  object-fit: contain;
 }
 
 .dd-list .dd-item p {

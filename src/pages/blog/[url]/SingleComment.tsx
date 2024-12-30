@@ -7,6 +7,7 @@ import BookmarkIcon from '@/assets/icons/BookmarkIcon'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
+import Link from 'next/link'
 
 interface Props {
   comment: any
@@ -85,11 +86,12 @@ const SingleComment: React.FC<Props> = ({
     window.addEventListener('click', outsideClick)
     return () => window.removeEventListener('click', outsideClick)
   }, [])
+  console.log('asifs obj', comment)
 
   return (
     <div key={comment?._id} className={styles['comment']}>
       {/* Profile Image */}
-      <>
+      <Link href={`/profile/${comment?._author?.profile_url}`}>
         {comment?._author?.profile_image ? (
           <img
             className={styles['inputAuthorImage']}
@@ -107,16 +109,18 @@ const SingleComment: React.FC<Props> = ({
             }  ${styles['inputAuthorImage']}`}
           ></div>
         )}
-      </>
+      </Link>
       {/* All Content  */}
       <section className={styles['content-wrapper']}>
         {/* Header */}
         <header>
-          <p className={`${styles['author-name']} truncateOneLine`}>
-            {comment?.author_type === 'Listing'
-              ? comment?._author?.title
-              : comment?._author?.full_name}
-          </p>
+          <Link href={`/profile/${comment?._author?.profile_url}`}>
+            <p className={`${styles['author-name']} truncateOneLine`}>
+              {comment?.author_type === 'Listing'
+                ? comment?._author?.title
+                : comment?._author?.full_name}
+            </p>
+          </Link>
           <p className={styles['date']}>
             {comment?.date && format(new Date(comment.date))}
           </p>
