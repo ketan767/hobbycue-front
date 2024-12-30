@@ -223,6 +223,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     dispatch(setBlog(data?.blog_url))
     return () => {
       dispatch(setRefetch(0)) // important
+      dispatch(setBlog(null))
     }
   }, [])
 
