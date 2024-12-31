@@ -136,18 +136,25 @@ Note: This post will be visible to all those having the selected hobby and locat
   }
 
   useEffect(() => {
-    const handlePaste = async (event: ClipboardEvent) => {
-      if (event.clipboardData?.files.length) {
-        const imageFile = event.clipboardData.files[0]
+    const editorInstance = editorRef.current?.getEditor()
 
-        if (imageFile.type.startsWith('image/')) {
-          event.preventDefault()
-          handleImageUpload(imageFile, false)
-        }
+    const handlePaste = (event: ClipboardEvent) => {
+      if (!editorInstance || !event.clipboardData) return
+
+      const pastedText = event.clipboardData.getData('text')
+      const imageFile = event.clipboardData.files[0]
+
+      if (imageFile?.type.startsWith('image/')) {
+        event.preventDefault()
+        handleImageUpload(imageFile, false)
+      } else if (pastedText) {
+        event.preventDefault()
+        const selection = editorInstance.getSelection(true)
+        editorInstance.insertText(selection.index, pastedText)
       }
     }
 
-    const editorElement = editorRef.current?.getEditor()?.root
+    const editorElement = editorInstance?.root
     if (editorElement) {
       editorElement.addEventListener('paste', handlePaste)
     }
