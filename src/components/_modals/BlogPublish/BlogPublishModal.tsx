@@ -289,7 +289,7 @@ const BlogPublish = (props: any) => {
                   <figure className={styles.searchPicFigure}>
                     <img
                       className={styles.searchPicImage}
-                      src={author?.profile_image}
+                      src={blog?.cover_pic}
                       alt="Author Pic"
                     />
                   </figure>
@@ -303,7 +303,9 @@ const BlogPublish = (props: any) => {
                       {blog?.tagline}
                     </h4>
                     <p className={styles.searchPicAuthor}>
-                      {author?.full_name} | {formatDate(blog?.createdAt)}
+                      {author?.full_name.slice(0, 55) +
+                        (author?.full_name.length > 55 ? '...' : '')}{' '}
+                      | {formatDate(blog?.createdAt)}
                     </p>
                   </div>
                 </div>

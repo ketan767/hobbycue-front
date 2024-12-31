@@ -481,7 +481,9 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                             data-profile-type="user"
                           ></div>
                         )}
-                        <p className={styles['sidemenu-name']}>{user.full_name}</p>
+                        <p className={styles['sidemenu-name']}>
+                          {user.full_name}
+                        </p>
                       </li>
 
                       {filteredListing.map((page: any) => {
@@ -712,7 +714,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                       <li>Theatre</li>
                     </Link>
 
-                    <Link href={'/hobby/visual-arts'}>
+                    <Link href={'/hobby/visual'}>
                       <li>Visual</li>
                     </Link>
                   </ul>
@@ -755,15 +757,15 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                       <li>Cooking</li>
                     </Link>
 
-                    <Link href={'/hobby/gardening'}>
+                    <Link href={'/hobby/garden'}>
                       <li>Garden</li>
                     </Link>
 
-                    <Link href={'/hobby/model-making'}>
+                    <Link href={'/hobby/model'}>
                       <li>Model</li>
                     </Link>
 
-                    <Link href={'/hobby/making-utility'}>
+                    <Link href={'/hobby/utility'}>
                       <li>Utility</li>
                     </Link>
                   </ul>
@@ -791,7 +793,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                       <li>Outdoors</li>
                     </Link>
 
-                    <Link href={'/hobby/traveling'}>
+                    <Link href={'/hobby/travel'}>
                       <li>Travel</li>
                     </Link>
                     <Link href={'/hobby/wellness'}>
@@ -815,7 +817,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                       <li>Items</li>
                     </Link>
 
-                    <Link href={'/hobby/record-keeping'}>
+                    <Link href={'/hobby/records'}>
                       <li>Records</li>
                     </Link>
                   </ul>
