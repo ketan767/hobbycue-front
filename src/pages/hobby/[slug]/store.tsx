@@ -161,7 +161,10 @@ const HobbyStorePage: React.FC<Props> = (props) => {
           <section className={styles['store-container']}>
             {loadingPosts && (
               <>
-                <PagesLoader /> <PagesLoader /> <PagesLoader /> <PagesLoader />{' '}
+                <PagesLoader component={'store'} />
+                <PagesLoader component={'store'} />
+                <PagesLoader component={'store'} />
+                <PagesLoader component={'store'} />
               </>
             )}
             {!loadingPosts &&
