@@ -203,7 +203,6 @@ Note: This post will be visible to all those having the selected hobby and locat
       <ReactQuill
         theme="snow"
         ref={editorRef}
-        value={data.content}
         onFocus={() => {
           if (setIsFocused) {
             setIsFocused(true)
@@ -214,6 +213,7 @@ Note: This post will be visible to all those having the selected hobby and locat
             setIsFocused(false)
           }
         }}
+        value={data.content}
         onChange={(updatedValue) => {
           if (onStatusChange) {
             if (updatedValue == '') {

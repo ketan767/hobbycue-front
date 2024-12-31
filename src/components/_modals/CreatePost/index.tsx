@@ -389,7 +389,7 @@ export const CreatePost: React.FC<Props> = ({
     DropdownListItem[]
   >([])
   const [visibilityData, setVisibilityData] = useState(['puCblic'])
-  const [isFocused, setIsFocused] = useState(false)
+  const [isFocused, setIsFocused] = useState(true)
 
   const handleSubmit = useHandleSubmit(
     data,
