@@ -37,7 +37,6 @@ interface Props {
   hasLink?: boolean
   onStatusChange?: (isChanged: boolean) => void
   forWhichComponent?: string
-  setIsFocused?: (isFocused: boolean) => void
 }
 
 const CustomEditor: React.FC<Props> = ({
@@ -50,7 +49,6 @@ const CustomEditor: React.FC<Props> = ({
   hasLink,
   onStatusChange,
   forWhichComponent,
-  setIsFocused,
 }) => {
   const editorRef = useRef<ReactQuill>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -203,16 +201,6 @@ Note: This post will be visible to all those having the selected hobby and locat
       <ReactQuill
         theme="snow"
         ref={editorRef}
-        onFocus={() => {
-          if (setIsFocused) {
-            setIsFocused(true)
-          }
-        }}
-        onBlur={() => {
-          if (setIsFocused) {
-            setIsFocused(false)
-          }
-        }}
         value={data.content}
         onChange={(updatedValue) => {
           if (onStatusChange) {

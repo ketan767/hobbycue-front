@@ -1142,7 +1142,6 @@ export const CreatePost: React.FC<Props> = ({
                 error={errors.content}
                 hasLink={hasLink && showMetaData}
                 onStatusChange={onStatusChange}
-                setIsFocused={setIsFocused}
               />
               {data.video_url && (
                 <div className={styles.videoWrapper}>
