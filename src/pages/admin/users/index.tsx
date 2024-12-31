@@ -29,6 +29,7 @@ import sortAscending from '@/assets/icons/Sort-Ascending-On.png'
 import sortDescending from '@/assets/icons/Sort-Ascending-Off.png'
 import { User } from '@/types/user'
 import { Data } from '@react-google-maps/api'
+import { log } from 'console'
 export interface ModalState {
   onboarded: string
   joined: { start: string; end: string }
@@ -124,6 +125,7 @@ const AdminDashboard: React.FC = () => {
   const [NameSort, setNameSort] = useState<boolean>(true)
   const [loading, setLoading] = useState<boolean>(false)
    const [count, setCount] = useState(0)
+   const [activeSort, setActiveSort] = useState('login');
   const [isError, setIsError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<String>('')
   const [isSearching, setIsSearching] = useState<boolean>(false)
@@ -208,7 +210,7 @@ const AdminDashboard: React.FC = () => {
       setErrorMessage('No users found')
     } else {
       setSearchResults(res.data)
-      setCount(res.data.length || 0)
+      // setCount(res.data.length || 0)
       setIsError(false)
       setLoading(false)
       setPageNumber(res?.data?.length > 0 ? res?.data?.length : 1)
@@ -237,11 +239,37 @@ const AdminDashboard: React.FC = () => {
       setIsError(false)
       setLoading(false)
       setSearchResults(res.data.data.users)
-      setCount(res.data.data.no_of_users)
+      // setCount(res.data.data.no_of_users)
       dispatch(setShowPageLoader(false))
     }
     setLoading(false)
   }, [dispatch, pagelimit, page])
+
+  const fetchAllUsersCount = useCallback(async () => {
+    try {
+      setLoading(true);
+      const { res, err } = await getAllUserDetail(`limit=2500&populate=sessions`);
+      if (err) {
+        console.error('An error occurred:', err);
+        setIsError(true);
+        setErrorMessage('Unable to fetch user count');
+      } else {
+        setIsError(false);
+        setCount(res.data.data.no_of_users);
+      }
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      setIsError(true);
+      setErrorMessage('Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchAllUsersCount();
+  }, [])
+  
   useEffect(() => {
     if (data.search.value.trim()) {
       fetchSearchResults()
@@ -358,22 +386,27 @@ const AdminDashboard: React.FC = () => {
     )
   }
   const handleLoginSort = () => {
+    setActiveSort((prev) => (prev === 'login' ? '' : 'login'));
     setLoginSort((prev) => !prev)
     setJoinedSort(false)
     setNameSort(false)
+   
   }
   const handleNameSort = () => {
+    setActiveSort((prev) => (prev === 'name' ? '' : 'name')); 
     setNameSort((prev) => !prev)
     setLoginSort(false)
     setJoinedSort(false)
   }
   const handleJoinedSort = () => {
+    setActiveSort((prev) => (prev === 'joined' ? '': 'joined'));
     setJoinedSort((prev) => !prev)
     setLoginSort(false)
     setNameSort(false)
   }
 
   useEffect(() => {
+    setActiveSort('login');
     setLoginSort(false);
     setJoinedSort(false);
     setNameSort(false);
@@ -456,7 +489,7 @@ const AdminDashboard: React.FC = () => {
                         className={styles.sortButton}
                         onClick={handleNameSort}
                       >
-                        {NameSort ? (
+                        {activeSort === 'name'  ? (
                           <Image
                             src={sortAscending}
                             width={15}
@@ -487,7 +520,7 @@ const AdminDashboard: React.FC = () => {
                         className={styles.sortButton}
                         onClick={handleLoginSort}
                       >
-                       {!loginSort ? (
+                       {activeSort === 'login' ? (
                         <Image
                           src={sortAscending}
                           width={15}
@@ -521,7 +554,7 @@ const AdminDashboard: React.FC = () => {
                         className={styles.sortButton}
                         onClick={handleJoinedSort}
                       >
-                       {!joinedSort ? (
+                       {activeSort !== 'joined'  ? (
                           <Image
                             src={sortDescending}
                             width={15}
