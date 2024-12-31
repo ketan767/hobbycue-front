@@ -45,9 +45,8 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
       </div>
       <div className={styles.modalBody}>
         <UserDropdown />
-        <FilterDropdown />
         <div className={styles.keyword}>
-          <label htmlFor="">Keywords</label>
+          <label htmlFor="" style={{marginLeft:"1%"}}>Keywords</label>
 
           <input
             type="text"
@@ -60,6 +59,8 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
             }
           />
         </div>
+        <FilterDropdown />
+       
       </div>
     </main>
   )

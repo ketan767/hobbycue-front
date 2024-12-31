@@ -389,7 +389,7 @@ export const CreatePost: React.FC<Props> = ({
     DropdownListItem[]
   >([])
   const [visibilityData, setVisibilityData] = useState(['puCblic'])
-  const [isFocused, setIsFocused] = useState(false)
+  const [isFocused, setIsFocused] = useState(true)
 
   const handleSubmit = useHandleSubmit(
     data,
@@ -1142,7 +1142,6 @@ export const CreatePost: React.FC<Props> = ({
                 error={errors.content}
                 hasLink={hasLink && showMetaData}
                 onStatusChange={onStatusChange}
-                setIsFocused={setIsFocused}
               />
               {data.video_url && (
                 <div className={styles.videoWrapper}>

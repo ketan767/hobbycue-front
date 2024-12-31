@@ -333,7 +333,7 @@ select:-webkit-autofill {
   min-height: 100vh;
   border-radius: 0 !important;
   border: 0 !important;
-  border-top: 1px solid #ccc !important;
+  /* border-top: 1px solid #ccc !important; */
   border-bottom: 1px solid #ccc !important;
 }
 
@@ -345,11 +345,14 @@ select:-webkit-autofill {
 .blog-quill .ql-toolbar {
   border-radius: 8px 8px 0 0 !important;
   border: 0;
-  /* border-bottom: 1px solid #ccc; */
+  border-bottom: 1px solid #ccc;
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  position: sticky !important;
+  top: 80px;
+  z-index: 1;
 }
 
 .blog-quill .ql-toolbar span {
@@ -474,6 +477,10 @@ select:-webkit-autofill {
 }
 
 @media screen and (max-width: 1100px) {
+  .blog-quill .ql-toolbar {
+    top: 47px;
+  }
+
   .content-box-wrapper {
     border: none;
   }

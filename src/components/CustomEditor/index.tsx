@@ -37,7 +37,6 @@ interface Props {
   hasLink?: boolean
   onStatusChange?: (isChanged: boolean) => void
   forWhichComponent?: string
-  setIsFocused?: (isFocused: boolean) => void
 }
 
 const CustomEditor: React.FC<Props> = ({
@@ -50,7 +49,6 @@ const CustomEditor: React.FC<Props> = ({
   hasLink,
   onStatusChange,
   forWhichComponent,
-  setIsFocused,
 }) => {
   const editorRef = useRef<ReactQuill>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -204,16 +202,6 @@ Note: This post will be visible to all those having the selected hobby and locat
         theme="snow"
         ref={editorRef}
         value={data.content}
-        onFocus={() => {
-          if (setIsFocused) {
-            setIsFocused(true)
-          }
-        }}
-        onBlur={() => {
-          if (setIsFocused) {
-            setIsFocused(false)
-          }
-        }}
         onChange={(updatedValue) => {
           if (onStatusChange) {
             if (updatedValue == '') {

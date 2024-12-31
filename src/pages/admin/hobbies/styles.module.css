@@ -440,6 +440,7 @@
 .modal-wrapper {
   display: grid;
   place-items: center;
+  background-color: black;
   height: 100%;
   overflow: auto;
   padding: 1rem;
@@ -460,6 +461,12 @@
 
 .pos-relative {
   position: relative;
+}
+
+.countAndFilter{
+  display: flex;
+  gap: 25px;
+  align-items: center;
 }
 
 .pagination {

@@ -88,7 +88,7 @@ const EditUser: React.FC<UserEditProps> = ({
           onClick={() => setIsEditModalOpen(false)}
         />
       </div>
-
+        <hr style={{marginBottom:"8px"}} />
       <div className={styles.mainWrapper}>
         <form onSubmit={updateUserFunc}>
           <div className={styles.twoColumnGrid}>
@@ -166,10 +166,10 @@ const EditUser: React.FC<UserEditProps> = ({
                 id="displayName"
                 type="text"
                 autoComplete="new"
-                value={user?.display}
+                value={user?.display_name}
                 onChange={(e) => {
                   const value = e.target.value
-                  setUser({ ...user, display: value })
+                  setUser({ ...user, display_name: value })
 
                   if (value && value.length < 3) {
                     setErrors({
@@ -709,6 +709,28 @@ const EditUser: React.FC<UserEditProps> = ({
             <h3>Last Login</h3>
             <span>{` ${user._sessions[0]?.device}`}</span>
           </div>
+            <div className={styles.auditFields}>
+              <div className={styles.auditField}>
+                <span className={styles.label}>Created By:</span>
+                <span className={styles.value}>{user.full_name || "N/A"}</span>
+              </div>
+              <div className={styles.auditField}>
+                <span className={styles.label}>Created At:</span>
+                <span className={styles.value}>
+                  {user.createdAt ? new Date(user.createdAt).toLocaleString() : "N/A"}
+                </span>
+              </div>
+              <div className={styles.auditField}>
+                <span className={styles.label}>Updated By:</span>
+                <span className={styles.value}>{user.updatedBy || "Ketan Patil"}</span>
+              </div>
+              <div className={styles.auditField}>
+                <span className={styles.label}>Updated At:</span>
+                <span className={styles.value}>
+                  {user.updatedAt ? new Date(user.updatedAt).toLocaleString() : "N/A"}
+                </span>
+              </div>
+            </div>
           <div className={styles.btnWrapper}>
             <button className={styles.saveButton} type="submit">
               Save

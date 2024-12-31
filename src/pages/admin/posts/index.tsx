@@ -13,11 +13,15 @@ import { getAllPostsWithComments } from '@/services/post.service'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { deletePostByAdmin } from '@/services/admin.service'
-import { Fade, Modal } from '@mui/material'
+import { Fade, Icon, Modal } from '@mui/material'
 import EditPostModal from '@/components/_modals/AdminModals/EditpostsModal'
 import { formatDate } from '@/utils/Date'
 import { log } from 'console'
 import { setShowPageLoader } from '@/redux/slices/site'
+import ToggleButton from '@/components/_buttons/ToggleButton'
+import CommentIcon from '@mui/icons-material/Comment';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
 type PostProps = any
 type SearchInput = {
@@ -288,14 +292,14 @@ const AdminDashboard: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '18.06%', textAlign: 'center' }}>User</th>
-                  <th style={{ width: '19.48%', textAlign: 'center' }}>
+                  <th style={{ width: '18.06%', textAlign: 'left' }}>User</th>
+                  <th style={{ width: '19.48%', textAlign: 'left' }}>
                     Content
                   </th>
                   <th
                     style={{
                       width: '21.54%',
-                      textAlign: 'center',
+                      textAlign: 'left',
                       whiteSpace: 'nowrap',
                     }}
                   >
@@ -314,23 +318,19 @@ const AdminDashboard: React.FC = () => {
                   <th
                     style={{
                       width: '6.939%',
-                      paddingRight: '16px',
-                      textAlign: 'center',
+                      paddingLeft: '16px',
+                      textAlign: 'left',
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    Up Votes
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 5 }}>
+                      <div><ThumbUpIcon sx={{ fontSize: 16 }}/></div>
+                      <div><ThumbDownIcon sx={{ fontSize: 16 }}/></div>
+                      <div><CommentIcon sx={{ fontSize: 16 }}/></div>
+                    </div>
                   </th>
-                  <th
-                    style={{
-                      width: '6.672%',
-                      paddingRight: '16px',
-                      textAlign: 'center',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    Down Votes
-                  </th>
+
+
                   <th
                     style={{
                       width: '6.87%',
@@ -338,13 +338,13 @@ const AdminDashboard: React.FC = () => {
                       textAlign: 'center',
                     }}
                   >
-                    Comments
+                    Spam
                   </th>
                   <th
                     style={{
                       width: '6.252%',
                       paddingRight: '16px',
-                      textAlign: 'center',
+                      textAlign: 'left',
                     }}
                   >
                     Actions
@@ -360,7 +360,7 @@ const AdminDashboard: React.FC = () => {
                           href={`/profile/${post?._author?.profile_url}`}
                           className={styles.avatarContainer}
                         >
-                          {post.profile_image ? (
+                          {post?._author?.profile_image ? (
                             <img
                               src={post?._author?.profile_image}
                               alt={`${post.full_name}'s profile`}
@@ -382,19 +382,25 @@ const AdminDashboard: React.FC = () => {
                           <Link
                             href={`/profile/${post?._author?.profile_url}`}
                             className={styles.userName}
+                            style={{
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+
+                            }}
                           >
-                            {post?._author?.full_name ||
-                              post?._author?.title ||
-                              ''}
+                            {(post?._author?.full_name || post?._author?.title || '').slice(0, 25)
+                            }
                           </Link>
                         </div>
                       </div>
                     </td>
                     <td
                       dangerouslySetInnerHTML={{
-                        __html: post?.content.slice(0, 30) + '...',
+                        __html: post?.content.slice(0, 30),
                       }}
-                      className={styles.userEmail}
+                      className={styles.user}
+                      style={{ whiteSpace: 'nowrap' }}
                     ></td>
                     <td
                       className={styles.userPhone}
@@ -409,15 +415,23 @@ const AdminDashboard: React.FC = () => {
                       {post?._hobby?.display}
                       {`${post?._genre ? ` - ${post?._genre?.display}` : ''}`}
                     </td>
-                    <td className={styles.lastLoggedIn}>{post?.visibility}</td>
-                    <td className={styles.pagesLength}>
-                      {post?.up_votes?.count}
+                    <td className={styles.pagesLength} style={{ whiteSpace: 'nowrap' }}>{post?.visibility}</td>
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'row', gap: 12, marginLeft: 8 }}>
+                        <p className={styles.pagesLength}>{post?.up_votes?.count}</p>
+                        <p className={styles.pagesLength}>{post?.down_votes?.count}</p>
+                        <p className={styles.pagesLength}>{post?.comments?.length}</p>
+                      </div>
+
                     </td>
-                    <td className={styles.pagesLength}>
+                    {/* <td className={styles.pagesLength}>
                       {post?.down_votes?.count}
                     </td>
                     <td className={styles.pagesLength}>
                       {post?.comments?.length}
+                    </td> */}
+                    <td className={styles.pagesLength}>
+                      <ToggleButton />
                     </td>
                     <td>
                       <div className={styles.actions}>
@@ -434,31 +448,27 @@ const AdminDashboard: React.FC = () => {
               </tbody>
             </table>
           </div>
+
           <div className={styles.pagination}>
             {/* Previous Page Button */}
 
-            <button
-              style={
-                page <= 1 ? { visibility: 'hidden' } : { display: 'block' }
-              }
-              className="admin-next-btn"
+            {page > 1 && <button
+              // disabled={page <= 1}
+              className="users-next-btn"
               onClick={goToPreviousPage}
             >
-              Previous
-            </button>
+              Prev
+            </button>}
 
             <button
-              style={
-                searchResults.length !== pagelimit
-                  ? { visibility: 'hidden' }
-                  : { display: 'block' }
-              }
-              className="admin-next-btn"
+              disabled={searchResults.length !== pagelimit}
+              className="users-next-btn"
               onClick={goToNextPage}
             >
               Next
             </button>
           </div>
+
         </div>
       </AdminLayout>
 

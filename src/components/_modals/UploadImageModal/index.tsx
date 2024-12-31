@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { setCroppedImage } from '@/redux/slices/confirmationData'
+import { useRouter } from 'next/router'
 
 type Props = {
   onComplete?: () => void
@@ -25,6 +26,7 @@ export const UploadImageModal: React.FC<Props> = ({
   handleClose,
   onStatusChange,
 }) => {
+  const router = useRouter()
   const { editPhotoModalData } = useSelector((state: RootState) => state.site)
   const { croppedImage } = useSelector((state: RootState) => state.confirmation)
   const cropperRef = useRef<ReactCropperElement>(null)
@@ -44,7 +46,7 @@ export const UploadImageModal: React.FC<Props> = ({
         if (onComplete) {
           onComplete()
         } else {
-          window.location.reload()
+          // router.reload()
           dispatch(closeModal())
         }
 

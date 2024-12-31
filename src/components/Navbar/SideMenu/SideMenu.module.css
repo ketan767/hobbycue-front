@@ -78,6 +78,7 @@
   height: 40px;
   border-radius: 50%;
   border: 1px solid rgb(var(--primary-100-rgb));
+  object-fit: contain;
 }
 
 .img-listing {
@@ -85,7 +86,7 @@
   height: 40px;
   border-radius: 4px;
   border: 1px solid rgb(var(--primary-100-rgb));
-
+  object-fit: contain;
 }
 
 .view-profile-btn {

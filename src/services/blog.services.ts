@@ -99,23 +99,33 @@ export const downvoteBlog = async (blogId: string, userId: string) => {
   }
 }
 
-export const createBlog = async () => {
+export const createBlog = async ({
+  title,
+  tagline,
+  content,
+  cover_pic,
+  ...args
+}: UpdateBlogArgsType) => {
   try {
+    const body = { title, tagline, content, cover_pic }
     const token = localStorage.getItem(`token`)
-    const body = null
     const headers = { Authorization: `Bearer ${token}` }
-    const res = await axiosInstance.post(`/blogs/create`, body, { headers })
+    const res = await axiosInstance.post(`/blogs/create`, body, {
+      headers,
+    })
     return { res, err: null }
   } catch (err) {
     return { res: null, err }
   }
 }
 
+
 interface UpdateBlogArgsType {
   title?: string
   tagline?: string
   content?: string
-  blogId: string
+  blogId?: string
+  cover_pic?:string
 }
 
 export const updateBlog = async ({
