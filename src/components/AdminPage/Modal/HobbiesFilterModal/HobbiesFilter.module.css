@@ -1,201 +1,221 @@
 .modal {
-    background-color: white;
-    position: absolute;
-    right: 0;
-    top: 10%;
-    z-index: 99;
-    margin-right: 20px;
-    max-width: 328px;
-    min-height: 292px;
-    width: 100%;
-    padding: 10px ; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    border-radius: 8px;
-    box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .modalHeader {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .modalTitle {
-    color: var(--Grey-Darkest, #08090a);
-    font-family: Poppins;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-  }
-  .wrapper {
-    display: flex;
-    gap: 9px;
-  }
-  .applyButton {
-    display: flex;
-    height: 30px;
-    padding: 12px 24px;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    border-radius: 8px;
-    background: var(--Blue1, #0096c8);
-    color: var(--Grey-white, #fff);
-    font-family: Poppins;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 16px; /* 114.286% */
-  }
-  .clearButton {
-    display: flex;
-    height: 30px;
-    padding: 12px 24px;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    border-radius: 8px;
-    border: 1px solid #0096c8;
-    color: #0096c8;
-    background-color: white;
-    font-family: Poppins;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 16px; /* 114.286% */
-  }
-  
-  .modalBody {
-    padding-top: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .filterGroup {
-    width: 100%;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 24px;
-  }
-  
-  .filterLabel {
-    display: inline-block;
-    width: fit-content;
-    white-space: nowrap;
-    color: var(--Grey-Darker, #6d747a);
-    font-family: Poppins;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 22px; /* 157.143% */
-  }
-  
-  .fieldset {
-    border: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 10px;
-  }
-  .LoginMode {
-    width: 100%;
-    display: flex;
-    border: none;
-    justify-content: space-around;
-  }
-  .radioGroup {
-    display: flex;
-    align-items: center;
-  }
-  .checkboxGroup {
-    margin-bottom: 8px;
-  }
-  .checkboxGroup {
-    display: flex;
-  }
-  
-  .radioInput,
-  .checkboxInput {
-    margin-right: 8px;
-  }
-  
-  .radioLabel,
-  .checkboxLabel {
-    font-size: 1rem;
-    color: #555;
-  }
-  .checkboxLabel {
-    display: flex;
-    align-items: center;
-  }
-  .dateRange {
-    display: flex;
-    align-items: center;
-    position: relative;
-  }
-  .hiddenDateInput {
-    display: none;
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-    z-index: -1;
-  }
-  
-  .dateButton {
-    width: 105px;
-    background: none;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 12px;
-    font-size: 12px;
-    cursor: pointer;
-    border-radius: 8px;
-    border: 1px solid var(--Grey-Lighter, #ebedf0);
-    color: var(--Grey-Dark, #939ca3);
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 400;
-  }
-  
-  .dateInput {
-    padding: 3px;
-    border-radius: 8px;
-    border: 1px solid var(--Grey-Lighter, #ebedf0);
-    color: var(--Grey-Dark, #939ca3);
-    font-family: Poppins;
-    font-size: 10px;
-    font-style: normal;
-    font-weight: 400;
-  }
-  .textRange {
-    width: 100%;
-    display: flex;
-    align-items: center;
-  }
-  .textInput {
-    width: 50%;
-    padding: 6px 8px;
-    border-radius: 8px;
-    border: 1px solid var(--Grey-Lighter, #ebedf0);
-    color: var(--Grey-Dark, #939ca3);
-    font-family: Poppins;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    outline: none;
-  }
-  
-  .rangeSeparator {
-    margin: 0 8px;
-    color: #888;
-  }
-  
+  background-color: white;
+  position: absolute;
+  right: 0;
+  top: 110%;
+  z-index: 99;
+  max-width: 328px;
+  min-height: 292px;
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modalHeader {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalTitle {
+  color: var(--Grey-Darkest, #08090a);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+}
+.wrapper {
+  display: flex;
+  gap: 9px;
+}
+.applyButton {
+  display: flex;
+  width: 64px;
+  height: 30px;
+  padding: 12px 24px;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 8px;
+  background: var(--Blue1, #0096c8);
+  color: var(--Grey-white, #fff);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px; /* 114.286% */
+}
+.clearButton {
+  display: flex;
+  width: 64px;
+  height: 30px;
+  padding: 12px 24px;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 8px;
+  border: 1px solid #0096c8;
+  color: #0096c8;
+  background-color: white;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px; /* 114.286% */
+}
+
+.modalBody {
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filterGroup {
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 24px;
+}
+
+.filterLabel {
+  display: inline-block;
+  width: fit-content;
+  white-space: nowrap;
+  color: var(--Grey-Darker, #6d747a);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 157.143% */
+}
+
+.fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
+}
+.LoginMode {
+  width: 100%;
+  display: flex;
+  border: none;
+  justify-content: space-around;
+  align-items: center;
+}
+.radioGroup {
+  display: flex;
+  align-items: center;
+}
+.checkboxGroup {
+  margin-bottom: 0px;
+}
+.checkboxGroup {
+  display: flex;
+}
+
+.radioInput {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #0096c8;
+  color: #0096c8;
+}
+.radioInput :checked {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #0096c8;
+}
+.radioInput,
+.checkboxInput {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.radioLabel,
+.checkboxLabel {
+  font-size: 1rem;
+  color: #555;
+}
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+}
+.dateRange {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+.hiddenDateInput {
+  display: none;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.dateButton {
+  width: 105px;
+  background: none;
+  height: 32px;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  border: 1px solid var(--Grey-Lighter, #ebedf0);
+  color: var(--Grey-Dark, #939ca3);
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.dateInput {
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid var(--Grey-Lighter, #ebedf0);
+  color: var(--Grey-Dark, #939ca3);
+  font-family: Poppins;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+}
+.textRange {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.textInput {
+  width: 90.5px;
+  height: 32px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--Grey-Lighter, #ebedf0);
+  color: var(--Grey-Dark, #939ca3);
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  outline: none;
+  cursor: pointer;
+}
+
+.rangeSeparator {
+  margin: 0 8px;
+  color: #888;
+}

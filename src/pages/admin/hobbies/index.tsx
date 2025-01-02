@@ -28,6 +28,11 @@ import { setShowPageLoader } from '@/redux/slices/site'
 import ToggleButton from '@/components/_buttons/ToggleButton'
 
 import HobbiesNotesModal from '@/components/AdminPage/Modal/HobbiesFilterModal/HobbiesNotesModal'
+import DisplayState from '@/components/AdminPage/Users/DisplayState/DisplayState'
+import { filterIcon } from '../users'
+import sortAscending from '@/assets/icons/Sort-Ascending-On.png'
+import sortDescending from '@/assets/icons/Sort-Ascending-Off.png'
+import UserFilter from '@/components/AdminPage/Filters/UserFilter/UserFilter'
 type SearchInput = {
   search: InputData<string>
 }
@@ -105,6 +110,8 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
     listing_id: '',
   })
   // const [createdAtSort, setCreatedAtSort] = useState(false);
+
+  
 
   const handleSearch = async (event: React.FormEvent) => {
     event.preventDefault(); 
@@ -421,6 +428,16 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
   //       : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   //   });
 
+  const hasNonEmptyValues = (state: ModalState) => {
+      return !Object.entries(state).every(
+        ([_, value]) =>
+          !value ||
+          (Array.isArray(value) && value.length === 0) ||
+          (typeof value === 'object' &&
+            Object.values(value).every((v) => v === '')),
+      )
+    }
+
 
   return (
     <>
@@ -460,7 +477,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                 autoComplete="new"
                 value={data.search.value}
                 onChange={handleInputChange}
-                placeholder="Search users..."
+                placeholder="Search here..."
                 className={styles.searchInput}
               />
               <button type="submit" className={styles.searchButton}>
@@ -468,50 +485,81 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
               </button>
             </form>
             <span className={styles.countText}>Count: <span style={{ color:"#0096c8", fontWeight:"500"}}>{count}</span></span>
-            <div className={styles.countAndFilter}>
-            
-          
-            <button className={styles.filterBtn} onClick={() => setIsModalOpen(!isModalOpen)}>{filterSvg}</button>
-            {isModalOpen && ( 
+            {hasNonEmptyValues(modalState) && (
+              <DisplayState modalState={modalState} />
+            )}
+           
+            {hasNonEmptyValues(modalState) ? (
+              <button
+                className={styles.filterBtn}
+                onClick={() => setIsModalOpen(!isModalOpen)}
+              >
+                <Image src={filterIcon} width={40} height={40} alt="filter" />
+              </button>
+            ) : (
+              <button
+                className={styles.filterBtn}
+                onClick={() => setIsModalOpen(!isModalOpen)}
+              >
+                {filterSvg}
+              </button>
+            )}
+
+            {isModalOpen && (
               <HobbiesFilter
                 modalState={modalState}
                 setModalState={setModalState}
                 setIsModalOpen={setIsModalOpen}
                 setApplyFilter={setApplyFilter}
               />
-              )}
-        </div>
-      </div>
-
+            )}
+          </div>
           <div className={styles.resultsContainer}>
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '8.06%', padding:'1px' }}>Hobby</th>
+                  <th style={{ width: '8.06%', paddingLeft:'8px'}}>Hobby</th>
                   <th style={{ width: '8%', padding:'1px' }}>Genre/Style</th>
 
                   <th style={{ width: '12.163%' }}>Requested By</th>
-                  <th style={{ width: '12.163%', cursor:"pointer" }} onClick={handleCreatedAtSort}>On {" "}
-                  <span
-                  style={{
-                    display: "inline-block",
-                    transform: createdAtSort ? "rotate(180deg)" : "rotate(0deg)",
-                    transition: "transform 0.3s ease",
-                  }}
-                >
-                  ▼
-                </span>
+                  <th style={{ width: '20.06%' }}>
+                    <div className={styles.sortButtonWrapper}>
+                      Created At
+                      <button
+                        className={styles.sortButton}
+                        onClick={handleCreatedAtSort}
+                      >
+                        {createdAtSort ? (
+                          <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                            style={{ transform: 'rotate(180deg)' }}
+                          />
+                        ) : (
+                          <Image
+                            src={sortDescending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                           style={{ transform: 'rotate(180deg)' }}
+                          />
+                        )}
+                      </button>
+                    </div>
                   </th>
                   <th
                     style={{
                       width: '20%',
                       paddingRight: '16px',
+                      whiteSpace:'nowrap'
                     }}
                   >
                     Matching or Similar
                   </th>
 
-                  <th style={{ width: '30.672%', paddingRight: '160px' }}>
+                  <th style={{ width: '30.672%', paddingRight: '160px',whiteSpace:'nowrap' }}>
                     Admin Notes
                   </th>
                   <th style={{ width: '9.252%', paddingRight: '32px' }}>
