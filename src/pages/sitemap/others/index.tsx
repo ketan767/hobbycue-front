@@ -210,6 +210,16 @@ export const getServerSideProps: GetServerSideProps = async () => {
       loc: 'https://hobbycue.com/releases/',
       name: `https://hobbycue.com/releases/`,
     },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://hobbycue.com/tips/',
+      name: `https://hobbycue.com/tips/`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://hobbycue.com/testimonials/',
+      name: `https://hobbycue.com/testimonials/`,
+    },
   ]
   return {
     props: {

@@ -17,6 +17,7 @@ import {
   getAllListingPageTypes,
 } from '@/services/listing.service'
 import { getMyProfileDetail } from '@/services/user.service'
+import Head from 'next/head'
 
 type Props = {}
 
@@ -94,6 +95,19 @@ const AddListing: React.FC<Props> = (props) => {
 
   return (
     <>
+      <Head>
+        <title>HobbyCue - Add Listing</title>
+        <meta
+          name="description"
+          content="hobbycue – explore your hobby or passion Sign-in to interact with a community of fellow hobbyists and an eco-system of experts, teachers, suppliers, classes, workshops, and places to practice, participate or perform. Your hobby may be about visual or performing arts, sports, games, gardening, model making, cooking, indoor or outdoor activities… If you are an expert […]"
+        />
+        <link rel="manifest" href="/manifest.json"></link>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
+        <meta property="og:image:width" content="478" />
+        <meta property="og:image:height" content="477" />
+        <meta property="og:image:type" content="image/png" />
+      </Head>
       <section className={`site-container ${styles['add-listing-container']}`}>
         <h1 className={styles['add-listing-heading']}>
           <svg
