@@ -43,6 +43,7 @@ const ListingCTAModal: React.FC<Props> = ({
 
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
+  const [isApprovalRequired, setIsApprovalRequired] = useState<boolean>(true)
   console.log('listingModalData:', listingModalData)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -94,10 +95,18 @@ const ListingCTAModal: React.FC<Props> = ({
   >([
     { name: 'Contact', description: 'Opens a Contact or Message dialogue' },
     { name: 'Claim', description: 'Allows others to Claim this Page' },
-    { name: 'Register', description: 'Allows to Register for the Program' },
+    { name: 'Join', description: 'Society or Club Membership' },
   ])
 
   const [listThree, setListThree] = useState<
+    { name: string; description: string }[]
+  >([
+    { name: 'Contact', description: 'Opens a Contact or Message dialogue' },
+    { name: 'Claim', description: 'Allows others to Claim this Page' },
+    { name: 'Register', description: 'Allows to Register for the Program' },
+  ])
+
+  const [listFour, setListFour] = useState<
     { name: string; description: string }[]
   >([
     {
@@ -111,13 +120,13 @@ const ListingCTAModal: React.FC<Props> = ({
       setList(listOne)
     }
     if (listingModalData.type === 2) {
-      setList(listOne)
-    }
-    if (listingModalData.type === 3) {
       setList(listTwo)
     }
-    if (listingModalData.type === 4) {
+    if (listingModalData.type === 3) {
       setList(listThree)
+    }
+    if (listingModalData.type === 4) {
+      setList(listFour)
     }
   }, [])
   const [value, setValue] = useState<any>([])
@@ -154,7 +163,7 @@ const ListingCTAModal: React.FC<Props> = ({
 
     if (onComplete) onComplete()
     else {
-      if (cta === 'Register' || cta === 'Buy Now') {
+      if (cta === 'Register' || cta === 'Buy Now' || cta === 'Join') {
         dispatch(
           openModal({
             type: 'listing-product-variants-edit',
@@ -343,6 +352,29 @@ const ListingCTAModal: React.FC<Props> = ({
                 </div>
               </div>
             )}
+          {cta === 'Join' && (
+            <div className={styles['approval-box']}>
+              <p>Approval required </p>
+              <div className={styles.radioLabel}>
+                <input
+                  type="radio"
+                  name="approval"
+                  checked={isApprovalRequired === true}
+                  onChange={() => setIsApprovalRequired(true)}
+                />
+                <span className={styles.span}>Yes</span>
+              </div>
+              <div className={styles.radioLabel}>
+                <input
+                  type="radio"
+                  name="approval"
+                  checked={isApprovalRequired === false}
+                  onChange={() => setIsApprovalRequired(false)}
+                />
+                <span className={styles.span}>No</span>
+              </div>
+            </div>
+          )}
         </section>
 
         <footer className={styles['footer']}>
@@ -375,7 +407,10 @@ const ListingCTAModal: React.FC<Props> = ({
           >
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
-            ) : onComplete || cta === 'Register' || cta === 'Buy Now' ? (
+            ) : onComplete ||
+              cta === 'Register' ||
+              cta === 'Buy Now' ||
+              cta === 'Join' ? (
               'Next'
             ) : (
               'Save'
@@ -398,7 +433,7 @@ const ListingCTAModal: React.FC<Props> = ({
             >
               {submitBtnLoading ? (
                 <CircularProgress color="inherit" size={'14px'} />
-              ) : onComplete || cta === 'Register' ? (
+              ) : onComplete || cta === 'Register' || cta === 'Join' ? (
                 'Next'
               ) : (
                 'Save'
