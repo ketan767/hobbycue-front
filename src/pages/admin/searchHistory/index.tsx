@@ -242,7 +242,7 @@ const SearchHistory: React.FC = () => {
                 autoComplete="new"
                 value={data.search.value}
                 onChange={handleInputChange}
-                placeholder="Search users..."
+                placeholder="Search by user name, mail ID, phone, keyboard..."
                 className={styles.searchInput}
               />
               <button type="submit" className={styles.searchButton}>
@@ -270,7 +270,7 @@ const SearchHistory: React.FC = () => {
                 <thead>
                   <tr>
                     <th>User</th>
-                    <th>Search key</th>
+                    <th style={{width:"20%"}}>Keyword</th>
                     <th>
                     <div className={styles.sortButtonWrapper}>  
                     Time
@@ -299,7 +299,7 @@ const SearchHistory: React.FC = () => {
                       </div>
                     </th>
 
-                    <th >Pages</th>
+                    <th >4P Count</th>
 
                     {/* <th style={{ textAlign: 'center' }}>Actions</th> */}
                   </tr>
