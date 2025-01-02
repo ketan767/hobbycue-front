@@ -1353,10 +1353,10 @@ export const CreatePost: React.FC<Props> = ({
                           {!isMobile && metaData?.url && (
                             <>
                               <p className={styles['metadata-url']}>
-                                {metaData?.description?.split(';')[0]}
+                                {metaData?.description?.split(' ⬢ ')[0]}
                               </p>
                               <p className={styles['metadata-url']}>
-                                {metaData?.description?.split(';')[1]}
+                                {metaData?.description?.split(' ⬢ ')[1]}
                               </p>
                             </>
                           )}
@@ -1366,11 +1366,11 @@ export const CreatePost: React.FC<Props> = ({
                         <>
                           <p className={styles['metadata-url']}>
                             {' '}
-                            {metaData?.description?.split(';')[0]}
+                            {metaData?.description?.split(' ⬢ ')[0]}
                           </p>
                           <p className={styles['metadata-url']}>
                             {' '}
-                            {metaData?.description?.split(';')[1]}
+                            {metaData?.description?.split(' ⬢ ')[1]}
                           </p>
                         </>
                       )}
