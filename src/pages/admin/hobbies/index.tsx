@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import styles from './styles.module.css'
 import Image from 'next/image'
 import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
-import HobbiesFilter from '@/components/AdminPage/Modal/HobbiesFilterModal/HobbiesFilter'
+import HobbiesFilter, { HobbyModalState } from '@/components/AdminPage/Modal/HobbiesFilterModal/HobbiesFilter'
 
 import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
@@ -71,12 +71,12 @@ const HobbiesRequest: React.FC = () => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
   }
-  const [modalState, setModalState] = useState<ModalState>({
-      onboarded: '',
-      joined: { start: '', end: '' },
-      loginModes: [],
-      pageCount: { min: '', max: '' },
-      status: '',
+  const [modalState, setModalState] = useState<HobbyModalState>({
+    hobby: '',
+    genre: '',
+    requestedBy: '',
+    requestedOn: { start: '', end: '' },
+    status: '',
     })
 const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
      const [adminNoteModalData, setAdminNoteModalData] =
@@ -243,15 +243,42 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
       console.log('FetchHobbyReq', res.data)
       let filteredResults = res.data.data.hobbyreq;
 
-      if (modalState.onboarded === 'Yes') {
+      if (modalState.hobby) {
         filteredResults = filteredResults.filter(
-          (hobbyreq : any) => hobbyreq?.user_id?.is_onboarded === true
-        );
-      } else if (modalState.onboarded === 'No') {
-        filteredResults = filteredResults.filter(
-          (hobbyreq : any) => hobbyreq?.user_id?.is_onboarded === false
+          (hobbyreq: any) => hobbyreq?.hobby?.toLowerCase().includes(modalState.hobby.toLowerCase())
         );
       }
+      
+      if (modalState.genre) {
+        filteredResults = filteredResults.filter(
+          (hobbyreq: any) => hobbyreq?.genre?.toLowerCase().includes(modalState.genre.toLowerCase())
+        );
+      }
+      
+      if (modalState.requestedBy) {
+        filteredResults = filteredResults.filter(
+          (hobbyreq: any) => hobbyreq?.user_id?.full_name?.toLowerCase().includes(modalState.requestedBy.toLowerCase())
+        );
+      }
+      
+      if (modalState.requestedOn.start && modalState.requestedOn.end) {
+        filteredResults = filteredResults.filter(
+          (hobbyreq: any) =>
+            new Date(hobbyreq?.createdAt) >= new Date(modalState.requestedOn.start) &&
+            new Date(hobbyreq?.createdAt) <= new Date(modalState.requestedOn.end)
+        );
+      }
+      
+      if (modalState.status) {
+        filteredResults = filteredResults.filter(
+          (hobbyreq: any) => hobbyreq?.status===modalState.status
+        );
+      }
+      
+      
+      
+      
+      
       setSearchResults(filteredResults);
       setCount(filteredResults.length);
       dispatch(setShowPageLoader(false))
@@ -271,7 +298,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
       FetchHobbyReq()
     }
     setShowPreLoader(false)
-  }, [data.search.value, page, modalState.onboarded])
+  }, [data.search.value, page, modalState])
 
   useEffect(() => {
     const initialNotes: { [key: string]: string } = {}
@@ -428,7 +455,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
   //       : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   //   });
 
-  const hasNonEmptyValues = (state: ModalState) => {
+  const hasNonEmptyValues = (state: HobbyModalState) => {
       return !Object.entries(state).every(
         ([_, value]) =>
           !value ||
@@ -477,7 +504,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                 autoComplete="new"
                 value={data.search.value}
                 onChange={handleInputChange}
-                placeholder="Search here..."
+                placeholder="Search by Hobby, Genre/Style, Requested By, Matching or Similar"
                 className={styles.searchInput}
               />
               <button type="submit" className={styles.searchButton}>
@@ -518,11 +545,11 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '8.06%', paddingLeft:'8px'}}>Hobby</th>
-                  <th style={{ width: '8%', padding:'1px' }}>Genre/Style</th>
+                  <th >Hobby</th>
+                  <th >Genre/Style</th>
 
-                  <th style={{ width: '12.163%' }}>Requested By</th>
-                  <th style={{ width: '20.06%' }}>
+                  <th >Requested By</th>
+                  <th >
                     <div className={styles.sortButtonWrapper}>
                       Created At
                       <button
@@ -550,19 +577,15 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                     </div>
                   </th>
                   <th
-                    style={{
-                      width: '20%',
-                      paddingRight: '16px',
-                      whiteSpace:'nowrap'
-                    }}
+                    
                   >
                     Matching or Similar
                   </th>
 
-                  <th style={{ width: '30.672%', paddingRight: '160px',whiteSpace:'nowrap' }}>
+                  <th >
                     Admin Notes
                   </th>
-                  <th style={{ width: '9.252%', paddingRight: '32px' }}>
+                  <th >
                     Status
                   </th>
                 </tr>
@@ -574,7 +597,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                       <div className={styles.resultItem}>
                         <div className={styles.detailsContainer}>
                           <Link
-                            className={styles.userName}
+                            // className={styles.userName}
                             href={`/hobby/${hobbyreq?.hobby}`}
                           >
                             {hobbyreq?.hobby}
@@ -582,12 +605,12 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                         </div>
                       </div>
                     </td>
-                    <td className={styles.userName}>
+                    <td>
                       <div>{hobbyreq?.genre}</div>
                     </td>
 
                     <td>
-                        <Link
+                    <Link
                            href={
                             hobbyreq.user_type == 'user'
                               ? `/profile/${hobbyreq.user_id?.profile_url}`
@@ -611,7 +634,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                                 />
                               ) : (
                                 <Image
-                                  className={styles['img']}
+                                  className={styles.avatarImage}
                                   src={DefaultProfile}
                                   alt="profile"
                                   width={40}
@@ -625,27 +648,27 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                                 // hobbyreq?.user_id?.full_name?.length > 25
                                 //   ? hobbyreq?.user_id?.full_name
                                 //   : ''
-                                hobbyreq.user_type == 'user'
+                                hobbyreq.user_type == 'user' && hobbyreq.user_id?.full_name
                           ? hobbyreq.user_id?.full_name.slice(0,25)
                           : hobbyreq.listing_id?.title
                               }
-                              style={{whiteSpace: 'nowrap'}}
+                              // style={{whiteSpace: 'nowrap'}}
                             >
-                              {hobbyreq.user_type == 'user'
+                              {hobbyreq.user_type == 'user' && hobbyreq.user_id?.full_name
                           ? hobbyreq.user_id?.full_name.slice(0,25)
                           : hobbyreq.listing_id?.title}
                             </div>
                           </div>
                         </Link>
                       </td>
-                    <td className={styles.userName} style={{whiteSpace: 'nowrap'}}>
+                    <td>
                       <div>{formatDate(hobbyreq?.createdAt)}</div>
                     </td>
-                    <td className={styles.userName}>
+                    <td >
                       <div>{hobbyreq?.similar}</div>
                       </td>
 
-                    <td className={styles.pagesLength}>
+                    <td >
                       <input
                         className={styles.notesInput}
                         type="text"

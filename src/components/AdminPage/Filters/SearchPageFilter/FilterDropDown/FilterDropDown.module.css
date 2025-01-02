@@ -60,6 +60,9 @@
   background-color: white;
   z-index: 90;
 }
+
+
+
 .filter-sidebar {
   color: var(--grey-darkest, #08090a);
   font-family: Poppins;
@@ -68,7 +71,7 @@
   font-weight: 500;
   line-height: 16px;
   flex-shrink: 0;
-  margin: 7px 0 8px 3px;
+  margin: 7px 0 8px 10px;
 }
 
 .heading {

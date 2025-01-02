@@ -47,6 +47,7 @@ import {
   setPreview,
   setRefetch,
 } from '@/redux/slices/blog'
+import { uploadImage } from '@/services/post.service'
 
 const BlogEditor = dynamic(() => import('@/components/BlogEditor/BlogEditor'), {
   ssr: false,
@@ -140,21 +141,29 @@ const BlogPage: React.FC<Props> = ({ data }) => {
 
   const handleAddBlog = async () => {
     if (!isEditing || !blog) return
-
+    if (!blog?.title) {
+      setSnackbar({
+        display: true,
+        type: 'error',
+        message: 'Title is required',
+      })
+      return
+    }
     let response: any = {}
 
     response = await createBlog({
-      title: blog.title,
-      blogId: blog._id,
-      tagline: blog.tagline,
-      content: blog.content,
+      title: blog?.title,
+      blogId: blog?._id,
+      tagline: blog?.tagline,
+      content: blog?.content,
+      cover_pic: blog?.cover_pic,
     })
     if (response?.res?.data?.success) {
       const newUrl = response?.res?.data?.data?.url
       router.push(`/blog/${newUrl}`)
     }
 
-    dispatch(setRefetch(refetch + 1))
+    // dispatch(setRefetch(refetch + 1))
 
     if (response?.err || !response?.res?.data?.success) {
       console.log('Error in handleEditBlog()!', response.err)
@@ -188,11 +197,11 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     const blob = await response.blob()
 
     const formData = new FormData()
-    formData.append('blog-image', blob)
-    const { err, res } = await uploadBlogImage(formData, data?.blog_url._id)
+    formData.append('post', blob)
+    const { err, res } = await uploadImage(formData)
     if (err) return console.log('Error in uploadImageToServer(): ', err)
     if (res?.data.success) {
-      dispatch(setBlog({ ...blog, cover_pic: res?.data?.data.img_url }))
+      dispatch(setBlog({ ...blog, cover_pic: res?.data?.data?.url }))
       dispatch(closeModal())
     }
   }
@@ -509,7 +518,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
 
         {/* Content */}
         <div className={styles.blogContainerParent}>
-          <BlogContainer className={styles.blogWrapper}>
+          <BlogContainer className={styles.blogWrapper + ' ' + styles.newPage}>
             {/* <div className={styles.blogWrapper}> */}
             {isEditing ? (
               <div className={styles.blogEditor}>
@@ -524,14 +533,14 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                 <div className={styles.blogButtons}>
                   <FilledButton
                     className={styles.blogSaveButton}
-                    onClick={() => dispatch(setIsEditing(false))}
+                    onClick={() => router.back()}
                   >
                     Cancel
                   </FilledButton>
                   <FilledButton
                     className={styles.blogSaveButton}
                     onClick={() => handleAddBlog()}
-                    disabled={!hasChanged || btnLoading}
+                    disabled={btnLoading}
                   >
                     {btnLoading ? (
                       <CircularProgress color="inherit" size={'14px'} />
@@ -549,7 +558,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                 }}
               />
             )}
-            <div className={styles.profileAndComment}>
+            {/* <div className={styles.profileAndComment}>
               <div className={styles['profile-wrapper']}>
                 <div className={`${styles['header-user']}`}>
                   {user?.profile_image ? (
@@ -654,7 +663,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                   <BlogComments data={data?.blog_url} />
                 </div>
               </div>
-            </div>
+            </div> */}
             {/* </div> */}
           </BlogContainer>
         </div>

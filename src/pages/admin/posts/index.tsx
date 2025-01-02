@@ -316,7 +316,7 @@ const AdminDashboard: React.FC = () => {
                 autoComplete="new"
                 value={data.search.value}
                 onChange={handleInputChange}
-                placeholder="Search here..."
+                placeholder="Search by User/Page Title, Content, Hobby, Location"
                 className={styles.searchInput}
               />
               <button type="submit" className={styles.searchButton}>

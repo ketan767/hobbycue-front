@@ -131,6 +131,15 @@ const ProfileLayout: React.FC<Props> = ({
           </div>
         </>
       )}
+      {activeTab !== 'home' &&
+        activeTab !== 'pages' &&
+        activeTab !== 'blogs' && (
+          <>
+            {isMobile && (
+              <div style={{ height: '8px', background: '#EBEDF0' }}></div>
+            )}
+          </>
+        )}
       {/* Profile Page Body, where all contents of different tabs appears. */}
       <main>{React.cloneElement(children, { expandAll })}</main>
     </div>

@@ -84,7 +84,7 @@
   display: flex;
   justify-content: start;
   align-items: center;
-  gap: 24px;
+  gap: 8px;
 }
 
 .filterLabel {
@@ -218,4 +218,22 @@
 .rangeSeparator {
   margin: 0 8px;
   color: #888;
+}
+.input{
+  padding: 10px;
+  height: 32px;
+  width: 320x;
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 16px;
+  /* 133.333% */
+  border-radius: 8px;
+  
+  border: 1px solid var(--Grey-Lighter, #ebedf0);
+  /* background: var(--Grey-Hover, #F8F9FA); */
+  /* border-right: none; */
+  outline: none;
+ 
 }
