@@ -257,11 +257,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       ? formatDateRange(pageData?.event_date_time[0])
       : ''
 
-  const time = pageData?.event_date_time[0].from_time
-    ? `${pageData?.event_date_time[0].from_time}` +
-      pageData?.event_date_time[0].to_time
-      ? ` - ${pageData?.event_date_time[0].to_time}`
-      : ''
+  const time = pageData?.event_date_time[0]?.from_time
+    ? `${pageData.event_date_time[0].from_time}${
+        pageData.event_date_time[0].to_time
+          ? ` - ${pageData.event_date_time[0].to_time}`
+          : ''
+      }`
     : ''
 
   const pageTypeAndPrice =
