@@ -92,6 +92,7 @@ import HobbyAboutEditModal from './EditHobby/About'
 import FBNoEmail from './FBNoEmail'
 import BlogPublish from './BlogPublish/BlogPublishModal'
 import BlogFilterMobileModal from './BlogFilterMobileModal/BlogFilterMobileModal'
+import ListingPlaceVariantsModal from './EditListing/ListingPlaceVariants'
 
 const CustomBackdrop: React.FC = () => {
   const { activeModal } = useSelector((state: RootState) => state.modal)
@@ -524,6 +525,9 @@ const ModalManager: React.FC = () => {
               )}
               {activeModal === 'listing-product-variants-edit' && (
                 <ListingProductVariantsModal {...props} />
+              )}
+              {activeModal === 'listing-place-variants-edit' && (
+                <ListingPlaceVariantsModal {...props} />
               )}
               {activeModal === 'listing-product-purchase' && (
                 <ListingProductPurchase {...props} />

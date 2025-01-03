@@ -163,10 +163,20 @@ const ListingCTAModal: React.FC<Props> = ({
 
     if (onComplete) onComplete()
     else {
-      if (cta === 'Register' || cta === 'Buy Now' || cta === 'Join') {
+      if (cta === 'Register' || cta === 'Buy Now') {
         dispatch(
           openModal({
             type: 'listing-product-variants-edit',
+            closable: true,
+            propData: propData,
+          }),
+        )
+        return
+      }
+      if (cta === 'Join') {
+        dispatch(
+          openModal({
+            type: 'listing-place-variants-edit',
             closable: true,
             propData: propData,
           }),
