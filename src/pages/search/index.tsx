@@ -2611,7 +2611,6 @@ const MainContent: React.FC<SearchResultsProps> = ({
                                   {page?.event_date_time[0].to_time
                                     ? ` - ${page?.event_date_time[0].to_time}`
                                     : ''}
-                                  {}
                                   {/* {!isMobile && (
                                     <>
                                       {', '}
