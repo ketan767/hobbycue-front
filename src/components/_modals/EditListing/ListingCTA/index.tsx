@@ -43,7 +43,7 @@ const ListingCTAModal: React.FC<Props> = ({
 
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
-  const [isApprovalRequired, setIsApprovalRequired] = useState<boolean>(true)
+  const [isApprovalRequired, setIsApprovalRequired] = useState<boolean>(false)
   console.log('listingModalData:', listingModalData)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -144,6 +144,9 @@ const ListingCTAModal: React.FC<Props> = ({
     if (listingModalData && listingModalData.click_url) {
       setUrl(listingModalData.click_url)
     }
+    if (listingModalData && listingModalData.is_approval_required) {
+      setIsApprovalRequired(listingModalData.is_approval_required)
+    }
   }, [listingModalData])
 
   const handleSubmit = async () => {
@@ -151,11 +154,13 @@ const ListingCTAModal: React.FC<Props> = ({
     const { err, res } = await updateListing(listingModalData._id, {
       cta_text: cta,
       click_url: url,
+      is_approval_required: isApprovalRequired,
     })
     const updatedData = {
       ...listingModalData,
       cta_text: res?.data.data.listing.cta_text,
       click_url: res?.data.data.listing.click_url,
+      is_approval_required: res?.data.data.listing.is_approval_required,
     }
     dispatch(updateListingModalData(updatedData))
     if (err) return console.log(err)
@@ -191,10 +196,12 @@ const ListingCTAModal: React.FC<Props> = ({
     setBackBtnLoading(true)
     const { err, res } = await updateListing(listingModalData._id, {
       cta_text: cta,
+      membership_identifier: isApprovalRequired,
     })
     const updatedData = {
       ...listingModalData,
       cta_text: res?.data.data.listing.cta_text,
+      membership_identifier: res?.data.data.listing.membership_identifier,
     }
     dispatch(updateListingModalData(updatedData))
     if (err) return console.log(err)

@@ -7,7 +7,7 @@ type ListingModalData = {
    * * `3 -> PROGRAM`
    * * `4 -> PRODUCT`
    */
-  admin?: string 
+  admin?: string
   seller?: any
   type?: ListingPages | null
   page_type?: string | string[]
@@ -22,12 +22,12 @@ type ListingModalData = {
   phone?: {
     number?: any
     prefix?: any
-  };
+  }
   website?: string
   whatsapp_number?: {
     number?: any
     prefix?: any
-  };
+  }
   _address?: any
   _hobbies?: any
   work_hours?: any
@@ -67,17 +67,19 @@ type ListingModalData = {
     listings: any
   }
   related_listings_right?: any
-  event_weekdays?:{
+  event_weekdays?: {
     from_time: string
     to_time: string
     from_day: string
     to_day: string
   }[]
-  click_url?:string|null
-  cta_text?:string|null
-  product_category?:string|null
-  parent_page?:string|null
-  about?:string|null
+  click_url?: string | null
+  cta_text?: string | null
+  product_category?: string | null
+  parent_page?: string | null
+  about?: string | null
+  membership_identifier?: string | null
+  is_approval_required?: boolean | null
 }
 
 interface AuthState {
@@ -93,60 +95,60 @@ interface AuthState {
   }
   showPageLoader: boolean
   listingTypeModalMode?: any
-  admin_nav:boolean
+  admin_nav: boolean
   expandMenu: {
     hobby: boolean
     listing: boolean
     profile: boolean
-  },
+  }
   sidemenuRefresh: number
-  searchToggleRefresh: number 
+  searchToggleRefresh: number
   hobbyStates?: {
-    [key:string]:boolean
+    [key: string]: boolean
   }
   AboutStates?: {
-    [key:string]:boolean
+    [key: string]: boolean
   }
   DescriptionStates?: {
-    [key:string]:boolean
+    [key: string]: boolean
   }
   pagesStates?: {
-    [key:string]:boolean
+    [key: string]: boolean
   }
   locationStates?: {
-    [key:string]:boolean
+    [key: string]: boolean
   }
   contactStates?: {
-    [key:string]:boolean
+    [key: string]: boolean
   }
   socialMediaStates?: {
-    [key:string]:boolean
+    [key: string]: boolean
   }
   saleStates?: {
-    [key:string]:boolean
+    [key: string]: boolean
   }
   tagsStates?: {
-    [key:string]:boolean
+    [key: string]: boolean
   }
-  relatedListingsStates?:{
-    [key:string]:boolean
+  relatedListingsStates?: {
+    [key: string]: boolean
   }
-  relatedListingsStates2?:{
-    [key:string]:boolean
+  relatedListingsStates2?: {
+    [key: string]: boolean
   }
-  workingHoursStates?:{
-    [key:string]:boolean
+  workingHoursStates?: {
+    [key: string]: boolean
   }
-  membersStates?:{
-    [key:string]:boolean
+  membersStates?: {
+    [key: string]: boolean
   }
-  active_img_product?:{
-    idx: number,
+  active_img_product?: {
+    idx: number
     type: string
   }
-  eventflowRunning:boolean
-  pageDataForEvent:null|any
-  totalEvents:number
+  eventflowRunning: boolean
+  pageDataForEvent: null | any
+  totalEvents: number
 }
 
 const initialState: AuthState = {
@@ -164,43 +166,45 @@ const initialState: AuthState = {
     admin_note: '',
     tagline: '',
     click_url: null,
-    cta_text: 'Contact'
+    cta_text: 'Contact',
+    membership_identifier: '',
+    is_approval_required: false,
   },
   editPhotoModalData: {
     image: null,
     type: null,
     onComplete: null,
   },
-  
+
   showPageLoader: false,
   listingTypeModalMode: 'create',
-  admin_nav:true,
+  admin_nav: true,
   expandMenu: {
     hobby: false,
     listing: false,
-    profile: false
+    profile: false,
   },
   sidemenuRefresh: 0,
   searchToggleRefresh: 0,
-  hobbyStates:{},
+  hobbyStates: {},
   AboutStates: {},
   DescriptionStates: {},
-  pagesStates:{},
-  locationStates:{},
-  contactStates:{},
-  socialMediaStates:{},
-  tagsStates:{},
-  relatedListingsStates:{},
-  relatedListingsStates2:{},
-  workingHoursStates:{},
-  membersStates:{},
-  eventflowRunning:false,
-  pageDataForEvent:null,
-  totalEvents:0,
+  pagesStates: {},
+  locationStates: {},
+  contactStates: {},
+  socialMediaStates: {},
+  tagsStates: {},
+  relatedListingsStates: {},
+  relatedListingsStates2: {},
+  workingHoursStates: {},
+  membersStates: {},
+  eventflowRunning: false,
+  pageDataForEvent: null,
+  totalEvents: 0,
   active_img_product: {
     idx: 0,
-    type: 'image'
-  }
+    type: 'image',
+  },
 }
 
 /** Template Listing Data 
@@ -275,8 +279,8 @@ const siteSlice = createSlice({
     ) => {
       state.editPhotoModalData = payload
     },
-    toggleAdminNav:(state)=>{
-      state.admin_nav = !state.admin_nav;
+    toggleAdminNav: (state) => {
+      state.admin_nav = !state.admin_nav
     },
     updateEventDateTime: (state, { payload }) => {
       state.listingPageData.event_date_time = payload
@@ -299,128 +303,219 @@ const siteSlice = createSlice({
     updateProfileMenuExpandAll: (state, { payload }) => {
       state.expandMenu.profile = payload
     },
-    increaseSidemenuRefresh: (state)=> {
-      state.sidemenuRefresh = state.sidemenuRefresh+1
+    increaseSidemenuRefresh: (state) => {
+      state.sidemenuRefresh = state.sidemenuRefresh + 1
     },
-    increaseSearchRefresh: (state)=> {
-      state.searchToggleRefresh = state.searchToggleRefresh+1
+    increaseSearchRefresh: (state) => {
+      state.searchToggleRefresh = state.searchToggleRefresh + 1
     },
-    updateAboutOpenState: (state,{payload}:{payload:{
-      [key:string]:boolean
-    }})=>{
-      const objKey = Object.keys(payload);
-      if(objKey[0] && state.AboutStates){
-      state.AboutStates[objKey[0]] = payload[objKey[0]];
+    updateAboutOpenState: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          [key: string]: boolean
+        }
+      },
+    ) => {
+      const objKey = Object.keys(payload)
+      if (objKey[0] && state.AboutStates) {
+        state.AboutStates[objKey[0]] = payload[objKey[0]]
       }
     },
-    updateDescriptionOpenState: (state,{payload}:{payload:{
-      [key:string]:boolean
-    }})=>{
-      const objKey = Object.keys(payload);
-      if(objKey[0] && state.DescriptionStates){
-      state.DescriptionStates[objKey[0]] = payload[objKey[0]];
+    updateDescriptionOpenState: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          [key: string]: boolean
+        }
+      },
+    ) => {
+      const objKey = Object.keys(payload)
+      if (objKey[0] && state.DescriptionStates) {
+        state.DescriptionStates[objKey[0]] = payload[objKey[0]]
       }
     },
-    updateHobbyOpenState: (state,{payload}:{payload:{
-      [key:string]:boolean
-    }})=>{
-      const objKey = Object.keys(payload);
-      if(objKey[0] && state.hobbyStates){
-      state.hobbyStates[objKey[0]] = payload[objKey[0]];
+    updateHobbyOpenState: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          [key: string]: boolean
+        }
+      },
+    ) => {
+      const objKey = Object.keys(payload)
+      if (objKey[0] && state.hobbyStates) {
+        state.hobbyStates[objKey[0]] = payload[objKey[0]]
       }
     },
-    updateSaleOpenStates: (state,{payload}:{payload:{
-      [key:string]:boolean
-    }})=>{
-      const objKey = Object.keys(payload);
-      if(objKey[0] && state.saleStates){
-      state.saleStates[objKey[0]] = payload[objKey[0]];
+    updateSaleOpenStates: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          [key: string]: boolean
+        }
+      },
+    ) => {
+      const objKey = Object.keys(payload)
+      if (objKey[0] && state.saleStates) {
+        state.saleStates[objKey[0]] = payload[objKey[0]]
       }
     },
-    updatePagesOpenState: (state,{payload}:{payload:{
-      [key:string]:boolean
-    }})=>{
-      const objKey = Object.keys(payload);
-      if(objKey[0] && state.pagesStates){
-      state.pagesStates[objKey[0]] = payload[objKey[0]];
+    updatePagesOpenState: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          [key: string]: boolean
+        }
+      },
+    ) => {
+      const objKey = Object.keys(payload)
+      if (objKey[0] && state.pagesStates) {
+        state.pagesStates[objKey[0]] = payload[objKey[0]]
       }
     },
-    updateLocationOpenStates: (state,{payload}:{payload:{
-      [key:string]:boolean
-    }})=>{
-      const objKey = Object.keys(payload);
-      if(objKey[0] && state.locationStates){
-      state.locationStates[objKey[0]] = payload[objKey[0]];
+    updateLocationOpenStates: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          [key: string]: boolean
+        }
+      },
+    ) => {
+      const objKey = Object.keys(payload)
+      if (objKey[0] && state.locationStates) {
+        state.locationStates[objKey[0]] = payload[objKey[0]]
       }
     },
-    updateContactOpenStates: (state,{payload}:{payload:{
-      [key:string]:boolean
-    }})=>{
-      const objKey = Object.keys(payload);
-      if(objKey[0] && state.contactStates){
-      state.contactStates[objKey[0]] = payload[objKey[0]];
+    updateContactOpenStates: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          [key: string]: boolean
+        }
+      },
+    ) => {
+      const objKey = Object.keys(payload)
+      if (objKey[0] && state.contactStates) {
+        state.contactStates[objKey[0]] = payload[objKey[0]]
       }
     },
-    updateSocialMediaOpenStates: (state,{payload}:{payload:{
-      [key:string]:boolean
-    }})=>{
-      const objKey = Object.keys(payload);
-      if(objKey[0] && state.socialMediaStates){
-      state.socialMediaStates[objKey[0]] = payload[objKey[0]];
+    updateSocialMediaOpenStates: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          [key: string]: boolean
+        }
+      },
+    ) => {
+      const objKey = Object.keys(payload)
+      if (objKey[0] && state.socialMediaStates) {
+        state.socialMediaStates[objKey[0]] = payload[objKey[0]]
       }
     },
-    updateTagsOpenStates: (state,{payload}:{payload:{
-      [key:string]:boolean
-    }})=>{
-      const objKey = Object.keys(payload);
-      if(objKey[0] && state.tagsStates){
-      state.tagsStates[objKey[0]] = payload[objKey[0]];
+    updateTagsOpenStates: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          [key: string]: boolean
+        }
+      },
+    ) => {
+      const objKey = Object.keys(payload)
+      if (objKey[0] && state.tagsStates) {
+        state.tagsStates[objKey[0]] = payload[objKey[0]]
       }
     },
-    updateRelatedListingsOpenStates: (state,{payload}:{payload:{
-      [key:string]:boolean
-    }})=>{
-      const objKey = Object.keys(payload);
-      if(objKey[0] && state.relatedListingsStates){
-      state.relatedListingsStates[objKey[0]] = payload[objKey[0]];
+    updateRelatedListingsOpenStates: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          [key: string]: boolean
+        }
+      },
+    ) => {
+      const objKey = Object.keys(payload)
+      if (objKey[0] && state.relatedListingsStates) {
+        state.relatedListingsStates[objKey[0]] = payload[objKey[0]]
       }
     },
-    updateRelatedListingsOpenStates2: (state,{payload}:{payload:{
-      [key:string]:boolean
-    }})=>{
-      const objKey = Object.keys(payload);
-      if(objKey[0] && state.relatedListingsStates2){
-      state.relatedListingsStates2[objKey[0]] = payload[objKey[0]];
+    updateRelatedListingsOpenStates2: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          [key: string]: boolean
+        }
+      },
+    ) => {
+      const objKey = Object.keys(payload)
+      if (objKey[0] && state.relatedListingsStates2) {
+        state.relatedListingsStates2[objKey[0]] = payload[objKey[0]]
       }
     },
-    updateWorkingHoursOpenStates: (state,{payload}:{payload:{
-      [key:string]:boolean
-    }})=>{
-      const objKey = Object.keys(payload);
-      if(objKey[0] && state.workingHoursStates){
-      state.workingHoursStates[objKey[0]] = payload[objKey[0]];
+    updateWorkingHoursOpenStates: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          [key: string]: boolean
+        }
+      },
+    ) => {
+      const objKey = Object.keys(payload)
+      if (objKey[0] && state.workingHoursStates) {
+        state.workingHoursStates[objKey[0]] = payload[objKey[0]]
       }
     },
-    updateMembersOpenStates: (state,{payload}:{payload:{
-      [key:string]:boolean
-    }})=>{
-      const objKey = Object.keys(payload);
-      if(objKey[0] && state.membersStates){
-      state.membersStates[objKey[0]] = payload[objKey[0]];
+    updateMembersOpenStates: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          [key: string]: boolean
+        }
+      },
+    ) => {
+      const objKey = Object.keys(payload)
+      if (objKey[0] && state.membersStates) {
+        state.membersStates[objKey[0]] = payload[objKey[0]]
       }
     },
-    updateEventFlow: (state,{payload}:{payload:boolean}) => {
+    updateEventFlow: (state, { payload }: { payload: boolean }) => {
       state.eventflowRunning = payload
     },
-    updatePageDataForEvent: (state,{payload}:{payload:any}) => {
-      state.pageDataForEvent = payload;
+    updatePageDataForEvent: (state, { payload }: { payload: any }) => {
+      state.pageDataForEvent = payload
     },
-    updateTotalEvents: (state,{payload}:{payload:number}) => {
-      state.totalEvents = payload;
+    updateTotalEvents: (state, { payload }: { payload: number }) => {
+      state.totalEvents = payload
     },
-    updateActiveProductImg: (state,{payload}:{payload:any}) => {
-      state.active_img_product = payload;
-    }
+    updateActiveProductImg: (state, { payload }: { payload: any }) => {
+      state.active_img_product = payload
+    },
   },
 })
 
