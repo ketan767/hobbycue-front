@@ -131,16 +131,29 @@ const AdminDashboard: React.FC = () => {
   const [isSearching, setIsSearching] = useState<boolean>(false)
   
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value
-    const isValid = /^[a-zA-Z\s]*$/.test(value)
+    const value = event.target.value;
+  
+    // Define regex for validation
+    const isValid =
+      /^[a-zA-Z\s]*$/.test(value) || // Allow letters and spaces
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || // Basic email validation
+      /^\d{0,10}$/.test(value); // Allow up to 10 digits (partial matches included)
+  
+    let error = null;
+    if (!isValid) {
+      error = "Enter a valid name, email, or phone number (up to 10 digits).";
+    }
+  
     setData((prev) => ({
       ...prev,
       search: {
-        value: isValid ? value : '',
-        error: isValid ? null : 'Only text is allowed',
+        value: isValid ? value : prev.search.value, // Retain the previous value if invalid
+        error,
       },
-    }))
-  }
+    }));
+  };
+  
+  
   const [page, setPage] = useState(1)
   const [pagelimit, setPagelimit] = useState(25)
   const [deleteData, setDeleteData] = useState<{
@@ -210,7 +223,7 @@ const AdminDashboard: React.FC = () => {
       setErrorMessage('No users found')
     } else {
       setSearchResults(res.data)
-      // setCount(res.data.length || 0)
+      setCount(res.data.length || 0)
       setIsError(false)
       setLoading(false)
       setPageNumber(res?.data?.length > 0 ? res?.data?.length : 1)
@@ -440,7 +453,7 @@ const AdminDashboard: React.FC = () => {
                 autoComplete="new"
                 value={data.search.value}
                 onChange={handleInputChange}
-                placeholder="Search here..."
+                placeholder="Search by user name, mail ID, phone..."
                 className={styles.searchInput}
               />
               <button type="submit" className={styles.searchButton}>
@@ -514,7 +527,7 @@ const AdminDashboard: React.FC = () => {
                   </th>
                   <th style={{ width: '16.48%' }}>
                     <div className={styles.sortButtonWrapper}>
-                      <span style={{ marginLeft: '-10px' }}>Last Login</span>
+                      <span style={{ marginLeft: '-25px' }}>Last Login</span>
 
                       <button
                         className={styles.sortButton}
@@ -549,7 +562,7 @@ const AdminDashboard: React.FC = () => {
                     }}
                   >
                     <div className={styles.sortButtonWrapper}>
-                      <span style={{ marginLeft: '-15px' }}>Joined</span>
+                      <span style={{ marginLeft: '-28px' }}>Joined</span>
                       <button
                         className={styles.sortButton}
                         onClick={handleJoinedSort}
@@ -582,7 +595,7 @@ const AdminDashboard: React.FC = () => {
                     Posts
                   </th>
                   <th style={{ width: '8.672%' }}>Status</th>
-                  <th style={{ width: '5.852%', textAlign: 'center' }}>
+                  <th style={{ width: '5.852%' }}>
                     Actions
                   </th>
                 </tr>
@@ -594,8 +607,8 @@ const AdminDashboard: React.FC = () => {
                     ?.sort((a, b) => {
                       if (NameSort) {
                         return NameSort
-                          ? (a.full_name || '').localeCompare(b.full_name || '') // Ascending order
-                          : b.full_name.localeCompare(a.full_name) // Descending order
+                          ? (a.full_name || '').localeCompare(b.full_name || '') 
+                          : b.full_name.localeCompare(a.full_name) 
                       }
                       if (loginSort) {
                         return loginSort
