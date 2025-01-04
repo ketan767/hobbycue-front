@@ -124,36 +124,35 @@ const AdminDashboard: React.FC = () => {
   const [joinedSort, setJoinedSort] = useState<boolean>(true)
   const [NameSort, setNameSort] = useState<boolean>(true)
   const [loading, setLoading] = useState<boolean>(false)
-   const [count, setCount] = useState(0)
-   const [activeSort, setActiveSort] = useState('login');
+  const [count, setCount] = useState(0)
+  const [activeSort, setActiveSort] = useState('login')
   const [isError, setIsError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<String>('')
   const [isSearching, setIsSearching] = useState<boolean>(false)
-  
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-  
+    const value = event.target.value
+
     // Define regex for validation
     const isValid =
       /^[a-zA-Z\s]*$/.test(value) || // Allow letters and spaces
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || // Basic email validation
-      /^\d{0,10}$/.test(value); // Allow up to 10 digits (partial matches included)
-  
-    let error = null;
+      /^\d{0,10}$/.test(value) // Allow up to 10 digits (partial matches included)
+
+    let error: string | null = null
     if (!isValid) {
-      error = "Enter a valid name, email, or phone number (up to 10 digits).";
+      error = 'Enter a valid name, email, or phone number (up to 10 digits).'
     }
-  
+
     setData((prev) => ({
       ...prev,
       search: {
         value: isValid ? value : prev.search.value, // Retain the previous value if invalid
         error,
       },
-    }));
-  };
-  
-  
+    }))
+  }
+
   const [page, setPage] = useState(1)
   const [pagelimit, setPagelimit] = useState(25)
   const [deleteData, setDeleteData] = useState<{
@@ -260,29 +259,31 @@ const AdminDashboard: React.FC = () => {
 
   const fetchAllUsersCount = useCallback(async () => {
     try {
-      setLoading(true);
-      const { res, err } = await getAllUserDetail(`limit=2500&populate=sessions`);
+      setLoading(true)
+      const { res, err } = await getAllUserDetail(
+        `limit=2500&populate=sessions`,
+      )
       if (err) {
-        console.error('An error occurred:', err);
-        setIsError(true);
-        setErrorMessage('Unable to fetch user count');
+        console.error('An error occurred:', err)
+        setIsError(true)
+        setErrorMessage('Unable to fetch user count')
       } else {
-        setIsError(false);
-        setCount(res.data.data.no_of_users);
+        setIsError(false)
+        setCount(res.data.data.no_of_users)
       }
     } catch (error) {
-      console.error('Unexpected error:', error);
-      setIsError(true);
-      setErrorMessage('Something went wrong');
+      console.error('Unexpected error:', error)
+      setIsError(true)
+      setErrorMessage('Something went wrong')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    fetchAllUsersCount();
+    fetchAllUsersCount()
   }, [])
-  
+
   useEffect(() => {
     if (data.search.value.trim()) {
       fetchSearchResults()
@@ -399,31 +400,30 @@ const AdminDashboard: React.FC = () => {
     )
   }
   const handleLoginSort = () => {
-    setActiveSort((prev) => (prev === 'login' ? '' : 'login'));
+    setActiveSort((prev) => (prev === 'login' ? '' : 'login'))
     setLoginSort((prev) => !prev)
     setJoinedSort(false)
     setNameSort(false)
-   
   }
   const handleNameSort = () => {
-    setActiveSort((prev) => (prev === 'name' ? '' : 'name')); 
+    setActiveSort((prev) => (prev === 'name' ? '' : 'name'))
     setNameSort((prev) => !prev)
     setLoginSort(false)
     setJoinedSort(false)
   }
   const handleJoinedSort = () => {
-    setActiveSort((prev) => (prev === 'joined' ? '': 'joined'));
+    setActiveSort((prev) => (prev === 'joined' ? '' : 'joined'))
     setJoinedSort((prev) => !prev)
     setLoginSort(false)
     setNameSort(false)
   }
 
   useEffect(() => {
-    setActiveSort('login');
-    setLoginSort(false);
-    setJoinedSort(false);
-    setNameSort(false);
-  }, []);
+    setActiveSort('login')
+    setLoginSort(false)
+    setJoinedSort(false)
+    setNameSort(false)
+  }, [])
 
   useEffect(() => {
     if (hasNonEmptyValues(modalState)) {
@@ -460,11 +460,16 @@ const AdminDashboard: React.FC = () => {
                 {searchSvg}
               </button>
             </form>
-            <span className={styles.countText}>Count: <span style={{ color:"#0096c8", fontWeight:"500"}}>{count}</span></span>
+            <span className={styles.countText}>
+              Count:{' '}
+              <span style={{ color: '#0096c8', fontWeight: '500' }}>
+                {count}
+              </span>
+            </span>
             {hasNonEmptyValues(modalState) && (
               <DisplayState modalState={modalState} />
             )}
-           
+
             {hasNonEmptyValues(modalState) ? (
               <button
                 className={styles.filterBtn}
@@ -502,13 +507,13 @@ const AdminDashboard: React.FC = () => {
                         className={styles.sortButton}
                         onClick={handleNameSort}
                       >
-                        {activeSort === 'name'  ? (
+                        {activeSort === 'name' ? (
                           <Image
                             src={sortAscending}
                             width={15}
                             height={15}
                             alt="sort"
-                            style={{  marginTop: '3px' }}
+                            style={{ marginTop: '3px' }}
                           />
                         ) : (
                           <Image
@@ -516,7 +521,7 @@ const AdminDashboard: React.FC = () => {
                             width={15}
                             height={15}
                             alt="sort"
-                           style={{  marginTop: '3px' }}
+                            style={{ marginTop: '3px' }}
                           />
                         )}
                       </button>
@@ -533,23 +538,23 @@ const AdminDashboard: React.FC = () => {
                         className={styles.sortButton}
                         onClick={handleLoginSort}
                       >
-                       {activeSort === 'login' ? (
-                        <Image
-                          src={sortAscending}
-                          width={15}
-                          height={15}
-                          alt="sort"
-                          style={{ transform: 'rotate(180deg)' }}
-                        />
-                      ) : (
-                        <Image
-                          src={sortDescending}
-                          width={15}
-                          height={15}
-                          alt="sort"
-                          style={{ transform: 'rotate(180deg)' }}
-                        />
-                      )}
+                        {activeSort === 'login' ? (
+                          <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                            style={{ transform: 'rotate(180deg)' }}
+                          />
+                        ) : (
+                          <Image
+                            src={sortDescending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                            style={{ transform: 'rotate(180deg)' }}
+                          />
+                        )}
                       </button>
                     </div>
                   </th>
@@ -567,7 +572,7 @@ const AdminDashboard: React.FC = () => {
                         className={styles.sortButton}
                         onClick={handleJoinedSort}
                       >
-                       {activeSort !== 'joined'  ? (
+                        {activeSort !== 'joined' ? (
                           <Image
                             src={sortDescending}
                             width={15}
@@ -595,9 +600,7 @@ const AdminDashboard: React.FC = () => {
                     Posts
                   </th>
                   <th style={{ width: '8.672%' }}>Status</th>
-                  <th style={{ width: '5.852%' }}>
-                    Actions
-                  </th>
+                  <th style={{ width: '5.852%' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -607,8 +610,8 @@ const AdminDashboard: React.FC = () => {
                     ?.sort((a, b) => {
                       if (NameSort) {
                         return NameSort
-                          ? (a.full_name || '').localeCompare(b.full_name || '') 
-                          : b.full_name.localeCompare(a.full_name) 
+                          ? (a.full_name || '').localeCompare(b.full_name || '')
+                          : b.full_name.localeCompare(a.full_name)
                       }
                       if (loginSort) {
                         return loginSort
@@ -732,11 +735,11 @@ const AdminDashboard: React.FC = () => {
                             ) : (
                               ''
                             )}
-                           {` ` + formatDateTimeTwo(user?.last_login)}
+                            {` ` + formatDateTimeTwo(user?.last_login)}
                             {user?._sessions[0]?.device ? (
-                              user?._sessions[0]?.device.split(' ')[0] === 'Desktop' ? (
+                              user?._sessions[0]?.device.split(' ')[0] ===
+                              'Desktop' ? (
                                 <>
-                                  
                                   <Image
                                     src={pc}
                                     alt=""
