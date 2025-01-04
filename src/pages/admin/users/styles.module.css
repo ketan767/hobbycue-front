@@ -73,7 +73,7 @@
 
 /* Container styles */
 .searchContainer {
-  padding: 28.5px 24px 20px 32px;
+  padding: 28.5px 24px 1px 32px;
   transition: all 0.5s ease-in-out;
 }
 
@@ -261,6 +261,7 @@
   min-height: 48px;
 }
 .sortButtonWrapper {
+  margin-left: 13px;
   background: none;
   display: flex;
   align-items: center;
@@ -394,7 +395,7 @@
   display: flex;
   justify-content: end;
   gap: 20px;
-  padding: 10px 12px;
+  padding: 5px 12px;
   margin-left: auto;
 }
 

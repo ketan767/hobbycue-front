@@ -125,23 +125,25 @@ const ListingHome: React.FC<Props> = (props) => {
             props?.data?.pageData?.type === 1 ||
             props?.data?.pageData?.type === 2
               ? props?.data?.pageData?.tagline
-                ? props?.data?.pageData?.tagline + ';' + props?.pageTypeAndCity
-                : props?.result + ';' + props.pageTypeAndCity
+                ? props?.data?.pageData?.tagline +
+                  ' ⬢ ' +
+                  props?.pageTypeAndCity
+                : props?.result + ' ⬢ ' + props.pageTypeAndCity
               : props?.data?.pageData?.type === 3
               ? props?.data?.pageData?.tagline
                 ? props?.data?.pageData?.tagline +
-                  ';' +
+                  ' ⬢ ' +
                   props?.pageTypeAndCity +
                   ' ' +
                   props?.date
                 : props?.address +
-                  ';' +
+                  ' ⬢ ' +
                   props?.pageTypeAndCity +
                   ' ' +
                   props?.date
               : props?.data?.pageData?.tagline
-              ? props?.data?.pageData?.tagline + ';' + props?.pageTypeAndPrice
-              : props?.result + ';' + props?.pageTypeAndPrice
+              ? props?.data?.pageData?.tagline + ' ⬢ ' + props?.pageTypeAndPrice
+              : props?.result + ' ⬢ ' + props?.pageTypeAndPrice
           }`}
         />
 

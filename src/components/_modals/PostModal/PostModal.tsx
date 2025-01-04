@@ -610,7 +610,7 @@ export const PostModal: React.FC<Props> = ({
                                   className={styles.contentUrl}
                                 >
                                   {' '}
-                                  {metaData?.description?.split(';')[0]}{' '}
+                                  {metaData?.description?.split(' ⬢ ')[0]}{' '}
                                 </a>
                                 <a
                                   href={url}
@@ -618,7 +618,7 @@ export const PostModal: React.FC<Props> = ({
                                   className={styles.contentUrl}
                                 >
                                   {' '}
-                                  {metaData?.description?.split(';')[1]}{' '}
+                                  {metaData?.description?.split(' ⬢ ')[1]}{' '}
                                 </a>
                               </>
                             )}
@@ -632,7 +632,7 @@ export const PostModal: React.FC<Props> = ({
                               className={styles.contentUrl}
                             >
                               {' '}
-                              {metaData?.description?.split(';')[0]}{' '}
+                              {metaData?.description?.split(' ⬢ ')[0]}{' '}
                             </a>
                             <a
                               href={url}
@@ -640,7 +640,7 @@ export const PostModal: React.FC<Props> = ({
                               className={styles.contentUrl}
                             >
                               {' '}
-                              {metaData?.description?.split(';')[1]}{' '}
+                              {metaData?.description?.split(' ⬢ ')[1]}{' '}
                             </a>
                           </>
                         )}
