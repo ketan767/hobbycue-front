@@ -236,6 +236,12 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
     const { res, err } = await getHobbyRequests(
       `limit=${pagelimit}&sort=-createdAt&page=${page}&populate=user_id,listing_id`,
     )
+
+    const hobbiesreq = await getHobbyRequests(`limit=2500000&sort=-createdAt`)
+
+    console.log(hobbiesreq);
+    
+    
     if (err) {
       console.log('An error', err)
       dispatch(setShowPageLoader(false))
@@ -274,13 +280,12 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
           (hobbyreq: any) => hobbyreq?.status===modalState.status
         );
       }
-      
-      
-      
-      
-      
       setSearchResults(filteredResults);
-      setCount(filteredResults.length);
+      if(hasNonEmptyValues(modalState)){
+        setCount(filteredResults.length);
+      }else{
+        setCount(hobbiesreq.res.data.data.no_of_requests);
+      }
       dispatch(setShowPageLoader(false))
     }
   }

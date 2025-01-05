@@ -222,7 +222,7 @@
 .input{
   padding: 10px;
   height: 32px;
-  width: 320x;
+  /* width: 320x; */
   font-family: Poppins;
   font-size: 12px;
   font-style: normal;
