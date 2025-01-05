@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import styles from './styles.module.css'
@@ -20,7 +20,10 @@ import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { formatDateTime, pageType } from '@/utils'
 import { setShowPageLoader } from '@/redux/slices/site'
-
+import sortAscending from '@/assets/icons/Sort-Ascending-On.png'
+import sortDescending from '@/assets/icons/Sort-Ascending-Off.png'
+import PagesFilter from '@/components/AdminPage/Filters/PagesFilter/PagesFilter'
+import filterIcon from '@/assets/icons/Filter-On.png'
 type PagesProps = {
   _id: string
   type: string
@@ -35,6 +38,7 @@ type PagesProps = {
   facebook: any
   google: any
   email: string
+  cta_text: string
   last_loggedIn_via: string
   is_password: string
   profile_url: string
@@ -46,7 +50,16 @@ type PagesProps = {
 type SearchInput = {
   search: InputData<string>
 }
-
+export interface ModalState {
+  postedat: { start: string; end: string }
+  edited: string
+  upcount: { min: string; max: string }
+  downcount: { min: string; max: string }
+  updowncount: { min: string; max: string }
+  commcount: { min: string; max: string }
+  sharecount: { min: string; max: string }
+  bookmarkcount: { min: string; max: string }
+}
 const AdminPages: React.FC = () => {
   const dispatch = useDispatch()
   const router = useRouter()
@@ -56,7 +69,12 @@ const AdminPages: React.FC = () => {
   const [email, setEmail] = useState('')
   const [searchResults, setSearchResults] = useState<PagesProps[]>([])
   const [page, setPage] = useState(1)
+  const [count, setCount] = useState(0)
+    const [isModalOpen, setIsModalOpen] = useState(false)
   const [pagelimit, setPagelimit] = useState(25)
+  const [PageSort, setPageSort] = useState<boolean>(true)
+    const [LastSort, setLastSort] = useState<boolean>(true)
+     const [activeSort, setActiveSort] = useState('')
   const [deleteData, setDeleteData] = useState<{
     open: boolean
     _id: string | undefined
@@ -69,7 +87,17 @@ const AdminPages: React.FC = () => {
     display: false,
     message: '',
   })
-
+ const [modalState, setModalState] = useState<ModalState>({
+    postedat: { start: '', end: '' },
+    edited: '',
+    upcount: { min: '', max: '' },
+    downcount: { min: '', max: '' },
+    updowncount: { min: '', max: '' },
+    commcount: { min: '', max: '' },
+    sharecount: { min: '', max: '' },
+    bookmarkcount: { min: '', max: '' }
+  })
+  const [applyFilter, setApplyFilter] = useState<boolean>(false)
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
@@ -132,6 +160,52 @@ const AdminPages: React.FC = () => {
     dispatch(openModal({ type: 'reset-password', closable: true }))
     dispatch(updateForgotPasswordEmail(email))
   }
+
+  const handlePageSort = () => {
+    if (activeSort === 'Page') {
+      setPageSort((prev) => !prev);
+    } else {
+      setActiveSort('Page'); 
+      setPageSort(true); 
+      setLastSort(true);
+    }
+  };
+  
+  const handleLastSort = () => {
+    if (activeSort === 'Last') {
+      setLastSort((prev) => !prev);
+    } else {
+      setActiveSort('Last');
+      setLastSort(true); 
+      setPageSort(true); 
+    }
+  };
+
+  useEffect(() => {
+    setActiveSort('Last'); 
+    setPageSort(true); 
+    setLastSort(true); 
+  }, []);
+
+  const fetchAllUsersCount = useCallback(async () => {
+      try {
+        const { res, err } = await getListingPages(
+          `limit=150&populate=admin`,
+        )
+        if (err) {
+          console.error('An error occurred:', err)
+        } else {
+          setCount(res?.data?.data?.no_of_listings)
+        }
+      } catch (error) {
+        console.error('Unexpected error:', error)
+
+      } 
+    }, [])
+
+  useEffect(() => {
+    fetchAllUsersCount()
+  }, [])
 
   const filterSvg = (
     <svg
@@ -208,17 +282,18 @@ const AdminPages: React.FC = () => {
     </svg>
   )
   console.log({ searchResults })
-  const fullNumber = (user: any) => {
-    if (user?.phone?.prefix && user?.phone?.number) {
-      return user?.phone?.prefix + user?.phone?.number
-    } else {
-      return 'No number'
-    }
-  }
 
-  const pagesLength = (user: any) => {
-    return user?._listings?.length || 0
-  }
+    const hasNonEmptyValues = (state: ModalState) => {
+      return !Object.entries(state).every(
+        ([_, value]) =>
+          !value ||
+          (Array.isArray(value) && value.length === 0) ||
+          (typeof value === 'object' &&
+            Object.values(value).every((v) => v === '')),
+      )
+    }
+
+
   const handleEdit = (page_url: any) => {
     router.push(`/admin/pages/edit/${page_url}`)
   }
@@ -250,7 +325,6 @@ const AdminPages: React.FC = () => {
       })
     }
   }
-
   return (
     <>
       <AdminLayout>
@@ -268,44 +342,187 @@ const AdminPages: React.FC = () => {
                 autoComplete="new"
                 value={data.search.value}
                 onChange={handleInputChange}
-                placeholder="Search users..."
+                placeholder="Search by Page Title, Page Admin, Tagline, Hobby, Category..."
                 className={styles.searchInput}
               />
               <button type="submit" className={styles.searchButton}>
                 {searchSvg}
               </button>
+              
             </form>
-            <button className={styles.filterBtn}>{filterSvg}</button>
+            <span className={styles.countText}>
+              Count:{' '}
+              <span style={{ color: '#0096c8', fontWeight: '500' }}>
+                {count}
+              </span>
+            </span>
+            {hasNonEmptyValues(modalState) ? (
+              <button
+                className={styles.filterBtn}
+                onClick={() => setIsModalOpen(!isModalOpen)}
+              >
+                <Image src={filterIcon} width={40} height={40} alt="filter" />
+              </button>
+            ) : (
+              <button
+                className={styles.filterBtn}
+                onClick={() => setIsModalOpen(!isModalOpen)}
+              >
+                {filterSvg}
+              </button>
+            )}
+            {isModalOpen && (
+              <PagesFilter
+                modalState={modalState}
+                setModalState={setModalState}
+                setIsModalOpen={setIsModalOpen}
+                setApplyFilter={setApplyFilter}
+              />
+            )}
           </div>
 
           <div className={styles.resultsContainer}>
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '22.06%' }}>Page</th>
+                  <th style={{ width: '22.06%' }}>
+                    <div className={styles.sortButtonWrapper}>
+                      <span>Page Title</span>
+                      <button
+                        className={styles.sortButton}
+                        onClick={handlePageSort}
+                      >
+                        {activeSort === 'Page' ? (
+                          <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                            
+                          />
+                        ) : (
+                          <Image
+                            src={sortDescending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                            
+                          />
+                        )}
+                      </button>
+                    </div>
+                  </th>
                   <th style={{ width: '19.48%' }}>Page Admin</th>
-                  <th style={{ width: '13.87%' }}>Status</th>
-                  <th style={{ width: '9.163%' }}>Claimed</th>
+                  <th style={{ width: '12.87%' }}>Status</th>
+                  <th style={{ width: '8.163%' }}>Claimed</th>
+                  <th style={{ width: '8.163%', textAlign:'center' }}>CTA</th>
                   <th
                     style={{
-                      width: '16.54%',
+                      width: '25%',
                       paddingRight: '16px',
                       textAlign: 'center',
+                      whiteSpace: 'nowrap',
                     }}
                   >
-                    Last update
+                    <div className={styles.sortButtonWrapper}>
+                      <span>Last update</span>
+                      <button
+                        className={styles.sortButton}
+                        onClick={handleLastSort}
+                      >
+                        {activeSort !== 'Last' ? (
+                          <Image
+                            src={sortDescending}
+                            width={15}
+                            height={15} 
+                            alt="sort"
+                            style={{ transform: 'rotate(180deg)' }}
+                          />
+                        ) : (
+                          <Image
+                            src={sortAscending}
+                            width={15}
+                            height={15}
+                            alt="sort"
+                            style={{ transform: 'rotate(180deg)' }}
+                          />
+                        )}
+                      </button>
+                    </div>
+                   
                   </th>
-                  <th style={{ width: '6.939%', paddingRight: '16px' }}>
-                    Posts
+                  <th style={{ width: '4%' }}>
+                  <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12.5433 14.3338L5.52857 14.3338C5.46856 14.3338 5.411 14.31 5.36856 14.2675C5.32613 14.2251 5.30229 14.1675 5.30229 14.1075V10.2608H2.02122C1.97796 10.2608 1.93561 10.2484 1.89918 10.225C1.86275 10.2017 1.83377 10.1684 1.81568 10.1291C1.79758 10.0899 1.79112 10.0462 1.79707 10.0034C1.80302 9.96051 1.82113 9.92027 1.84924 9.8874L8.86395 1.74129C8.88574 1.71814 8.91204 1.69969 8.94122 1.68708C8.97041 1.67447 9.00187 1.66797 9.03366 1.66797C9.06545 1.66797 9.09691 1.67447 9.12609 1.68708C9.15528 1.69969 9.18158 1.71814 9.20337 1.74129L16.2181 9.8874C16.246 9.91997 16.264 9.95981 16.2701 10.0022C16.2762 10.0447 16.2702 10.088 16.2526 10.1271C16.2351 10.1662 16.2068 10.1996 16.171 10.2232C16.1352 10.2469 16.0935 10.2599 16.0506 10.2608H12.7696V14.1075C12.7696 14.1675 12.7457 14.2251 12.7033 14.2675C12.6608 14.31 12.6033 14.3338 12.5433 14.3338ZM5.75485 13.8813L12.317 13.8813V10.0345C12.317 9.97447 12.3408 9.91691 12.3833 9.87447C12.4257 9.83204 12.4833 9.8082 12.5433 9.8082H15.5573L9.03592 2.23571L2.51451 9.8082H5.52857C5.58858 9.8082 5.64614 9.83204 5.68857 9.87447C5.73101 9.91691 5.75485 9.97447 5.75485 10.0345V13.8813Z" fill="white" stroke="white" stroke-width="0.8"/>
+                  </svg>
                   </th>
+                  <th style={{ width: '4%' }}>
+                  <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_18418_292454)">
+                  <path d="M5.45966 2.00212L12.4744 2.00212C12.5344 2.00212 12.5919 2.02597 12.6344 2.0684C12.6768 2.11084 12.7006 2.16839 12.7006 2.22841L12.7006 6.07518L15.9817 6.07518C16.025 6.07518 16.0673 6.08757 16.1037 6.1109C16.1402 6.13422 16.1692 6.1675 16.1873 6.20679C16.2054 6.24608 16.2118 6.28973 16.2059 6.33258C16.1999 6.37543 16.1818 6.41567 16.1537 6.44854L9.13898 14.5946C9.11719 14.6178 9.09089 14.6362 9.06171 14.6489C9.03252 14.6615 9.00106 14.668 8.96927 14.668C8.93748 14.668 8.90602 14.6615 8.87684 14.6489C8.84765 14.6362 8.82135 14.6178 8.79956 14.5946L1.78486 6.44854C1.75698 6.41596 1.73893 6.37613 1.73281 6.33369C1.7267 6.29125 1.73277 6.24794 1.75031 6.20882C1.76786 6.16969 1.79616 6.13636 1.83192 6.1127C1.86769 6.08904 1.90943 6.07602 1.95231 6.07518L5.23338 6.07518L5.23338 2.22841C5.23338 2.16839 5.25722 2.11084 5.29965 2.0684C5.34209 2.02596 5.39964 2.00212 5.45966 2.00212ZM12.2481 2.45469L5.68594 2.45469L5.68594 6.30146C5.68594 6.36147 5.6621 6.41903 5.61966 6.46146C5.57723 6.5039 5.51967 6.52774 5.45966 6.52774L2.4456 6.52774L8.96701 14.1002L15.4884 6.52774L12.4744 6.52774C12.4143 6.52774 12.3568 6.5039 12.3144 6.46146C12.2719 6.41903 12.2481 6.36147 12.2481 6.30146L12.2481 2.45469Z" fill="white" stroke="white" stroke-width="0.8"/>
+                  </g>
+                  <defs>
+                  <clipPath id="clip0_18418_292454">
+                  <rect width="17.9681" height="15.999" fill="white" transform="translate(17.9697 16) rotate(-180)"/>
+                  </clipPath>
+                  </defs>
+                  </svg>
 
-                  <th style={{ width: '9.252%', paddingRight: '16px' }}>
+                  </th>
+                  <th style={{ width: '4%' }}>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_18418_292450)">
+                  <path d="M4.9702 12.4813H4.94878L4.934 12.4968L2.35371 15.2061V2.73194C2.35371 1.98728 2.93356 1.38203 3.63696 1.38203H14.3029C15.0063 1.38203 15.5862 1.98728 15.5862 2.73194V11.1314C15.5862 11.8761 15.0063 12.4813 14.3029 12.4813H4.9702ZM14.3029 11.1814H14.3529V11.1314V2.73194V2.68194H14.3029H3.63696H3.58696V2.73194V12.5313V12.6563L3.67316 12.5658L4.99163 11.1814H14.3029Z" fill="white" stroke="white" stroke-width="0.0999935"/>
+                  </g>
+                  <defs>
+                  <clipPath id="clip0_18418_292450">
+                  <rect width="15.999" height="15.999" fill="white" transform="translate(0.969727)"/>
+                  </clipPath>
+                  </defs>
+                  </svg>
+                  </th>
+                  <th style={{ width: '4%' }}>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2.05062 14.5112L2.19345 14.9929L2.33808 14.5118L2.64734 13.4829L2.64746 13.4825C3.42034 10.8849 5.7071 9.14108 8.33209 9.14108C8.42955 9.14108 8.58699 9.14479 8.77087 9.14932V11.1202C8.77087 11.383 8.85068 11.5904 8.98586 11.7333C9.12037 11.8755 9.29911 11.9423 9.47397 11.9423C9.67 11.9423 9.8568 11.8661 10.0318 11.7248C10.0319 11.7248 10.032 11.7247 10.0321 11.7246L15.402 7.43108L15.402 7.43106C15.6425 7.23865 15.7854 6.95906 15.7854 6.66567C15.7854 6.37228 15.6425 6.09268 15.402 5.90028L15.402 5.90025L10.0315 1.60627L10.0316 1.60625L10.0293 1.60454C9.85861 1.47322 9.67253 1.38906 9.47397 1.38906C9.29911 1.38906 9.12037 1.45585 8.98586 1.59805C8.85068 1.74095 8.77087 1.94835 8.77087 2.21111V4.29122C8.58665 4.28542 8.42594 4.28542 8.33258 4.28542H8.33209C4.52761 4.28542 1.44375 7.47954 1.44375 11.3938C1.44375 12.1042 1.54697 12.8084 1.74723 13.488L1.74731 13.4883L2.05062 14.5112ZM9.70129 5.10747V2.54699L14.8102 6.63411L14.81 6.63435L14.8179 6.63987C14.8326 6.65019 14.8391 6.65875 14.8415 6.66292C14.8423 6.66422 14.8427 6.66516 14.8429 6.66576C14.8426 6.6667 14.842 6.66835 14.8406 6.67079C14.8369 6.6772 14.8283 6.68864 14.8102 6.70317L9.70129 10.7903V8.39634V8.25211L9.55717 8.24646L9.25473 8.2346C8.90104 8.21664 8.51236 8.21066 8.33209 8.21066C5.83028 8.21066 3.601 9.57134 2.38782 11.7128C2.38268 11.6071 2.38012 11.5009 2.38012 11.3938C2.38012 7.9866 5.05356 5.22773 8.33209 5.22773C8.50255 5.22773 8.87546 5.23364 9.21298 5.24548L9.54594 5.25737L9.70129 5.26292V5.10747Z" fill="white" stroke="white" stroke-width="0.3"/>
+                  </svg>
+
+                  </th>
+                  <th style={{ width: '4%' }}>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_18418_292460)">
+                  <path d="M8.88817 11.7902L8.63444 11.6718L8.38071 11.7902L4.23477 13.7249V2.22342C4.23477 1.65017 4.65603 1.26797 5.06324 1.26797H12.2056C12.6129 1.26797 13.0341 1.65017 13.0341 2.22342V13.7249L8.88817 11.7902Z" stroke="white" stroke-width="1.2"/>
+                  </g>
+                  <defs>
+                  <clipPath id="clip0_18418_292460">
+                  <rect width="15.999" height="15.999" fill="white" transform="translate(0.96875)"/>
+                  </clipPath>
+                  </defs>
+                  </svg>
+                  </th>
+                  <th style={{ width: '4.939%' }}>
+                    Spam
+                  </th>
+                  <th style={{ width: '9.252%', textAlign: 'center' }}>
                     Actions
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {searchResults.map((page, index) => (
+                {searchResults.length > 0 && searchResults
+                    ?.sort((a, b) => {
+                      if (activeSort === 'Page') {
+                        return PageSort
+                          ? (a.title || '').localeCompare(b.title || '') // Ascending
+                          : (b.title || '').localeCompare(a.title || ''); // Descending
+                      }
+                      if (activeSort === 'Last') {
+                        return LastSort
+                          ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime() // Ascending
+                          : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // Descending
+                      }
+                      return 0
+                    })
+                    ?.map((page, index) => (
                   <tr key={index}>
                     <td>
                       <div className={styles.resultItem}>
@@ -350,10 +567,21 @@ const AdminPages: React.FC = () => {
                       {page?.is_claimed ? 'Yes' : 'No'}
                     </td>
                     <td className={styles.lastLoggedIn}>
+                      {page?.cta_text}
+                    </td>
+                    <td className={styles.lastLoggedIn}>
                       {formatDateTime(page?.createdAt)}
                     </td>
-                    <td className={styles.pagesLength}>{pagesLength(page)}</td>
-
+                    <td>1</td>
+                    <td>5</td>
+                    <td>3</td>
+                    <td>7</td>
+                    <td>2</td>
+                    <td className={styles.pagesLength}>
+                    <input type="checkbox"
+                    className={`${styles.customCheckbox} cursor-pointer`} 
+                    />  
+                    </td>
                     <td>
                       <div className={styles.actions}>
                         <div onClick={() => handleEdit(page.page_url)}>
@@ -374,15 +602,15 @@ const AdminPages: React.FC = () => {
 
             <button
               disabled={page <= 1}
-              className="admin-next-btn"
+              className="users-next-btn"
               onClick={goToPreviousPage}
             >
-              Previous
+              Prev
             </button>
 
             <button
               disabled={searchResults.length !== pagelimit}
-              className="admin-next-btn"
+              className="users-next-btn"
               onClick={goToNextPage}
             >
               Next
