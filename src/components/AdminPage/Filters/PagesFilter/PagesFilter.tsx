@@ -38,7 +38,7 @@ const PagesFilter: React.FC<UserFilterProps> = ({
   const handleDateChange = (field: 'start' | 'end', value: Date) => {
     setModalState?.((prev) => ({
       ...prev,
-      upcount: { ...prev.upcount, [field]: value },
+      postedat: { ...prev.postedat, [field]: value },
     }))
   }
 
@@ -193,7 +193,7 @@ const PagesFilter: React.FC<UserFilterProps> = ({
               placeholder="Max"
               className={styles.textInput}
               value={modalState.downcount.max || ''}
-              onChange={(e) => handlePageCountChange('downcount','min', e.target.value)}
+              onChange={(e) => handlePageCountChange('downcount','max', e.target.value)}
             />
           </p>
         </div>
