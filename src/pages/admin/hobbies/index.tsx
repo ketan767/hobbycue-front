@@ -59,7 +59,7 @@ const HobbiesRequest: React.FC = () => {
   })
   const [email, setEmail] = useState('')
   const [count, setCount] = useState(0)
-   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [notes, setNotes] = useState<{ [key: string]: string }>({})
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [singleData, setSingleData] = useState({})
@@ -77,15 +77,15 @@ const HobbiesRequest: React.FC = () => {
     requestedBy: '',
     requestedOn: { start: '', end: '' },
     status: '',
+  })
+  const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
+  const [adminNoteModalData, setAdminNoteModalData] =
+    useState<AdminNoteModalData>({
+      adminNotes: 'Admin Note',
+      status: 'in_progress',
+      emailUser: false,
+      userId: '',
     })
-const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
-     const [adminNoteModalData, setAdminNoteModalData] =
-        useState<AdminNoteModalData>({
-          adminNotes: 'Admin Note',
-          status: 'in_progress',
-          emailUser: false,
-          userId: '',
-        })
 
   const [applyFilter, setApplyFilter] = useState<boolean>(false)
   const [page, setPage] = useState(1)
@@ -110,20 +110,45 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
     listing_id: '',
   })
   // const [createdAtSort, setCreatedAtSort] = useState(false);
+  const [openDropdownIndex, setOpenDropdownIndex] = useState<number | null>(null);
 
-  
+  const handleDropdownToggle = (index: number) => {
+    
+    setOpenDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
 
-  const handleSearch = async (event: React.FormEvent) => {
-    event.preventDefault(); 
+
+
+  const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const searchValue = data.search.value.trim();
-  
+
     if (!searchValue) {
-      setSearchResults([]);
-      setPageNumber([]);
-      setCount(0);
+      // setSearchResults([]);
+      // setPageNumber([]);
+      // setCount(0);
       return;
     }
+
+    // Assuming `originalResults` is the full dataset (e.g., an array of objects)
+    const filteredResults = searchResults.filter((item) =>
+      Object.values(item).some((value: any) =>
+        value?.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
+        (value?.full_name &&
+          value.full_name.toLowerCase().includes(searchValue.toLowerCase()))
+      )
+    );
+
+    setSearchResults(filteredResults);
+
+
+
+
+    // Set the total count of filtered results
+    setCount(filteredResults.length);
   };
+
+
 
   const filterSvg = (
     <svg
@@ -211,7 +236,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
   const fetchSearchResults = async () => {
     const searchValue = data.search.value.trim();
     if (!searchValue) return;
-  
+
     const queryString = `limit=${pagelimit}&sort=-createdAt&page=${page}&populate=user_id,listing_id&search=${encodeURIComponent(searchValue)}`;
     const { res, err } = await getHobbyRequests(queryString);
     if (err) {
@@ -219,7 +244,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
     } else {
       setSearchResults(res.data.data.hobbyreq || []);
       setCount(res.data.data.no_of_requests || 0);
-  
+
       const totalPages = Math.ceil(res.data.data.no_of_requests / 50);
       setPageNumber(Array.from({ length: totalPages }, (_, i) => i + 1));
     }
@@ -230,7 +255,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
   };
 
 
-  
+
   const FetchHobbyReq = async () => {
     dispatch(setShowPageLoader(true))
     const { res, err } = await getHobbyRequests(
@@ -240,8 +265,8 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
     const hobbiesreq = await getHobbyRequests(`limit=2500000&sort=-createdAt`)
 
     console.log(hobbiesreq);
-    
-    
+
+
     if (err) {
       console.log('An error', err)
       dispatch(setShowPageLoader(false))
@@ -254,19 +279,19 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
           (hobbyreq: any) => hobbyreq?.hobby?.toLowerCase().includes(modalState.hobby.toLowerCase())
         );
       }
-      
+
       if (modalState.genre) {
         filteredResults = filteredResults.filter(
           (hobbyreq: any) => hobbyreq?.genre?.toLowerCase().includes(modalState.genre.toLowerCase())
         );
       }
-      
+
       if (modalState.requestedBy) {
         filteredResults = filteredResults.filter(
           (hobbyreq: any) => hobbyreq?.user_id?.full_name?.toLowerCase().includes(modalState.requestedBy.toLowerCase())
         );
       }
-      
+
       if (modalState.requestedOn.start && modalState.requestedOn.end) {
         filteredResults = filteredResults.filter(
           (hobbyreq: any) =>
@@ -274,16 +299,16 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
             new Date(hobbyreq?.createdAt) <= new Date(modalState.requestedOn.end)
         );
       }
-      
+
       if (modalState.status) {
         filteredResults = filteredResults.filter(
-          (hobbyreq: any) => hobbyreq?.status===modalState.status
+          (hobbyreq: any) => hobbyreq?.status === modalState.status
         );
       }
       setSearchResults(filteredResults);
-      if(hasNonEmptyValues(modalState)){
+      if (hasNonEmptyValues(modalState)) {
         setCount(filteredResults.length);
-      }else{
+      } else {
         setCount(hobbiesreq.res.data.data.no_of_requests);
       }
       dispatch(setShowPageLoader(false))
@@ -317,7 +342,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
 
 
 
-  
+
   const goToPreviousPage = () => {
     setPage(page - 1)
   }
@@ -369,7 +394,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
       description: note,
       status: hobbyreq?.status,
     });
-    
+
     try {
       const { err, res } = await UpdateHobbyreq({
         user_id: hobbyreq?.user_id?._id,
@@ -387,7 +412,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
     }
   }
 
-  
+
 
   const handleSubmit = async () => {
     let jsondata = {
@@ -397,11 +422,11 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
       status: hobbyData?.status,
       description: hobbyData?.description,
     }
-    console.log("jsonData",jsondata)
+    console.log("jsonData", jsondata)
     const { err, res } = await UpdateHobbyreq(jsondata)
     if (err) {
       console.log(err.response.data);
-      
+
       throw new Error()
     } else {
       window.location.reload()
@@ -428,7 +453,7 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
       description: hobbyreq?.description,
       status: hobbyreq?.status,
     })
-    
+
     setSingleData(hobbyreq)
     // setAdminNoteModal(true)
 
@@ -444,14 +469,14 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
   // };
 
   const sortedResults = searchResults
-    ?.slice() 
+    ?.slice()
     ?.sort((a, b) => {
       return createdAtSort
         ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
         : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
 
-  
+
   // const sortedResults = searchResults
   //   ?.slice() 
   //   ?.sort((a, b) => {
@@ -461,19 +486,19 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
   //   });
 
   const hasNonEmptyValues = (state: HobbyModalState) => {
-      return !Object.entries(state).every(
-        ([_, value]) =>
-          !value ||
-          (Array.isArray(value) && value.length === 0) ||
-          (typeof value === 'object' &&
-            Object.values(value).every((v) => v === '')),
-      )
-    }
+    return !Object.entries(state).every(
+      ([_, value]) =>
+        !value ||
+        (Array.isArray(value) && value.length === 0) ||
+        (typeof value === 'object' &&
+          Object.values(value).every((v) => v === '')),
+    )
+  }
 
 
   return (
     <>
-    {showPreLoader && <PreLoader />}
+      {showPreLoader && <PreLoader />}
       {showAdminActionModal && (
         <Modal
           open
@@ -516,11 +541,11 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                 {searchSvg}
               </button>
             </form>
-            <span className={styles.countText}>Count: <span style={{ color:"#0096c8", fontWeight:"500"}}>{count}</span></span>
+            <span className={styles.countText}>Count: <span style={{ color: "#0096c8", fontWeight: "500" }}>{count}</span></span>
             {hasNonEmptyValues(modalState) && (
               <DisplayState modalState={modalState} />
             )}
-           
+
             {hasNonEmptyValues(modalState) ? (
               <button
                 className={styles.filterBtn}
@@ -575,14 +600,14 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                             width={15}
                             height={15}
                             alt="sort"
-                           style={{ transform: 'rotate(180deg)' }}
+                            style={{ transform: 'rotate(180deg)' }}
                           />
                         )}
                       </button>
                     </div>
                   </th>
                   <th
-                    
+
                   >
                     Matching or Similar
                   </th>
@@ -615,63 +640,62 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                     </td>
 
                     <td>
-                    <Link
-                           href={
-                            hobbyreq.user_type == 'user'
-                              ? `/profile/${hobbyreq.user_id?.profile_url}`
-                              : `/${pageType(hobbyreq?.listing_id?.type)}/${
-                                  hobbyreq.listing_id?.page_url
-                                }`
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <div className={styles.resultItem}>
-                            <div className={styles.avatarContainer}>
-                              {hobbyreq?.user_id?.profile_image ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img
-                                  src={hobbyreq?.user_id?.profile_image}
-                                  alt={`${hobbyreq?.user_id?.full_name}'s profile`}
-                                  width={40}
-                                  height={40}
-                                  className={styles.avatarImage}
-                                />
-                              ) : (
-                                <Image
-                                  className={styles.avatarImage}
-                                  src={DefaultProfile}
-                                  alt="profile"
-                                  width={40}
-                                  height={40}
-                                />
-                              )}
-                            </div>
-                            <div
-                              className={styles.detailsContainer}
-                              title={
-                                // hobbyreq?.user_id?.full_name?.length > 25
-                                //   ? hobbyreq?.user_id?.full_name
-                                //   : ''
-                                hobbyreq.user_type == 'user' && hobbyreq.user_id?.full_name
-                          ? hobbyreq.user_id?.full_name.slice(0,25)
-                          : hobbyreq.listing_id?.title
-                              }
-                              // style={{whiteSpace: 'nowrap'}}
-                            >
-                              {hobbyreq.user_type == 'user' && hobbyreq.user_id?.full_name
-                          ? hobbyreq.user_id?.full_name.slice(0,25)
-                          : hobbyreq.listing_id?.title}
-                            </div>
+                      <Link
+                        href={
+                          hobbyreq.user_type == 'user'
+                            ? `/profile/${hobbyreq.user_id?.profile_url}`
+                            : `/${pageType(hobbyreq?.listing_id?.type)}/${hobbyreq.listing_id?.page_url
+                            }`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <div className={styles.resultItem}>
+                          <div className={styles.avatarContainer}>
+                            {hobbyreq?.user_id?.profile_image ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={hobbyreq?.user_id?.profile_image}
+                                alt={`${hobbyreq?.user_id?.full_name}'s profile`}
+                                width={40}
+                                height={40}
+                                className={styles.avatarImage}
+                              />
+                            ) : (
+                              <Image
+                                className={styles.avatarImage}
+                                src={DefaultProfile}
+                                alt="profile"
+                                width={40}
+                                height={40}
+                              />
+                            )}
                           </div>
-                        </Link>
-                      </td>
+                          <div
+                            className={styles.detailsContainer}
+                            title={
+                              // hobbyreq?.user_id?.full_name?.length > 25
+                              //   ? hobbyreq?.user_id?.full_name
+                              //   : ''
+                              hobbyreq.user_type == 'user' && hobbyreq.user_id?.full_name
+                                ? hobbyreq.user_id?.full_name.slice(0, 25)
+                                : hobbyreq.listing_id?.title
+                            }
+                          // style={{whiteSpace: 'nowrap'}}
+                          >
+                            {hobbyreq.user_type == 'user' && hobbyreq.user_id?.full_name
+                              ? hobbyreq.user_id?.full_name.slice(0, 25)
+                              : hobbyreq.listing_id?.title}
+                          </div>
+                        </div>
+                      </Link>
+                    </td>
                     <td>
                       <div>{formatDate(hobbyreq?.createdAt)}</div>
                     </td>
                     <td >
                       <div>{hobbyreq?.similar}</div>
-                      </td>
+                    </td>
 
                     <td >
                       <input
@@ -693,31 +717,34 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
                     </td>
                     <td>
                       <div
-                        
+
                         className={styles.actions}
                       >
-                        <div onClick={()=>{
+                        <div onClick={() => {
                           handleAction(hobbyreq);
                           setShowAdminActionModal(true)
                         }}>{pencilSvg}</div>
-                          <StatusDropdown
-                            status={hobbyreq?.status}
-                            onStatusChange={async (newStatus) => {
-                              console.log(newStatus, hobbyreq, 100);
-                              const { err, res } = await UpdateHobbyreq({
-                                user_id: hobbyreq?.user_id?._id,
-                                listing_id: hobbyreq?.listing_id?._id,
-                                hobby: hobbyreq?.hobby,
-                                description: hobbyreq?.description,
-                                status: newStatus?.status,
-                              })
-                              if (err) {
-                                console.log(err);
-                                
-                              }
-                            }}
-                          />
-                        
+                        <StatusDropdown
+                          key={index}
+                          status={hobbyreq?.status}
+                          onStatusChange={async (newStatus) => {
+                            console.log(newStatus, hobbyreq, 100);
+                            const { err, res } = await UpdateHobbyreq({
+                              user_id: hobbyreq?.user_id?._id,
+                              listing_id: hobbyreq?.listing_id?._id,
+                              hobby: hobbyreq?.hobby,
+                              description: hobbyreq?.description,
+                              status: newStatus?.status,
+                            })
+                            if (err) {
+                              console.log(err);
+
+                            }
+                          }}
+                          isOpen={openDropdownIndex === index}
+                          onToggle={() => handleDropdownToggle(index)}
+                        />
+
                       </div>
                     </td>
                   </tr>
@@ -728,13 +755,13 @@ const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
           <div className={styles.pagination}>
             {/* Previous Page Button */}
             {page > 1 ? (
-              <button className={styles.PaginationButton} onClick={goToPreviousPage}>Prev</button>
+              <button className="users-next-btn" onClick={goToPreviousPage}>Prev</button>
             ) : (
               ''
             )}
             {searchResults.length === pagelimit ? (
               <button
-                className={styles.PaginationButton}
+                className="users-next-btn"
                 onClick={goToNextPage}
               >
                 Next

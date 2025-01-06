@@ -72,6 +72,7 @@
 .searchContainer {
   padding: 28.5px 24px 20px 32px;
   transition: all 0.5s ease-in-out;
+  
 }
 
 .admintitle {
@@ -200,7 +201,7 @@
 
 .resultsContainer {
   max-height: calc(100vh - 140px);
-  overflow-y: auto;
+  overflow-y: hidden;
   -ms-overflow-style: none;
   border-radius: 8px;
 }
