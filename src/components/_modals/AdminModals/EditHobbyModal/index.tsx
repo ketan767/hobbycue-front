@@ -194,6 +194,7 @@ const EditHobbyModal: React.FC<Props> = ({
                 <footer className={styles['footer']}>
                     <button
                         className="modal-footer-btn submit"
+                        style={{backgroundColor:''}} 
                         onClick={handleFormSubmit}
                         disabled={submitBtnLoading}
                     >
