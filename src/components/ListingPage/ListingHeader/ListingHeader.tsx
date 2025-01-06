@@ -317,6 +317,25 @@ const ListingHeader: React.FC<Props> = ({
       dispatch(openModal({ type: 'auth', closable: true }))
     }
   }
+  
+  const handleJoin = async () => {
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(
+          openModal({
+            type: 'listing-place-purchase',
+            closable: true,
+            propData: { currentListing: data },
+          }),
+        )
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
+  }
 
   const handleBuy = async () => {
     if (isLoggedIn) {
@@ -485,7 +504,25 @@ const ListingHeader: React.FC<Props> = ({
         )}
       </FilledButton>
     )
-  } else {
+  }else if (ctaText === 'Join') {
+    button = (
+      <FilledButton
+        className={styles.contactBtn}
+        onClick={isEditMode ? handleUpdateCTA : handleJoin}
+      >
+        <p>{ctaText}</p>
+        {isEditMode && (
+          <img
+            width={16}
+            height={16}
+            src={smallPencilSvg.src}
+            alt="small pencil"
+          />
+        )}
+      </FilledButton>
+    )
+  }
+   else {
     button = (
       <FilledButton
         className={styles.contactBtn}

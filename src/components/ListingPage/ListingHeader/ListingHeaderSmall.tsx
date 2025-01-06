@@ -188,6 +188,24 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
       dispatch(openModal({ type: 'auth', closable: true }))
     }
   }
+  const handleJoin = async () => {
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(
+          openModal({
+            type: 'listing-place-purchase',
+            closable: true,
+            propData: { currentListing: data },
+          }),
+        )
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
+  }
 
   const handleCtaText = (ctaText: string) => {
     if (ctaText === 'Buy Now') {
@@ -317,6 +335,23 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
         onClick={isEditMode ? handleUpdateCTA : handleRegister}
       >
         <p>Register</p>
+        {isEditMode && (
+          <img
+            width={16}
+            height={16}
+            src={smallPencilSvg.src}
+            alt="small pencil"
+          />
+        )}
+      </FilledButton>
+    )
+  } else if (ctaText === 'Join') {
+    button = (
+      <FilledButton
+        className={styles.contactBtn}
+        onClick={isEditMode ? handleUpdateCTA : handleJoin}
+      >
+        <p>Join</p>
         {isEditMode && (
           <img
             width={16}

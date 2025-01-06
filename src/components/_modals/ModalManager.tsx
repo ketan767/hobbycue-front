@@ -93,6 +93,7 @@ import FBNoEmail from './FBNoEmail'
 import BlogPublish from './BlogPublish/BlogPublishModal'
 import BlogFilterMobileModal from './BlogFilterMobileModal/BlogFilterMobileModal'
 import ListingPlaceVariantsModal from './EditListing/ListingPlaceVariants'
+import ListingPlacePurchase from './ListingPlacePurchase'
 
 const CustomBackdrop: React.FC = () => {
   const { activeModal } = useSelector((state: RootState) => state.modal)
@@ -422,6 +423,7 @@ const ModalManager: React.FC = () => {
                     activeModal === 'claim-listing' ||
                     activeModal === 'listing-cta-edit' ||
                     activeModal === 'listing-product-purchase' ||
+                    activeModal === 'listing-place-purchase' ||
                     activeModal === 'CopyProfileDataModal') &&
                   styles['responsive-popup']
                 }`
@@ -455,6 +457,7 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'claim-listing' &&
                 activeModal !== 'listing-cta-edit' &&
                 activeModal !== 'listing-product-purchase' &&
+                activeModal !== 'listing-place-purchase' &&
                 activeModal !== 'BlogFilterMobileModal' &&
                 !showAddHobbyModal && (
                   <>
@@ -531,6 +534,9 @@ const ModalManager: React.FC = () => {
               )}
               {activeModal === 'listing-product-purchase' && (
                 <ListingProductPurchase {...props} />
+              )}
+              {activeModal === 'listing-place-purchase' && (
+                <ListingPlacePurchase {...props} />
               )}
 
               {activeModal === 'listing-tags-edit' && (
@@ -678,6 +684,7 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'claim-listing' &&
                 activeModal !== 'listing-cta-edit' &&
                 activeModal !== 'listing-product-purchase' &&
+                activeModal !== 'listing-place-purchase' &&
                 activeModal !== 'BlogFilterMobileModal' &&
                 !showAddGenreModal &&
                 !showAddHobbyModal && (
