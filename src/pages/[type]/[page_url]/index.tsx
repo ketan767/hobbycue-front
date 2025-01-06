@@ -26,6 +26,7 @@ type Props = {
   result: any
   pageTypeAndCity: any
   date: any
+  time: string
   pageTypeAndPrice: any
 }
 
@@ -125,23 +126,28 @@ const ListingHome: React.FC<Props> = (props) => {
             props?.data?.pageData?.type === 1 ||
             props?.data?.pageData?.type === 2
               ? props?.data?.pageData?.tagline
-                ? props?.data?.pageData?.tagline + ';' + props?.pageTypeAndCity
-                : props?.result + ';' + props.pageTypeAndCity
+                ? props?.data?.pageData?.tagline +
+                  ' ⬢ ' +
+                  props?.pageTypeAndCity
+                : props?.result + ' ⬢ ' + props.pageTypeAndCity
               : props?.data?.pageData?.type === 3
               ? props?.data?.pageData?.tagline
                 ? props?.data?.pageData?.tagline +
-                  ';' +
+                  ' ⬢ ' +
                   props?.pageTypeAndCity +
                   ' ' +
                   props?.date
                 : props?.address +
-                  ';' +
+                  ' ⬢ ' +
                   props?.pageTypeAndCity +
                   ' ' +
-                  props?.date
+                  props?.date +
+                  props?.time
+                ? ` | ${props?.time}`
+                : ''
               : props?.data?.pageData?.tagline
-              ? props?.data?.pageData?.tagline + ';' + props?.pageTypeAndPrice
-              : props?.result + ';' + props?.pageTypeAndPrice
+              ? props?.data?.pageData?.tagline + ' ⬢ ' + props?.pageTypeAndPrice
+              : props?.result + ' ⬢ ' + props?.pageTypeAndPrice
           }`}
         />
 
@@ -251,6 +257,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       ? formatDateRange(pageData?.event_date_time[0])
       : ''
 
+  const time = pageData?.event_date_time[0]?.from_time
+    ? `${pageData.event_date_time[0].from_time}${
+        pageData.event_date_time[0].to_time
+          ? ` - ${pageData.event_date_time[0].to_time}`
+          : ''
+      }`
+    : ''
+
   const pageTypeAndPrice =
     pageData?.page_type.map((pt: string, index: number) => {
       return `${index > 0 ? ' ' : ''}${pt}`
@@ -276,6 +290,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       result,
       pageTypeAndCity,
       date,
+      time,
       pageTypeAndPrice,
     },
   }

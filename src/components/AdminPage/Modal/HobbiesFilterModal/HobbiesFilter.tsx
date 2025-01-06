@@ -6,12 +6,26 @@ import styles from './HobbiesFilter.module.css'
 import GoogleIcon from '@/assets/svg/admin_google.svg'
 import MailIcon from '@/assets/svg/admin_email.svg'
 import FacebookIcon from '@/assets/svg/admin_facebook.svg'
-import { ModalState } from '@/pages/admin/users'
+// import { ModalState } from '@/pages/admin/users'
 import MyDatePicker from '../../Users/DatePicker'
+import StatusDropdown from '@/components/_formElements/AdminStatusDropdown'
+// import StatusDropdown from '@/components/_formElements/StatusDropdown'
+
+export interface HobbyModalState {
+  hobby: string; // Corresponds to the "Hobby" input field
+  genre: string; // Corresponds to the "Genre/Style" input field
+  requestedBy: string; // Corresponds to the "Requested By" input field
+  requestedOn: {
+    start: string | Date; // Start date of the "Requested On" range
+    end: string | Date;   // End date of the "Requested On" range
+  };
+  status: string; // Represents the toggle button state and status radio options
+}
+
 
 interface UserFilterProps {
-  modalState: ModalState
-  setModalState?: React.Dispatch<React.SetStateAction<ModalState>>
+  modalState: HobbyModalState
+  setModalState?: React.Dispatch<React.SetStateAction<HobbyModalState>>
   setIsModalOpen?: React.Dispatch<React.SetStateAction<boolean>>
   setApplyFilter?: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -31,54 +45,36 @@ const HobbiesFilter: React.FC<UserFilterProps> = ({
   setIsModalOpen,
   setApplyFilter,
 }) => {
-  const [showStartDateCalender, setShowStartDateCalender] = useState(false)
-  const [showEndDateCalender, setShowEndDateCalender] = useState(false)
-  const handleOnboardedChange = (value: string) => {
-    setModalState?.((prev) => ({ ...prev, onboarded: value }))
-  }
+  const [showStartDateCalender, setShowStartDateCalender] = useState(false);
+  const [showEndDateCalender, setShowEndDateCalender] = useState(false);
 
   const handleDateChange = (field: 'start' | 'end', value: Date) => {
     setModalState?.((prev) => ({
       ...prev,
-      joined: { ...prev.joined, [field]: value },
-    }))
-  }
-
-  const handleLoginModeChange = (mode: string) => {
-    setModalState?.((prev) => {
-      const exists = prev.loginModes.includes(mode)
-      const updatedModes = exists
-        ? prev.loginModes.filter((m) => m !== mode)
-        : [...prev.loginModes, mode]
-      return { ...prev, loginModes: updatedModes }
-    })
-  }
-
-  const handlePageCountChange = (field: 'min' | 'max', value: string) => {
-    setModalState?.((prev) => ({
-      ...prev,
-      pageCount: { ...prev.pageCount, [field]: value },
-    }))
-  }
-
-  const handleStatusChange = (value: string) => {
-    setModalState?.((prev) => ({ ...prev, status: value }))
-  }
+      requestedOn: { ...prev.requestedOn, [field]: value },
+    }));
+  };
 
   const handleApply = () => {
-    setApplyFilter?.(true)
-    setIsModalOpen?.(false)
-  }
+    setApplyFilter?.(true);
+    setIsModalOpen?.(false);
+  };
+
   const handleClear = () => {
     setModalState?.({
-      onboarded: '',
-      joined: { start: '', end: '' },
-      loginModes: [],
-      pageCount: { min: '', max: '' },
+      hobby: '',
+      genre: '',
+      requestedBy: '',
+      requestedOn: { start: '', end: '' },
       status: '',
-    })
-    setIsModalOpen?.(false)
-  }
+    });
+    setIsModalOpen?.(false);
+  };
+
+  const handleStatusChange = (value: string) => {
+    setModalState?.((prev) => ({ ...prev, status: value }));
+  };
+
   return (
     <main className={styles.modal}>
       <div className={styles.modalHeader}>
@@ -93,42 +89,61 @@ const HobbiesFilter: React.FC<UserFilterProps> = ({
         </div>
       </div>
       <div className={styles.modalBody}>
-        {/* Onboarded */}
+        {/* Hobby */}
         <div className={styles.filterGroup}>
-          <label className={styles.filterLabel}>Onboarded</label>
-          <fieldset className={styles.fieldset}>
-            {['Yes', 'No', 'Both'].map((option) => (
-              <p key={option} className={styles.radioGroup}>
-                <input
-                  type="radio"
-                  name="onboarded"
-                  id={`onboarded-${option}`}
-                  value={option}
-                  checked={modalState.onboarded === option}
-                  onChange={(e) => handleOnboardedChange(e.target.value)}
-                  className={styles.radioInput}
-                />
-                <label
-                  htmlFor={`onboarded-${option}`}
-                  className={styles.radioLabel}
-                >
-                  {option}
-                </label>
-              </p>
-            ))}
-          </fieldset>
+          <label className={styles.filterLabel}>Hobby</label>
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Keywords"
+            value={modalState.hobby}
+            onChange={(e) =>
+              setModalState?.((prev) => ({ ...prev, hobby: e.target.value }))
+            }
+          />
         </div>
 
-        {/* Joined */}
+        {/* Genre/Style */}
         <div className={styles.filterGroup}>
-          <label className={styles.filterLabel}>Joined</label>
+          <label className={styles.filterLabel}>Genre/Style</label>
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Keywords"
+            value={modalState.genre}
+            onChange={(e) =>
+              setModalState?.((prev) => ({ ...prev, genre: e.target.value }))
+            }
+          />
+        </div>
+
+        {/* Requested By */}
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>Requested By</label>
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Requested By"
+            value={modalState.requestedBy}
+            onChange={(e) =>
+              setModalState?.((prev) => ({
+                ...prev,
+                requestedBy: e.target.value,
+              }))
+            }
+          />
+        </div>
+
+        {/* Requested On */}
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>Requested On</label>
           <p className={styles.dateRange}>
             <button
               className={styles.dateButton}
-              onClick={() => setShowStartDateCalender((pre) => !pre)}
+              onClick={() => setShowStartDateCalender((prev) => !prev)}
             >
-              {modalState.joined.start
-                ? formatDate(modalState.joined.start)
+              {modalState.requestedOn.start
+                ? formatDate(modalState.requestedOn.start)
                 : 'start'}
             </button>
 
@@ -142,10 +157,10 @@ const HobbiesFilter: React.FC<UserFilterProps> = ({
             <span>-</span>
             <button
               className={styles.dateButton}
-              onClick={() => setShowEndDateCalender((pre) => !pre)}
+              onClick={() => setShowEndDateCalender((prev) => !prev)}
             >
-              {modalState.joined.end
-                ? formatDate(modalState.joined.end)
+              {modalState.requestedOn.end
+                ? formatDate(modalState.requestedOn.end)
                 : 'end'}
             </button>
 
@@ -158,94 +173,17 @@ const HobbiesFilter: React.FC<UserFilterProps> = ({
           </p>
         </div>
 
-        {/* Login Mode */}
-        <div className={styles.filterGroup}>
-          <label className={styles.filterLabel}>Login Mode</label>
-          <fieldset className={styles.LoginMode}>
-            {[
-              { name: 'Google', icon: GoogleIcon },
-              { name: 'Email', icon: MailIcon },
-              { name: 'Facebook', icon: FacebookIcon },
-            ].map((mode) => (
-              <p key={mode.name} className={styles.checkboxGroup}>
-                <input
-                  type="checkbox"
-                  id={`login-${mode.name}`}
-                  value={mode.name.toLowerCase()}
-                  checked={modalState.loginModes.includes(
-                    mode.name.toLowerCase(),
-                  )}
-                  onChange={() =>
-                    handleLoginModeChange(mode.name.toLowerCase())
-                  }
-                  className={styles.checkboxInput}
-                />
-                <label
-                  htmlFor={`login-${mode.name}`}
-                  className={styles.checkboxLabel}
-                >
-                  <Image
-                    width={20}
-                    height={20}
-                    src={mode.icon}
-                    alt={`${mode.name} Icon`}
-                  />
-                </label>
-              </p>
-            ))}
-          </fieldset>
-        </div>
-
-        {/* Page Count */}
-        <div className={styles.filterGroup}>
-          <label className={styles.filterLabel}>Page Count</label>
-          <p className={styles.textRange}>
-            <input
-              type="text"
-              placeholder="Min"
-              className={styles.textInput}
-              value={modalState.pageCount.min || ''}
-              onChange={(e) => handlePageCountChange('min', e.target.value)}
-            />
-            <span className={styles.rangeSeparator}>-</span>
-            <input
-              type="text"
-              placeholder="Max"
-              className={styles.textInput}
-              value={modalState.pageCount.max || ''}
-              onChange={(e) => handlePageCountChange('max', e.target.value)}
-            />
-          </p>
-        </div>
-
         {/* Status */}
         <div className={styles.filterGroup}>
           <label className={styles.filterLabel}>Status</label>
-          <ToggleButton
-            isOn={modalState.status === 'active'}
-            handleToggle={() =>
-              handleStatusChange(
-                modalState.status === 'active' ? 'deactivate' : 'active',
-              )
-            }
-          />
-          <p className={styles.radioGroup}>
-            <input
-              type="radio"
-              name="status"
-              id="status-both"
-              checked={modalState.status === 'both'}
-              onChange={() => handleStatusChange('both')}
-              className={styles.radioInput}
-            />
-            <label htmlFor="status-both" className={styles.radioLabel}>
-              Both
-            </label>
-          </p>
+          
+          <StatusDropdown status = {modalState.status} onStatusChange={(status)=>handleStatusChange(status.status)
+          }/>
         </div>
       </div>
     </main>
-  )
-}
+  );
+};
+
 
 export default HobbiesFilter

@@ -241,7 +241,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
         )}
         <meta
           property="og:description"
-          content={props?.previewLine1 + ';' + props?.unformattedAbout}
+          content={props?.previewLine1 + ' ⬢ ' + props?.unformattedAbout}
         />
         <title>{`${data?.display} | HobbyCue`}</title>
       </Head>
@@ -569,7 +569,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
           ? ' | ' + data?.hobbyData?.category?.display
           : '') +
         (data?.hobbyData?.level > 1 && data?.hobbyData?.sub_category?.display
-          ? ' ' + data?.hobbyData?.sub_category?.display
+          ? ', ' + data?.hobbyData?.sub_category?.display
           : '')
       : ''
   const previewLine1 = `${hobbyType}${additionalInfo}`
