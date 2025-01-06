@@ -24,6 +24,7 @@ import sortAscending from '@/assets/icons/Sort-Ascending-On.png'
 import sortDescending from '@/assets/icons/Sort-Ascending-Off.png'
 import PagesFilter from '@/components/AdminPage/Filters/PagesFilter/PagesFilter'
 import filterIcon from '@/assets/icons/Filter-On.png'
+import ToggleButton from '@/components/_buttons/ToggleButton'
 type PagesProps = {
   _id: string
   type: string
@@ -578,9 +579,9 @@ const AdminPages: React.FC = () => {
                     <td>7</td>
                     <td>2</td>
                     <td className={styles.pagesLength}>
-                    <input type="checkbox"
-                    className={`${styles.customCheckbox} cursor-pointer`} 
-                    />  
+                      <div >
+                      <ToggleButton /> 
+                      </div>
                     </td>
                     <td>
                       <div className={styles.actions}>

@@ -108,6 +108,7 @@
   .resultsTable thead{
     position: sticky;
     top:0;
+    z-index: 1;
   }
   
   .resultsTable td,
@@ -247,9 +248,10 @@
   .pagesLength{
     text-align: center !important;
     padding-right: 16px !important;
+    overflow: hidden;
+    position: relative;
   }
-  
-  /* Responsive styles (optional) */
+
   
   .actions {
     display: flex;
