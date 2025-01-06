@@ -2010,24 +2010,32 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           )}
                         </div>
                         <div className={styles.userLocation}>
-                          {(user?.preferences
-                            ? user?.preferences?.location_visibility ===
+                          {(
+                            user?.preferences
+                              ? user?.preferences?.location_visibility ===
                                 'My Society'
-                            : false)?user.primary_address?.society:""}
+                              : false
+                          )
+                            ? user.primary_address?.society
+                            : ''}
                           {user.primary_address?.society &&
                           user.primary_address?.locality &&
                           (user?.preferences
                             ? user?.preferences?.location_visibility ===
-                                'My Society'
+                              'My Society'
                             : false)
                             ? ', '
                             : ''}
-                          {(user?.preferences
-                            ? user?.preferences?.location_visibility ===
-                                'My Society' ||
-                              user?.preferences?.location_visibility ===
-                                'My Locality'
-                            : false)?user.primary_address?.locality:""}
+                          {(
+                            user?.preferences
+                              ? user?.preferences?.location_visibility ===
+                                  'My Society' ||
+                                user?.preferences?.location_visibility ===
+                                  'My Locality'
+                              : false
+                          )
+                            ? user.primary_address?.locality
+                            : ''}
                           {user.primary_address?.city &&
                           user.primary_address?.locality &&
                           (user?.preferences
@@ -2576,8 +2584,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             </>
                           )}
                         </div>
-                        <div className={styles.programDetails}>
-                          <div className={styles.address}>
+                        <div
+                          className={`${styles.programDetails} truncateOneLine`}
+                        >
+                          <span>
                             {page?.page_type?.map(
                               (pt: string, index: number) => {
                                 return `${index > 0 ? ' ' : ''}${pt}`
@@ -2586,14 +2596,21 @@ const MainContent: React.FC<SearchResultsProps> = ({
                               (page._address?.city
                                 ? ` | ${page._address?.city}`
                                 : '') || '\u00a0'}
-                          </div>
+                          </span>
 
                           <>
                             {page?.event_date_time &&
                               page?.event_date_time.length !== 0 && (
-                                <span>
+                                <span
+                                // className={`truncateOneLine ${styles.event_date_time}`}
+                                >
                                   {' | '}
                                   {formatDateRange(page?.event_date_time[0])}
+                                  {page?.event_date_time[0].from_time &&
+                                    ` | ${page?.event_date_time[0].from_time}`}
+                                  {page?.event_date_time[0].to_time
+                                    ? ` - ${page?.event_date_time[0].to_time}`
+                                    : ''}
                                   {/* {!isMobile && (
                                     <>
                                       {', '}

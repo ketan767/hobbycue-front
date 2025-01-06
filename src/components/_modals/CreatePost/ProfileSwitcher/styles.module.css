@@ -85,11 +85,14 @@
   border-radius: 100%;
   width: var(--spacing-32);
   height: var(--spacing-32);
+  object-fit: contain;
 }
 .dd-list .dd-item img[data-profile-type='listing'] {
   border-radius: var(--spacing-4);
   width: var(--spacing-32);
   height: var(--spacing-32);
+  object-fit: contain;
+  border: 1px solid #8064a2;
 }
 .dd-list .dd-item p {
   font-weight: 500;

@@ -144,10 +144,19 @@
   cursor: pointer;
 }
 
-.rotate-arrow {
+.filterBtn img {
+  width: 40px;
+  height: 40px;
+  gap: 0px;
+  border-radius: 8.89px;
+  border: 1.11px solid #0096c8;
+  padding: 8px;
+}
+
+/* .rotate-arrow {
   display: inline-block;
   transition: transform 0.3s ease;
-}
+} */
 
 .searchButton {
   width: 40px;
@@ -321,6 +330,7 @@
 .sortButton {
   background: none;
   border: none;
+  /* transform: rotate(180deg); */
 }
 .userName {
   color: var(--Grey-Darkest, #08090a);
@@ -440,7 +450,7 @@
 .modal-wrapper {
   display: grid;
   place-items: center;
-  background-color: black;
+  
   height: 100%;
   overflow: auto;
   padding: 1rem;
@@ -476,6 +486,13 @@
   gap: 16px;
   /* margin-top: 6px; */
   /* margin-bottom: 6px; */
+}
+
+.countText {
+  margin-left: 10px;
+  white-space: nowrap; 
+  position: relative; 
+  margin-right: 40%;
 }
 
 .PaginationButton {

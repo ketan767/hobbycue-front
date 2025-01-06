@@ -3,9 +3,10 @@ import styles from './DisplayState.module.css'
 import { ModalState } from '@/pages/admin/users'
 import { formatDate } from '../../Filters/UserFilter/UserFilter'
 import { format } from 'path'
+import { HobbyModalState } from '../../Modal/HobbiesFilterModal/HobbiesFilter'
 
 interface Props {
-  modalState: ModalState
+  modalState: ModalState | HobbyModalState
 }
 
 const DisplayState: React.FC<Props> = ({ modalState }) => {

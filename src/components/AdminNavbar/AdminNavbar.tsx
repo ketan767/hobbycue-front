@@ -554,6 +554,8 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
     const handleClick = (
       e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
     ) => {
+      console.log('handleClick');
+      
       e.preventDefault()
       setLoading(true)
       router.push(url)

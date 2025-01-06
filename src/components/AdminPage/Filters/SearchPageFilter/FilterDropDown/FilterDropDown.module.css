@@ -53,7 +53,7 @@
   width: 100%;
   position: absolute;
   top: 50px;
-  height: 100px;
+  max-height: none;
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: thin;

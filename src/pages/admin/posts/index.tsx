@@ -19,9 +19,16 @@ import { formatDate } from '@/utils/Date'
 import { log } from 'console'
 import { setShowPageLoader } from '@/redux/slices/site'
 import ToggleButton from '@/components/_buttons/ToggleButton'
-import CommentIcon from '@mui/icons-material/Comment';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+// import CommentIcon from '@mui/icons-material/Comment';
+// import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+// import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import DisplayState from '@/components/AdminPage/Users/DisplayState/DisplayState'
+import { filterIcon, ModalState } from '../users'
+import HobbiesFilter from '@/components/AdminPage/Modal/HobbiesFilterModal/HobbiesFilter'
+import Upvote from '@/assets/icons/AdminIcons/Upvote'
+import Downvote from '@/assets/icons/AdminIcons/Downvote'
+import Comment from '@/assets/icons/AdminIcons/Comment'
+import UserFilter from '@/components/AdminPage/Filters/UserFilter/UserFilter'
 
 type PostProps = any
 type SearchInput = {
@@ -66,10 +73,20 @@ const AdminDashboard: React.FC = () => {
     search: { value: '', error: null },
   })
   const [showAdminActionModal, setShowAdminActionModal] = useState(false)
+  const [modalState, setModalState] = useState<ModalState>({
+        onboarded: '',
+        joined: { start: '', end: '' },
+        loginModes: [],
+        pageCount: { min: '', max: '' },
+        status: '',
+      })
   const [searchResults, setSearchResults] = useState<PostProps[]>([])
+  const [applyFilter, setApplyFilter] = useState<boolean>(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [id, setId] = useState('')
   const [page, setPage] = useState(1)
   const [pagelimit, setPagelimit] = useState(25)
+  const [createdAtSort, setCreatedAtSort] = useState(false);
   const [deleteData, setDeleteData] = useState<{
     open: boolean
     _id: string | undefined
@@ -257,35 +274,92 @@ const AdminDashboard: React.FC = () => {
     }
   }
 
+  const sortedResults = searchResults
+    ?.slice() 
+    ?.sort((a, b) => {
+      return createdAtSort
+        ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+
+    const hasNonEmptyValues = (state: ModalState) => {
+          return !Object.entries(state).every(
+            ([_, value]) =>
+              !value ||
+              (Array.isArray(value) && value.length === 0) ||
+              (typeof value === 'object' &&
+                Object.values(value).every((v) => v === '')),
+          )
+        }
+
+    const handleSearch = async (event: React.FormEvent) => {
+        event.preventDefault(); 
+        const searchValue = data.search.value.trim();
+      
+        if (!searchValue) {
+          setSearchResults([]);
+          // setPageNumber([]);
+          // setCount(0);
+          return;
+        }
+      };
+
   return (
     <>
       <AdminLayout>
         <div className={styles.searchContainer}>
           {/* <div className={styles.admintitle}>Admin Search</div> */}
           <div className={styles.searchAndFilter}>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault()
-              }}
-              className={styles.searchForm}
-            >
+            <form onSubmit={()=>console.log("Success!")} 
+            className={styles.searchForm}>
               <input
                 type="text"
                 autoComplete="new"
                 value={data.search.value}
                 onChange={handleInputChange}
-                placeholder="Search users..."
+                placeholder="Search by User/Page Title, Content, Hobby, Location"
                 className={styles.searchInput}
               />
               <button type="submit" className={styles.searchButton}>
                 {searchSvg}
               </button>
             </form>
-            <p>
-              Count :{' '}
-              <span style={{ color: '#0096C8' }}>{searchResults.length}</span>
-            </p>
-            <button className={styles.filterBtn}>{filterSvg}</button>
+            <span className={styles.countText}>Count: <span style={{ color:"#0096c8", fontWeight:"500"}}>{25}</span></span>
+            {/* <button
+                className={styles.filterBtn}
+                onClick={() => console.log("filter")
+                }
+              >
+                {filterSvg}
+              </button> */}
+            {hasNonEmptyValues(modalState) && (
+              <DisplayState modalState={modalState} />
+            )}
+           
+            {hasNonEmptyValues(modalState) ? (
+              <button
+                className={styles.filterBtn}
+                onClick={() => setIsModalOpen(!isModalOpen)}
+              >
+                <Image src={filterIcon} width={40} height={40} alt="filter" />
+              </button>
+            ) : (
+              <button
+                className={styles.filterBtn}
+                onClick={() => setIsModalOpen(!isModalOpen)}
+              >
+                {filterSvg}
+              </button>
+            )}
+
+            {isModalOpen && (
+              <UserFilter
+                modalState={modalState}
+                setModalState={setModalState}
+                setIsModalOpen={setIsModalOpen}
+                setApplyFilter={setApplyFilter}
+              />
+            )}
           </div>
 
           <div className={styles.resultsContainer}>
@@ -324,9 +398,9 @@ const AdminDashboard: React.FC = () => {
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', gap: 5 }}>
-                      <div><ThumbUpIcon sx={{ fontSize: 16 }}/></div>
-                      <div><ThumbDownIcon sx={{ fontSize: 16 }}/></div>
-                      <div><CommentIcon sx={{ fontSize: 16 }}/></div>
+                      <div><Upvote/></div>
+                      <div><Downvote/></div>
+                      <div><Comment/></div>
                     </div>
                   </th>
 
@@ -417,7 +491,7 @@ const AdminDashboard: React.FC = () => {
                     </td>
                     <td className={styles.pagesLength} style={{ whiteSpace: 'nowrap' }}>{post?.visibility}</td>
                     <td>
-                      <div style={{ display: 'flex', flexDirection: 'row', gap: 12, marginLeft: 8 }}>
+                      <div style={{ display: 'flex', flexDirection: 'row', gap: 16, marginLeft: 16,alignItems:'flex-end' }}>
                         <p className={styles.pagesLength}>{post?.up_votes?.count}</p>
                         <p className={styles.pagesLength}>{post?.down_votes?.count}</p>
                         <p className={styles.pagesLength}>{post?.comments?.length}</p>
@@ -435,9 +509,9 @@ const AdminDashboard: React.FC = () => {
                     </td>
                     <td>
                       <div className={styles.actions}>
-                        <div onClick={() => handleEdit(post._id)}>
+                        {/* <div onClick={() => handleEdit(post._id)}>
                           {pencilSvg}
-                        </div>
+                        </div> */}
                         <div onClick={() => handleDelete(post._id)}>
                           {deleteSvg}
                         </div>

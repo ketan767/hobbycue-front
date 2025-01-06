@@ -116,6 +116,7 @@ export type ModalType =
           imageurl?: string | undefined
           propData?:any
           modalType?: any
+          description?:any
 
         }>
       ) {
