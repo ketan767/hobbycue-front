@@ -4,10 +4,10 @@
   right: 0;
   top: 110%;
   z-index: 99;
-  max-width: 328px;
+  max-width: 352px;
   min-height: 292px;
   width: 100%;
-  padding: 16px;
+  /* padding: 16px; */
   display: flex;
   flex-direction: column;
   justify-content: center;
