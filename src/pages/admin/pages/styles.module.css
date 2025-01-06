@@ -92,6 +92,11 @@
   .resultsContainer{
     max-height: calc(100vh - 140px);
     overflow-y: auto;
+  -ms-overflow-style: none;
+  }
+
+  .resultsContainer::-webkit-scrollbar {
+    display: none;
   }
 
   .resultsTable {
@@ -224,7 +229,15 @@
     /* Fixed width for the Login Types column */
   }
   
-  
+  .pagination {
+    width: 280px;
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+    padding: 5px 12px;
+    margin-left: auto;
+  }
+
   .lastLoggedIn {
     padding-right: 16px !important;
     text-align: center !important;
@@ -258,4 +271,48 @@
     .searchInput {
       margin-bottom: 10px;
     }
+  }
+  
+  .countText {
+    margin-left: 10px;
+    white-space: nowrap; 
+    position: relative; 
+    margin-right: 55%;
+  }
+
+  .customCheckbox {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px; 
+    height: 20px;
+    background-color: #ffffff; 
+    border: 2px solid #009fd1; 
+    border-radius: 4px; 
+    cursor: pointer;
+  }
+  
+  
+  .customCheckbox:checked {
+    background-color: #009fd1;
+    border-color: #009fd1; 
+  }
+  
+  .customCheckbox:checked::after {
+    content: '✔'; 
+    color: #ffffff; 
+    font-size: 14px;
+  }
+  
+  .sortButtonWrapper {
+    margin-left: 13px;
+    background: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: start;
+  }
+  .sortButton {
+    background: none;
+    border: none;
   }
