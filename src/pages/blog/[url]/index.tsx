@@ -356,6 +356,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                         openModal({
                           type: 'blogPublish',
                           closable: true,
+                          propData: blog?.content,
                         }),
                       )
                     }
