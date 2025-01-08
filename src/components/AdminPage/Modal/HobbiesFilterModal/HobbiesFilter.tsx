@@ -194,6 +194,7 @@ const HobbiesFilter: React.FC<UserFilterProps> = ({
 
             {showEndDateCalender && (
               <MyDatePicker
+              minDate={new Date(modalState.requestedOn.start)}
                 updateState={() => setShowEndDateCalender(false)}
                 handleDatePick={(date) => handleDateChange('end', date)}
               />

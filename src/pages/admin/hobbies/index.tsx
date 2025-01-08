@@ -592,7 +592,7 @@ const HobbiesRequest: React.FC = () => {
                   <th >Requested By</th>
                   <th >
                     <div className={styles.sortButtonWrapper}>
-                      Created At
+                      On
                       <button
                         className={styles.sortButton}
                         onClick={handleCreatedAtSort}
@@ -766,7 +766,7 @@ const HobbiesRequest: React.FC = () => {
           <div className={styles.pagination}>
             {/* Previous Page Button */}
             
-            {searchResults.length === pagelimit ? (
+            
               <button
               disabled={page <= 1}
                 className="users-next-btn"
@@ -774,9 +774,7 @@ const HobbiesRequest: React.FC = () => {
               >
                 Prev
               </button>
-            ) : (
-              ''
-            )}
+            
             
             {searchResults.length === pagelimit ? (
               <button

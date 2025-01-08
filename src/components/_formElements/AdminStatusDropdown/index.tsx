@@ -106,7 +106,7 @@ const StatusDropdown: React.FC<{
         <ul
           className={styles.dropdownMenu}
           style={{
-            width: long ? '290px' : '140px',
+            width: long ? '180px' : '140px',
             ...(long ? { left: '0px' } : { right: '0px' }),
           }}
         >

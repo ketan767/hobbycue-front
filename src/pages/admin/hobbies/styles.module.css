@@ -201,7 +201,7 @@
 
 .resultsContainer {
   max-height: calc(100vh - 140px);
-  overflow-y: auto;
+  overflow-y: hidden;
   -ms-overflow-style: none;
   border-radius: 8px;
 }
