@@ -6,6 +6,7 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { updateUserByAdmin } from '@/services/admin.service'
 
 import CloseIcon from '@/assets/icons/CloseIcon'
+import Link from 'next/link'
 
 interface UserEditProps {
   id: string
@@ -712,22 +713,53 @@ const EditUser: React.FC<UserEditProps> = ({
             <div className={styles.auditFields}>
               <div className={styles.auditField}>
                 <span className={styles.label}>Created By:</span>
-                <span className={styles.value}>{user.full_name || "N/A"}</span>
+                    <Link
+                    href={`/profile/${user.profile_url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >
+                    <span className={styles.value}>{user.full_name || "N/A"}</span>
+                    </Link>
               </div>
               <div className={styles.auditField}>
                 <span className={styles.label}>Created At:</span>
                 <span className={styles.value}>
-                  {user.createdAt ? new Date(user.createdAt).toLocaleString() : "N/A"}
+                {user.createdAt ? 
+                  (() => {
+                      const date = new Date(user.createdAt);
+                      const options = { year: 'numeric' as const, month: 'short' as const, day: 'numeric' as const, hour: 'numeric' as const, minute: 'numeric' as const, hour12: true };
+                      const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+                      const [monthDay, year, time] = formattedDate.split(', ');
+                      return `${year} ${monthDay}, ${time}`;
+                  })() 
+                  : "N/A"
+                }
                 </span>
               </div>
               <div className={styles.auditField}>
                 <span className={styles.label}>Updated By:</span>
-                <span className={styles.value}>{user.updatedBy || "Ketan Patil"}</span>
+                <Link
+                    href={user.updated_profile_url ? `/profile/${user.updated_profile_url}` : `/profile/admin`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >
+                    <span className={styles.value}>{user.updatedBy || "HobbyCue Admin"}</span>
+                    </Link>
+                {/* <span className={styles.value}></span> */}
               </div>
               <div className={styles.auditField}>
                 <span className={styles.label}>Updated At:</span>
                 <span className={styles.value}>
-                  {user.updatedAt ? new Date(user.updatedAt).toLocaleString() : "N/A"}
+                {user.updatedAt ? 
+                  (() => {
+                      const date = new Date(user.updatedAt);
+                      const options = { year: 'numeric' as const, month: 'short' as const, day: 'numeric' as const, hour: 'numeric' as const, minute: 'numeric' as const, hour12: true };
+                      const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+                      const [monthDay, year, time] = formattedDate.split(', ');
+                      return `${year} ${monthDay}, ${time}`;
+                  })() 
+                  : "N/A"
+                }
                 </span>
               </div>
             </div>

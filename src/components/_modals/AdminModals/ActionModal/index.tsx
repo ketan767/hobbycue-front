@@ -110,6 +110,7 @@ const AdminActionModal: React.FC<Props> = ({
           <button
             ref={nextButtonRef}
             className="modal-footer-btn submit"
+            style={{backgroundColor:'#0096C8'}}
             onClick={handleFormSubmit}
             disabled={submitBtnLoading}
           >

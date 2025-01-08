@@ -28,6 +28,7 @@ import HobbiesFilter from '@/components/AdminPage/Modal/HobbiesFilterModal/Hobbi
 import Upvote from '@/assets/icons/AdminIcons/Upvote'
 import Downvote from '@/assets/icons/AdminIcons/Downvote'
 import Comment from '@/assets/icons/AdminIcons/Comment'
+import UserFilter from '@/components/AdminPage/Filters/UserFilter/UserFilter'
 
 type PostProps = any
 type SearchInput = {
@@ -316,7 +317,7 @@ const AdminDashboard: React.FC = () => {
                 autoComplete="new"
                 value={data.search.value}
                 onChange={handleInputChange}
-                placeholder="Search here..."
+                placeholder="Search by User/Page Title, Content, Hobby, Location"
                 className={styles.searchInput}
               />
               <button type="submit" className={styles.searchButton}>
@@ -352,7 +353,7 @@ const AdminDashboard: React.FC = () => {
             )}
 
             {isModalOpen && (
-              <HobbiesFilter
+              <UserFilter
                 modalState={modalState}
                 setModalState={setModalState}
                 setIsModalOpen={setIsModalOpen}
