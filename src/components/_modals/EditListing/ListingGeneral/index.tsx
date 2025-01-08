@@ -451,7 +451,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     fullNameRef?.current?.focus()
     if (onComplete !== undefined || pageType(listingModalData?.type) === 'product') {
-      let pageUrl: any = data.title.value
+      let pageUrl: string = data.title.value
       console.log(pageUrl)
       pageUrl = pageUrl
         ?.toLowerCase()
