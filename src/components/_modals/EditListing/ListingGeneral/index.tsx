@@ -65,6 +65,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   const [urlSpanLength, setUrlSpanLength] = useState<number>(0)
   const [labelText, setLabelText] = useState('')
   const urlSpanRef = useRef<HTMLSpanElement>(null)
+  
+  const isProductPage = pageType(listingModalData?.type) === 'product';
 
   useEffect(() => {
     setInitialData({
@@ -150,24 +152,25 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       setBackBtnLoading(false)
       if (err) {
         if (err?.response?.status === 500) {
-          if (pageType(listingModalData?.type) === 'product') {
+          if (isProductPage) {
             pageUrlRef.current?.focus();
-            let pageUrl: any = data.title.value
+            const random = Math.floor(Math.random() * 1000000);
+            let pageUrl: string = `${data.title.value}-${random}`;
             pageUrl = pageUrl
               ?.toLowerCase()
               .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
               .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
               .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
-            const random = Math.floor(Math.random() * 1000000);
             setData((prev) => {
               return {
                 ...prev,
                 page_url: {
-                  value: `${pageUrl}-${random}`,
+                  value: pageUrl,
                   error: "This URL is already taken so we have auto-assigned a unique URL"
                 },
               }
             })
+            return
           }
 
           pageUrlRef.current?.focus()
@@ -293,24 +296,25 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       setSubmitBtnLoading(false)
       if (err) {
         if (err?.response?.status === 500) {
-          if (pageType(listingModalData?.type) === 'product') {
+          if (isProductPage) {
             pageUrlRef.current?.focus();
-            let pageUrl: any = data.title.value
+            const random = Math.floor(Math.random() * 1000000);
+            let pageUrl: string = `${data.title.value}-${random}`;
             pageUrl = pageUrl
               ?.toLowerCase()
               .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
               .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
               .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
-            const random = Math.floor(Math.random() * 1000000);
             setData((prev) => {
               return {
                 ...prev,
                 page_url: {
-                  value: `${pageUrl}-${random}`,
+                  value: pageUrl,
                   error: "This URL is already taken so we have auto-assigned a unique URL"
                 },
               }
             })
+            return
           }
 
           pageUrlRef.current?.focus()
@@ -369,23 +373,24 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       .then((res) => {
         console.log('res', res)
         if (res.data.message !== 'Available!') {
-          if (pageType(listingModalData?.type) === 'product') {
-            let pageUrl: any = data.title.value
+          if (isProductPage) {
+            const random = Math.floor(Math.random() * 1000000);
+            let pageUrl: string = `${data.title.value}-${random}`;
             pageUrl = pageUrl
               ?.toLowerCase()
               .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
               .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
               .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
-            const random = Math.floor(Math.random() * 1000000);
             setData((prev) => {
               return {
                 ...prev,
                 page_url: {
-                  value: `${pageUrl}-${random}`,
+                  value: pageUrl,
                   error: "This URL is already taken so we have auto-assigned a unique URL"
                 },
               }
             })
+            return
           }
 
           setData((prev) => {
@@ -410,23 +415,24 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       .catch((err) => {
         console.log('err', err.response)
 
-        if (pageType(listingModalData?.type) === 'product') {
-          let pageUrl: any = data.title.value
-            pageUrl = pageUrl
-              ?.toLowerCase()
-              .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
-              .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
-              .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
-            const random = Math.floor(Math.random() * 1000000);
-            setData((prev) => {
-              return {
-                ...prev,
-                page_url: {
-                  value: `${pageUrl}-${random}`,
-                  error: "This URL is already taken so we have auto-assigned a unique URL"
-                },
-              }
+        if (isProductPage) {
+          const random = Math.floor(Math.random() * 1000000);
+          let pageUrl: string = `${data.title.value}-${random}`;
+          pageUrl = pageUrl
+            ?.toLowerCase()
+            .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
+            .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
+            .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
+          setData((prev) => {
+            return {
+              ...prev,
+              page_url: {
+                value: pageUrl,
+                error: "This URL is already taken so we have auto-assigned a unique URL"
+              },
+            }
           })
+          return
         }
 
         // setNextDisabled(true)
@@ -508,23 +514,24 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       if (err) {
         if ('response' in err) {
           if (err.response.status === 404) {
-            if (pageType(listingModalData?.type) === 'product') {
-              let pageUrl: any = data.title.value
-            pageUrl = pageUrl
-              ?.toLowerCase()
-              .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
-              .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
-              .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
-            const random = Math.floor(Math.random() * 1000000);
-            setData((prev) => {
-              return {
-                ...prev,
-                page_url: {
-                  value: `${pageUrl}-${random}`,
-                  error: "This URL is already taken so we have auto-assigned a unique URL"
-                },
-              }
+            if (isProductPage) {
+              const random = Math.floor(Math.random() * 1000000);
+              let pageUrl: string = `${data.title.value}-${random}`;
+              pageUrl = pageUrl
+                ?.toLowerCase()
+                .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
+                .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
+                .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
+              setData((prev) => {
+                return {
+                  ...prev,
+                  page_url: {
+                    value: pageUrl,
+                    error: "This URL is already taken so we have auto-assigned a unique URL"
+                  },
+                }
               })
+              return
             }
 
             setData((prev) => ({
