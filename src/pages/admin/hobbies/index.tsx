@@ -89,7 +89,8 @@ const HobbiesRequest: React.FC = () => {
 
   const [applyFilter, setApplyFilter] = useState<boolean>(false)
   const [page, setPage] = useState(1)
-  const [pagelimit, setPagelimit] = useState(25)
+  const [pagelimit, setPagelimit] = useState(10)
+  const [totalPages, setTotalPages] = useState(0);
   const [deleteData, setDeleteData] = useState<{
     open: boolean
     _id: string | undefined
@@ -274,11 +275,15 @@ const HobbiesRequest: React.FC = () => {
       console.log('FetchHobbyReq', res.data)
       let filteredResults = res.data.data.hobbyreq;
 
-      
+
       if (!hasNonEmptyValues(modalState)) {
-        setCount(hobbiesreq.res.data.data.no_of_requests);
+        const totalRequests = hobbiesreq.res.data.data.no_of_requests;
+        const totalPages = Math.ceil(totalRequests / pagelimit);
+        setCount(totalRequests);
+        setTotalPages(totalPages);
         setSearchResults(filteredResults);
       }
+
       dispatch(setShowPageLoader(false))
     }
   }
@@ -289,25 +294,25 @@ const HobbiesRequest: React.FC = () => {
 
   const ApplyFilter = (): void => {
     let filteredResults = searchResults;
-  
+
     if (modalState.hobby) {
       filteredResults = filteredResults.filter(
         (hobbyreq: any) => hobbyreq?.hobby?.toLowerCase().includes(modalState.hobby.toLowerCase())
       );
     }
-  
+
     if (modalState.genre) {
       filteredResults = filteredResults.filter(
         (hobbyreq: any) => hobbyreq?.genre?.toLowerCase().includes(modalState.genre.toLowerCase())
       );
     }
-  
+
     if (modalState.requestedBy) {
       filteredResults = filteredResults.filter(
         (hobbyreq: any) => hobbyreq?.user_id?.full_name?.toLowerCase().includes(modalState.requestedBy.toLowerCase())
       );
     }
-  
+
     if (modalState.requestedOn.start && modalState.requestedOn.end) {
       filteredResults = filteredResults.filter(
         (hobbyreq: any) =>
@@ -315,19 +320,19 @@ const HobbiesRequest: React.FC = () => {
           new Date(hobbyreq?.createdAt) <= new Date(modalState.requestedOn.end)
       );
     }
-  
+
     if (modalState.status) {
       filteredResults = filteredResults.filter(
         (hobbyreq: any) => hobbyreq?.status === modalState.status
       );
     }
-  
+
     setSearchResults(filteredResults);
-  
+
     // Update the count based on filtered results
     setCount(filteredResults.length);
   };
-  
+
 
 
   useEffect(() => {
@@ -753,7 +758,7 @@ const HobbiesRequest: React.FC = () => {
                             }
                           }}
                           isOpen={openDropdownIndex === index}
-                          // onToggle={() => handleDropdownToggle(index)}
+                        // onToggle={() => handleDropdownToggle(index)}
                         />
 
                       </div>
@@ -764,29 +769,43 @@ const HobbiesRequest: React.FC = () => {
             </table>
           </div>
           <div className={styles.pagination}>
+            {/* Page Selection with Text */}
+            <div style={{ display: "flex", alignItems: "center", gap: "8px",marginRight:'16px' }}>
+              <span className={styles.userName}>Page</span>
+              <select
+                value={page}
+                onChange={(e) => setPage(Number(e.target.value))}
+                className={styles["page-select-dropdown"]}
+              >
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+              <span className={styles.userName}>of {totalPages}</span>
+            </div>
+
             {/* Previous Page Button */}
-            
-            
-              <button
+            <button
               disabled={page <= 1}
-                className="users-next-btn"
-                onClick={goToPreviousPage}
-              >
-                Prev
-              </button>
-            
-            
+              className="users-next-btn"
+              onClick={goToPreviousPage}
+            >
+              Prev
+            </button>
+
+            {/* Next Page Button */}
             {searchResults.length === pagelimit ? (
-              <button
-                className="users-next-btn"
-                onClick={goToNextPage}
-              >
+              <button className="users-next-btn" onClick={goToNextPage}>
                 Next
               </button>
             ) : (
               ''
             )}
           </div>
+
+
         </div>
       </AdminLayout>
       {deleteData.open && (
