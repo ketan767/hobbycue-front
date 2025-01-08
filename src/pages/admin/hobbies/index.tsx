@@ -113,7 +113,7 @@ const HobbiesRequest: React.FC = () => {
   const [openDropdownIndex, setOpenDropdownIndex] = useState<number | null>(null);
 
   const handleDropdownToggle = (index: number) => {
-    
+    console.log("Current Index:", openDropdownIndex, "Clicked Index:", index);
     setOpenDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
@@ -274,42 +274,10 @@ const HobbiesRequest: React.FC = () => {
       console.log('FetchHobbyReq', res.data)
       let filteredResults = res.data.data.hobbyreq;
 
-      if (modalState.hobby) {
-        filteredResults = filteredResults.filter(
-          (hobbyreq: any) => hobbyreq?.hobby?.toLowerCase().includes(modalState.hobby.toLowerCase())
-        );
-      }
-
-      if (modalState.genre) {
-        filteredResults = filteredResults.filter(
-          (hobbyreq: any) => hobbyreq?.genre?.toLowerCase().includes(modalState.genre.toLowerCase())
-        );
-      }
-
-      if (modalState.requestedBy) {
-        filteredResults = filteredResults.filter(
-          (hobbyreq: any) => hobbyreq?.user_id?.full_name?.toLowerCase().includes(modalState.requestedBy.toLowerCase())
-        );
-      }
-
-      if (modalState.requestedOn.start && modalState.requestedOn.end) {
-        filteredResults = filteredResults.filter(
-          (hobbyreq: any) =>
-            new Date(hobbyreq?.createdAt) >= new Date(modalState.requestedOn.start) &&
-            new Date(hobbyreq?.createdAt) <= new Date(modalState.requestedOn.end)
-        );
-      }
-
-      if (modalState.status) {
-        filteredResults = filteredResults.filter(
-          (hobbyreq: any) => hobbyreq?.status === modalState.status
-        );
-      }
-      setSearchResults(filteredResults);
-      if (hasNonEmptyValues(modalState)) {
-        setCount(filteredResults.length);
-      } else {
+      
+      if (!hasNonEmptyValues(modalState)) {
         setCount(hobbiesreq.res.data.data.no_of_requests);
+        setSearchResults(filteredResults);
       }
       dispatch(setShowPageLoader(false))
     }
@@ -318,6 +286,48 @@ const HobbiesRequest: React.FC = () => {
     await FetchHobbyReq();
     setAdminNoteModal(false);
   };
+
+  const ApplyFilter = (): void => {
+    let filteredResults = searchResults;
+  
+    if (modalState.hobby) {
+      filteredResults = filteredResults.filter(
+        (hobbyreq: any) => hobbyreq?.hobby?.toLowerCase().includes(modalState.hobby.toLowerCase())
+      );
+    }
+  
+    if (modalState.genre) {
+      filteredResults = filteredResults.filter(
+        (hobbyreq: any) => hobbyreq?.genre?.toLowerCase().includes(modalState.genre.toLowerCase())
+      );
+    }
+  
+    if (modalState.requestedBy) {
+      filteredResults = filteredResults.filter(
+        (hobbyreq: any) => hobbyreq?.user_id?.full_name?.toLowerCase().includes(modalState.requestedBy.toLowerCase())
+      );
+    }
+  
+    if (modalState.requestedOn.start && modalState.requestedOn.end) {
+      filteredResults = filteredResults.filter(
+        (hobbyreq: any) =>
+          new Date(hobbyreq?.createdAt) >= new Date(modalState.requestedOn.start) &&
+          new Date(hobbyreq?.createdAt) <= new Date(modalState.requestedOn.end)
+      );
+    }
+  
+    if (modalState.status) {
+      filteredResults = filteredResults.filter(
+        (hobbyreq: any) => hobbyreq?.status === modalState.status
+      );
+    }
+  
+    setSearchResults(filteredResults);
+  
+    // Update the count based on filtered results
+    setCount(filteredResults.length);
+  };
+  
 
 
   useEffect(() => {
@@ -568,6 +578,7 @@ const HobbiesRequest: React.FC = () => {
                 setModalState={setModalState}
                 setIsModalOpen={setIsModalOpen}
                 setApplyFilter={setApplyFilter}
+                onApplyFilter={ApplyFilter}
               />
             )}
           </div>
@@ -742,7 +753,7 @@ const HobbiesRequest: React.FC = () => {
                             }
                           }}
                           isOpen={openDropdownIndex === index}
-                          onToggle={() => handleDropdownToggle(index)}
+                          // onToggle={() => handleDropdownToggle(index)}
                         />
 
                       </div>
@@ -754,11 +765,19 @@ const HobbiesRequest: React.FC = () => {
           </div>
           <div className={styles.pagination}>
             {/* Previous Page Button */}
-            {page > 1 ? (
-              <button className="users-next-btn" onClick={goToPreviousPage}>Prev</button>
+            
+            {searchResults.length === pagelimit ? (
+              <button
+              disabled={page <= 1}
+                className="users-next-btn"
+                onClick={goToPreviousPage}
+              >
+                Prev
+              </button>
             ) : (
               ''
             )}
+            
             {searchResults.length === pagelimit ? (
               <button
                 className="users-next-btn"

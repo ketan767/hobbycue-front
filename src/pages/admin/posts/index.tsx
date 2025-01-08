@@ -509,9 +509,9 @@ const AdminDashboard: React.FC = () => {
                     </td>
                     <td>
                       <div className={styles.actions}>
-                        {/* <div onClick={() => handleEdit(post._id)}>
+                        <div onClick={() => handleEdit(post._id)}>
                           {pencilSvg}
-                        </div> */}
+                        </div>
                         <div onClick={() => handleDelete(post._id)}>
                           {deleteSvg}
                         </div>
