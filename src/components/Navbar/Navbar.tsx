@@ -553,7 +553,7 @@ export const Navbar: React.FC<Props> = ({}) => {
               <ul className={styles['right-listing-expanded']}>
                 {/* Explore */}
                 <li
-                  className=""
+                  className={styles["nav-explore-li"]}
                   onMouseOver={() => setShowDropdown('explore-list')}
                   onMouseLeave={() => setShowDropdown(null)}
                 >
@@ -1223,7 +1223,7 @@ export const Navbar: React.FC<Props> = ({}) => {
       </header>
 
       {menuActive && <SideMenu handleClose={toggleMenu} />}
-      {showDropdown && <div className={styles['navbar-backdrop']}></div>}
+      {/* {showDropdown && <div className={styles['navbar-backdrop']}></div>} */}
       {
         <CustomSnackbar
           message={snackbar?.message}
