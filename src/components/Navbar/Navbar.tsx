@@ -461,6 +461,14 @@ export const Navbar: React.FC<Props> = ({}) => {
                 )}
               </Link>
 
+              {
+                isLoggedIn && (
+                  <Link href={'/community'} className={styles['pos-relative-z-2']}>
+                    <Image src={HomeIcon} width={20} height={20} alt="home" />
+                  </Link>
+                )
+              }
+
               <TextField
                 autoComplete="off"
                 inputRef={searchInputRef}
