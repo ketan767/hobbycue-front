@@ -291,8 +291,7 @@ const ListingPlaceVariantsModal: React.FC<Props> = ({
         <hr className={styles['hr-line']} />
         <div className={styles['bottom-txt-container']}>
           <p className={styles['bottom-text']}>
-            If there are no Variants, you can leave everything blank. If there
-            is no payment, you can leave Price as blank.
+            If there are no Variants, you can leave everything blank.
           </p>
         </div>
         <footer className={styles['footer']}>

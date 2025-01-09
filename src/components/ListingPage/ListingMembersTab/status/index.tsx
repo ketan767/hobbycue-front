@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import selectIcon from '@/assets/svg/select_icon.svg'
 import InProgressIcon from '@/assets/svg/In_progress_icon.svg'
@@ -23,6 +23,7 @@ const StatusDropdown: React.FC<{
   status?: string
   onStatusChange: (status: any) => void
 }> = ({ isOddRow, status, onStatusChange }) => {
+  const dropdownRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [selectedStatus, setSelectedStatus] = useState(
     statusOptions.find((option) => option.status === status) ||
@@ -43,9 +44,28 @@ const StatusDropdown: React.FC<{
     setIsOpen(false)
     onStatusChange(status)
   }
+  const handleClickOutside = (e: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(e.target as Node)
+    ) {
+      setIsOpen(false)
+    }
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      window.addEventListener('mousedown', handleClickOutside)
+    } else {
+      window.removeEventListener('mousedown', handleClickOutside)
+    }
+    return () => {
+      window.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
 
   return (
-    <div className={styles.dropdown} onClick={toggleDropdown}>
+    <div ref={dropdownRef} className={styles.dropdown} onClick={toggleDropdown}>
       <button
         className={`${styles.dropdownButton} ${
           isOddRow ? `${styles['odd-row']}` : ''

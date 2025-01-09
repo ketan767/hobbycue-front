@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import StatusDropdown from './status'
 import { upadtePlaceMembership } from '@/services/listing.service'
+import TableMobile from './mobile/TableMobile'
+import { isMobile } from '@/utils'
 
 interface ListingMembersTabProps {
   pageData: ListingPageData['pageData']
@@ -73,6 +75,8 @@ const ListingMembersTab: FC<ListingMembersTabProps> = ({
     }).length,
   )
   const [startDate, setStartDate] = useState<string>('')
+
+  const isMob = isMobile()
   useEffect(() => {
     if (pageData) {
       console.log(
@@ -82,6 +86,19 @@ const ListingMembersTab: FC<ListingMembersTabProps> = ({
       setStartDate(formatDate(pageData.createdAt, true))
     }
   }, [pageData])
+  if (isMob) {
+    return (
+      <TableMobile
+        pageData={pageData}
+        data={data}
+        headerData={headerData}
+        pageName={pageName}
+        startDate={startDate}
+        notesCnt={notesCnt}
+        formatDate={formatDate}
+      />
+    )
+  }
   return (
     <div className={styles['container']}>
       {listingLayoutMode === 'edit' ? (
