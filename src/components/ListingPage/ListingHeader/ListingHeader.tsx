@@ -318,6 +318,25 @@ const ListingHeader: React.FC<Props> = ({
     }
   }
 
+  const handleJoin = async () => {
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(
+          openModal({
+            type: 'listing-place-purchase',
+            closable: true,
+            propData: { currentListing: data },
+          }),
+        )
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
+  }
+
   const handleBuy = async () => {
     if (isLoggedIn) {
       if (user.is_onboarded) {
@@ -473,6 +492,23 @@ const ListingHeader: React.FC<Props> = ({
       <FilledButton
         className={styles.contactBtn}
         onClick={isEditMode ? handleUpdateCTA : handleBuy}
+      >
+        <p>{ctaText}</p>
+        {isEditMode && (
+          <img
+            width={16}
+            height={16}
+            src={smallPencilSvg.src}
+            alt="small pencil"
+          />
+        )}
+      </FilledButton>
+    )
+  } else if (ctaText === 'Join') {
+    button = (
+      <FilledButton
+        className={styles.contactBtn}
+        onClick={isEditMode ? handleUpdateCTA : handleJoin}
       >
         <p>{ctaText}</p>
         {isEditMode && (
@@ -1134,8 +1170,8 @@ const ListingHeader: React.FC<Props> = ({
             <div className={styles['content-container']}>
               <div className={styles['name-container']}>
                 <h1 className={styles['name']}>
-                  {data?.title.slice(0, 77) +
-                    (data?.title.length > 77 ? '...' : '')}
+                  {data?.title?.slice(0, 77) +
+                    (data?.title?.length > 77 ? '...' : '')}
                   {data?.is_verified ? (
                     <Image alt="claim" src={claimSvg} />
                   ) : (
