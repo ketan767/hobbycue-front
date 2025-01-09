@@ -82,9 +82,16 @@ const StatusDropdown: React.FC<{
           padding: long ? '4px' : '0px',
         }}
       >
-        <span style={{ color: selectedStatus.color }}>
+        
+        <span>
           <Image src={selectedStatus.icon} alt={selectedStatus.label} />
+          {long&&(
+          <span className={styles.statusLabel}>
+          {selectedStatus.label}
         </span>
+        )}
+        </span>
+        
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="8"

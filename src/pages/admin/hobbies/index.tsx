@@ -125,9 +125,6 @@ const HobbiesRequest: React.FC = () => {
     const searchValue = data.search.value.trim();
 
     if (!searchValue) {
-      // setSearchResults([]);
-      // setPageNumber([]);
-      // setCount(0);
       return;
     }
 
@@ -147,6 +144,7 @@ const HobbiesRequest: React.FC = () => {
 
     // Set the total count of filtered results
     setCount(filteredResults.length);
+    setTotalPages(Math.ceil(filteredResults.length / pagelimit))
   };
 
 
@@ -331,6 +329,8 @@ const HobbiesRequest: React.FC = () => {
 
     // Update the count based on filtered results
     setCount(filteredResults.length);
+    setTotalPages(Math.ceil(filteredResults.length / pagelimit))
+    
   };
 
 
@@ -430,25 +430,39 @@ const HobbiesRequest: React.FC = () => {
 
 
   const handleSubmit = async () => {
+    console.log(hobbyData);
+    
     let jsondata = {
       user_id: hobbyData?.user_id,
       listing_id: hobbyData?.listing_id,
       hobby: hobbyData?.hobby,
       status: hobbyData?.status,
       description: hobbyData?.description,
-    }
-    console.log("jsonData", jsondata)
-    const { err, res } = await UpdateHobbyreq(jsondata)
+    };
+    
+    const filteredData = Object.fromEntries(
+      Object.entries(jsondata).filter(([_, value]) => value !== undefined)
+    );
+    
+    console.log("Filtered jsonData", filteredData);
+    
+    const { err, res } = await UpdateHobbyreq(filteredData);
     if (err) {
       console.log(err.response.data);
-
-      throw new Error()
+      setSnackbar({
+        display: true,
+        message: "Error updating hobby request" + err.response.data.error,
+        // autoHideDuration: 3000,
+        type:'error'
+      })
     } else {
       window.location.reload()
     }
   }
 
   const handleStatusChange = async (hobbyreq: any, newStatus: any) => {
+    console.log(hobbyreq);
+    
     setHobbydata({
       user_id: hobbyreq?.user_id?._id,
       listing_id: hobbyreq?.listing_id?._id,
@@ -456,7 +470,7 @@ const HobbiesRequest: React.FC = () => {
       description: hobbyreq?.description,
       status: newStatus?.status,
     })
-    console.log('status changed')
+    console.log('status changed',hobbyData)
     await handleSubmit()
   }
 
@@ -602,23 +616,14 @@ const HobbiesRequest: React.FC = () => {
                         className={styles.sortButton}
                         onClick={handleCreatedAtSort}
                       >
-                        {createdAtSort ? (
-                          <Image
-                            src={sortAscending}
-                            width={15}
-                            height={15}
-                            alt="sort"
-                            style={{ transform: 'rotate(180deg)' }}
-                          />
-                        ) : (
-                          <Image
-                            src={sortDescending}
-                            width={15}
-                            height={15}
-                            alt="sort"
-                            style={{ transform: 'rotate(180deg)' }}
-                          />
-                        )}
+                        <Image
+                          src={createdAtSort ? sortAscending : sortDescending}
+                          width={15}
+                          height={15}
+                          alt="sort"
+                          style={{ transform: 'rotate(180deg)' }}
+                        />
+
                       </button>
                     </div>
                   </th>
@@ -636,7 +641,7 @@ const HobbiesRequest: React.FC = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody >
                 {sortedResults?.map((hobbyreq, index) => (
                   <tr key={index}>
                     <td>
@@ -743,20 +748,7 @@ const HobbiesRequest: React.FC = () => {
                         <StatusDropdown
                           key={index}
                           status={hobbyreq?.status}
-                          onStatusChange={async (newStatus) => {
-                            console.log(newStatus, hobbyreq, 100);
-                            const { err, res } = await UpdateHobbyreq({
-                              user_id: hobbyreq?.user_id?._id,
-                              listing_id: hobbyreq?.listing_id?._id,
-                              hobby: hobbyreq?.hobby,
-                              description: hobbyreq?.description,
-                              status: newStatus?.status,
-                            })
-                            if (err) {
-                              console.log(err);
-
-                            }
-                          }}
+                          onStatusChange={(status)=>handleStatusChange(hobbyreq,status)}
                           isOpen={openDropdownIndex === index}
                         // onToggle={() => handleDropdownToggle(index)}
                         />
@@ -770,7 +762,7 @@ const HobbiesRequest: React.FC = () => {
           </div>
           <div className={styles.pagination}>
             {/* Page Selection with Text */}
-            <div style={{ display: "flex", alignItems: "center", gap: "8px",marginRight:'16px' }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginRight: '16px' }}>
               <span className={styles.userName}>Page</span>
               <select
                 value={page}
@@ -788,7 +780,7 @@ const HobbiesRequest: React.FC = () => {
 
             {/* Previous Page Button */}
             <button
-              disabled={page <= 1}
+              disabled={page <= 1 || totalPages<=1}
               className="users-next-btn"
               onClick={goToPreviousPage}
             >
@@ -796,13 +788,11 @@ const HobbiesRequest: React.FC = () => {
             </button>
 
             {/* Next Page Button */}
-            {searchResults.length === pagelimit ? (
-              <button className="users-next-btn" onClick={goToNextPage}>
-                Next
-              </button>
-            ) : (
-              ''
-            )}
+
+            <button className="users-next-btn" onClick={goToNextPage} disabled={page>=totalPages}>
+              Next
+            </button>
+
           </div>
 
 

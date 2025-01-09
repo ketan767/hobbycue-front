@@ -4,9 +4,10 @@ import { ModalState } from '@/pages/admin/users'
 import { formatDate } from '../../Filters/UserFilter/UserFilter'
 import { format } from 'path'
 import { HobbyModalState } from '../../Modal/HobbiesFilterModal/HobbiesFilter'
+import { CommunitiesModalState } from '../../Filters/CommunityFilter/CommunityFilter'
 
 interface Props {
-  modalState: ModalState | HobbyModalState
+  modalState: ModalState | HobbyModalState | CommunitiesModalState
 }
 
 const DisplayState: React.FC<Props> = ({ modalState }) => {
