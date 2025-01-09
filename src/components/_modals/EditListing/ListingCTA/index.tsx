@@ -95,7 +95,7 @@ const ListingCTAModal: React.FC<Props> = ({
   >([
     { name: 'Contact', description: 'Opens a Contact or Message dialogue' },
     { name: 'Claim', description: 'Allows others to Claim this Page' },
-    { name: 'Join', description: 'Society or Club Membership' },
+    // { name: 'Join', description: 'Society or Club Membership' },
   ])
 
   const [listThree, setListThree] = useState<
