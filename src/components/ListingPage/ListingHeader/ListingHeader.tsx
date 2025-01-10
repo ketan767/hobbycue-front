@@ -95,6 +95,7 @@ const ListingHeader: React.FC<Props> = ({
   const [showDays, setShowDays] = useState(false)
   const [quantity, setQuantity] = useState(1)
   const [HighlightRed, SetHiglightRed] = useState(false)
+  const [AboutError, setAboutError] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const eventDateOpenRef = useRef<HTMLDivElement | null>(null)
   const eventDateParentRef = useRef<HTMLDivElement | null>(null)
@@ -249,6 +250,11 @@ const ListingHeader: React.FC<Props> = ({
         if (!data.title) {
           setTitleError?.(true)
           SetHiglightRed(true)
+          hasError = true
+        }
+        if (!data.about) {
+          setHAboutErr?.(true)
+          setAboutError(true)
           hasError = true
         }
       }
@@ -1525,7 +1531,9 @@ const ListingHeader: React.FC<Props> = ({
                     </div>
                   ) : listingLayoutMode === 'edit' ? (
                     <div className={styles['about-text']}>
-                      About
+                      <div className={`${AboutError && styles['error-red']}`}>
+                        About
+                      </div>
                       <span className={styles['required-asterisk']}>*</span>
                     </div>
                   ) : (
