@@ -247,7 +247,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                   )
                 })}
                 {unpinnnedPosts.length > 0 && (
-                  <PostWrapper title="Recent Post">
+                  <PostWrapper title={pinnedPosts.length > 0 ? 'Recent Post' : ''}>
                     {unpinnnedPosts.map((post: any) => {
                       return (
                         <PostCard
@@ -353,7 +353,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
               )
             })}
             {unpinnnedPosts.length > 0 && (
-              <PostWrapper title="Recent Post">
+              <PostWrapper title={pinnedPosts.length > 0 ? 'Recent Post' : ''}>
                 {unpinnnedPosts.map((post: any) => {
                   return (
                     <PostCard
