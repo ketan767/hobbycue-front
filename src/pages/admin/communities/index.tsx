@@ -30,68 +30,68 @@ type SearchInput = {
 }
 
 const AdminCommunities: React.FC = () => {
-  const router = useRouter()
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
   const [itemsPerPage] = useState(11);
   const [count, setCount] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [applyFilter, setApplyFilter] = useState<boolean>(false) 
-  const [totalData, setTotalData] = useState([]); 
+  const [applyFilter, setApplyFilter] = useState<boolean>(false)
+  const [totalData, setTotalData] = useState([]);
   const [email, setEmail] = useState('')
   const [searchResults, setSearchResults] = useState<any[]>([])
-  const [pageNumber, setPageNumber] = useState<number[]>([])
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
   }
   const [page, setPage] = useState(1)
-  
+
   const [modalState, setModalState] = useState<CommunitiesModalState>({
     hobby: '',
     Location: '',
     userCount: { min: '', max: '' },
     pageCount: { min: '', max: '' }
   })
-  const [deleteData, setDeleteData] = useState<{
-    open: boolean
-    _id: string | undefined
-  }>({
-    open: false,
-    _id: undefined,
-  })
-  const [snackbar, setSnackbar] = useState({
-    type: 'success',
-    display: false,
-    message: '',
-  })
+
+  const [sortBy, setSortBy] = useState<"post_count" | "user_count" | null>(null);
+
+  const handleSort = (field: "post_count" | "user_count") => {
+    if (sortBy === field) {
+      setSearchResults(totalData.slice((page - 1) * itemsPerPage, page * itemsPerPage));
+      setSortBy(null);
+    } else {
+      // Sort by the selected field
+      const sortedResults = [...searchResults].sort((a, b) => a[field] - b[field]);
+      setSearchResults(sortedResults);
+      setSortBy(field);
+    }
+  };
   const dispatch = useDispatch()
   const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  
+
     const searchValue = data.search.value.trim().toLowerCase(); // Normalize search value for case-insensitive comparison
-  
+
     // If searchValue is empty, reset results and exit
     if (!searchValue) {
       setSearchResults(totalData.slice(0, itemsPerPage)); // Reset to initial results
       setCount(totalData.length); // Reset total count
       return;
     }
-  
+
     // Filter based on location and hobby
     const filteredResults = totalData.filter((item: any) => {
       const location = item?._id?.city?.toLowerCase() || ""; // Normalize location value
       const hobby = item?.hobby?.display?.toLowerCase() || ""; // Normalize hobby value
-  
+
       return location.includes(searchValue) || hobby.includes(searchValue);
     });
-  
+
     // Update search results and count
     setSearchResults(filteredResults.slice(0, itemsPerPage)); // Paginate results
     setCount(filteredResults.length); // Set total count of filtered results
   };
-  
+
 
   const filterSvg = (
     <svg
@@ -124,44 +124,6 @@ const AdminCommunities: React.FC = () => {
     </svg>
   )
 
- 
-  console.log({ searchResults })
-  const fullNumber = (user: any) => {
-    if (user?.phone?.prefix && user?.phone?.number) {
-      return user?.phone?.prefix + user?.phone?.number
-    } else {
-      return 'No number'
-    }
-  }
-
-  const pagesLength = (user: any) => {
-    return user?._listings?.length || 0
-  }
-  const handleEdit = (profile_url: any) => {
-    router.push(`/admin/users/edit/${profile_url}`)
-  }
-
-  const fetchSearchResults = async () => {
-    const searchValue = data.search.value.trim()
-    let searchCriteria = {
-      full_name: searchValue,
-    }
-
-    const { res, err } = await getCommunities()
-    if (err) {
-      console.log('An error', err)
-    } else {
-      setSearchResults(res.data)
-
-      // Calculate total number of pages based on search results length
-      const count = Math.ceil(res.data.length / 50)
-      const pages = []
-      for (let i = 1; i <= 20; i++) {
-        pages.push(i)
-      }
-      setPageNumber(pages)
-    }
-  }
   const fetchUsers = async () => {
     dispatch(setShowPageLoader(true))
     const { res, err } = await getCommunities()
@@ -170,23 +132,20 @@ const AdminCommunities: React.FC = () => {
       dispatch(setShowPageLoader(false))
     } else {
       console.log('fetchUsers', res.data);
-    const totalData = res.data.data; 
-    setTotalData(totalData);
-    setCount(totalData.length);
-    const startIndex = (page-1) * itemsPerPage;
-    setSearchResults(totalData.slice(startIndex, startIndex + itemsPerPage)); 
-    dispatch(setShowPageLoader(false));
+      const totalData = res.data.data;
+      setTotalData(totalData);
+      setCount(totalData.length);
+      const startIndex = (page - 1) * itemsPerPage;
+      setSearchResults(totalData.slice(startIndex, startIndex + itemsPerPage));
+      dispatch(setShowPageLoader(false));
     }
   }
   useEffect(() => {
     if (data.search.value === '' && !hasNonEmptyValues(modalState)) {
       fetchUsers()
     }
-  }, [data.search.value,modalState,page])
+  }, [data.search.value, modalState, page])
 
-  const goToPage = (page: number) => {
-    // Logic to navigate to specific page
-  }
 
   const goToPreviousPage = () => {
     if (page > 1) {
@@ -202,7 +161,7 @@ const AdminCommunities: React.FC = () => {
 
   const ApplyFilter = (): void => {
     let filteredResults = totalData;
-  
+
     // Filter by hobby
     if (modalState.hobby) {
       filteredResults = filteredResults.filter(
@@ -210,7 +169,7 @@ const AdminCommunities: React.FC = () => {
           data?.hobby?.display?.toLowerCase().includes(modalState.hobby.toLowerCase())
       );
     }
-  
+
     // Filter by location (if location data exists in the structure)
     if (modalState.Location) {
       filteredResults = filteredResults.filter(
@@ -218,7 +177,7 @@ const AdminCommunities: React.FC = () => {
           data?._id?.city?.toLowerCase().includes(modalState.Location.toLowerCase())
       );
     }
-  
+
     // Filter by user count
     if (modalState.userCount.min || modalState.userCount.max) {
       filteredResults = filteredResults.filter((data: any) => {
@@ -228,7 +187,7 @@ const AdminCommunities: React.FC = () => {
         return userCount >= min && userCount <= max;
       });
     }
-  
+
     // Filter by page count (if applicable in your data)
     if (modalState.pageCount.min || modalState.pageCount.max) {
       filteredResults = filteredResults.filter((data: any) => {
@@ -238,51 +197,23 @@ const AdminCommunities: React.FC = () => {
         return pageCount >= min && pageCount <= max;
       });
     }
-  
+
     // Update the results
     setSearchResults(filteredResults.slice(0, itemsPerPage));
     setCount(filteredResults.length);
-  
+
   };
-  
 
-  const handleDelete = (user_id: string) => {
-    setDeleteData({ open: true, _id: user_id })
-  }
-
-  const deleteFunc = async (user_id: string) => {
-    const { err, res } = await deleteUserByAdmin(user_id)
-    if (err) {
-      setSnackbar({
-        type: 'warning',
-        display: true,
-        message: 'Some error occured',
-      })
-    } else if (res) {
-      setSnackbar({
-        type: 'success',
-        display: true,
-        message: 'User deleted successfully',
-      })
-      window.location.reload()
-    } else {
-      setSnackbar({
-        type: 'warning',
-        display: true,
-        message: 'Some error occured',
-      })
-    }
-  }
 
   const hasNonEmptyValues = (state: CommunitiesModalState) => {
-      return !Object.entries(state).every(
-        ([_, value]) =>
-          !value ||
-          (Array.isArray(value) && value.length === 0) ||
-          (typeof value === 'object' &&
-            Object.values(value).every((v) => v === '')),
-      )
-    }
+    return !Object.entries(state).every(
+      ([_, value]) =>
+        !value ||
+        (Array.isArray(value) && value.length === 0) ||
+        (typeof value === 'object' &&
+          Object.values(value).every((v) => v === '')),
+    )
+  }
 
   return (
     <>
@@ -297,7 +228,7 @@ const AdminCommunities: React.FC = () => {
                 autoComplete="new"
                 value={data.search.value}
                 onChange={handleInputChange}
-                placeholder="Search by Hobby, Genre/Style, Requested By, Matching or Similar"
+                placeholder="Search by Hobby, Location, Most Active"
                 className={styles.searchInput}
               />
               <button type="submit" className={styles.searchButton}>
@@ -346,10 +277,10 @@ const AdminCommunities: React.FC = () => {
                       Members
                       <button
                         className={styles.sortButton}
-                      // onClick={handleCreatedAtSort}
+                        onClick={() => handleSort('user_count')}
                       >
                         <Image
-                          src={sortDescending}
+                          src={sortBy == 'user_count' ? sortAscending : sortDescending}
                           width={15}
                           height={15}
                           alt="sort"
@@ -364,16 +295,15 @@ const AdminCommunities: React.FC = () => {
                       Posts
                       <button
                         className={styles.sortButton}
-                      // onClick={handleCreatedAtSort}
+                        onClick={() => handleSort('post_count')}
                       >
                         <Image
-                          src={sortAscending}
+                          src={sortBy == 'post_count' ? sortAscending : sortDescending}
                           width={15}
                           height={15}
                           alt="sort"
                           style={{ transform: 'rotate(180deg)' }}
                         />
-
                       </button>
                     </div>
                   </th>
@@ -384,7 +314,7 @@ const AdminCommunities: React.FC = () => {
               </thead>
               <tbody >
                 {searchResults?.map((hobbyreq, index) => (
-                  <tr key={index} style={{height:'48px'}}>
+                  <tr key={index} style={{ height: '48px' }}>
                     <td>
                       <div>{hobbyreq?.hobby?.display}</div>
                     </td>
@@ -414,13 +344,13 @@ const AdminCommunities: React.FC = () => {
                 onChange={(e) => setPage(Number(e.target.value))}
                 className={styles["page-select-dropdown"]}
               >
-                {Array.from({ length: Math.ceil(totalData.length/itemsPerPage) }, (_, i) => (
+                {Array.from({ length: Math.ceil(totalData.length / itemsPerPage) }, (_, i) => (
                   <option key={i + 1} value={i + 1}>
                     {i + 1}
                   </option>
                 ))}
               </select>
-              <span className={styles.userName}>of {Math.ceil(count/itemsPerPage)}</span>
+              <span className={styles.userName}>of {Math.ceil(count / itemsPerPage)}</span>
             </div>
 
             {/* Previous Page Button */}
@@ -434,40 +364,12 @@ const AdminCommunities: React.FC = () => {
 
             {/* Next Page Button */}
 
-            <button className="users-next-btn" onClick={goToNextPage} disabled={page >= Math.ceil(totalData.length/itemsPerPage)}>
+            <button className="users-next-btn" onClick={goToNextPage} disabled={page >= Math.ceil(totalData.length / itemsPerPage)}>
               Next
             </button>
-
           </div>
-
-
         </div>
       </AdminLayout>
-      {deleteData.open && (
-        <DeletePrompt
-          triggerOpen={deleteData.open}
-          _id={deleteData._id}
-          closeHandler={() => {
-            setDeleteData({ open: false, _id: undefined })
-          }}
-          noHandler={() => {
-            setDeleteData({ open: false, _id: undefined })
-          }}
-          yesHandler={deleteFunc}
-          text="user"
-        />
-      )}
-      {
-        <CustomSnackbar
-          message={snackbar?.message}
-          triggerOpen={snackbar?.display}
-          type={snackbar.type === 'success' ? 'success' : 'error'}
-          closeSnackbar={() => {
-            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
-          }}
-        />
-      }
-
     </>
   )
 }

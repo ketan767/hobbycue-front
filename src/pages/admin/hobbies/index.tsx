@@ -118,6 +118,26 @@ const HobbiesRequest: React.FC = () => {
     setOpenDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
+  useEffect(() => {
+    const minHeight = 600; // Replace with the minimum height
+    const minNumber = 8; // Replace with the minimum number of entries
+
+    const updatePageLimit = () => {
+      const height = window.innerHeight;
+      const additionalEntries = Math.max(0, Math.floor((height - minHeight) / 52.9));
+      setPagelimit(minNumber + additionalEntries);
+    };
+
+    // Set initial page limit
+    updatePageLimit();
+
+    // Update on resize
+    window.addEventListener('resize', updatePageLimit);
+    return () => {
+      window.removeEventListener('resize', updatePageLimit);
+    };
+  }, []);
+
 
 
   const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -343,7 +363,7 @@ const HobbiesRequest: React.FC = () => {
       FetchHobbyReq()
     }
     setShowPreLoader(false)
-  }, [data.search.value, page, modalState])
+  }, [data.search.value, page, modalState,pagelimit])
 
   useEffect(() => {
     const initialNotes: { [key: string]: string } = {}
