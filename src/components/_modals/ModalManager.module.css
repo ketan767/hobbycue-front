@@ -116,8 +116,8 @@
   }
   .responsive-logo {
     display: block;
-    height: 35px; /*technically it should be 32px but 35px is working better than 32px*/
-    width: 35px; /*technically it should be 32px but 35px is working better than 32px*/
+    height: 16px; /*technically it should be 32px but 20px is working better than 32px*/
+    width: 16px; /*technically it should be 32px but 20px is working better than 32px*/
   }
 
   .modal-heading {
@@ -135,6 +135,9 @@
     /* left: calc(50vw + 152x) !important; */
     left: calc(50vw + 133px) !important;
     top: calc(50vh - 44px) !important;
+  }
+  .display-none {
+    display: none;
   }
 
   .self-centre {
