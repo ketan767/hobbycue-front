@@ -68,6 +68,20 @@ const EditUser: React.FC<UserEditProps> = ({
     }
   }
 
+  useEffect(() => {
+    const handleKeyDown = (event : any) => {
+      if (event.key === 'Escape') {
+        setIsEditModalOpen(false); 
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [setIsEditModalOpen]);
+
   if (!profile_url || !user) {
     return <div>Loading...</div>
   }
