@@ -13,9 +13,13 @@ import Link from 'next/link'
 import { GetServerSideProps } from 'next'
 import { isEmptyField } from '@/utils'
 import Image from 'next/image'
-import AddIcon from '@/assets/svg/add-circle.svg'
+import AddIcon from '@/assets/image/plus.png'
+import MinusIcon from '@/assets/image/minus.png'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import FilterIcon from '@/assets/image/filter_unfilled.png';
+import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
+import { set, sub } from 'date-fns'
 
 type Props = {
   data: any
@@ -58,6 +62,76 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   const [filtercategories, setFilterCategories] = useState([])
   const [filtersubCategories, setFilterSubCategories] = useState([])
   const [filterhobbyData, setFilterHobbyData] = useState([])
+
+  const [isCategoryExpanded, setIsCategoryExpanded] = useState<boolean[]>([]);
+  const [isSubCategoryExpanded, setIsSubCategoryExpanded] = useState<{ [key: string]: boolean }>({});
+
+  const handleCategoryShowHide = (index: number) => {
+    setIsCategoryExpanded((prev) => {
+      const newCatArr = [...prev];
+      newCatArr[index] = !newCatArr[index];
+      return newCatArr;
+    })
+  }
+
+  const handleSubCategoryShowHide = (subCategoryId: string) => {
+    setIsSubCategoryExpanded((prev) => ({
+      ...prev,
+      [subCategoryId]: !prev[subCategoryId],
+    }))
+  }
+
+  useEffect(() => {
+    setIsCategoryExpanded((prev) => {
+      const newCatArr = [...prev];
+      categories.filter((cat: any) => {
+        if (filterData.hobby) {
+          return (
+            cat._id === hobbyData.find((h) => h._id === filterData.hobby)?.category?._id
+          )
+         } else if (!filterData.category) {
+          return true // No filtering if filterData.category is empty
+        } else {
+           return cat._id === filterData.category
+         }
+       })
+       .sort((a: any, b: any) =>
+        a.display.localeCompare(b.display),
+      )
+      .forEach((cat: any, i: number) => {
+        newCatArr[i] = true;
+      });
+      return newCatArr;
+    })
+
+    setIsSubCategoryExpanded((prev) => {
+      const newSubCatObj = { ...prev };
+      subCategories.filter((subCat: any) => {
+        if (filterData.hobby) {
+          return (
+            subCat._id ===
+            hobbyData.find(
+              (h) => h._id === filterData.hobby,
+            )?.sub_category?._id
+          )
+        } else if (!filterData.subCategory) {
+          return true // No filtering if filterData.subCategory is empty
+        } else {
+          return (
+            subCat._id === filterData.subCategory
+            // !filterData.hobby ||
+          )
+        }
+      })
+      .sort((a: any, b: any) =>
+        a?.display?.localeCompare(b.display),
+      )
+      .forEach((subCat: any) => {
+        newSubCatObj[subCat._id] = true;
+      })
+      return newSubCatObj;
+    })
+  }, [categories, subCategories])
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     ExtendedDropdownListItem[]
@@ -444,11 +518,16 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
         <div className={`site-container ${styles['page-container']}`}>
           {!isMobile && (
             <aside className={styles['hobby-filter']}>
+              <ProfileSwitcher />
+
               {/* Filters */}
 
               <div className={styles['filter-wrapper']}>
-                <h2>Hobbies</h2>
-                <div className={styles['select-filter']}>
+                <div className={styles['filter-header']}>
+                  <h2>Hobbies</h2>
+                  <Image src={FilterIcon} alt="filter" />
+                </div>
+                <div className={`${styles['select-filter']}`}>
                   <TextField
                     autoComplete="off"
                     className={hobbyStyles['hobby-search']}
@@ -468,7 +547,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                 </div>
                 <hr className={hobbyStyles['divider']} />
 
-                <div className={styles['select-filter']}>
+                <div className={`${styles['select-filter']} ${styles['cat-subCat']}`}>
                   <p>Category</p>
                   <FormControl variant="outlined" fullWidth size="small">
                     <Select
@@ -575,19 +654,10 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
               <h1 className={styles['heading']}>Hobbies</h1>
               <div className={styles['text']}>
                 <p>
-                  Here is a reference list of hobbies categorised primarily
-                  based on the research work of Dr. Robert Stebbins called
-                  Serious Leisure. Dr. Stebbins defines Series Leisure as a
-                  systematic pursuit of an amateur, hobbyist or volunteer that
-                  is substantial, rewarding and results in a sense of
-                  accomplishment. Here is a top-down view of the categorisation.
+                A comprehensive list of hobbies and interests categorised based on the research work of Dr. Robert Stebbis called Serious Leisure. Dr. Stebbins defines Serious Leisure as a systematic pursuit of an amateur, hobbyist or volunteer, that is substantial, rewarding and results in a sense of accomplishment.
                 </p>
                 <p>
-                  While we maintain the same 5 top-level categories for a
-                  Hobbyist, the sub-categories may be slightly different. Each
-                  Category or Sub-Category has a dedicated page – just{' '}
-                  <strong>click on the name</strong> to navigate. Search on this
-                  page for any hobby and let us know if we’re missing something.
+                Each one of these hobbies has a dedicated page. Search for any hobby and just click on the name to navigate to that page.
                 </p>
               </div>
             </div>
@@ -754,11 +824,13 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                       .map((cat: any, i) => (
                         <tr key={i}>
                           <td className="">
+                            <Image onClick={() => handleCategoryShowHide(i)} src={isCategoryExpanded[i] === true ? MinusIcon : AddIcon} width={16} height={16} alt={isCategoryExpanded[i] ? "minus" : "add"} />{' '}
                             <Link href={`/hobby/${cat.slug}`}>
                               {cat.display}
                             </Link>
                           </td>
                           <td>
+                          {isCategoryExpanded[i] ? <>
                             {subCategories
                               .filter((subCat: any) => {
                                 if (filterData.hobby) {
@@ -789,7 +861,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                       }
                                     >
                                       <p>
-                                        <Image src={AddIcon} alt="add" />{' '}
+                                        <Image onClick={() => handleSubCategoryShowHide(subCat._id)} src={isSubCategoryExpanded[subCat._id] ? MinusIcon : AddIcon} width={16} height={16} alt={isSubCategoryExpanded[subCat._id] ? "minus" : "add"} />{' '}
                                         <Link href={`/hobby/${subCat.slug}`}>
                                           {subCat.display}
                                         </Link>
@@ -802,6 +874,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                           styles['table-hobby'] +
                                           ` ${hobbyStyles['tags-genres-sect']}`
                                         }
+                                        style={isSubCategoryExpanded[subCat._id] === true ? {} : { overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', width: '719px'} }
                                       >
                                         {hobbyData
                                           .filter(
@@ -859,6 +932,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                   )
                                 )
                               })}
+                              </> : null}
                           </td>
                         </tr>
                       ))}
