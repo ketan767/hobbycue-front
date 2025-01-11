@@ -132,7 +132,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
       })
       return newSubCatObj;
     })
-  }, [categories, subCategories])
+  }, [categories, subCategories, filterData])
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     ExtendedDropdownListItem[]
