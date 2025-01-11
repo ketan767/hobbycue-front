@@ -40,6 +40,12 @@
   /* height: 271px; */
 }
 
+.container:hover {
+  .contentImageContainer {
+    filter: brightness(0.7);
+  }
+}
+
 .content {
   /* padding: 12px; */
   font-family: 'Poppins';

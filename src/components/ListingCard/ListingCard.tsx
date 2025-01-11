@@ -186,7 +186,7 @@ const ListingCard: React.FC<Props> = ({
             <>
               <div
                 className={
-                  column === 4 ? styles.backgroundtwo : styles.background
+                  `${column === 4 ? styles.backgroundtwo : styles.background} ${styles.hoverCoverImage}`
                 }
               >
                 <img
@@ -214,19 +214,19 @@ const ListingCard: React.FC<Props> = ({
                 data?.type == 1
                   ? `${
                       column === 4 ? styles.coverImageTwo : styles.coverImage
-                    } default-people-listing-cover`
+                    } default-people-listing-cover ${styles.hoverCoverImage}`
                   : data?.type == 2
                   ? `${
                       column === 4 ? styles.coverImageTwo : styles.coverImage
-                    } default-place-listing-cover`
+                    } default-place-listing-cover ${styles.hoverCoverImage}`
                   : data?.type == 3
                   ? `${
                       column === 4 ? styles.coverImageTwo : styles.coverImage
-                    } default-program-listing-cover`
+                    } default-program-listing-cover ${styles.hoverCoverImage}`
                   : data?.type == 4
                   ? `${
                       column === 4 ? styles.coverImageTwo : styles.coverImage
-                    } default-product-listing-cover`
+                    } default-product-listing-cover ${styles.hoverCoverImage}`
                   : `${
                       column === 4 ? styles.coverImageTwo : styles.coverImage
                     } default-people-listing-cover`
