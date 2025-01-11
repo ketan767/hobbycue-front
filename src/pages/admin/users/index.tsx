@@ -19,7 +19,7 @@ import GoogleIcon from '@/assets/svg/admin_google.svg'
 import MailIcon from '@/assets/svg/admin_email.svg'
 import FacebookIcon from '@/assets/svg/admin_facebook.svg'
 import ToggleButton from '@/components/_buttons/ToggleButton'
-import ModalWrapper from '@/components/Modal'
+import ModalWrapper from '@/components/UserEModal'
 import UserFilter from '@/components/AdminPage/Filters/UserFilter/UserFilter'
 import EditUser from '@/components/AdminPage/Modal/UserEditModal/UserEditModal'
 import { setShowPageLoader } from '@/redux/slices/site'
@@ -339,14 +339,12 @@ const AdminDashboard: React.FC = () => {
         }
       }
 
-      // Check "status"
-      if (
-        status === 'deactivate' &&
-        (user.is_account_activated || user.deactivation_date === null)
-      ) {
-        return false
-      }
 
+      if (status === 'active') {
+        if (!user.is_account_activated) return false; 
+      } else if (status === 'deactivate') {
+        if (user.is_account_activated || !user.deactivation_date) return false; 
+      }
       return true
     })
   }

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import Image from 'next/image'
-import ToggleButton from '@/components/_buttons/ToggleButton'
+import ToggleButton from '@/components/_buttons/ToggleButtonFilter'
 import styles from './UserFilter.module.css'
 
 import GoogleIcon from '@/assets/svg/admin_google.svg'
