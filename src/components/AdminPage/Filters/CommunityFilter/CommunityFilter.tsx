@@ -44,7 +44,7 @@ const CommunityFilter: React.FC<UserFilterProps> = ({
   const handleUserCountChange = (field: 'min' | 'max', value: string) => {
     setModalState?.((prev) => ({
       ...prev,
-      pageCount: { ...prev.userCount, [field]: value },
+      userCount: { ...prev.userCount, [field]: value },
     }))
   }
 
