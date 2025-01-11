@@ -125,6 +125,7 @@ const Home: React.FC<PropTypes> = function () {
           router.push(`/community`)
         }
       }
+      localStorage.setItem('meUrl', '')
     }
   }
 
