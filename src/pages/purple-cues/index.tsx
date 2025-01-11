@@ -1,7 +1,8 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import styles from '@/styles/Brand.module.css'
 import Image from 'next/image'
 import Head from 'next/head'
+import styles2 from '@/styles/ExplorePage.module.css'
 
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
@@ -9,6 +10,8 @@ import { RootState } from '@/redux/store'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import dynamic from 'next/dynamic'
 import { GetOtherPage, updateOtherPage } from '@/services/admin.service'
+import PageGridLayout from '@/layouts/PageGridLayout'
+import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 
 const QuillEditor = dynamic(
   () => import('@/components/QuillEditor/QuillEditor'),
@@ -23,14 +26,22 @@ interface indexProps {}
 const index: FC<indexProps> = ({}) => {
   const [isEditing, setIsEditing] = useState(false)
   const [content, setContent] = useState('')
+  const [title, setTitle] = useState('')
   const { user } = useSelector((state: RootState) => state.user)
   const [id, setId] = useState('')
+  const titleRef = useRef<HTMLTextAreaElement | null>(null)
   const [isUpdating, setIsUpdating] = useState(false)
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
     message: '',
   })
+
+  const handleChange = (e: any, type: string) => {
+    const { value } = e.target
+    console.warn('valiee', value)
+    setTitle(value)
+  }
 
   const handleValueChange = (value: string) => {
     setContent(value)
@@ -40,6 +51,7 @@ const index: FC<indexProps> = ({}) => {
     try {
       const formData = {
         content: content,
+        title: title,
       }
       const data = await updateOtherPage('purple', formData)
       // console.log('data=================>', data)
@@ -60,6 +72,17 @@ const index: FC<indexProps> = ({}) => {
       console.log('error', error)
     } finally {
       setIsUpdating(false)
+    }
+  }
+
+  const updateTitle = async () => {
+    try {
+      const formData = {
+        title: title,
+      }
+      const data = await updateOtherPage('purple', formData)
+    } catch (error) {
+      console.log('error', error)
     }
   }
 
@@ -91,8 +114,6 @@ const index: FC<indexProps> = ({}) => {
   useEffect(() => {
     const fetchBrands = async () => {
       const result = await GetOtherPage('purple')
-      // console.log('result------>', result.res.data[0])
-      // console.log('id------>', result.res.data[0]._id)
 
       const currContent = result.res.data[0] ? result.res.data[0].content : ''
       const currId = result.res.data[0] ? result.res.data[0]._id : ''
@@ -100,26 +121,66 @@ const index: FC<indexProps> = ({}) => {
       setId(currId)
     }
     fetchBrands()
-  }, [])
+
+    if (user?.is_admin) {
+      setIsEditing(true)
+    }
+  }, [user])
   return (
     <>
       <Head>
-        <title>HobbyCue - Purple-cues</title>
+        <title>HobbyCue - Purple-Cues</title>
       </Head>
-      <main className={styles['main']}>
-        <section className={styles['white-container']}>
-          <div className={styles['heading-container']}>
-            {/* <span className={styles['heading']}>BRAND </span> */}
-            {user.is_admin && (
-              <div className={styles['pencil']} onClick={toggleEditing}>
-                {pencilIconSvg}
+
+      <PageGridLayout column={2}>
+        <aside
+          className={`${styles2['community-left-aside']} custom-scrollbar`}
+        >
+          <section
+            className={`content-box-wrapper ${styles2['hobbies-side-wrapper']}`}
+          >
+            <header className={styles2['header']}>
+              <div className={styles2['heading']}>
+                {isEditing ? (
+                  <textarea
+                    className={styles['title'] + ' ' + styles.editInput}
+                    placeholder="Title"
+                    value={title || ''}
+                    name="title"
+                    onChange={(e) => handleChange(e, 'title')}
+                    onBlur={() => updateTitle()}
+                    ref={titleRef}
+                    onKeyDown={(e) =>
+                      e.key === 'Enter' && titleRef.current?.blur()
+                    }
+                    rows={1}
+                    onInput={function (e) {
+                      const target = e.target as HTMLTextAreaElement
+                      target.style.height = 'auto'
+                      target.style.height = target.scrollHeight + 'px'
+                    }}
+                  />
+                ) : (
+                  <h1 className={styles['title']}>{title || ''}</h1>
+                )}
               </div>
-            )}
-          </div>
-          <div className={styles['list-container']}>
-            <div className={styles['max-w-1296px']}>
-              <style>
-                {`
+            </header>
+          </section>
+        </aside>
+        <main className={styles['main']}>
+          <section className={styles['white-container']}>
+            <div className={styles['heading-container']}>
+              {/* <span className={styles['heading']}>BRAND </span> */}
+              {user.is_admin && (
+                <div className={styles['pencil']} onClick={toggleEditing}>
+                  {pencilIconSvg}
+                </div>
+              )}
+            </div>
+            <div className={styles['list-container']}>
+              <div className={styles['max-w-1296px']}>
+                <style>
+                  {`
                         .ql-toolbar.ql-snow {
                           width: 100%;
                           border-left:none;
@@ -161,7 +222,7 @@ const index: FC<indexProps> = ({}) => {
                           font-weight: 400;
                           line-height: 24px;
                           margin-bottom: 11px;
-}
+                          }
                         }
                          @media screen and (max-width:1100px) {
                           .ql-editor{
@@ -172,27 +233,30 @@ const index: FC<indexProps> = ({}) => {
                         }
                         
                       `}
-              </style>
-              <div className={`ql-snow ${styles['max-w-1296px']}`}>
-                <div
-                  className={`ql-editor ${styles['max-w-full']}`}
-                  dangerouslySetInnerHTML={{ __html: content }}
-                />
+                </style>
+                <div className={`ql-snow ${styles['max-w-1296px']}`}>
+                  {!isEditing && (
+                    <div
+                      className={`ql-editor ${styles['max-w-full']}`}
+                      dangerouslySetInnerHTML={{ __html: content }}
+                    />
+                  )}
+                </div>
+                {isEditing && (
+                  <>
+                    <QuillEditor value={content} onChange={handleValueChange} />
+                    <div className={styles.buttonContainer}>
+                      <button className={styles.button} onClick={handleSave}>
+                        {!isUpdating ? 'Save' : 'Saving...'}
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
-              {isEditing && (
-                <>
-                  <QuillEditor value={content} onChange={handleValueChange} />
-                  <div className={styles.buttonContainer}>
-                    <button className={styles.button} onClick={handleSave}>
-                      {!isUpdating ? 'Save' : 'Saving...'}
-                    </button>
-                  </div>
-                </>
-              )}
             </div>
-          </div>
-        </section>
-      </main>
+          </section>
+        </main>
+      </PageGridLayout>
       {
         <CustomSnackbar
           message={snackbar.message}
