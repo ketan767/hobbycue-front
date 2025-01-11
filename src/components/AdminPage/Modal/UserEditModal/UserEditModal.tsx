@@ -74,6 +74,7 @@ const EditUser: React.FC<UserEditProps> = ({
 
   return (
     <section className={styles.mainContainer}>
+      <div className={styles.modalHeaderWrapper}>
       <div className={styles.header}>
         <h1
           className={styles.title}
@@ -89,7 +90,8 @@ const EditUser: React.FC<UserEditProps> = ({
           onClick={() => setIsEditModalOpen(false)}
         />
       </div>
-        <hr style={{marginBottom:"8px"}} />
+      </div>
+        {/* <hr style={{marginBottom:"8px"}} /> */}
       <div className={styles.mainWrapper}>
         <form onSubmit={updateUserFunc}>
           <div className={styles.twoColumnGrid}>
