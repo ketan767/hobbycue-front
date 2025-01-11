@@ -241,7 +241,14 @@ const HobbyDetail: React.FC<Props> = (props) => {
         )}
         <meta
           property="og:description"
-          content={props?.previewLine1 + ' ⬢ ' + props?.unformattedAbout}
+          content={
+            props?.previewLine1 +
+            ' ⬢ ' +
+            props?.unformattedAbout +
+            ' • ' +
+            data?.display +
+            'hobby community'
+          }
         />
         <title>{`${data?.display} | HobbyCue`}</title>
       </Head>

@@ -154,7 +154,7 @@ const AdminDashboard: React.FC = () => {
   }
 
   const [page, setPage] = useState(1)
-  const [pagelimit, setPagelimit] = useState(25)
+  const [pagelimit, setPagelimit] = useState(10)
   const [deleteData, setDeleteData] = useState<{
     open: boolean
     _id: string | undefined
@@ -429,7 +429,7 @@ const AdminDashboard: React.FC = () => {
     if (hasNonEmptyValues(modalState)) {
       setPagelimit(1000)
     } else {
-      setPagelimit(25)
+      setPagelimit(10)
     }
   }, [modalState])
 
@@ -592,7 +592,7 @@ const AdminDashboard: React.FC = () => {
                       </button>
                     </div>
                   </th>
-                  <th style={{ width: '5.939%' }}>Onb</th>
+                  <th style={{ width: '5.939%', textAlign:'center' }}>Onb</th>
                   <th style={{ width: '4.939%', paddingRight: '16px' }}>
                     Pages
                   </th>

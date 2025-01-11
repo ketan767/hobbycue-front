@@ -710,17 +710,21 @@ const EditUser: React.FC<UserEditProps> = ({
             <h3>Last Login</h3>
             <span>{` ${user._sessions[0]?.device}`}</span>
           </div>
+         
             <div className={styles.auditFields}>
-              <div className={styles.auditField}>
-                <span className={styles.label}>Created By:</span>
-                    <Link
+            <Link
                     href={`/profile/${user.profile_url}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     >
+              <div className={styles.auditField}>
+              
+                <span className={styles.label}>Created By:</span>
+                   
                     <span className={styles.value}>{user.full_name || "N/A"}</span>
-                    </Link>
+                  
               </div>
+              </Link>
               <div className={styles.auditField}>
                 <span className={styles.label}>Created At:</span>
                 <span className={styles.value}>
@@ -735,18 +739,22 @@ const EditUser: React.FC<UserEditProps> = ({
                   : "N/A"
                 }
                 </span>
+                
               </div>
-              <div className={styles.auditField}>
-                <span className={styles.label}>Updated By:</span>
-                <Link
+              <Link
                     href={user.updated_profile_url ? `/profile/${user.updated_profile_url}` : `/profile/admin`}
                     target="_blank"
                     rel="noopener noreferrer"
                     >
+              <div className={styles.auditField}>
+             
+                <span className={styles.label}>Updated By:</span>
+                
                     <span className={styles.value}>{user.updatedBy || "HobbyCue Admin"}</span>
-                    </Link>
+                    
                 {/* <span className={styles.value}></span> */}
               </div>
+              </Link>
               <div className={styles.auditField}>
                 <span className={styles.label}>Updated At:</span>
                 <span className={styles.value}>

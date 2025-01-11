@@ -23,7 +23,9 @@ export type ModalType =
   | 'listing-about-edit'
   | 'listing-cta-edit'
   | 'listing-product-variants-edit'
+  | 'listing-place-variants-edit'
   | 'listing-product-purchase'
+  | 'listing-place-purchase'
   | 'listing-working-hours-edit'
   | 'listing-event-hours-edit'
   | 'listing-address-edit'
@@ -116,6 +118,7 @@ export type ModalType =
           imageurl?: string | undefined
           propData?:any
           modalType?: any
+          description?:any
 
         }>
       ) {

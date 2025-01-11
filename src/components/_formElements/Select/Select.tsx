@@ -22,8 +22,10 @@ type Props = {
   style?: any
   singleActiveMode?: boolean
   openDropdownId?: string | null
-  setOpenDropdownId?: React.Dispatch<React.SetStateAction<string | null|undefined>>
-  id?:string
+  setOpenDropdownId?: React.Dispatch<
+    React.SetStateAction<string | null | undefined>
+  >
+  id?: string
 }
 
 const InputSelect: React.FC<Props> = ({
@@ -43,7 +45,7 @@ const InputSelect: React.FC<Props> = ({
   singleActiveMode = false, // New optional prop
   openDropdownId,
   setOpenDropdownId,
-  id
+  id,
 }) => {
   const [active, setActive] = useState(false)
 
@@ -116,7 +118,11 @@ const InputSelect: React.FC<Props> = ({
       style={{ backgroundColor: `${notSelected && '#8064a2'}`, ...style }}
       className={`${styles.container} ${className || ''}`}
     >
-      <header className={styles.header} onClick={handleHeaderClick}>
+      <header
+        className={styles.header}
+        style={id === 'ListingPlaceAdminHeader' ? { height: '40px' } : {}}
+        onClick={handleHeaderClick}
+      >
         {type === 'page' ? (
           <div className={styles['page-type']}>
             {value && <img src={img ?? DefaultPageImage.src} alt="" />}

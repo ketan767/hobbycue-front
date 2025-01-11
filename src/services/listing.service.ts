@@ -492,6 +492,60 @@ export const updateProductVariant = async (
   }
 }
 
+export const getPlaceVariant = async (
+  id: string,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.get(`listing/place-variant/${id}`, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+export const addPlaceVariant = async (
+  id: string,
+  data: any,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.post(
+      `listing/place-variant/${id}`,
+      data,
+      { headers },
+    )
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+export const updatePlaceVariant = async (
+  id: string,
+  data: any,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.patch(
+      `listing/place-variant/${id}`,
+      data,
+      { headers },
+    )
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 export const purchaseProduct = async (
   id: string,
   data: any,
@@ -500,6 +554,39 @@ export const purchaseProduct = async (
   const headers = { Authorization: `Bearer ${token}` }
   try {
     const res = await axiosInstance.post(`listing/purchase/${id}`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+export const purchasePlaceMembership = async (
+  id: string,
+  data: any,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.post(`listing/purchase-membership/${id}`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+export const upadtePlaceMembership = async (
+  id: string,
+  data: any,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.patch(`listing/place-membership-update/${id}`, data, {
       headers,
     })
     return { res: res, err: null }

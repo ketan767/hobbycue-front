@@ -15,23 +15,15 @@ import {
 } from '@/redux/slices/site'
 import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
-
+import ListingOrdersTab from '@/components/ListingPage/ListingOrdersTab/ListingOrdersTab'
+import styles from '@/styles/Page.module.css'
 import { useMediaQuery } from '@mui/material'
-import { formatDateRange, htmlToPlainTextAdv, pageType } from '@/utils'
+import { pageType } from '@/utils'
+import ListingMembersTab from '@/components/ListingPage/ListingMembersTab/ListingMembersTab'
 
-type Props = {
-  data: ListingPageData
-  unformattedAbout?: string
-  address?: any
-  result?: any
-  pageTypeAndCity?: any
-  date?: any
-  time?: string
-  pageTypeAndPrice?: any
-}
+type Props = { data: ListingPageData }
 
 const ListingHome: React.FC<Props> = (props) => {
-  console.warn({ props })
   const dispatch = useDispatch()
   const [error, seterror] = useState({
     hobby: false,
@@ -39,22 +31,24 @@ const ListingHome: React.FC<Props> = (props) => {
     location: false,
     contact: false,
   })
-  console.warn('timeee', props.time)
   const { listing } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(listing)
   const { user } = useSelector((state: RootState) => state.user)
   const { listingLayoutMode } = useSelector((state: any) => state.site)
-
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    if (isMobile) {
+      setExpandAll(false)
+    }
+  }, [isMobile])
   useEffect(() => {
     dispatch(updateListingPageData(props.data.pageData))
     dispatch(updateListingModalData(props.data.pageData))
-    setExpandAll(false)
   }, [])
 
   const [isDataLoaded, setIsDataLoaded] = useState(false)
   const router = useRouter()
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
-  const isMobile = useMediaQuery('(max-width:1100px)')
 
   useEffect(() => {
     if (user._id) {
@@ -73,7 +67,7 @@ const ListingHome: React.FC<Props> = (props) => {
     setExpandAll(value)
     dispatch(updateListingMenuExpandAll(value))
   }
-  console.warn('pageDData', props)
+
   useEffect(() => {
     const handleRouteChange = () => {
       sessionStorage.setItem('scrollPositionlisting', window.scrollY.toString())
@@ -110,7 +104,7 @@ const ListingHome: React.FC<Props> = (props) => {
           rel="canonical"
           href={`${process.env.NEXT_PUBLIC_BASE_URL}/${pageType(
             props?.data?.pageData?.type,
-          )}/${props?.data?.pageData?.page_url}`}
+          )}/${props?.data?.pageData?.page_url}/members`}
         />
         <meta
           property="og:image"
@@ -122,40 +116,14 @@ const ListingHome: React.FC<Props> = (props) => {
         />
         <meta
           property="og:description"
-          content={`${
-            props?.data?.pageData?.type === 1 ||
-            props?.data?.pageData?.type === 2
-              ? props?.data?.pageData?.tagline
-                ? props?.data?.pageData?.tagline +
-                  ' ⬢ ' +
-                  props?.pageTypeAndCity
-                : props?.result + ' ⬢ ' + props.pageTypeAndCity
-              : props?.data?.pageData?.type === 3
-              ? props?.data?.pageData?.tagline
-                ? props?.data?.pageData?.tagline +
-                  ' ⬢ ' +
-                  props?.pageTypeAndCity +
-                  ' ' +
-                  props?.date +
-                  (props?.time ? ` | ${props?.time}` : '')
-                : props?.address +
-                  ' ⬢ ' +
-                  props?.pageTypeAndCity +
-                  ' ' +
-                  props?.date +
-                  (props?.time ? ` | ${props?.time}` : '')
-              : props?.data?.pageData?.tagline
-              ? props?.data?.pageData?.tagline + ' ⬢ ' + props?.pageTypeAndPrice
-              : props?.result + ' ⬢ ' + props?.pageTypeAndPrice
-          }`}
+          content={`${props?.data?.pageData?.tagline ?? ''}`}
         />
-
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>
 
       <ListingPageLayout
-        activeTab={'home'}
+        activeTab={'members'}
         data={props.data}
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
@@ -163,10 +131,16 @@ const ListingHome: React.FC<Props> = (props) => {
         <ListingPageMain
           data={props.data.pageData}
           expandAll={expandAll}
-          setExpandAll={setExpandAll}
-          activeTab={'home'}
+          activeTab={'members'}
         >
-          <ListingHomeTab data={props.data.pageData} expandAll={expandAll} />
+          <div className={styles['display-desktop']}>
+            <ListingMembersTab
+              pageData={props.data.pageData}
+              data={props.data.pageData._membership_purchases}
+              headerData={props.data?.pageData?.place_variant}
+              pageName={props.data?.pageData?.title}
+            />
+          </div>
         </ListingPageMain>
       </ListingPageLayout>
     </>
@@ -199,8 +173,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   }
 
   const { err, res } = await getListingPages(
-    `page_url=${query['page_url']}&populate=_hobbies,_address,seller,product_variant`,
+    `page_url=${query['page_url']}&populate=_hobbies,_address,seller,product_variant,_purchases,_membership_purchases,place_variant`,
   )
+
+  console.log('Pages----> ', res?.data?.data)
 
   if (res?.data.success && res.data.data.no_of_listings === 0) {
     return {
@@ -214,82 +190,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     }
   }
 
-  const pageData = res?.data.data.listings[0]
-
-  const hobbiesDisplay =
-    pageData?._hobbies
-      ?.slice(0, 3)
-      ?.map((hobbyItem: any, index: any) => {
-        const hobbyDisplay = hobbyItem?.hobby?.display || ''
-        const genreDisplay = hobbyItem?.genre?.display
-          ? ` - ${hobbyItem?.genre?.display}`
-          : ''
-        const separator =
-          index < pageData?._hobbies.length - 1 && index < 2 ? ', ' : ''
-        return `${hobbyDisplay}${genreDisplay}${separator}`
-      })
-      ?.join('') || ''
-
-  const additionalHobbies =
-    pageData?._hobbies?.length > 3
-      ? ` (+${pageData?._hobbies?.length - 3})`
-      : ''
-
-  const result = `${hobbiesDisplay}${additionalHobbies}`
-
-  const address = [
-    pageData?._address?.society,
-    pageData?._address?.locality,
-    pageData?._address?.city,
-  ]
-    .filter(Boolean)
-    .join(', ')
-
-  const pageTypeAndCity =
-    pageData?.page_type.map((pt: string, index: number) => {
-      return `${index > 0 ? ' ' : ''}${pt}`
-    }) + (pageData?._address?.city ? ` | ${pageData?._address?.city}` : '') ||
-    '\u00a0'
-
-  const date =
-    pageData?.event_date_time.length !== 0
-      ? formatDateRange(pageData?.event_date_time[0])
-      : ''
-
-  const time = pageData?.event_date_time[0]?.from_time
-    ? ` ${pageData?.event_date_time[0]?.from_time}` +
-      (pageData?.event_date_time[0]?.to_time
-        ? ` - ${pageData?.event_date_time[0]?.to_time}`
-        : '')
-    : ''
-
-  const pageTypeAndPrice =
-    pageData?.page_type.map((pt: string, index: number) => {
-      return `${index > 0 ? ' ' : ''}${pt}`
-    }) +
-    (pageData?.product_variant?.variations[0]?.value
-      ? ` | ₹${pageData?.product_variant?.variations[0]?.value}`
-      : ` | ₹0`)
-
-  const unformattedAbout = htmlToPlainTextAdv(pageData?.description)
-
+  const data = {
+    pageData: res?.data.data.listings[0],
+    postsData: null,
+    mediaData: null,
+    reviewsData: null,
+    eventsData: null,
+    storeData: null,
+  }
+  console.log('current data---------------->', data?.pageData?.place_variant)
   return {
     props: {
-      data: {
-        pageData,
-        postsData: null,
-        mediaData: null,
-        reviewsData: null,
-        eventsData: null,
-        storeData: null,
-      },
-      address,
-      unformattedAbout,
-      result,
-      pageTypeAndCity,
-      date,
-      time,
-      pageTypeAndPrice,
+      data,
     },
   }
 }

@@ -118,6 +118,7 @@ const BlogPublish = (props: any) => {
       setSaveBtnLoading(true)
       let updatedFields = {
         url: processedUrl,
+        content: props?.propData,
         keywords: keywords
           ?.trim()
           .split(/[\s,]+/)
@@ -143,8 +144,8 @@ const BlogPublish = (props: any) => {
         return null
       }
       setUrlError('')
-      dispatch(setBlog({ ...blog, ...updatedFields }))
-      dispatch(setRefetch(refetch + 1))
+      // dispatch(setBlog({ ...blog, ...updatedFields }))
+      // dispatch(setRefetch(refetch + 1))
       dispatch(closeModal())
       router.push(`/blog/${updatedFields.url}`)
       console.log('Blog updated successfully:', data)
