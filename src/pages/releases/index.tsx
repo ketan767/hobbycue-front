@@ -114,10 +114,11 @@ const index: FC<indexProps> = ({}) => {
   useEffect(() => {
     const fetchBrands = async () => {
       const result = await GetOtherPage('releases')
-
       const currContent = result.res.data[0] ? result.res.data[0].content : ''
+      const currTitle = result.res.data[0] ? result.res.data[0].title : ''
       const currId = result.res.data[0] ? result.res.data[0]._id : ''
       setContent(currContent)
+      setTitle(currTitle)
       setId(currId)
     }
     fetchBrands()

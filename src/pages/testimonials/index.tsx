@@ -116,8 +116,10 @@ const index: FC<indexProps> = ({}) => {
       const result = await GetOtherPage('testimonials')
 
       const currContent = result.res.data[0] ? result.res.data[0].content : ''
+      const currTitle = result.res.data[0] ? result.res.data[0].title : ''
       const currId = result.res.data[0] ? result.res.data[0]._id : ''
       setContent(currContent)
+      setTitle(currTitle)
       setId(currId)
     }
     fetchBrands()
