@@ -1,111 +1,210 @@
-import Link from 'next/link'
-import styles from './styles.module.css'
-import Footer from '@/components/Footer/Footer'
+import { FC, useEffect, useState } from 'react'
+import styles from '@/styles/Brand.module.css'
+import Image from 'next/image'
 import Head from 'next/head'
-import CWEimg from '@/assets/image/CWE_logo.png'
-import govLogo from '@/assets/image/KarnatakaGovtLogo.png'
-import nasComimg from '@/assets/image/nasscom_initiative_img.jpg'
 
-export default function index() {
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
+
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import dynamic from 'next/dynamic'
+import { GetOtherPage, updateOtherPage } from '@/services/admin.service'
+
+const QuillEditor = dynamic(
+  () => import('@/components/QuillEditor/QuillEditor'),
+  {
+    ssr: false,
+    loading: () => <h1>Loading...</h1>,
+  },
+)
+
+interface indexProps {}
+
+const index: FC<indexProps> = ({}) => {
+  const [isEditing, setIsEditing] = useState(false)
+  const [content, setContent] = useState('')
+  const { user } = useSelector((state: RootState) => state.user)
+  const [id, setId] = useState('')
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+
+  const handleValueChange = (value: string) => {
+    setContent(value)
+  }
+  const handleSave = async (e: any) => {
+    setIsUpdating(true)
+    try {
+      const formData = {
+        content: content,
+      }
+      const data = await updateOtherPage('about', formData)
+      // console.log('data=================>', data)
+      if (data.res.status === 200) {
+        setSnackbar({
+          display: true,
+          type: 'success',
+          message: 'Page updated successfully',
+        })
+        setIsEditing(false)
+      }
+    } catch (error) {
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Unable to update data',
+      })
+      console.log('error', error)
+    } finally {
+      setIsUpdating(false)
+    }
+  }
+
+  const toggleEditing = () => {
+    setIsEditing(!isEditing)
+  }
+  const pencilIconSvg = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_13842_168963)">
+        <path
+          d="M2 11.5002V14.0002H4.5L11.8733 6.62687L9.37333 4.12687L2 11.5002ZM13.8067 4.69354C14.0667 4.43354 14.0667 4.01354 13.8067 3.75354L12.2467 2.19354C11.9867 1.93354 11.5667 1.93354 11.3067 2.19354L10.0867 3.41354L12.5867 5.91354L13.8067 4.69354Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_13842_168963">
+          <rect width="16" height="16" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      const result = await GetOtherPage('about')
+      // console.log('result------>', result.res.data[0])
+      // console.log('id------>', result.res.data[0]._id)
+
+      const currContent = result.res.data[0] ? result.res.data[0].content : ''
+      const currId = result.res.data[0] ? result.res.data[0]._id : ''
+      setContent(currContent)
+      setId(currId)
+    }
+    fetchBrands()
+  }, [])
   return (
     <>
       <Head>
-        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
-        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
-
         <title>HobbyCue - About</title>
       </Head>
-      <div className={styles.container}>
-        <div className={styles.dataSection}>
-          <div className={styles.about}>
-            <h1>About</h1>
-            <p>
-              <span className="font-semibold font-italic">hobbycue</span> is a
-              social network and a marketplace for hobbyists and hobby
-              communities. Find a partner or teacher/expert, join a class or a
-              workshop, find a place to practice, or shop for equipment and
-              supplies pertaining to your hobby.
-            </p>
-            <p>
-              A <span className="font-italic">cue</span> is a guiding suggestion
-              or a hint, a prompt or a stimulus for action. We believe everyone
-              is a hobbyist. They just may not explore or express enough. And a
-              cue is all that is needed to get them going.
-            </p>
-            <p>
-              <span className="font-italic">hobbycue</span> – because we provide
-              cues for your hobby 🙂 Brought to you by Purple Cues Pvt. Ltd. You
-              could take the cue from your community members, or cue them in
-              based on your knowledge. Read on and explore to know more …
-            </p>
-            <p>
-              <span className="font-semibold font-italic">Why hobbycue</span> :
-              Most social networks, search lists and websites today, cut across
-              topics. As part of our hobby, we may end up checking multiple
-              sites and filter for topics of our interest. What if your hobby is
-              at the centre, with a community around it, and we aggregate
-              everything that already exists, enrich with new content, and link
-              them all?
-            </p>
-            <p>
-              <span className="font-semibold font-italic">What can you do</span>{' '}
-              : Sign-in with your e-mail, Google or Facebook login. Update your
-              profile to edit your location and hobbies. Browse through content
-              related to your hobbies or add new ones. Join the community
-              groups, post your queries or help others. And do reach out to us
-              with your ideas. Login to view all the content.
-            </p>
-            <p>
-              Company : This site is built and owned by Purple Cues Pvt. Ltd.
-              who are incubated at the NASSCOM 10K Startup Warehouse, with
-              support from CWE and Govt of Karnataka. Know more at{' '}
-              <Link
-                className="font-medium"
-                target="_blank"
-                href={'http://hobbycue.com/purple-cues'}
-              >
-                http://hobbycue.com/purple-cues
-              </Link>
-            </p>
-            <img
-              src={CWEimg.src}
-              alt="CWE"
-            />
-            <img
-              src={nasComimg.src}
-              alt="Nascomm 10000 Startups"
-            />
-            <img
-              src={govLogo.src}
-              alt="Karnataka Government Logo"
-            />
-            <p>
-              <span className="font-semibold">Team</span> : Purnima and Bhaskar
-              from Bangalore are the Co-Founding couple. Between them, they have
-              several hobbies in common, as well as individual talents in the
-              family. More about them and the team at{' '}
-              <Link target="_blank" href={'http://hobbycue.com/team'}>
-                http://hobbycue.com/team
-              </Link>{' '}
-            </p>
-            <p>
-              <span className="font-semibold">Recommendations</span> : Check out
-              our user reactions{' '}
-              <Link target="_blank" href={'http://hobbycue.com/testimonials'}>
-                http://hobbycue.com/testimonials
-              </Link>{' '}
-            </p>
-            <p>
-              <span className="font-semibold">Contact</span> : Contact us
-              through{' '}
-              <Link target="_blank" href={'/contact'}>
-                http://hobbycue.com/contact
-              </Link>
-            </p>
+      <main className={styles['main']}>
+        <section className={styles['white-container']}>
+          <div className={styles['heading-container']}>
+            {/* <span className={styles['heading']}>BRAND </span> */}
+            {user.is_admin && (
+              <div className={styles['pencil']} onClick={toggleEditing}>
+                {pencilIconSvg}
+              </div>
+            )}
           </div>
-        </div>
-      </div>
-      <Footer />
+          <div className={styles['list-container']}>
+            <div className={styles['max-w-1296px']}>
+              <style>
+                {`
+                        .ql-toolbar.ql-snow {
+                          width: 100%;
+                          border-left:none;
+                          border-right:none;
+                          border-bottom:none;
+                        }
+                        .ql-container.ql-snow {
+                          width: 100%;
+                          border:none;
+                        }
+                        .ql-editor{
+                          border: none !important;
+                          width: 100%;
+                          border-top:1px solid #ccc;
+                          padding-right:16px;
+                          margin-inline: auto;
+                        }
+                        .ql-editor.ql-indent-1{
+                          padding-left:4px;
+                        }
+                        .ql-editor ul, 
+                        .ql-editor ol {
+                          padding-left: 4px;  
+                                        text-align:justify; 
+
+                        }
+
+                        .ql-editor a {
+                          color: rgb(128, 100, 162);  
+                          text-decoration: none !important;
+                                        text-align:justify;
+
+                        }
+                        .ql-editor p {
+                          color: var(--Grey-Darkest, #08090a);
+                          font-family: Cambria;
+                          font-size: 16px !important;
+                          font-style: normal;
+                          font-weight: 400;
+                          line-height: 24px;
+                          margin-bottom: 11px;
+}
+                        }
+                         @media screen and (max-width:1100px) {
+                          .ql-editor{
+                          
+                            width: 114vw;
+                          
+                          }
+                        }
+                        
+                      `}
+              </style>
+              <div className={`ql-snow ${styles['max-w-1296px']}`}>
+                <div
+                  className={`ql-editor ${styles['max-w-full']}`}
+                  dangerouslySetInnerHTML={{ __html: content }}
+                />
+              </div>
+              {isEditing && (
+                <>
+                  <QuillEditor value={content} onChange={handleValueChange} />
+                  <div className={styles.buttonContainer}>
+                    <button className={styles.button} onClick={handleSave}>
+                      {!isUpdating ? 'Save' : 'Saving...'}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </section>
+      </main>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }
+
+export default index

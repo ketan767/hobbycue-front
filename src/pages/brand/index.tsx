@@ -41,7 +41,7 @@ const index: FC<indexProps> = ({}) => {
       const formData = {
         content: content,
       }
-      const data = await updateOtherPage(id, formData)
+      const data = await updateOtherPage('brand', formData)
       // console.log('data=================>', data)
       if (data.res.status === 200) {
         setSnackbar({

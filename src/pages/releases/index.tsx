@@ -1,270 +1,210 @@
-import Link from 'next/link'
-import styles from './styles.module.css'
-import Footer from '@/components/Footer/Footer'
+import { FC, useEffect, useState } from 'react'
+import styles from '@/styles/Brand.module.css'
+import Image from 'next/image'
 import Head from 'next/head'
 
-export default function index() {
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
+
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import dynamic from 'next/dynamic'
+import { GetOtherPage, updateOtherPage } from '@/services/admin.service'
+
+const QuillEditor = dynamic(
+  () => import('@/components/QuillEditor/QuillEditor'),
+  {
+    ssr: false,
+    loading: () => <h1>Loading...</h1>,
+  },
+)
+
+interface indexProps {}
+
+const index: FC<indexProps> = ({}) => {
+  const [isEditing, setIsEditing] = useState(false)
+  const [content, setContent] = useState('')
+  const { user } = useSelector((state: RootState) => state.user)
+  const [id, setId] = useState('')
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+
+  const handleValueChange = (value: string) => {
+    setContent(value)
+  }
+  const handleSave = async (e: any) => {
+    setIsUpdating(true)
+    try {
+      const formData = {
+        content: content,
+      }
+      const data = await updateOtherPage('releases', formData)
+      // console.log('data=================>', data)
+      if (data.res.status === 200) {
+        setSnackbar({
+          display: true,
+          type: 'success',
+          message: 'Page updated successfully',
+        })
+        setIsEditing(false)
+      }
+    } catch (error) {
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Unable to update data',
+      })
+      console.log('error', error)
+    } finally {
+      setIsUpdating(false)
+    }
+  }
+
+  const toggleEditing = () => {
+    setIsEditing(!isEditing)
+  }
+  const pencilIconSvg = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_13842_168963)">
+        <path
+          d="M2 11.5002V14.0002H4.5L11.8733 6.62687L9.37333 4.12687L2 11.5002ZM13.8067 4.69354C14.0667 4.43354 14.0667 4.01354 13.8067 3.75354L12.2467 2.19354C11.9867 1.93354 11.5667 1.93354 11.3067 2.19354L10.0867 3.41354L12.5867 5.91354L13.8067 4.69354Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_13842_168963">
+          <rect width="16" height="16" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      const result = await GetOtherPage('releases')
+      // console.log('result------>', result.res.data[0])
+      // console.log('id------>', result.res.data[0]._id)
+
+      const currContent = result.res.data[0] ? result.res.data[0].content : ''
+      const currId = result.res.data[0] ? result.res.data[0]._id : ''
+      setContent(currContent)
+      setId(currId)
+    }
+    fetchBrands()
+  }, [])
   return (
     <>
       <Head>
-        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
-        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
-
-        <title>HobbyCue - Releases</title>
+        <title>HobbyCue - releases</title>
       </Head>
-      <div className={styles.container}>
-        <div className={styles.dataSection}>
-          <div className={styles.about}>
-            <h1>Releases</h1>
-            <ul>
-              <li>2024-05-04 Release 0.9.0</li>
-              <li style={{ marginLeft: '10px' }}>
-                This is the Beta release – May the 4th be with you!
-              </li>
-              <li>2025-05-21 Release 0.9.1</li>
-            </ul>
-            <ul style={{ marginLeft: '10px' }}>
-              <li>Install mini web app on mobile phones</li>
-              <li>Delete posts</li>
-              <li>Site Admin ability to handle spam</li>
-              <li>Add to mine for hobbies</li>
-              <li>Bug fixes, image compression and data handling</li>
-              <li style={{ marginLeft: '-10px' }}>
-                2025-06-07 Releases 0.9.1a to 0.9.1c
-              </li>
-              <li>Custom Page Button</li>
-              <li>Event Registrations with Variants</li>
-              <li>Admin Reports </li>
-              <li>Create Post </li>
-              <li>Bug fixes, share previews </li>
-              <li style={{ marginLeft: '-10px' }}>2025-06-21 Release 0.9.2</li>
-              <li>Admin approval workflows </li>
-              <li>Facebook Login New </li>
-              <li>Transfer Page </li>
-              <li>Schedule with Weekdays </li>
-              <li>Everyone can add Events </li>
-              <li>Sign-in to view Contact </li>
-            </ul>
+      <main className={styles['main']}>
+        <section className={styles['white-container']}>
+          <div className={styles['heading-container']}>
+            {/* <span className={styles['heading']}>BRAND </span> */}
+            {user.is_admin && (
+              <div className={styles['pencil']} onClick={toggleEditing}>
+                {pencilIconSvg}
+              </div>
+            )}
           </div>
-          <div className={styles.allPosts}>
-            <h2>Blog Posts by Category</h2>
-            <select
-              onChange={(e) => {
-                if (
-                  e.target.value === 'Select Category' ||
-                  e.target.value === undefined
-                ) {
-                  return
-                } else {
-                  window.location.href = e.target.value
-                }
-              }}
-            >
-              <option value={undefined}>Select Category</option>
-              <option
-                className="level-0"
-                value="https://hobbycue.com/blog/category/activity/"
-              >
-                Activity&nbsp;&nbsp;(26)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/activity/fitness"
-              >
-                &nbsp;&nbsp;&nbsp;Fitness&nbsp;&nbsp;(2)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/activity/nature"
-              >
-                &nbsp;&nbsp;&nbsp;Nature&nbsp;&nbsp;(11)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/activity/travel"
-              >
-                &nbsp;&nbsp;&nbsp;Travel&nbsp;&nbsp;(20)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/activity/wellness"
-              >
-                &nbsp;&nbsp;&nbsp;Wellness&nbsp;&nbsp;(4)
-              </option>
-              <option
-                className="level-0"
-                value="https://hobbycue.com/blog/category/arts/"
-              >
-                Arts&nbsp;&nbsp;(26)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/arts/artwork"
-              >
-                &nbsp;&nbsp;&nbsp;Artwork&nbsp;&nbsp;(3)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/arts/dance"
-              >
-                &nbsp;&nbsp;&nbsp;Dance&nbsp;&nbsp;(4)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/arts/literary"
-              >
-                &nbsp;&nbsp;&nbsp;Literary&nbsp;&nbsp;(5)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/arts/music"
-              >
-                &nbsp;&nbsp;&nbsp;Music&nbsp;&nbsp;(9)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/arts/photography"
-              >
-                &nbsp;&nbsp;&nbsp;Photography&nbsp;&nbsp;(4)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/arts/theatre"
-              >
-                &nbsp;&nbsp;&nbsp;Theatre&nbsp;&nbsp;(2)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/arts/visual"
-              >
-                &nbsp;&nbsp;&nbsp;Visual&nbsp;&nbsp;(2)
-              </option>
-              <option
-                className="level-0"
-                value="https://hobbycue.com/blog/category/collect/"
-              >
-                Collect&nbsp;&nbsp;(8)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/collect-items/"
-              >
-                &nbsp;&nbsp;&nbsp;Collect Items&nbsp;&nbsp;(1)
-              </option>
-              <option
-                className="level-0"
-                value="https://hobbycue.com/blog/category/making/"
-              >
-                Making&nbsp;&nbsp;(14)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/making/cooking"
-              >
-                &nbsp;&nbsp;&nbsp;Cooking&nbsp;&nbsp;(2)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/making/gardening"
-              >
-                &nbsp;&nbsp;&nbsp;Gardening&nbsp;&nbsp;(4)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/making/utility"
-              >
-                &nbsp;&nbsp;&nbsp;Utility&nbsp;&nbsp;(4)
-              </option>
-              <option
-                className="level-0"
-                value="https://hobbycue.com/blog/category/other/"
-              >
-                Other&nbsp;&nbsp;(8)
-              </option>
-              <option
-                className="level-0"
-                value="https://hobbycue.com/blog/category/perform/"
-              >
-                Perform&nbsp;&nbsp;(2)
-              </option>
-              <option
-                className="level-0"
-                value="https://hobbycue.com/blog/category/play/"
-              >
-                Play&nbsp;&nbsp;(3)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/play/games"
-              >
-                &nbsp;&nbsp;&nbsp;Games&nbsp;&nbsp;(1)
-              </option>
-              <option
-                className="level-1"
-                value="https://hobbycue.com/blog/category/play/sports"
-              >
-                &nbsp;&nbsp;&nbsp;Sports&nbsp;&nbsp;(3)
-              </option>
-              <option
-                className="level-0"
-                value="https://hobbycue.com/blog/category/uncategorized/"
-              >
-                Uncategorized&nbsp;&nbsp;(13)
-              </option>
-            </select>
-            <h2 className={styles.mt40}>1 minute Intro</h2>
-            <iframe
-              id="video-2866-1_youtube_iframe"
-              frameBorder="0"
-              allowFullScreen={undefined}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              title="HobbyCue - 1 Minute Intro"
-              src="https://www.youtube.com/embed/jd7DWl7woyw?controls=0&amp;rel=0&amp;disablekb=1&amp;showinfo=0&amp;modestbranding=0&amp;html5=1&amp;iv_load_policy=3&amp;autoplay=0&amp;end=0&amp;loop=0&amp;playsinline=0&amp;start=0&amp;nocookie=false&amp;enablejsapi=1&amp;origin=https%3A%2F%2Fhobbycue.com&amp;widgetid=1"
-              width="272.5"
-              height="153.28125"
-            ></iframe>
-            <h2 className={styles.mt40}>Recent Posts</h2>
-            <Link
-              target="_blank"
-              href={'https://hobbycue.com/blog/the-4-ps-of-a-hobby/'}
-            >
-              The 4 Ps of a Hobby
-            </Link>
-            <Link
-              target="_blank"
-              href={
-                'https://hobbycue.com/blog/what-is-it-like-to-be-an-artreprenuer/'
-              }
-            >
-              What is it like to be an artreprenuer?
-            </Link>
-            <Link
-              target="_blank"
-              href={
-                'https://hobbycue.com/blog/plan-your-travel-and-tours-on-your-own/'
-              }
-            >
-              Plan your travel and tours on your own…
-            </Link>
-            <Link
-              target="_blank"
-              href={'https://hobbycue.com/blog/ponniyin-selvan-characters/'}
-            >
-              Ponniyin Selvan main characters (and movie cast)
-            </Link>
-            <Link
-              target="_blank"
-              href={
-                'https://hobbycue.com/blog/balance-in-life-for-holistic-wellness-development/'
-              }
-            >
-              Balance in Life for Holistic Wellness & Development
-            </Link>
+          <div className={styles['list-container']}>
+            <div className={styles['max-w-1296px']}>
+              <style>
+                {`
+                        .ql-toolbar.ql-snow {
+                          width: 100%;
+                          border-left:none;
+                          border-right:none;
+                          border-bottom:none;
+                        }
+                        .ql-container.ql-snow {
+                          width: 100%;
+                          border:none;
+                        }
+                        .ql-editor{
+                          border: none !important;
+                          width: 100%;
+                          border-top:1px solid #ccc;
+                          padding-right:16px;
+                          margin-inline: auto;
+                        }
+                        .ql-editor.ql-indent-1{
+                          padding-left:4px;
+                        }
+                        .ql-editor ul, 
+                        .ql-editor ol {
+                          padding-left: 4px;  
+                                        text-align:justify; 
+
+                        }
+
+                        .ql-editor a {
+                          color: rgb(128, 100, 162);  
+                          text-decoration: none !important;
+                                        text-align:justify;
+
+                        }
+                        .ql-editor p {
+                          color: var(--Grey-Darkest, #08090a);
+                          font-family: Cambria;
+                          font-size: 16px !important;
+                          font-style: normal;
+                          font-weight: 400;
+                          line-height: 24px;
+                          margin-bottom: 11px;
+}
+                        }
+                         @media screen and (max-width:1100px) {
+                          .ql-editor{
+                          
+                            width: 114vw;
+                          
+                          }
+                        }
+                        
+                      `}
+              </style>
+              <div className={`ql-snow ${styles['max-w-1296px']}`}>
+                <div
+                  className={`ql-editor ${styles['max-w-full']}`}
+                  dangerouslySetInnerHTML={{ __html: content }}
+                />
+              </div>
+              {isEditing && (
+                <>
+                  <QuillEditor value={content} onChange={handleValueChange} />
+                  <div className={styles.buttonContainer}>
+                    <button className={styles.button} onClick={handleSave}>
+                      {!isUpdating ? 'Save' : 'Saving...'}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      </div>
-      <Footer />
+        </section>
+      </main>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }
+
+export default index

@@ -5,7 +5,12 @@ import Head from 'next/head'
 
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { getTips, updateTips } from '@/services/admin.service'
+import {
+  GetOtherPage,
+  getTips,
+  updateOtherPage,
+  updateTips,
+} from '@/services/admin.service'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import dynamic from 'next/dynamic'
 
@@ -39,7 +44,7 @@ const index: FC<indexProps> = ({}) => {
       const formData = {
         content: content,
       }
-      const data = await updateTips(id, formData)
+      const data = await updateOtherPage('tips', formData)
 
       if (data.res.status === 200) {
         setSnackbar({
@@ -88,7 +93,7 @@ const index: FC<indexProps> = ({}) => {
 
   useEffect(() => {
     const fetchTips = async () => {
-      const result = await getTips()
+      const result = await GetOtherPage('tips')
       // console.log('result------>', result.res.data[0])
       // console.log('id------>', result.res.data[0]._id)
 

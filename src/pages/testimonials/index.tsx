@@ -5,7 +5,12 @@ import Head from 'next/head'
 
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { getTestimonials, updateTestimonials } from '@/services/admin.service'
+import {
+  GetOtherPage,
+  getTestimonials,
+  updateOtherPage,
+  updateTestimonials,
+} from '@/services/admin.service'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import dynamic from 'next/dynamic'
 const QuillEditor = dynamic(
@@ -38,7 +43,7 @@ const index: FC<indexProps> = ({}) => {
       const formData = {
         content: content,
       }
-      const data = await updateTestimonials(id, formData)
+      const data = await updateOtherPage('testimonials', formData)
       // console.log('data=================>', data)
       if (data.res.status === 200) {
         setSnackbar({
@@ -87,7 +92,7 @@ const index: FC<indexProps> = ({}) => {
 
   useEffect(() => {
     const fetchTestimnials = async () => {
-      const result = await getTestimonials()
+      const result = await GetOtherPage('testimonials')
 
       const currContent = result.res.data[0] ? result.res.data[0].content : ''
       const currId = result.res.data[0] ? result.res.data[0]._id : ''

@@ -355,7 +355,7 @@ export const GetOtherPage = async (  url: any): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
   try {
-    const res = await axiosInstance.get(`/otherpage/${url}`, { headers })
+    const res = await axiosInstance.get(`/otherpage?url=${url}`, { headers })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -371,7 +371,7 @@ export const updateOtherPage = async (
   const headers = { Authorization: `Bearerhobby_id ${token}` }
   try {
     const res = await axiosInstance.patch(
-      `/otherpage/update/${url}`,
+      `/otherpage/update?url=${url}`,
       data,
       { headers },
     )
