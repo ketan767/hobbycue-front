@@ -783,7 +783,7 @@ export const CreatePost: React.FC<Props> = ({
           </h3>
           <div className={styles['create-post-modal']}>
             <div className={styles['image-posting-as']}>
-              <Link
+              {!isMobile && <Link
                 href={'/settings/visibility-notification'}
                 className={styles['settings-icon']}
                 onClick={handleClose}
@@ -795,7 +795,7 @@ export const CreatePost: React.FC<Props> = ({
                   alt="settings-icon"
                   className={styles['settingsIconImage']}
                 />
-              </Link>
+              </Link>}
               {data.type === 'user' ? (
                 <img
                   className={styles['user-profile-img']}
