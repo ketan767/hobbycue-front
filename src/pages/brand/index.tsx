@@ -5,9 +5,10 @@ import Head from 'next/head'
 
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { getBrand, updateBrand } from '@/services/admin.service'
+
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import dynamic from 'next/dynamic'
+import { GetOtherPage, updateOtherPage } from '@/services/admin.service'
 
 const QuillEditor = dynamic(
   () => import('@/components/QuillEditor/QuillEditor'),
@@ -40,7 +41,7 @@ const index: FC<indexProps> = ({}) => {
       const formData = {
         content: content,
       }
-      const data = await updateBrand(id, formData)
+      const data = await updateOtherPage(id, formData)
       // console.log('data=================>', data)
       if (data.res.status === 200) {
         setSnackbar({
@@ -89,7 +90,7 @@ const index: FC<indexProps> = ({}) => {
 
   useEffect(() => {
     const fetchBrands = async () => {
-      const result = await getBrand()
+      const result = await GetOtherPage('brand')
       // console.log('result------>', result.res.data[0])
       // console.log('id------>', result.res.data[0]._id)
 
