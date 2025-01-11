@@ -191,6 +191,27 @@ const CommunityLayout: React.FC<Props> = ({
   const { refreshNum } = useSelector((state: RootState) => state.post)
   const router = useRouter()
 
+  const { hobby: hobbyQuery, location: locationQuery } = router.query
+
+  useEffect(() => {
+    if (hobbyQuery) {
+      const hobbyDetail = activeProfile?.data?._hobbies.find(
+        (hobby: any) => hobby?.hobby?.display?.toLowerCase() === (hobbyQuery as string).toLowerCase(),
+      )
+      if (hobbyDetail) {
+        setSelectedHobby(hobbyDetail?.hobby?._id)
+      }
+    }
+    if (locationQuery) {
+      const locationDetail = activeProfile?.data?._addresses.find(
+        (address: any) => address?.city?.toLowerCase() === (locationQuery as string).toLowerCase(),
+      )
+      if (locationDetail) {
+        setSelectedLocation(locationDetail?.city)
+      }
+    }
+  }, [hobbyQuery, locationQuery, activeProfile])
+
   const [seeMoreOpenedFirstTime, setSeeMoreOpenedFirstTime] =
     useState<boolean>(false)
   const toggleSeeMore = () => {
