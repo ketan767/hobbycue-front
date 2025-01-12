@@ -82,6 +82,18 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     }))
   }
 
+  const [hobbyDropdownList, setHobbyDropdownList] = useState<
+    ExtendedDropdownListItem[]
+  >([])
+  const [dataa, setData] = useState<ListingHobbyData>({ hobby: null })
+  const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
+
+  const [filterData, setFilterData] = useState({
+    category: '',
+    subCategory: '',
+    hobby: '',
+  })
+
   useEffect(() => {
     setIsCategoryExpanded((prev) => {
       const newCatArr = [...prev];
@@ -134,17 +146,6 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     })
   }, [categories, subCategories, filterData])
 
-  const [hobbyDropdownList, setHobbyDropdownList] = useState<
-    ExtendedDropdownListItem[]
-  >([])
-  const [dataa, setData] = useState<ListingHobbyData>({ hobby: null })
-  const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
-
-  const [filterData, setFilterData] = useState({
-    category: '',
-    subCategory: '',
-    hobby: '',
-  })
   // const { isLoggedIn, isAuthenticated, user } = useSelector(
   //   (state: RootState) => state.user,
   // )

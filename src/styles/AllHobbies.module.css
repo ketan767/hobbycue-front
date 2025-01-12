@@ -217,6 +217,10 @@ line-height: 26px; /* 144.444% */
   
 }
 
+.hobbies-table tbody img {
+  cursor: pointer;
+}
+
 .hobbies-table * {
   margin: 0;
 }
