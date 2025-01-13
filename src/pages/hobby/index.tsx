@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import styles from '@/styles/AllHobbies.module.css'
 import hobbyStyles from './HobbyPage.module.css'
 import { getAllHobbies } from '@/services/hobby.service'
@@ -67,12 +67,18 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   const [isCategoryExpanded, setIsCategoryExpanded] = useState<boolean[]>([]);
   const [isSubCategoryExpanded, setIsSubCategoryExpanded] = useState<{ [key: string]: boolean }>({});
 
+  const catRef = useRef(null);
+  const catRefArr = useRef([]);
+  const subCatRef = useRef(null);
+
   const handleCategoryShowHide = (index: number) => {
     setIsCategoryExpanded((prev) => {
       const newCatArr = [...prev];
       newCatArr[index] = !newCatArr[index];
       return newCatArr;
     })
+
+    console.log("catRef", catRef)
   }
 
   const handleSubCategoryShowHide = (subCategoryId: string) => {
@@ -833,8 +839,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                               {cat.display}
                             </Link>
                           </td>
-                          <td>
-                          {isCategoryExpanded[i] ? <>
+                          <td className={`${styles['hobby-list-expanded']} ${isCategoryExpanded[i] ? "" : styles['hobby-list-collapsed']}`}>
                             {subCategories
                               .filter((subCat: any) => {
                                 if (filterData.hobby) {
@@ -876,9 +881,8 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                       <section
                                         className={
                                           styles['table-hobby'] +
-                                          ` ${hobbyStyles['tags-genres-sect']}`
+                                          ` ${hobbyStyles['tags-genres-sect']} ${styles['hobby-list-expanded-table']} ${isSubCategoryExpanded[subCat._id] === true ? "" : styles['hobby-list-collapsed-table']}`
                                         }
-                                        style={isSubCategoryExpanded[subCat._id] === true ? {} : { overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', width: '719px'} }
                                       >
                                         {hobbyData
                                           .filter(
@@ -936,7 +940,6 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                   )
                                 )
                               })}
-                              </> : null}
                           </td>
                         </tr>
                       ))}
@@ -981,8 +984,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                             </Link>
                             <Image onClick={() => handleCategoryShowHide(i)} src={ArrowIcon} width={20} height={20} alt={isCategoryExpanded[i] ? "close" : "open"} style={isCategoryExpanded[i] === true ? { transform: 'rotate(180deg)' } : { transform: 'rotate(0deg)' }} />
                           </div>
-                          <div>
-                          {isCategoryExpanded[i] ? <>
+                          <div className={`${styles['hobby-list-expanded']} ${isCategoryExpanded[i] ? "" : styles['hobby-list-collapsed']}`}>
                             {subCategories
                               .filter((subCat: any) => {
                                 if (filterData.hobby) {
@@ -1021,9 +1023,8 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                       <div
                                         className={styles['vertical-line']}
                                       ></div>
-                                      {
-                                        isSubCategoryExpanded[subCat._id] ?<section
-                                        className={styles['accordion-content']}
+                                      <section
+                                        className={`${styles['accordion-content']} ${styles['hobby-list-expanded']} ${isSubCategoryExpanded[subCat._id] === true ? "" : styles['hobby-list-collapsed']}`}
                                       >
                                         {hobbyData
                                           .filter(
@@ -1076,13 +1077,11 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                               </>
                                             ),
                                           )}
-                                      </section> : null
-                                      }
+                                      </section>
                                     </div>
                                   )
                                 )
                               })}
-                              </> : null}
                           </div>
                         </div>
                       ))}

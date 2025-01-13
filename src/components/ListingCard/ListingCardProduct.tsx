@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './ListingCardProduct.module.css'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -18,6 +18,7 @@ import RedCartIcon from '@/assets/icons/RedCartIcon'
 import HobbyIconHexagon from '@/assets/icons/HobbyIconHexagon'
 import { Inter } from 'next/font/google'
 import ListingBookmark from './icon/ListingBookmark'
+import ListingMenu from './icon/ListingMenu'
 export const rupeesIcon = (
   <svg
     width="14"
@@ -83,6 +84,8 @@ const ListingCardProduct: React.FC<Props> = ({
 }) => {
   const router = useRouter()
   const { user } = useSelector((state: RootState) => state.user)
+
+  const [showMenu, setShowMenu] = useState<boolean>(false)
   console.log('router', router.pathname)
 
   return (
@@ -115,13 +118,30 @@ const ListingCardProduct: React.FC<Props> = ({
 
         <div className={styles.content}>
           <div className={styles.contentHead}>
-            {hoverCardIndex === data._id ? (
-              <div className={styles['bookmark']}>
-                <ListingBookmark />
+            {itsMe ? (
+              <div onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setShowMenu(!showMenu)
+              }} className={styles['bookmark']}>
+                <ListingMenu isCardHovered={hoverCardIndex === data._id} />
               </div>
             ) : (
-              <></>
+              <div className={styles['bookmark']}>
+                <ListingBookmark isCardHovered={hoverCardIndex === data._id} />
+              </div>
             )}
+
+            {
+              hoverCardIndex === data._id && showMenu && (
+                <div className={styles['listing-card-menu']}>
+                 <button>Publish</button>
+                 <button>Unpublish</button>
+                 <button>Delete</button>
+                </div>
+              )
+           }
+
             {data?.profile_image ? (
               <div className={styles.contentImageContainer}>
                 <img
