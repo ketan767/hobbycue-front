@@ -167,6 +167,7 @@ left: 12px;
     grid-template-columns: 1fr
   }
   .add-event{
+    margin-top: 8px;
     border-radius: 0;
     height: 88px;
   }

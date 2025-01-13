@@ -366,7 +366,7 @@ const EditBlogHobbyModal: React.FC<Props> = ({
 
   const handleHobbySelection = async (selectedHobby: DropdownListItem) => {
     setGenreId('')
-    console.log("Hobby : ",selectedHobby)
+    console.log('Hobby : ', selectedHobby)
 
     setData((prev) => ({ ...prev, hobby: selectedHobby }))
     setHobbyInputValue(selectedHobby?.display ?? hobbyInputValue)
