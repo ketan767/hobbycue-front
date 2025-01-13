@@ -17,6 +17,7 @@ import ListingCardProduct from './ListingCardProduct'
 import { useRouter } from 'next/router'
 import HobbyIconHexagon from '@/assets/icons/HobbyIconHexagon'
 import ListingBookmark from './icon/ListingBookmark'
+import ListingMenu from './icon/ListingMenu'
 
 type Props = {
   data: any
@@ -128,8 +129,11 @@ const ListingCard: React.FC<Props> = ({
     </svg>
   )
 
-  const itsMe = data?.admin === user?._id
+  const itsMe = data?.admin?._id === user?._id
   const isMobile = useMediaQuery('(max-width:1100px)')
+
+  console.log("datas", data);
+  console.log("userss", user);
 
   if (data.type === 4) {
     return (
@@ -175,12 +179,14 @@ const ListingCard: React.FC<Props> = ({
         )}
 
         <div className={styles.imgContainer}>
-          {hoverCardIndex === data._id ? (
+          {itsMe ? (
             <div className={styles['bookmark']}>
-              <ListingBookmark />
+              <ListingMenu isCardHovered={hoverCardIndex === data._id} />
             </div>
           ) : (
-            <></>
+            <div className={styles['bookmark']}>
+              <ListingBookmark isCardHovered={hoverCardIndex === data._id} />
+            </div>
           )}
           {data?.cover_image ? (
             <>

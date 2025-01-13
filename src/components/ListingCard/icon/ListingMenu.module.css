@@ -1,0 +1,29 @@
+.action-btn {
+    /* background-color: #f7f5f9; */
+    background-color: #ccc1da;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    position: relative;
+    opacity: 0.5;
+  }
+
+  .action-btn > * {
+    width: 19.5px;
+    height: 19.5px;
+  }
+  /* .action-btn:hover {
+    background-color: #ccc1da;
+    transition: 0.3s;
+  } */
+  /* .action-btn img {
+    border-radius: 8px;
+  } */
+  
+  .action-btn:hover {
+    background-color: #f7f5f9;
+    transition: 0.3s;
+  }
