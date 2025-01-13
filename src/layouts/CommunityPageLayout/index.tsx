@@ -13,6 +13,7 @@ import { openModal } from '@/redux/slices/modal'
 import { getAllHobbyPosts } from '@/services/post.service'
 import { GetServerSideProps } from 'next'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
+import settingsIcon from '@/assets/svg/setting/settings.svg'
 import post, {
   appendPosts,
   appendPostsWithLink,
@@ -190,6 +191,31 @@ const CommunityLayout: React.FC<Props> = ({
   const { showPageLoader } = useSelector((state: RootState) => state.site)
   const { refreshNum } = useSelector((state: RootState) => state.post)
   const router = useRouter()
+
+  const { hobby: hobbyQuery, location: locationQuery } = router.query
+
+  useEffect(() => {
+    if (hobbyQuery) {
+      const hobbyDetail = activeProfile?.data?._hobbies.find(
+        (hobby: any) =>
+          hobby?.hobby?.display?.toLowerCase() ===
+          (hobbyQuery as string).toLowerCase(),
+      )
+      if (hobbyDetail) {
+        setSelectedHobby(hobbyDetail?.hobby?._id)
+      }
+    }
+    if (locationQuery) {
+      const locationDetail = activeProfile?.data?._addresses.find(
+        (address: any) =>
+          address?.city?.toLowerCase() ===
+          (locationQuery as string).toLowerCase(),
+      )
+      if (locationDetail) {
+        setSelectedLocation(locationDetail?.city)
+      }
+    }
+  }, [hobbyQuery, locationQuery, activeProfile])
 
   const [seeMoreOpenedFirstTime, setSeeMoreOpenedFirstTime] =
     useState<boolean>(false)
@@ -1155,178 +1181,298 @@ const CommunityLayout: React.FC<Props> = ({
         responsive={true}
       >
         {!isMobile && (
-          <aside
-            className={`${styles['community-left-aside']} custom-scrollbar`}
-          >
-            <ProfileSwitcher
-              dropdownClass={styles['desktop-profile-switcher-class']}
-            />
-            <section
-              className={`content-box-wrapper ${styles['hobbies-side-wrapper']}`}
+          <div className={styles['flex-col']}>
+            <aside
+              className={`${styles['community-left-aside']} custom-scrollbar`}
             >
-              <header>
-                <h3>Hobbies</h3>
-                <Image
-                  src={EditIcon}
-                  onClick={() => {
-                    if (!isLoggedIn) {
-                      dispatch(openModal({ type: 'auth', closable: true }))
-                      return
-                    }
+              <ProfileSwitcher
+                dropdownClass={styles['desktop-profile-switcher-class']}
+              />
+              <section
+                className={`content-box-wrapper ${styles['hobbies-side-wrapper']}`}
+              >
+                <header>
+                  <h3>Hobbies</h3>
+                  <Image
+                    src={EditIcon}
+                    onClick={() => {
+                      if (!isLoggedIn) {
+                        dispatch(openModal({ type: 'auth', closable: true }))
+                        return
+                      }
 
-                    if (activeProfile?.type === 'user') {
-                      dispatch(
-                        openModal({
-                          type: 'profile-hobby-edit',
-                          closable: true,
-                        }),
-                      )
-                    } else {
-                      dispatch(
-                        openModal({
-                          type: 'listing-hobby-edit',
-                          closable: true,
-                        }),
-                      )
-                    }
-                  }}
-                  alt="edit"
-                />
-                {/* <Image src={EditIcon} alt="Edit" /> */}
-              </header>
-              {/* <span className={styles['divider']}></span> */}
-              <section>
-                {activeProfile.data?._hobbies?.length > 0 ? (
-                  <ul>
-                    <li
-                      onClick={() => handleHobbyClick('All Hobbies', undefined)}
-                      className={
-                        selectedHobby === 'All Hobbies'
-                          ? styles.selectedItem
-                          : ''
-                      }
-                    >
-                      All Hobbies
-                    </li>
-                    <li
-                      onClick={() => handleHobbyClick('My Hobbies', undefined)}
-                      className={
-                        selectedHobby === 'My Hobbies' &&
-                        selectedGenre === undefined
-                          ? styles.selectedItem
-                          : ''
-                      }
-                    >
-                      My Hobbies
-                    </li>
-                    {activeProfile.data?._hobbies
-                      ?.slice(
-                        0,
-                        seeMoreHobby ? activeProfile.data?._hobbies.length : 3,
-                      )
-                      .map((hobby: any) => {
-                        return (
-                          <li
-                            key={hobby._id}
-                            onClick={() =>
-                              handleHobbyClick(
-                                hobby.hobby?._id,
-                                hobby.genre?._id,
-                              )
-                            }
-                            className={
-                              selectedHobby === hobby.hobby?._id &&
-                              (selectedGenre !== ''
-                                ? selectedGenre === hobby.genre?._id
-                                : '')
-                                ? styles.selectedItem
-                                : ''
-                            }
-                          >
-                            {hobby?.hobby?.display}{' '}
-                            {hobby?.genre && ` - ${hobby?.genre?.display} `}
-                          </li>
+                      if (activeProfile?.type === 'user') {
+                        dispatch(
+                          openModal({
+                            type: 'profile-hobby-edit',
+                            closable: true,
+                          }),
                         )
-                      })}
-                    {activeProfile.data?._hobbies?.length >= 4 &&
-                      (!seeMoreHobby ? (
-                        <p
-                          className={styles['see-more']}
-                          onClick={toggleSeeMore}
-                        >
-                          {' '}
-                          See more{' '}
-                        </p>
-                      ) : (
-                        <p
-                          className={styles['see-more']}
-                          onClick={toggleSeeMore}
-                        >
-                          {' '}
-                          See less{' '}
-                        </p>
-                      ))}
-                  </ul>
+                      } else {
+                        dispatch(
+                          openModal({
+                            type: 'listing-hobby-edit',
+                            closable: true,
+                          }),
+                        )
+                      }
+                    }}
+                    alt="edit"
+                  />
+                  {/* <Image src={EditIcon} alt="Edit" /> */}
+                </header>
+                {/* <span className={styles['divider']}></span> */}
+                <section>
+                  {activeProfile.data?._hobbies?.length > 0 ? (
+                    <ul>
+                      <li
+                        onClick={() =>
+                          handleHobbyClick('All Hobbies', undefined)
+                        }
+                        className={
+                          selectedHobby === 'All Hobbies'
+                            ? styles.selectedItem
+                            : ''
+                        }
+                      >
+                        All Hobbies
+                      </li>
+                      <li
+                        onClick={() =>
+                          handleHobbyClick('My Hobbies', undefined)
+                        }
+                        className={
+                          selectedHobby === 'My Hobbies' &&
+                          selectedGenre === undefined
+                            ? styles.selectedItem
+                            : ''
+                        }
+                      >
+                        My Hobbies
+                      </li>
+                      {activeProfile.data?._hobbies
+                        ?.slice(
+                          0,
+                          seeMoreHobby
+                            ? activeProfile.data?._hobbies.length
+                            : 3,
+                        )
+                        .map((hobby: any) => {
+                          return (
+                            <li
+                              key={hobby._id}
+                              onClick={() =>
+                                handleHobbyClick(
+                                  hobby.hobby?._id,
+                                  hobby.genre?._id,
+                                )
+                              }
+                              className={
+                                selectedHobby === hobby.hobby?._id &&
+                                (selectedGenre !== ''
+                                  ? selectedGenre === hobby.genre?._id
+                                  : '')
+                                  ? styles.selectedItem
+                                  : ''
+                              }
+                            >
+                              {hobby?.hobby?.display}{' '}
+                              {hobby?.genre && ` - ${hobby?.genre?.display} `}
+                            </li>
+                          )
+                        })}
+                      {activeProfile.data?._hobbies?.length >= 4 &&
+                        (!seeMoreHobby ? (
+                          <p
+                            className={styles['see-more']}
+                            onClick={toggleSeeMore}
+                          >
+                            {' '}
+                            See more{' '}
+                          </p>
+                        ) : (
+                          <p
+                            className={styles['see-more']}
+                            onClick={toggleSeeMore}
+                          >
+                            {' '}
+                            See less{' '}
+                          </p>
+                        ))}
+                    </ul>
+                  ) : (
+                    <ContentLoader
+                      speed={2}
+                      width="100%"
+                      backgroundColor="#f3f3f3"
+                      foregroundColor="#ecebeb"
+                      viewBox="0 0 229 282"
+                    >
+                      <rect
+                        x="16"
+                        y="10"
+                        width="47"
+                        height="12.25"
+                        rx="6.125"
+                        fill="#D9DBE9"
+                      />
+                      <rect
+                        x="16"
+                        y="49"
+                        width="77"
+                        height="12.25"
+                        rx="6.125"
+                        fill="#D9DBE9"
+                      />
+                      <rect
+                        x="16"
+                        y="89"
+                        width="57"
+                        height="12.25"
+                        rx="6.125"
+                        fill="#D9DBE9"
+                      />
+                      <rect
+                        x="16"
+                        y="129"
+                        width="32"
+                        height="12.25"
+                        rx="6.125"
+                        fill="#D9DBE9"
+                      />
+                      <rect
+                        x="16"
+                        y="169"
+                        width="111"
+                        height="12.25"
+                        rx="6.125"
+                        fill="#D9DBE9"
+                      />
+                      <rect
+                        x="16"
+                        y="209"
+                        width="91"
+                        height="12.25"
+                        rx="6.125"
+                        fill="#D9DBE9"
+                      />
+                      <rect
+                        x="81"
+                        y="250"
+                        width="67"
+                        height="12.25"
+                        rx="6.125"
+                        fill="#D9DBE9"
+                      />
+                    </ContentLoader>
+                  )}
+                </section>
+              </section>
+
+              <section
+                className={`content-box-wrapper ${styles['location-side-wrapper']}`}
+              >
+                <header>
+                  <h3>Location</h3>
+                  <Image
+                    src={EditIcon}
+                    onClick={EditProfileLocation}
+                    alt="edit"
+                  />
+                  {/* <Image src={EditIcon} alt="Edit" /> */}
+                </header>
+                {/* <span className={styles['divider']}></span> */}
+                {visibilityData?.length > 0 ? (
+                  <>
+                    {visibilityData?.length > 0 && (
+                      <InputSelect
+                        onChange={(e: any) =>
+                          updateFilterLocation(e.target.value)
+                        }
+                        value={selectedLocation}
+                        // inputProps={{ 'aria-label': 'Without label' }}
+                        className={` ${styles['location-dropdown']}`}
+                      >
+                        {visibilityData?.map((item: any, idx) => {
+                          return (
+                            <>
+                              <DropdownOption
+                                className={
+                                  styles['location-dropdown-container']
+                                }
+                                {...item}
+                                key={idx}
+                                currentValue={selectedLocation}
+                                onChange={(val: any) =>
+                                  updateFilterLocation(val)
+                                }
+                              />
+                            </>
+                          )
+                        })}
+                      </InputSelect>
+                    )}
+                  </>
                 ) : (
                   <ContentLoader
                     speed={2}
                     width="100%"
                     backgroundColor="#f3f3f3"
                     foregroundColor="#ecebeb"
-                    viewBox="0 0 229 282"
+                    viewBox="0 0 229 160"
                   >
                     <rect
                       x="16"
-                      y="10"
-                      width="47"
+                      y="11"
+                      width="55"
                       height="12.25"
                       rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="197"
+                      y="52"
+                      width="16"
+                      height="16"
+                      rx="8"
                       fill="#D9DBE9"
                     />
                     <rect
                       x="16"
-                      y="49"
-                      width="77"
+                      y="51"
+                      width="95"
                       height="12.25"
                       rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="197"
+                      y="92"
+                      width="16"
+                      height="16"
+                      rx="8"
                       fill="#D9DBE9"
                     />
                     <rect
                       x="16"
-                      y="89"
-                      width="57"
+                      y="91"
+                      width="93"
                       height="12.25"
                       rx="6.125"
+                      fill="#D9DBE9"
+                    />
+                    <rect
+                      x="197"
+                      y="132"
+                      width="16"
+                      height="16"
+                      rx="8"
                       fill="#D9DBE9"
                     />
                     <rect
                       x="16"
-                      y="129"
-                      width="32"
-                      height="12.25"
-                      rx="6.125"
-                      fill="#D9DBE9"
-                    />
-                    <rect
-                      x="16"
-                      y="169"
-                      width="111"
-                      height="12.25"
-                      rx="6.125"
-                      fill="#D9DBE9"
-                    />
-                    <rect
-                      x="16"
-                      y="209"
-                      width="91"
-                      height="12.25"
-                      rx="6.125"
-                      fill="#D9DBE9"
-                    />
-                    <rect
-                      x="81"
-                      y="250"
-                      width="67"
+                      y="131"
+                      width="102"
                       height="12.25"
                       rx="6.125"
                       fill="#D9DBE9"
@@ -1334,116 +1480,22 @@ const CommunityLayout: React.FC<Props> = ({
                   </ContentLoader>
                 )}
               </section>
-            </section>
-
-            <section
-              className={`content-box-wrapper ${styles['location-side-wrapper']}`}
+            </aside>
+            <Link
+              href={'/settings/visibility-notification'}
+              className={styles['settings-icon']}
             >
-              <header>
-                <h3>Location</h3>
-                <Image
-                  src={EditIcon}
-                  onClick={EditProfileLocation}
-                  alt="edit"
-                />
-                {/* <Image src={EditIcon} alt="Edit" /> */}
-              </header>
-              {/* <span className={styles['divider']}></span> */}
-              {visibilityData?.length > 0 ? (
-                <>
-                  {visibilityData?.length > 0 && (
-                    <InputSelect
-                      onChange={(e: any) =>
-                        updateFilterLocation(e.target.value)
-                      }
-                      value={selectedLocation}
-                      // inputProps={{ 'aria-label': 'Without label' }}
-                      className={` ${styles['location-dropdown']}`}
-                    >
-                      {visibilityData?.map((item: any, idx) => {
-                        return (
-                          <>
-                            <DropdownOption
-                              className={styles['location-dropdown-container']}
-                              {...item}
-                              key={idx}
-                              currentValue={selectedLocation}
-                              onChange={(val: any) => updateFilterLocation(val)}
-                            />
-                          </>
-                        )
-                      })}
-                    </InputSelect>
-                  )}
-                </>
-              ) : (
-                <ContentLoader
-                  speed={2}
-                  width="100%"
-                  backgroundColor="#f3f3f3"
-                  foregroundColor="#ecebeb"
-                  viewBox="0 0 229 160"
-                >
-                  <rect
-                    x="16"
-                    y="11"
-                    width="55"
-                    height="12.25"
-                    rx="6.125"
-                    fill="#D9DBE9"
-                  />
-                  <rect
-                    x="197"
-                    y="52"
-                    width="16"
-                    height="16"
-                    rx="8"
-                    fill="#D9DBE9"
-                  />
-                  <rect
-                    x="16"
-                    y="51"
-                    width="95"
-                    height="12.25"
-                    rx="6.125"
-                    fill="#D9DBE9"
-                  />
-                  <rect
-                    x="197"
-                    y="92"
-                    width="16"
-                    height="16"
-                    rx="8"
-                    fill="#D9DBE9"
-                  />
-                  <rect
-                    x="16"
-                    y="91"
-                    width="93"
-                    height="12.25"
-                    rx="6.125"
-                    fill="#D9DBE9"
-                  />
-                  <rect
-                    x="197"
-                    y="132"
-                    width="16"
-                    height="16"
-                    rx="8"
-                    fill="#D9DBE9"
-                  />
-                  <rect
-                    x="16"
-                    y="131"
-                    width="102"
-                    height="12.25"
-                    rx="6.125"
-                    fill="#D9DBE9"
-                  />
-                </ContentLoader>
-              )}
-            </section>
-          </aside>
+              <Image
+                height={20}
+                width={20}
+                src={settingsIcon}
+                alt="settings-icon"
+              />
+              <span className={styles['default-settings-text']}>
+                Default Settings
+              </span>
+            </Link>
+          </div>
         )}
 
         <main>
@@ -1716,6 +1768,26 @@ const CommunityLayout: React.FC<Props> = ({
                     <DoubleArrowSvg rotate={showPanel} />
                   </button>
                 </section>
+
+                {showPanel && isMobile && (
+                  <div className={styles['settings-icon-mob-container']}>
+                    <Link
+                      href={'/settings/visibility-notification'}
+                      className={styles['settings-icon']}
+                    >
+                      <Image
+                        height={20}
+                        width={20}
+                        src={settingsIcon}
+                        alt="settings-icon"
+                        className={styles['settingsIconImage']}
+                      />
+                      <span className={styles['default-settings-text']}>
+                        Default Settings
+                      </span>
+                    </Link>
+                  </div>
+                )}
                 {showPanel && (
                   <section className={styles['dropdowns-panel']}>
                     {[

@@ -81,26 +81,51 @@ const Home: React.FC<PropTypes> = function () {
     } else {
       if (redirectPath === '/me') {
         router.push(`/me`)
+      } else if (redirectPath === '/me/posts') {
+        router.push(`/me/posts`)
+      } else if (redirectPath === '/me/media') {
+        router.push(`/me/media`)
+      } else if (redirectPath === '/me/pages') {
+        router.push(`/me/pages`)
+      } else if (redirectPath === '/me/blogs') {
+        router.push(`/me/blogs`)
       } else if (redirectPath === '/me/general') {
         router.push(`/me/general`)
       } else if (redirectPath === '/me/hobby') {
         router.push(`/me/hobby`)
       } else if (redirectPath === '/me/location') {
         router.push(`/me/location`)
+      } else if (redirectPath === '/me/contact') {
+        router.push(`/me/contact`)
+      } else if (redirectPath === '/me/social') {
+        router.push(`/me/social`)
       } else {
         const path = localStorage.getItem('meUrl')
         if (path === '/me') {
           router.push(`/me`)
+        } else if (path === '/me/posts') {
+          router.push(`/me/posts`)
+        } else if (path === '/me/media') {
+          router.push(`/me/media`)
+        } else if (path === '/me/pages') {
+          router.push(`/me/pages`)
+        } else if (path === '/me/blogs') {
+          router.push(`/me/blogs`)
         } else if (path === '/me/general') {
           router.push(`/me/general`)
         } else if (path === '/me/hobby') {
           router.push(`/me/hobby`)
         } else if (path === '/me/location') {
           router.push(`/me/location`)
+        } else if (path === '/me/social') {
+          router.push(`/me/social`)
+        } else if (path === '/me/contact') {
+          router.push(`/me/contact`)
         } else {
           router.push(`/community`)
         }
       }
+      localStorage.setItem('meUrl', '')
     }
   }
 
@@ -187,9 +212,15 @@ const Home: React.FC<PropTypes> = function () {
   useEffect(() => {
     if (
       router.asPath.includes('me=true') ||
+      router.asPath.includes('me-posts=true') ||
+      router.asPath.includes('me-blogs=true') ||
+      router.asPath.includes('me-media=true') ||
+      router.asPath.includes('me-pages=true') ||
       router.asPath.includes('showGeneral=true') ||
       router.asPath.includes('showHobby=true') ||
-      router.asPath.includes('showLocation=true')
+      router.asPath.includes('showLocation=true') ||
+      router.asPath.includes('showSocial=true') ||
+      router.asPath.includes('showContact=true')
     ) {
       dispatch(
         openModal({
