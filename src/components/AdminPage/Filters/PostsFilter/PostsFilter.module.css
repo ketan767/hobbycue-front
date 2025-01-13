@@ -4,10 +4,10 @@
     right: 0;
     top: 110%;
     z-index: 99;
-    max-width: 352px;
+    max-width: 328px;
     min-height: 292px;
     width: 100%;
-    /* padding: 16px; */
+    padding: 16px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -84,7 +84,7 @@
     display: flex;
     justify-content: start;
     align-items: center;
-    gap: 8px;
+    gap: 24px;
   }
   
   .filterLabel {
@@ -206,7 +206,7 @@
     padding: 6px 8px;
     border-radius: 8px;
     border: 1px solid var(--Grey-Lighter, #ebedf0);
-    color: var(--Grey-Dark, #939ca3);
+    color: black;
     font-family: Poppins;
     font-size: 12px;
     font-style: normal;
@@ -219,28 +219,4 @@
     margin: 0 8px;
     color: #888;
   }
-  .textRange {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 4px;
-  }
-  .input{
-    padding: 10px;
-    height: 32px;
-    /* width: 320x; */
-    font-family: Poppins;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: 16px;
-    /* 133.333% */
-    border-radius: 8px;
-    
-    border: 1px solid var(--Grey-Lighter, #ebedf0);
-    /* background: var(--Grey-Hover, #F8F9FA); */
-    /* border-right: none; */
-    outline: none;
-   
-  }
+  

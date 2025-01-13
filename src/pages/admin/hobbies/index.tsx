@@ -66,7 +66,7 @@ const HobbiesRequest: React.FC = () => {
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const [showAdminActionModal, setShowAdminActionModal] = useState(false)
   const dispatch = useDispatch()
-  const [createdAtSort, setCreatedAtSort] = useState(false);
+  const [createdAtSort, setCreatedAtSort] = useState(true);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
@@ -113,10 +113,7 @@ const HobbiesRequest: React.FC = () => {
   // const [createdAtSort, setCreatedAtSort] = useState(false);
   const [openDropdownIndex, setOpenDropdownIndex] = useState<number | null>(null);
 
-  const handleDropdownToggle = (index: number) => {
-    console.log("Current Index:", openDropdownIndex, "Clicked Index:", index);
-    setOpenDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
-  };
+  
 
   useEffect(() => {
     const minHeight = 600; // Replace with the minimum height
