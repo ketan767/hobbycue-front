@@ -35,6 +35,7 @@ const ListingCard: React.FC<Props> = ({
   setHoveredCardIndex,
 }) => {
   const { user } = useSelector((state: RootState) => state.user)
+  const [showMenu, setShowMenu] = React.useState<boolean>(false);
   const type = getListingTypeName(data?.type)
   const router = useRouter()
   console.warn({ data })
@@ -180,7 +181,11 @@ const ListingCard: React.FC<Props> = ({
 
         <div className={styles.imgContainer}>
           {itsMe ? (
-            <div className={styles['bookmark']}>
+            <div onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setShowMenu(!showMenu)
+            }} className={styles['bookmark']}>
               <ListingMenu isCardHovered={hoverCardIndex === data._id} />
             </div>
           ) : (
@@ -188,6 +193,17 @@ const ListingCard: React.FC<Props> = ({
               <ListingBookmark isCardHovered={hoverCardIndex === data._id} />
             </div>
           )}
+
+          {
+            hoverCardIndex === data._id && showMenu && (
+              <div className={styles['listing-card-menu']}>
+                <button>Publish</button>
+                <button>Unpublish</button>
+                <button>Delete</button>
+              </div>
+            )
+          }
+
           {data?.cover_image ? (
             <>
               <div

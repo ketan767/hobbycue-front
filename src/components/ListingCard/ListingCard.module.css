@@ -17,6 +17,42 @@
   }
 }
 
+.listing-card-menu{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  right: 10px;
+  top: 45px;
+  min-width: 100px;
+  background-color: white ;
+  padding: 4px;
+  border-radius: 4px;
+box-shadow: 0px 8px 14px 0px rgba(147, 156, 163, 0.4);
+z-index: 101;
+}
+
+.listing-card-menu button{
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background-color: white;
+  padding: 11px 12px;
+  text-align: left;
+  color: var(--Grey-Darker, #6D747A);
+
+/* Text sm/Regular */
+font-family: Poppins;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 18px; /* 128.571% */
+letter-spacing: 0.07px;
+}
+
+.listing-card-menu button:hover{
+  border-radius: 4px;
+}
+
 .imgContainer {
   position: relative;
   align-self: stretch;

@@ -8,7 +8,6 @@
     display: grid;
     place-items: center;
     position: relative;
-    opacity: 0.5;
   }
 
   .action-btn > * {
