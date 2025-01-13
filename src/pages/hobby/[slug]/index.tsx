@@ -247,6 +247,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
             props?.unformattedAbout +
             ' • ' +
             data?.display +
+            ' ' +
             'hobby community'
           }
         />
