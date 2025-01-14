@@ -316,7 +316,16 @@ const AdminCommunities: React.FC = () => {
                 {searchResults?.map((hobbyreq, index) => (
                   <tr key={index} style={{ height: '48px' }}>
                     <td>
-                      <div>{hobbyreq?.hobby?.display}</div>
+                      <div className={styles.resultItem}>
+                        <div className={styles.detailsContainer}>
+                          <Link
+                            // className={styles.userName}
+                            href={`/hobby/${hobbyreq?.hobby.slug}`}
+                          >
+                            {hobbyreq?.hobby?.display}
+                          </Link>
+                        </div>
+                      </div>
                     </td>
                     <td>
                       <div>{hobbyreq?._id?.city}</div>

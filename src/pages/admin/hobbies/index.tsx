@@ -66,7 +66,7 @@ const HobbiesRequest: React.FC = () => {
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const [showAdminActionModal, setShowAdminActionModal] = useState(false)
   const dispatch = useDispatch()
-  const [createdAtSort, setCreatedAtSort] = useState(false);
+  const [createdAtSort, setCreatedAtSort] = useState(true);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
@@ -113,10 +113,7 @@ const HobbiesRequest: React.FC = () => {
   // const [createdAtSort, setCreatedAtSort] = useState(false);
   const [openDropdownIndex, setOpenDropdownIndex] = useState<number | null>(null);
 
-  const handleDropdownToggle = (index: number) => {
-    console.log("Current Index:", openDropdownIndex, "Clicked Index:", index);
-    setOpenDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
-  };
+  
 
   useEffect(() => {
     const minHeight = 600; // Replace with the minimum height
@@ -491,7 +488,8 @@ const HobbiesRequest: React.FC = () => {
       status: newStatus?.status,
     })
     console.log('status changed',hobbyData)
-    await handleSubmit()
+    setShowAdminActionModal(true);
+    // await handleSubmit()
   }
 
   const handleAction = async (hobbyreq: any) => {
@@ -521,8 +519,8 @@ const HobbiesRequest: React.FC = () => {
     ?.slice()
     ?.sort((a, b) => {
       return createdAtSort
-        ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
     });
 
 
@@ -734,8 +732,11 @@ const HobbiesRequest: React.FC = () => {
                     <td>
                       <div>{formatDate(hobbyreq?.createdAt)}</div>
                     </td>
-                    <td >
-                      <div>{hobbyreq?.similar}</div>
+                    <td>
+                      <div style={{display:'flex',gap:8,justifyContent:'center'}}>
+                        <div>{hobbyreq?.similar}</div>
+                        <div>{hobbyreq?.similar&&<ToggleButton/>}</div>
+                      </div>
                     </td>
 
                     <td >
@@ -761,10 +762,7 @@ const HobbiesRequest: React.FC = () => {
 
                         className={styles.actions}
                       >
-                        <div onClick={() => {
-                          handleAction(hobbyreq);
-                          setShowAdminActionModal(true)
-                        }}>{pencilSvg}</div>
+                        <div></div>
                         <StatusDropdown
                           key={index}
                           status={hobbyreq?.status}
