@@ -95,6 +95,7 @@ const ListingHeader: React.FC<Props> = ({
   const [showDays, setShowDays] = useState(false)
   const [quantity, setQuantity] = useState(1)
   const [HighlightRed, SetHiglightRed] = useState(false)
+  const [AboutError, setAboutError] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const eventDateOpenRef = useRef<HTMLDivElement | null>(null)
   const eventDateParentRef = useRef<HTMLDivElement | null>(null)
@@ -251,6 +252,11 @@ const ListingHeader: React.FC<Props> = ({
           SetHiglightRed(true)
           hasError = true
         }
+        if (!data.about) {
+          setHAboutErr?.(true)
+          setAboutError(true)
+          hasError = true
+        }
       }
 
       if (hasError) {
@@ -317,7 +323,7 @@ const ListingHeader: React.FC<Props> = ({
       dispatch(openModal({ type: 'auth', closable: true }))
     }
   }
-  
+
   const handleJoin = async () => {
     if (isLoggedIn) {
       if (user.is_onboarded) {
@@ -504,7 +510,7 @@ const ListingHeader: React.FC<Props> = ({
         )}
       </FilledButton>
     )
-  }else if (ctaText === 'Join') {
+  } else if (ctaText === 'Join') {
     button = (
       <FilledButton
         className={styles.contactBtn}
@@ -521,8 +527,7 @@ const ListingHeader: React.FC<Props> = ({
         )}
       </FilledButton>
     )
-  }
-   else {
+  } else {
     button = (
       <FilledButton
         className={styles.contactBtn}
@@ -1171,8 +1176,8 @@ const ListingHeader: React.FC<Props> = ({
             <div className={styles['content-container']}>
               <div className={styles['name-container']}>
                 <h1 className={styles['name']}>
-                  {data?.title.slice(0, 77) +
-                    (data?.title.length > 77 ? '...' : '')}
+                  {data?.title?.slice(0, 77) +
+                    (data?.title?.length > 77 ? '...' : '')}
                   {data?.is_verified ? (
                     <Image alt="claim" src={claimSvg} />
                   ) : (
@@ -1526,7 +1531,9 @@ const ListingHeader: React.FC<Props> = ({
                     </div>
                   ) : listingLayoutMode === 'edit' ? (
                     <div className={styles['about-text']}>
-                      About
+                      <div className={`${AboutError && styles['error-red']}`}>
+                        About
+                      </div>
                       <span className={styles['required-asterisk']}>*</span>
                     </div>
                   ) : (

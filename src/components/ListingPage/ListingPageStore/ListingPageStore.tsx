@@ -28,12 +28,13 @@ const ListingStoreTab: React.FC<Props> = ({ data }) => {
           ) : (
             <>
               <div
-              style={
-                isMobile
-                  ? { marginTop: '8px', height: '100px', borderRadius: '0px' }
-                  : undefined
-              } 
-              className={styles['no-data-div']}>
+                style={
+                  isMobile
+                    ? { height: '100px', borderRadius: '0px' }
+                    : undefined
+                }
+                className={styles['no-data-div']}
+              >
                 <p className={styles['no-data-text']}>No products available</p>
               </div>
               {!isMobile && (

@@ -267,6 +267,7 @@ aspect-ratio: 16/9;
   }
 
   .uploadContainer > div {
+    margin-top: 8px;
     margin-bottom: 0;
   }
 

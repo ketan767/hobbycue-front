@@ -1,85 +1,276 @@
-import { FC } from 'react'
-import styles from '@/styles/faq.module.css'
-import myStyles from './styles.module.css'
+import { FC, useEffect, useRef, useState } from 'react'
+import styles from '@/styles/Brand.module.css'
+import Image from 'next/image'
+import Head from 'next/head'
+import styles2 from '@/styles/ExplorePage.module.css'
 
-import thankyouimg from "@/assets/image/thankyou.jpg";
-import Link from 'next/link';
-import Head from 'next/head';
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import dynamic from 'next/dynamic'
+import { GetOtherPage, updateOtherPage } from '@/services/admin.service'
+import PageGridLayout from '@/layouts/PageGridLayout'
+import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 
-interface indexProps {
-  
-}
+const QuillEditor = dynamic(
+  () => import('@/components/QuillEditor/QuillEditor'),
+  {
+    ssr: false,
+    loading: () => <h1>Loading...</h1>,
+  },
+)
 
+interface indexProps {}
 
 const index: FC<indexProps> = ({}) => {
-  return (
-  <>
-  <Head>
-    <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
-    <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+  const [isEditing, setIsEditing] = useState(false)
+  const [content, setContent] = useState('')
+  const [title, setTitle] = useState('')
+  const { user } = useSelector((state: RootState) => state.user)
+  const [id, setId] = useState('')
+  const titleRef = useRef<HTMLTextAreaElement | null>(null)
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
 
-    <title>HobbyCue - Returns</title>
-  </Head>
-  <main className={styles['main']}>
-  <div className={styles['container']}>
-    <section className={styles['white-container']}>
-        <h1>Refund and Returns Policy – draft</h1>
-        <div className={styles['list-container']+` ${myStyles['about']}`}>
-            <p>Our refund and returns policy lasts 30 days. If 30 days have passed since your purchase, we are unable to offer you a full refund or exchange.</p>
-            <p>To be eligible for a return, your item must be unused and in the same condition that you received it. It must also be in the original packaging.</p>
-            <p>Several types of goods are exempt from being returned. Perishable goods such as food, flowers, newspapers or magazines cannot be returned. We also do not accept products that are intimate or sanitary goods, hazardous materials, or flammable liquids or gases.</p>
-            <p>Additional non-returnable items:</p>
-            <ul>
-              <li>Gift cards</li>                
-              <li>Downloadable software products</li>
-              <li>Some health and personal care items</li>
-            </ul>
-          <p>To complete your return, we require a receipt or proof of purchase.</p>
-        <p>Please do not send your purchase back to the manufacturer.</p>
-        <p>There are certain situations where only partial refunds are granted:</p>
-        <ul>
-          <li>Book with obvious signs of use</li>
-          <li>CD, DVD, VHS tape, software, video game, cassette tape, or vinyl record that has been opened.</li>
-          <li>Any item not in its original condition, is damaged or missing parts for reasons not due to our error.</li>
-          <li>Any item that is returned more than 30 days after delivery</li>
-        </ul>
-        <br />
-        <h2>Refunds</h2>
-        <br />
-        <p>Once your return is received and inspected, we will send you an email to notify you that we have received your returned item. We will also notify you of the approval or rejection of your refund.</p>
-        <p>If you are approved, then your refund will be processed, and a credit will automatically be applied to your credit card or original method of payment, within a certain amount of days.</p>
-        <p><strong>Late or missing refunds</strong></p>
-        <p>If you haven’t received a refund yet, first check your bank account again.</p>
-        <p>Then contact your credit card company, it may take some time before your refund is officially posted.</p>
-        <p>Next contact your bank. There is often some processing time before a refund is posted.</p>
-        <p>If you’ve done all of this and you still have not received your refund yet, please contact us at {'{email address}'}.</p>
-        <p><strong>Sale items</strong></p>
-        <p>Only regular priced items may be refunded. Sale items cannot be refunded.</p>
-        <br />
-        <h2>Exchanges</h2>
-        <p>We only replace items if they are defective or damaged. If you need to exchange it for the same item, send us an email at {'{email address}'} and send your item to: {'{physical address}'}.</p>
-        </div>
-        <div className={myStyles['about']}>
-        <br />
-        <h2>Gifts</h2>
-        <br />
-        <p>If the item was marked as a gift when purchased and shipped directly to you, you’ll receive a gift credit for the value of your return. Once the returned item is received, a gift certificate will be mailed to you.</p>
-        <p>If the item wasn’t marked as a gift when purchased, or the gift giver had the order shipped to themselves to give to you later, we will send a refund to the gift giver and they will find out about your return.</p>
-        <br />
-        <h2>Shipping returns</h2>
-        <br />
-        <p>To return your product, you should mail your product to: {'{physical address}'}.</p>
-        <p>You will be responsible for paying for your own shipping costs for returning your item. Shipping costs are non-refundable. If you receive a refund, the cost of return shipping will be deducted from your refund.</p>
-        <p>Depending on where you live, the time it may take for your exchanged product to reach you may vary.</p>
-        <p>If you are returning more expensive items, you may consider using a trackable shipping service or purchasing shipping insurance. We don’t guarantee that we will receive your returned item.</p>
-        <br />
-        <h2>Need help?</h2>
-        <br />
-        <p>For general terms of use, refer to <Link href={'/terms'}><strong>/terms</strong></Link>. For privacy policy, refer to <Link href={'/privacy'}><strong>/privacy</strong></Link>. For further questions related to refunds and returns, contact us at <Link href={'mailto:help@hobbycue.com'}>help@hobbycue.com</Link>.</p></div>
-    </section>
-  </div></main>
-  </>)
+  const handleChange = (e: any, type: string) => {
+    const { value } = e.target
+    console.warn('valiee', value)
+    setTitle(value)
+  }
+
+  const handleValueChange = (value: string) => {
+    setContent(value)
+  }
+  const handleSave = async (e: any) => {
+    setIsUpdating(true)
+    try {
+      const formData = {
+        content: content,
+        title: title,
+      }
+      const data = await updateOtherPage('returns', formData)
+      // console.log('data=================>', data)
+      if (data.res.status === 200) {
+        setSnackbar({
+          display: true,
+          type: 'success',
+          message: 'Page updated successfully',
+        })
+        setIsEditing(false)
+      }
+    } catch (error) {
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Unable to update data',
+      })
+      console.log('error', error)
+    } finally {
+      setIsUpdating(false)
+    }
+  }
+
+  const updateTitle = async () => {
+    try {
+      const formData = {
+        title: title,
+      }
+      const data = await updateOtherPage('returns', formData)
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
+  const toggleEditing = () => {
+    setIsEditing(!isEditing)
+  }
+  const pencilIconSvg = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_13842_168963)">
+        <path
+          d="M2 11.5002V14.0002H4.5L11.8733 6.62687L9.37333 4.12687L2 11.5002ZM13.8067 4.69354C14.0667 4.43354 14.0667 4.01354 13.8067 3.75354L12.2467 2.19354C11.9867 1.93354 11.5667 1.93354 11.3067 2.19354L10.0867 3.41354L12.5867 5.91354L13.8067 4.69354Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_13842_168963">
+          <rect width="16" height="16" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      const result = await GetOtherPage('returns')
+
+      const currContent = result.res.data[0] ? result.res.data[0].content : ''
+      const currTitle = result.res.data[0] ? result.res.data[0].title : ''
+      const currId = result.res.data[0] ? result.res.data[0]._id : ''
+      setContent(currContent)
+      setTitle(currTitle)
+      setId(currId)
+    }
+    fetchBrands()
+
+    if (user?.is_admin) {
+      setIsEditing(true)
+    }
+  }, [user])
+  return (
+    <>
+      <Head>
+        <title>HobbyCue - Returns</title>
+      </Head>
+
+      <PageGridLayout column={2}>
+        <aside
+          className={`${styles2['community-left-aside']} custom-scrollbar`}
+        >
+          <section
+            className={`content-box-wrapper ${styles2['hobbies-side-wrapper']}`}
+          >
+            <header className={styles2['header']}>
+              <div className={styles2['heading']}>
+                {isEditing ? (
+                  <textarea
+                    className={styles['title'] + ' ' + styles.editInput}
+                    placeholder="Title"
+                    value={title || ''}
+                    name="title"
+                    onChange={(e) => handleChange(e, 'title')}
+                    onBlur={() => updateTitle()}
+                    ref={titleRef}
+                    onKeyDown={(e) =>
+                      e.key === 'Enter' && titleRef.current?.blur()
+                    }
+                    rows={1}
+                    onInput={function (e) {
+                      const target = e.target as HTMLTextAreaElement
+                      target.style.height = 'auto'
+                      target.style.height = target.scrollHeight + 'px'
+                    }}
+                  />
+                ) : (
+                  <h1 className={styles['title']}>{title || ''}</h1>
+                )}
+              </div>
+            </header>
+          </section>
+        </aside>
+        <main className={styles['main']}>
+          <section className={styles['white-container']}>
+            <div className={styles['heading-container']}>
+              {/* <span className={styles['heading']}>BRAND </span> */}
+              {user.is_admin && (
+                <div className={styles['pencil']} onClick={toggleEditing}>
+                  {pencilIconSvg}
+                </div>
+              )}
+            </div>
+            <div className={styles['list-container']}>
+              <div className={styles['max-w-1296px']}>
+                <style>
+                  {`
+                        .ql-toolbar.ql-snow {
+                          width: 100%;
+                          border-left:none;
+                          border-right:none;
+                          border-bottom:none;
+                        }
+                        .ql-container.ql-snow {
+                          width: 100%;
+                          border:none;
+                        }
+                        .ql-editor{
+                          border: none !important;
+                          width: 100%;
+                          border-top:1px solid #ccc;
+                          padding-right:16px;
+                          margin-inline: auto;
+                        }
+                        .ql-editor.ql-indent-1{
+                          padding-left:4px;
+                        }
+                        .ql-editor ul, 
+                        .ql-editor ol {
+                          padding-left: 4px;  
+                                        text-align:justify; 
+
+                        }
+
+                        .ql-editor a {
+                          color: rgb(128, 100, 162);  
+                          text-decoration: none !important;
+                                        text-align:justify;
+
+                        }
+                        .ql-editor p {
+                          color: var(--Grey-Darkest, #08090a);
+                          font-family: Cambria;
+                          font-size: 16px !important;
+                          font-style: normal;
+                          font-weight: 400;
+                          line-height: 24px;
+                          margin-bottom: 11px;
+                          }
+                        }
+                         @media screen and (max-width:1100px) {
+                          .ql-editor{
+                          
+                            width: 114vw;
+                          
+                          }
+                        }
+                        
+                      `}
+                </style>
+                <div className={`ql-snow ${styles['max-w-1296px']}`}>
+                  {!isEditing && (
+                    <div
+                      className={`ql-editor ${styles['max-w-full']}`}
+                      dangerouslySetInnerHTML={{ __html: content }}
+                    />
+                  )}
+                </div>
+                {isEditing && (
+                  <>
+                    <QuillEditor value={content} onChange={handleValueChange} />
+                    <div className={styles.buttonContainer}>
+                      <button className={styles.button} onClick={handleSave}>
+                        {!isUpdating ? 'Save' : 'Saving...'}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </section>
+        </main>
+      </PageGridLayout>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
+    </>
+  )
 }
 
 export default index

@@ -105,6 +105,29 @@ const BlogPublish = (props: any) => {
     setUrlText(value)
   }
 
+  const updateKeyword = () => {
+    try {
+      let updatedFields = {
+        keywords: keywords
+          ?.trim()
+          .split(/[\s,]+/)
+          .map((item: any) => item.trim())
+          .filter((el: any) => el !== ''),
+      }
+      const token = localStorage.getItem('token')
+
+      const headers = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+      axiosInstance.patch(`blogs/${blog?._id}`, updatedFields, headers)
+    } catch (err: any) {
+      console.log(err)
+    }
+  }
+
   const updateBlog = async (blogId: String) => {
     let processedUrl = urlText?.trim()
     if (processedUrl) {
@@ -118,6 +141,7 @@ const BlogPublish = (props: any) => {
       setSaveBtnLoading(true)
       let updatedFields = {
         url: processedUrl,
+        content: props?.propData,
         keywords: keywords
           ?.trim()
           .split(/[\s,]+/)
@@ -143,8 +167,8 @@ const BlogPublish = (props: any) => {
         return null
       }
       setUrlError('')
-      dispatch(setBlog({ ...blog, ...updatedFields }))
-      dispatch(setRefetch(refetch + 1))
+      // dispatch(setBlog({ ...blog, ...updatedFields }))
+      // dispatch(setRefetch(refetch + 1))
       dispatch(closeModal())
       router.push(`/blog/${updatedFields.url}`)
       console.log('Blog updated successfully:', data)
@@ -287,11 +311,27 @@ const BlogPublish = (props: any) => {
               <div className={styles.searchPicWrapper}>
                 <div className={styles.searchPicContent}>
                   <figure className={styles.searchPicFigure}>
-                    <img
-                      className={styles.searchPicImage}
-                      src={blog?.cover_pic}
-                      alt="Author Pic"
-                    />
+                    {blog?.cover_pic ? (
+                      <>
+                        <img
+                          src={blog?.cover_pic}
+                          width={300}
+                          height={100}
+                          alt="cover"
+                          className={styles.searchPicImage}
+                          style={{ marginBottom: '-7px' }}
+                        />
+                        <div
+                          style={{
+                            width: '100%',
+                            height: '1px',
+                            background: '#939ca3',
+                          }}
+                        ></div>
+                      </>
+                    ) : (
+                      <div className={`${styles['coverImageGrey']} `}></div>
+                    )}
                   </figure>
                   <div className={styles.searchPicDetails}>
                     <h3 className={`${styles.searchPicTitle} truncateOneLine`}>
@@ -300,7 +340,13 @@ const BlogPublish = (props: any) => {
                     <h4
                       className={`${styles.searchPicSubtitle} truncateOneLine`}
                     >
-                      {blog?.tagline}
+                      {blog?.tagline ? (
+                        blog?.tagline
+                      ) : (
+                        <p
+                          dangerouslySetInnerHTML={{ __html: blog?.content }}
+                        ></p>
+                      )}
                     </h4>
                     <p className={styles.searchPicAuthor}>
                       {author?.full_name.slice(0, 55) +
@@ -330,7 +376,9 @@ const BlogPublish = (props: any) => {
                       Hobbies{' '}
                       <span
                         className={styles.penIcon}
-                        onClick={() => setEditHobby(true)}
+                        onClick={() => {
+                          setEditHobby(true), updateKeyword()
+                        }}
                       >
                         {penIcon}
                       </span>

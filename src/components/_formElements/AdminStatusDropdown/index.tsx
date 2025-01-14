@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import styles from './styles.module.css'
-import selectIcon from '@/assets/svg/select_icon.svg'
-import InProgressIcon from '@/assets/svg/In_progress_icon.svg'
-import AcceptedIcon from '@/assets/svg/checked_icon.svg'
-import RejectedIcon from '@/assets/svg/cancel_icon.svg'
-import Image from 'next/image'
-import { MenuItem, Select } from '@mui/material'
+import React, { useState, useEffect, useRef } from 'react';
+import styles from './styles.module.css';
+import selectIcon from '@/assets/svg/select_icon.svg';
+import InProgressIcon from '@/assets/svg/In_progress_icon.svg';
+import AcceptedIcon from '@/assets/svg/checked_icon.svg';
+import RejectedIcon from '@/assets/svg/cancel_icon.svg';
+import Image from 'next/image';
 
 const statusOptions = [
   { label: 'New', icon: selectIcon, color: 'gray', status: 'New' },
@@ -17,48 +16,88 @@ const statusOptions = [
   },
   { label: 'Accepted', icon: AcceptedIcon, color: 'green', status: 'accepted' },
   { label: 'Rejected', icon: RejectedIcon, color: 'red', status: 'rejected' },
-]
+];
 
 const StatusDropdown: React.FC<{
-  status?: string
-  onStatusChange: (status: any) => void
-}> = ({ status, onStatusChange }) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [selectedStatus, setSelectedStatus] = useState(
-    statusOptions.find((option) => option.status === status) ||
-    statusOptions[0],
-  )
+  status?: string;
+  isOpen?: boolean;
+  onToggle?: () => void;
+  onStatusChange: (status: any) => void;
+  long?: boolean;
+}> = ({ status, isOpen, onToggle, onStatusChange, long }) => {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const isControlled = isOpen !== undefined && onToggle !== undefined;
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    setSelectedStatus(
-      statusOptions.find((option) => option.status === status) ||
-      statusOptions[0],
-    )
-  }, [status])
+  const isDropdownOpen = isControlled ? isOpen : internalIsOpen;
 
-  const toggleDropdown = () => setIsOpen(!isOpen)
+  const selectedStatus =
+    statusOptions.find((option) => option.status === status) || statusOptions[0];
+
+  const toggleDropdown = () => {
+    if (isControlled) {
+      onToggle?.();
+    } else {
+      setInternalIsOpen((prev) => !prev);
+    }
+  };
+
+  const closeDropdown = () => {
+    if (isControlled) {
+      onToggle?.();
+    }
+    setInternalIsOpen(false);
+  };
 
   const selectStatus = (status: any) => {
-    setSelectedStatus(status)
-    setIsOpen(false)
-    onStatusChange(status)
-  }
+    onStatusChange(status);
+    closeDropdown();
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        closeDropdown();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
-    <div className={styles.dropdown} onClick={toggleDropdown}>
-      <button className={styles.dropdownButton} onClick={toggleDropdown}>
-        <span style={{ color: selectedStatus.color }}>
-          <Image
-            src={selectedStatus.icon}
-            alt={selectedStatus.label}
-          />
+    <div className={styles.dropdown} ref={dropdownRef}>
+      <button
+        className={styles.dropdownButton}
+        onClick={toggleDropdown}
+        aria-expanded={isDropdownOpen}
+        style={{
+          width: long ? '180px' : '66px',
+          justifyContent: long ? 'space-between' : 'space-around',
+          padding: long ? '4px' : '0px',
+        }}
+      >
+        
+        <span>
+          <Image src={selectedStatus.icon} alt={selectedStatus.label} />
+          {long&&(
+          <span className={styles.statusLabel}>
+          {selectedStatus.label}
         </span>
+        )}
+        </span>
+        
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="8"
           height="6"
           style={{
-            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: 'transform 0.2s ease',
           }}
           viewBox="0 0 8 6"
@@ -70,8 +109,14 @@ const StatusDropdown: React.FC<{
           />
         </svg>
       </button>
-      {isOpen && (
-        <ul className={styles.dropdownMenu}>
+      {isDropdownOpen && (
+        <ul
+          className={styles.dropdownMenu}
+          style={{
+            width: long ? '180px' : '140px',
+            ...(long ? { left: '0px' } : { right: '0px' }),
+          }}
+        >
           {statusOptions.map((status) => (
             <li
               key={status.label}
@@ -88,28 +133,10 @@ const StatusDropdown: React.FC<{
             </li>
           ))}
         </ul>
-        // <Select open className={`${styles.dropdownMenu} ${styles['hideSelect']}`}>
-        //   {statusOptions.map((status, i) => <MenuItem key={i} className={styles.dropdownItem}>
-        //     <li
-        //       key={status.label}
-
-        //       onClick={() => selectStatus(status)}
-        //     >
-        //       <Image
-        //         src={status.icon}
-        //         alt={status.label}
-        //         width={24}
-        //         height={24}
-        //       />
-        //       <span className={styles.dropdownLabel}>{status.label}</span>
-        //     </li>
-        //   </MenuItem>)}
-        // </Select>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default StatusDropdown
+export default StatusDropdown;
 
-  

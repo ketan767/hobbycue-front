@@ -49,6 +49,8 @@ import ReactPlayer from 'react-player'
 import useGetDefaultHobby from './components/hobby/useDefaultHobby'
 import useHandleSubmit from './components/handleSubmit/useHandleSubmit'
 import removeHobbyOption from './utils/removeHobbyOption'
+import settingsIcon from '@/assets/svg/setting/settings.svg'
+import Link from 'next/link'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -781,6 +783,19 @@ export const CreatePost: React.FC<Props> = ({
           </h3>
           <div className={styles['create-post-modal']}>
             <div className={styles['image-posting-as']}>
+              {!isMobile && <Link
+                href={'/settings/visibility-notification'}
+                className={styles['settings-icon']}
+                onClick={handleClose}
+              >
+                <Image
+                  height={20}
+                  width={20}
+                  src={settingsIcon}
+                  alt="settings-icon"
+                  className={styles['settingsIconImage']}
+                />
+              </Link>}
               {data.type === 'user' ? (
                 <img
                   className={styles['user-profile-img']}

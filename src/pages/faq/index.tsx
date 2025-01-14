@@ -1,207 +1,274 @@
-import { FC } from 'react'
-import styles from '@/styles/faq.module.css'
-
-import collectingImg from '@/assets/image/collecting-recording.jpg'
-import cookingImg from '@/assets/image/cooking.jpg'
-import outdoorImg from '@/assets/image/outdoor.jpg'
-import squashImg from '@/assets/image/squash.jpg'
-import musicImg from '@/assets/image/music.jpg'
-import literaryImg from '@/assets/image/literary.jpg'
+import { FC, useEffect, useRef, useState } from 'react'
+import styles from '@/styles/Brand.module.css'
 import Image from 'next/image'
 import Head from 'next/head'
+import styles2 from '@/styles/ExplorePage.module.css'
+
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
+
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import dynamic from 'next/dynamic'
+import { GetOtherPage, updateOtherPage } from '@/services/admin.service'
+import PageGridLayout from '@/layouts/PageGridLayout'
+import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
+
+const QuillEditor = dynamic(
+  () => import('@/components/QuillEditor/QuillEditor'),
+  {
+    ssr: false,
+    loading: () => <h1>Loading...</h1>,
+  },
+)
 
 interface indexProps {}
 
-const tableData = [
-  ['Physical', 'Clothing', 'Nature', 'Sports', 'Dance', 'Painting'],
-  ['Record', 'Food', 'Outdoor', 'Games', 'Music', 'Photography'],
-  ['', 'Garden', 'Animal', 'Fitness', 'Theatre', 'Literary'],
-  ['', 'Model', 'Travel', '', '', ''],
-  ['', 'Utility', '', '', '', ''],
-]
-
-const cardsData = [
-  {
-    title: 'Collecting, Recording',
-    img: collectingImg,
-    desc: 'Stamps, Coins, Currency, Art, Antiques, Music, Memorabilia, Spotting and Record keeping such as birds, jokes, travel itineraries, etc.',
-  },
-  {
-    title: 'Making, Tinkering',
-    img: cookingImg,
-    desc: 'Creating Scaled Models, 3D Printing, Dresses, Cooking, Gardening, etc. DIY Home and Utility building, Tinkering including Restoring & Repairing.',
-  },
-  {
-    title: 'Activity Participation',
-    img: outdoorImg,
-    desc: 'Nature (Mountain, Forest, Water, Aero, Desert) & Adventure, Safari, Park, Picnicking, etc. Require physical abilities, but are not competitive.',
-  },
-  {
-    title: 'Sports, Games',
-    img: squashImg,
-    desc: 'Sports and Games, Indoors and Outdoors, Video and Online, Guessing and Role playing games, usually Competitive.',
-  },
-  {
-    title: 'Arts – Performing',
-    img: musicImg,
-    desc: 'Music, Dance, Theatre – Singing, Playing Musical Instruments, Dancing, Acting, Magic, Stand-up and other stage based.',
-  },
-  {
-    title: 'Arts – Visual, Literary',
-    img: literaryImg,
-    desc: 'Visual Arts such as Painting, Photography, Movie making. Literary Arts such as Reading, Viewing, Listening, etc.',
-  },
-]
-
 const index: FC<indexProps> = ({}) => {
+  const [isEditing, setIsEditing] = useState(false)
+  const [content, setContent] = useState('')
+  const [title, setTitle] = useState('')
+  const { user } = useSelector((state: RootState) => state.user)
+  const [id, setId] = useState('')
+  const titleRef = useRef<HTMLTextAreaElement | null>(null)
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+
+  const handleChange = (e: any, type: string) => {
+    const { value } = e.target
+    console.warn('valiee', value)
+    setTitle(value)
+  }
+
+  const handleValueChange = (value: string) => {
+    setContent(value)
+  }
+  const handleSave = async (e: any) => {
+    setIsUpdating(true)
+    try {
+      const formData = {
+        content: content,
+        title: title,
+      }
+      const data = await updateOtherPage('faq', formData)
+      // console.log('data=================>', data)
+      if (data.res.status === 200) {
+        setSnackbar({
+          display: true,
+          type: 'success',
+          message: 'Page updated successfully',
+        })
+        setIsEditing(false)
+      }
+    } catch (error) {
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Unable to update data',
+      })
+      console.log('error', error)
+    } finally {
+      setIsUpdating(false)
+    }
+  }
+
+  const updateTitle = async () => {
+    try {
+      const formData = {
+        title: title,
+      }
+      const data = await updateOtherPage('faq', formData)
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
+  const toggleEditing = () => {
+    setIsEditing(!isEditing)
+  }
+  const pencilIconSvg = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_13842_168963)">
+        <path
+          d="M2 11.5002V14.0002H4.5L11.8733 6.62687L9.37333 4.12687L2 11.5002ZM13.8067 4.69354C14.0667 4.43354 14.0667 4.01354 13.8067 3.75354L12.2467 2.19354C11.9867 1.93354 11.5667 1.93354 11.3067 2.19354L10.0867 3.41354L12.5867 5.91354L13.8067 4.69354Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_13842_168963">
+          <rect width="16" height="16" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      const result = await GetOtherPage('faq')
+
+      const currContent = result.res.data[0] ? result.res.data[0].content : ''
+      const currTitle = result.res.data[0] ? result.res.data[0].title : ''
+      const currId = result.res.data[0] ? result.res.data[0]._id : ''
+      setContent(currContent)
+      setTitle(currTitle)
+      setId(currId)
+    }
+    fetchBrands()
+
+    if (user?.is_admin) {
+      setIsEditing(true)
+    }
+  }, [user])
   return (
     <>
       <Head>
-        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
-        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
-
-        <title>HobbyCue - FAQ</title>
+        <title>HobbyCue - Faq</title>
       </Head>
-      <main className={styles['main']}>
-        <div className={styles['container']}>
+
+      <PageGridLayout column={2}>
+        <aside
+          className={`${styles2['community-left-aside']} custom-scrollbar`}
+        >
+          <section
+            className={`content-box-wrapper ${styles2['hobbies-side-wrapper']}`}
+          >
+            <header className={styles2['header']}>
+              <div className={styles2['heading']}>
+                {isEditing ? (
+                  <textarea
+                    className={styles['title'] + ' ' + styles.editInput}
+                    placeholder="Title"
+                    value={title || ''}
+                    name="title"
+                    onChange={(e) => handleChange(e, 'title')}
+                    onBlur={() => updateTitle()}
+                    ref={titleRef}
+                    onKeyDown={(e) =>
+                      e.key === 'Enter' && titleRef.current?.blur()
+                    }
+                    rows={1}
+                    onInput={function (e) {
+                      const target = e.target as HTMLTextAreaElement
+                      target.style.height = 'auto'
+                      target.style.height = target.scrollHeight + 'px'
+                    }}
+                  />
+                ) : (
+                  <h1 className={styles['title']}>{title || ''}</h1>
+                )}
+              </div>
+            </header>
+          </section>
+        </aside>
+        <main className={styles['main']}>
           <section className={styles['white-container']}>
-            <h1>FAQ</h1>
+            <div className={styles['heading-container']}>
+              {/* <span className={styles['heading']}>BRAND </span> */}
+              {user.is_admin && (
+                <div className={styles['pencil']} onClick={toggleEditing}>
+                  {pencilIconSvg}
+                </div>
+              )}
+            </div>
             <div className={styles['list-container']}>
-              <h3>What is hobbycue all about?</h3>
-              <p>
-                Simply put, hobbycue has Cues for your Hobby 🙂 It is a
-                community blog for sharing your experiences and learning from
-                each other. Hobbies are categorised, and a Cue could be in the
-                form of a blog, a reference to a teacher/coach, an
-                equipment/part supplier, etc. – all pertaining to the hobby. In
-                this website you can jump across hobby categories or simply
-                search for Cues. Check the About page for a basic why and what.
-                We’ll soon have a post with more details.
-              </p>
-              <hr />
-              <h3>How are hobbies organised?</h3>
-              <p>
-                To make it easier, hobbies in hobbycue are categorised based on
-                research work done by Dr. Robert Stebbins called ‘Serious
-                Leisure’. If you find anything missing or incorrect, do let us
-                know. Do note that we are still in a beta phase of this whole
-                concept and happy to fine tune all content.
-              </p>
-              <p>
-                If you find anything missing or incorrect, do let us know. Do
-                note that we are still in a beta phase of this whole concept and
-                happy to fine tune all content.
-              </p>
-              <div className={styles['table-container']}>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Collect</th>
-                      <th>Make</th>
-                      <th>Activity</th>
-                      <th>Play</th>
-                      <th>Arts Perform</th>
-                      <th>Arts Visuals & Lit</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tableData.map((arr, i) => (
-                      <tr key={i}>
-                        {arr.map((str, index) => (
-                          <td key={index}>{str}</td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className={styles['max-w-1296px']}>
+                <style>
+                  {`
+                        .ql-toolbar.ql-snow {
+                          width: 100%;
+                          border-left:none;
+                          border-right:none;
+                          border-bottom:none;
+                        }
+                        .ql-container.ql-snow {
+                          width: 100%;
+                          border:none;
+                        }
+                        .ql-editor{
+                          border: none !important;
+                          width: 100%;
+                          border-top:1px solid #ccc;
+                          padding-right:16px;
+                          margin-inline: auto;
+                        }
+                        .ql-editor.ql-indent-1{
+                          padding-left:4px;
+                        }
+                        .ql-editor ul, 
+                        .ql-editor ol {
+                          padding-left: 4px;  
+                                        text-align:justify; 
+
+                        }
+
+                        .ql-editor a {
+                          color: rgb(128, 100, 162);  
+                          text-decoration: none !important;
+                                        text-align:justify;
+
+                        }
+                        .ql-editor p {
+                          color: var(--Grey-Darkest, #08090a);
+                          font-family: Cambria;
+                          font-size: 16px !important;
+                          font-style: normal;
+                          font-weight: 400;
+                          line-height: 24px;
+                          margin-bottom: 11px;
+                          }
+                        }
+                         @media screen and (max-width:1100px) {
+                          .ql-editor{
+                          
+                            width: 114vw;
+                          
+                          }
+                        }
+                        
+                      `}
+                </style>
+                <div className={`ql-snow ${styles['max-w-1296px']}`}>
+                  {!isEditing && (
+                    <div
+                      className={`ql-editor ${styles['max-w-full']}`}
+                      dangerouslySetInnerHTML={{ __html: content }}
+                    />
+                  )}
+                </div>
+                {isEditing && (
+                  <>
+                    <QuillEditor value={content} onChange={handleValueChange} />
+                    <div className={styles.buttonContainer}>
+                      <button className={styles.button} onClick={handleSave}>
+                        {!isUpdating ? 'Save' : 'Saving...'}
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
-              <div className={styles['card-container']}>
-                {cardsData.map((card, i) => (
-                  <div key={i} className={styles['card']}>
-                    <Image src={card.img} alt="" />
-                    <strong>{card.title}</strong>
-                    <p>{card.desc}</p>
-                  </div>
-                ))}
-              </div>
-              <hr />
-              <h3>
-                Why can’t I Like, Comment, Find or Add friends and content?
-              </h3>
-              <p>
-                You must be signed in to hobbycue to Like or Comment on pages
-                and posts. If you are visiting the site for the first time, you
-                may see options to sign in with Facebook or Google. If you do
-                not want to link any of these, you can always Register with an
-                e-mail ID. If you are already signed in, you should see your
-                image and/or name at the top right corner of hobbycue.
-              </p>
-              <hr />
-              <h3>How do I add a new Blog Post?</h3>
-              <p>
-                You must be signed in to add a new post to hobbycue. If you are
-                signed in from a laptop, you should see a “New +” icon at the
-                top right. If you are signed in from a mobile device, you should
-                see a “+” icon. Click on that and get started.
-              </p>
-              <p>
-                As of now, every new post is moderated. We want no spam here!
-                This can be removed for users who complete a certain number of
-                posts and reviews.
-              </p>
-              <h4>a) What are the Guidelines for Posting Blogs?</h4>
-              <p>
-                hobbycue is for experience sharing. While your profile details
-                and preferences are private, all your posts are public. Avoid
-                personal information in your post. Avoid politics, religion, sex
-                or other objectionable content.
-              </p>
-              <h4>
-                b) I already have my blog posts on another site. Can I get them
-                into hobbycue?
-              </h4>
-              <p>
-                Awesome! If you would like to get them over to hobbycue, it is
-                easy. Export your blog to an XML file as shown below, we can
-                import to hobbycue.
-              </p>
-              <ol>
-                <li>
-                  From another WordPress site : Check this WordPress support
-                  page.
-                </li>
-                <li>
-                  From Blogspot or Blogger : Check this Google guide, or this
-                  YouTube video.
-                </li>
-                <li>Anything else? : Let us know at info@hobbycue.com</li>
-              </ol>
-              <hr />
-              <h3>What is a Listing? How do I add one?</h3>
-              <p>
-                A Listing is to have an entry of your business or brand in
-                hobbycue database with an intent to collaborate with the
-                community. A Listing could be to teach a hobby, collaborate with
-                other hobbyists or to buy or sell supplies or products relevant
-                to the hobby. Click here to Add a Listing.
-              </p>
-              <hr />
-              <h3>How do you ensure privacy of my data?</h3>
-              <p>
-                We value the privacy of your data. Your login information,
-                location and cookies are used only to deliver an automatically
-                personalised experience. Passwords are encrypted, no data is
-                shared with 3rd party, and there will be no spam e-mails from
-                us. Check out our privacy policy for more details.
-              </p>
-              <hr />
-              <p>
-                For any further queries, please reach out to info@hobbycue.com
-              </p>
             </div>
           </section>
-        </div>
-      </main>
+        </main>
+      </PageGridLayout>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

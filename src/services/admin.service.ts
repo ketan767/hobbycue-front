@@ -351,11 +351,11 @@ export const updateHobbyCover = async (hobbyId: any, formData: FormData) => {
     return { err: error, res: null }
   }
 }
-export const getBrand = async (): Promise<ApiReturnObject> => {
+export const GetOtherPage = async (  url: any): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
   try {
-    const res = await axiosInstance.get(`/brand`, { headers })
+    const res = await axiosInstance.get(`/otherpage?url=${url}`, { headers })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -363,15 +363,15 @@ export const getBrand = async (): Promise<ApiReturnObject> => {
   }
 }
 
-export const updateBrand = async (
-  brand_id: string,
+export const updateOtherPage = async (
+  url: string,
   data: any,
 ): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearerhobby_id ${token}` }
   try {
     const res = await axiosInstance.patch(
-      `/brand/updateBrand/${brand_id}`,
+      `/otherpage/update?url=${url}`,
       data,
       { headers },
     )

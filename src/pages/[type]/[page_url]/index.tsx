@@ -22,12 +22,12 @@ import { formatDateRange, htmlToPlainTextAdv, pageType } from '@/utils'
 type Props = {
   data: ListingPageData
   unformattedAbout?: string
-  address: any
-  result: any
-  pageTypeAndCity: any
-  date: any
-  time: string
-  pageTypeAndPrice: any
+  address?: any
+  result?: any
+  pageTypeAndCity?: any
+  date?: any
+  time?: string
+  pageTypeAndPrice?: any
 }
 
 const ListingHome: React.FC<Props> = (props) => {
@@ -39,7 +39,7 @@ const ListingHome: React.FC<Props> = (props) => {
     location: false,
     contact: false,
   })
-
+  console.warn('timeee', props.time)
   const { listing } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(listing)
   const { user } = useSelector((state: RootState) => state.user)
@@ -136,15 +136,14 @@ const ListingHome: React.FC<Props> = (props) => {
                   ' ⬢ ' +
                   props?.pageTypeAndCity +
                   ' ' +
-                  props?.date
+                  props?.date +
+                  (props?.time ? ` | ${props?.time}` : '')
                 : props?.address +
                   ' ⬢ ' +
                   props?.pageTypeAndCity +
                   ' ' +
                   props?.date +
-                  props?.time
-                ? ` | ${props?.time}`
-                : ''
+                  (props?.time ? ` | ${props?.time}` : '')
               : props?.data?.pageData?.tagline
               ? props?.data?.pageData?.tagline + ' ⬢ ' + props?.pageTypeAndPrice
               : props?.result + ' ⬢ ' + props?.pageTypeAndPrice
@@ -258,11 +257,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       : ''
 
   const time = pageData?.event_date_time[0]?.from_time
-    ? `${pageData.event_date_time[0].from_time}${
-        pageData.event_date_time[0].to_time
-          ? ` - ${pageData.event_date_time[0].to_time}`
-          : ''
-      }`
+    ? ` ${pageData?.event_date_time[0]?.from_time}` +
+      (pageData?.event_date_time[0]?.to_time
+        ? ` - ${pageData?.event_date_time[0]?.to_time}`
+        : '')
     : ''
 
   const pageTypeAndPrice =

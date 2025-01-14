@@ -178,10 +178,11 @@ const BlogCard: React.FC<Props> = ({ data }) => {
           <div>
             <span className={styles.authorAndDate}>
               <div className={`truncateOneLine ${styles.author}`}>
-                {data?.author?.full_name}
+                {data?.author?.full_name}{' '}
               </div>
               <span className={styles.date}>
-                {` | `}
+                &nbsp;
+                {`| `}
                 {convertDateToString(data?.createdAt)}
               </span>
             </span>

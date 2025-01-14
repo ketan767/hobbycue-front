@@ -46,6 +46,7 @@ import {
   setPreview,
   setRefetch,
 } from '@/redux/slices/blog'
+import ScrollToTop from '@/components/ScrollToTop'
 
 const BlogEditor = dynamic(() => import('@/components/BlogEditor/BlogEditor'), {
   ssr: false,
@@ -135,9 +136,24 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     }
   }
 
+  useEffect(() => {
+    const scrollToTopHandler = () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
+    }
+    window.addEventListener('scrollToTop', scrollToTopHandler)
+    return () => {
+      window.removeEventListener('scrollToTop', scrollToTopHandler)
+    }
+  }, [])
+
   const handleEditBlog = async (type: string) => {
     if (!isEditing || !blog) return
     if (!blog?.title) {
+      const scrollEvent = new CustomEvent('scrollToTop')
+      window.dispatchEvent(scrollEvent)
       setSnackbar({
         display: true,
         type: 'error',
@@ -174,6 +190,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         response = await updateBlog({
           blogId: blog._id,
           content: blog.content,
+          tagline: blog.tagline,
         })
         router.reload()
         break
@@ -221,7 +238,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     const { err, res } = await uploadBlogImage(formData, data.blog_url._id)
     if (err) return console.log('Error in uploadImageToServer(): ', err)
     if (res?.data.success) {
-      dispatch(setBlog({ ...blog, cover_pic: res?.data?.data.img_url }))
+      dispatch(setBlog({ ...blog, cover_pic: res?.data?.data.cover_pic }))
       dispatch(closeModal())
     }
   }
@@ -356,6 +373,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                         openModal({
                           type: 'blogPublish',
                           closable: true,
+                          propData: blog?.content,
                         }),
                       )
                     }

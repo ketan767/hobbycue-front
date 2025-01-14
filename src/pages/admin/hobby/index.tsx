@@ -364,7 +364,7 @@ const AdminHobby: React.FC = () => {
 
             <button
               disabled={page <= 1}
-              className="admin-next-btn"
+              className="users-next-btn"
               onClick={goToPreviousPage}
             >
               Previous
@@ -372,7 +372,7 @@ const AdminHobby: React.FC = () => {
 
             <button
               disabled={searchResults.length !== pagelimit}
-              className="admin-next-btn"
+              className="users-next-btn"
               onClick={goToNextPage}
             >
               Next

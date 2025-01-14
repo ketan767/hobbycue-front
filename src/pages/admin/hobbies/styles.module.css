@@ -72,6 +72,7 @@
 .searchContainer {
   padding: 28.5px 24px 20px 32px;
   transition: all 0.5s ease-in-out;
+  
 }
 
 .admintitle {
@@ -200,10 +201,39 @@
 
 .resultsContainer {
   max-height: calc(100vh - 140px);
+  /* position: relative; */
   overflow-y: auto;
   -ms-overflow-style: none;
   border-radius: 8px;
 }
+
+.page-select-dropdown {
+  font-family: 'Poppins', sans-serif; 
+  font-size: 14px; 
+  padding: 5px 10px; 
+  border: 1px solid #ccc; 
+  border-radius: 8px; 
+  outline: none; 
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; 
+}
+
+.page-select-dropdown:focus {
+  border-color: #007bff; 
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+}
+
+.page-select-dropdown option {
+  font-family: 'Poppins', sans-serif; /* Ensure font consistency */
+  font-size: 14px;
+  background-color: #ffffff; /* Default background */
+  color: #000; /* Default text color */
+}
+
+.page-select-dropdown option:hover {
+  background-color: #007bff; /* Blue background on hover */
+  color: #ffffff; /* White text on hover */
+}
+
 
 .resultsContainer::-webkit-scrollbar {
   display: none; 
@@ -598,7 +628,7 @@
   cursor: pointer;
 }
 .pagination {
-  width: 280px;
+  width:100%;
   display: flex;
   justify-content: end;
   gap: 20px;

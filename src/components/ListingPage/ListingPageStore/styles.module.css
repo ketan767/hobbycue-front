@@ -21,7 +21,7 @@
 
 @media screen and (max-width: 1100px) {
   .data-container {
-    /* padding-top: 8px; */
+    padding-top: 8px;
     display: flex;
     flex-direction: column;
     gap: 8px;

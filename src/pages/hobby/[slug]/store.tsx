@@ -23,8 +23,13 @@ import Head from 'next/head'
 import { getListingPages } from '@/services/listing.service'
 import ListingCard from '@/components/ListingCard/ListingCard'
 import PagesLoader from '@/components/PagesLoader/PagesLoader'
+import { htmlToPlainTextAdv } from '@/utils'
 
-type Props = { data: { hobbyData: any } }
+type Props = {
+  data: { hobbyData: any }
+  unformattedAbout?: string
+  previewLine1: string
+}
 
 const HobbyStorePage: React.FC<Props> = (props) => {
   const data = props.data.hobbyData
@@ -148,7 +153,18 @@ const HobbyStorePage: React.FC<Props> = (props) => {
         ) : (
           ''
         )}
-        <meta property="og:description" content={displayDescMeta()} />
+        <meta
+          property="og:description"
+          content={
+            props?.previewLine1 +
+            ' ⬢ ' +
+            props?.unformattedAbout +
+            ' • ' +
+            data?.display +
+            ' ' +
+            'hobby community'
+          }
+        />
         <title>{`${data?.display} | HobbyCue`}</title>
       </Head>
       <HobbyPageLayout
@@ -217,9 +233,41 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const data = {
     hobbyData: res.data?.hobbies?.[0],
   }
+
+  const unformattedAbout = htmlToPlainTextAdv(
+    res.data?.hobbies?.[0]?.description,
+  )
+
+  const hobbyType =
+    data?.hobbyData?.level === 0
+      ? 'Category'
+      : data?.hobbyData?.level === 1
+      ? 'Sub-Category'
+      : data?.hobbyData?.level === 2
+      ? 'Hobby Tag'
+      : data?.hobbyData?.level === 3
+      ? 'Hobby'
+      : data?.hobbyData?.level === 5
+      ? 'Genre/Style'
+      : 'Hobby'
+
+  const additionalInfo =
+    data?.hobbyData?.level !== 0
+      ? (data?.hobbyData?.category?.display
+          ? ' | ' + data?.hobbyData?.category?.display
+          : '') +
+        (data?.hobbyData?.level > 1 && data?.hobbyData?.sub_category?.display
+          ? ', ' + data?.hobbyData?.sub_category?.display
+          : '')
+      : ''
+
+  const previewLine1 = `${hobbyType}${additionalInfo}`
+
   return {
     props: {
       data,
+      unformattedAbout,
+      previewLine1,
     },
   }
 }
