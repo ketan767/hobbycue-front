@@ -29,6 +29,7 @@
 
   border: 1px solid var(--Grey-Light, #ced4da);
   background: var(--background-white, #fff);
+  height: 40px;
 }
 
 .orders-table thead th:nth-child(5) div {

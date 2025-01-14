@@ -248,8 +248,10 @@ const ListingPageLayout: React.FC<Props> = ({
     'store',
     'related',
     'orders',
-    'members',
   ]
+  if (listingModalData?.cta_text === 'Join') {
+    tabs.push('members')
+  }
   let content
 
   if (React.isValidElement(children) && typeof children.type !== 'string') {
@@ -622,16 +624,17 @@ const ListingPageLayout: React.FC<Props> = ({
               <ListingOrdersTab data={data.pageData?._purchases || []} />
             </div>
           )}
-          {activeTab === 'members' && (
-            <div className={styles['display-mobile']}>
-              <ListingMembersTab
-                pageData={data.pageData}
-                data={data.pageData._membership_purchases}
-                headerData={data?.pageData?.place_variant}
-                pageName={data?.pageData?.title}
-              />
-            </div>
-          )}
+          {activeTab === 'members' &&
+            listingModalData?.cta_text === 'Join' && (
+              <div className={styles['display-mobile']}>
+                <ListingMembersTab
+                  pageData={data.pageData}
+                  data={data.pageData._membership_purchases}
+                  headerData={data?.pageData?.place_variant}
+                  pageName={data?.pageData?.title}
+                />
+              </div>
+            )}
         </div>
       </div>
       {/* Snackbar component */}

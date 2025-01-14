@@ -88,8 +88,12 @@ const ListingPlaceVariantsModal: React.FC<Props> = ({
   const handleSubmit = async () => {
     const apiFunc = data._id ? updatePlaceVariant : addPlaceVariant
     setSubmitBtnLoading(true)
+    const filteredVariations = data?.variations.filter(
+      (variant) => variant.name !== '',
+    )
+    const newData = { ...data, variations: filteredVariations }
     const { err, res } = await apiFunc(listingModalData._id as string, {
-      ...data,
+      ...newData,
     })
     if (err) return console.log(err)
     console.log('res', res?.data.data.listing)
@@ -259,7 +263,7 @@ const ListingPlaceVariantsModal: React.FC<Props> = ({
                       ...prev,
                       variations: [
                         ...prev.variations,
-                        { name: 'No value', value: '0' },
+                        { name: '', value: '0' },
                       ],
                     }))
                   }}
