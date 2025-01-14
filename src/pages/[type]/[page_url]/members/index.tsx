@@ -134,12 +134,14 @@ const ListingHome: React.FC<Props> = (props) => {
           activeTab={'members'}
         >
           <div className={styles['display-desktop']}>
-            <ListingMembersTab
-              pageData={props.data.pageData}
-              data={props.data.pageData._membership_purchases}
-              headerData={props.data?.pageData?.place_variant}
-              pageName={props.data?.pageData?.title}
-            />
+            {props.data.pageData.cta_text === 'Join' && (
+              <ListingMembersTab
+                pageData={props.data.pageData}
+                data={props.data.pageData._membership_purchases}
+                headerData={props.data?.pageData?.place_variant}
+                pageName={props.data?.pageData?.title}
+              />
+            )}
           </div>
         </ListingPageMain>
       </ListingPageLayout>
