@@ -134,6 +134,7 @@ const AdminActionModal: React.FC<Props> = ({
               <div />
             </div>
           </section>
+          
           <footer className={styles['footer']}>
             <button
               ref={nextButtonRef}

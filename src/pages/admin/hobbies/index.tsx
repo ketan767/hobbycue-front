@@ -488,7 +488,8 @@ const HobbiesRequest: React.FC = () => {
       status: newStatus?.status,
     })
     console.log('status changed',hobbyData)
-    await handleSubmit()
+    setShowAdminActionModal(true);
+    // await handleSubmit()
   }
 
   const handleAction = async (hobbyreq: any) => {
@@ -518,8 +519,8 @@ const HobbiesRequest: React.FC = () => {
     ?.slice()
     ?.sort((a, b) => {
       return createdAtSort
-        ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
     });
 
 
@@ -731,8 +732,11 @@ const HobbiesRequest: React.FC = () => {
                     <td>
                       <div>{formatDate(hobbyreq?.createdAt)}</div>
                     </td>
-                    <td >
-                      <div>{hobbyreq?.similar}</div>
+                    <td>
+                      <div style={{display:'flex',gap:8,justifyContent:'center'}}>
+                        <div>{hobbyreq?.similar}</div>
+                        <div>{hobbyreq?.similar&&<ToggleButton/>}</div>
+                      </div>
                     </td>
 
                     <td >
@@ -758,10 +762,7 @@ const HobbiesRequest: React.FC = () => {
 
                         className={styles.actions}
                       >
-                        <div onClick={() => {
-                          handleAction(hobbyreq);
-                          setShowAdminActionModal(true)
-                        }}>{pencilSvg}</div>
+                        <div></div>
                         <StatusDropdown
                           key={index}
                           status={hobbyreq?.status}
