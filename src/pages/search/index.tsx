@@ -492,9 +492,6 @@ const MainContent: React.FC<SearchResultsProps> = ({
   //   callForData(result_pagination)
   // }, [result_pagination])
 
-  // console.log('asifs hobbies', hobbiesSearchResults)
-  // console.log('asifs page', page)
-
   // const lastPostElementRef = useCallback(
   //   (node: HTMLDivElement | null) => {
   //     if (searchLoading) return
