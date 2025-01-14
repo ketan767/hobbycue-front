@@ -88,6 +88,19 @@ const ListingCardProduct: React.FC<Props> = ({
   const [showMenu, setShowMenu] = useState<boolean>(false)
   console.log('router', router.pathname)
 
+  const handlePublish = async (_id: string, event) => {
+      event.preventDefault();
+      event.stopPropagation();
+  
+      const { err, res } = await updateListing(_id, {
+            is_published: data.is_published === true ? false : true,
+          })
+          if (err) return console.log(err)
+          else {
+            window.location.reload()
+          }
+    }
+
   return (
     <>
       <Link
@@ -135,8 +148,9 @@ const ListingCardProduct: React.FC<Props> = ({
             {
               hoverCardIndex === data._id && showMenu && (
                 <div className={styles['listing-card-menu']}>
-                 <button>Publish</button>
-                 <button>Unpublish</button>
+                 <button onClick={(e) => handlePublish(data._id, e)}>
+                  {data.is_published ? 'Unpublish' : 'Publish'}
+                 </button>
                  <button>Delete</button>
                 </div>
               )
