@@ -452,6 +452,7 @@ const CommunityLayout: React.FC<Props> = ({
     const { err, res } = await getAllHobbyPosts(params.toString())
     const params2 = params
     params2.append('has_link', 'true')
+    params2.append('community', 'true')
 
     const { err: linksPostsErr, res: linksPostsRes } = await getAllHobbyPosts(
       params2.toString(),
