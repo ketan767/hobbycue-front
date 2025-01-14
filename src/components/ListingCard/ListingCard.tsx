@@ -17,6 +17,8 @@ import ListingCardProduct from './ListingCardProduct'
 import { useRouter } from 'next/router'
 import HobbyIconHexagon from '@/assets/icons/HobbyIconHexagon'
 import ListingBookmark from './icon/ListingBookmark'
+import ListingMenu from './icon/ListingMenu'
+import { updateListing } from '@/services/listing.service'
 
 type Props = {
   data: any
@@ -34,6 +36,7 @@ const ListingCard: React.FC<Props> = ({
   setHoveredCardIndex,
 }) => {
   const { user } = useSelector((state: RootState) => state.user)
+  const [showMenu, setShowMenu] = React.useState<boolean>(false);
   const type = getListingTypeName(data?.type)
   const router = useRouter()
   console.warn({ data })
@@ -87,6 +90,19 @@ const ListingCard: React.FC<Props> = ({
     return result
   }
 
+  const handlePublish = async (_id: string, event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const { err, res } = await updateListing(_id, {
+          is_published: data.is_published === true ? false : true,
+        })
+        if (err) return console.log(err)
+        else {
+          window.location.reload()
+        }
+  }
+
   const calendarIcon = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -128,8 +144,11 @@ const ListingCard: React.FC<Props> = ({
     </svg>
   )
 
-  const itsMe = data?.admin === user?._id
+  const itsMe = data?.admin?._id === user?._id
   const isMobile = useMediaQuery('(max-width:1100px)')
+
+  console.log("datas", data);
+  console.log("userss", user);
 
   if (data.type === 4) {
     return (
@@ -175,18 +194,36 @@ const ListingCard: React.FC<Props> = ({
         )}
 
         <div className={styles.imgContainer}>
-          {hoverCardIndex === data._id ? (
-            <div className={styles['bookmark']}>
-              <ListingBookmark />
+          {itsMe ? (
+            <div onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setShowMenu(!showMenu)
+            }} className={styles['bookmark']}>
+              <ListingMenu isCardHovered={hoverCardIndex === data._id} />
             </div>
           ) : (
-            <></>
+            <div className={styles['bookmark']}>
+              <ListingBookmark isCardHovered={hoverCardIndex === data._id} />
+            </div>
           )}
+
+          {
+            hoverCardIndex === data._id && showMenu && (
+              <div className={styles['listing-card-menu']}>
+                <button onClick={(e) => handlePublish(data._id, e)}>
+                  {data.is_published ? 'Unpublish' : 'Publish'}
+                </button>
+                <button>Delete</button>
+              </div>
+            )
+          }
+
           {data?.cover_image ? (
             <>
               <div
                 className={
-                  column === 4 ? styles.backgroundtwo : styles.background
+                  `${column === 4 ? styles.backgroundtwo : styles.background} ${styles.hoverCoverImage}`
                 }
               >
                 <img
@@ -214,19 +251,19 @@ const ListingCard: React.FC<Props> = ({
                 data?.type == 1
                   ? `${
                       column === 4 ? styles.coverImageTwo : styles.coverImage
-                    } default-people-listing-cover`
+                    } default-people-listing-cover ${styles.hoverCoverImage}`
                   : data?.type == 2
                   ? `${
                       column === 4 ? styles.coverImageTwo : styles.coverImage
-                    } default-place-listing-cover`
+                    } default-place-listing-cover ${styles.hoverCoverImage}`
                   : data?.type == 3
                   ? `${
                       column === 4 ? styles.coverImageTwo : styles.coverImage
-                    } default-program-listing-cover`
+                    } default-program-listing-cover ${styles.hoverCoverImage}`
                   : data?.type == 4
                   ? `${
                       column === 4 ? styles.coverImageTwo : styles.coverImage
-                    } default-product-listing-cover`
+                    } default-product-listing-cover ${styles.hoverCoverImage}`
                   : `${
                       column === 4 ? styles.coverImageTwo : styles.coverImage
                     } default-people-listing-cover`

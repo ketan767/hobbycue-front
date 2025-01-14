@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './ListingCardProduct.module.css'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -18,6 +18,8 @@ import RedCartIcon from '@/assets/icons/RedCartIcon'
 import HobbyIconHexagon from '@/assets/icons/HobbyIconHexagon'
 import { Inter } from 'next/font/google'
 import ListingBookmark from './icon/ListingBookmark'
+import ListingMenu from './icon/ListingMenu'
+import { updateListing } from '@/services/listing.service'
 export const rupeesIcon = (
   <svg
     width="14"
@@ -83,7 +85,22 @@ const ListingCardProduct: React.FC<Props> = ({
 }) => {
   const router = useRouter()
   const { user } = useSelector((state: RootState) => state.user)
+
+  const [showMenu, setShowMenu] = useState<boolean>(false)
   console.log('router', router.pathname)
+
+  const handlePublish = async (_id: string, event: React.MouseEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+  
+      const { err, res } = await updateListing(_id, {
+            is_published: data.is_published === true ? false : true,
+          })
+          if (err) return console.log(err)
+          else {
+            window.location.reload()
+          }
+    }
 
   return (
     <>
@@ -115,13 +132,31 @@ const ListingCardProduct: React.FC<Props> = ({
 
         <div className={styles.content}>
           <div className={styles.contentHead}>
-            {hoverCardIndex === data._id ? (
-              <div className={styles['bookmark']}>
-                <ListingBookmark />
+            {itsMe ? (
+              <div onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setShowMenu(!showMenu)
+              }} className={styles['bookmark']}>
+                <ListingMenu isCardHovered={hoverCardIndex === data._id} />
               </div>
             ) : (
-              <></>
+              <div className={styles['bookmark']}>
+                <ListingBookmark isCardHovered={hoverCardIndex === data._id} />
+              </div>
             )}
+
+            {
+              hoverCardIndex === data._id && showMenu && (
+                <div className={styles['listing-card-menu']}>
+                 <button onClick={(e) => handlePublish(data._id, e)}>
+                  {data.is_published ? 'Unpublish' : 'Publish'}
+                 </button>
+                 <button>Delete</button>
+                </div>
+              )
+           }
+
             {data?.profile_image ? (
               <div className={styles.contentImageContainer}>
                 <img

@@ -66,8 +66,16 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   const [labelText, setLabelText] = useState('')
   const urlSpanRef = useRef<HTMLSpanElement>(null)
   
+  const [isProductURLEditable, setIsProductURLEditable] = useState<boolean>(false);
   const isProductPage = pageType(listingModalData?.type) === 'product';
 
+  useEffect(() => {
+    if (listingModalData.title === null) {
+      setIsProductURLEditable(true);
+    }
+    console.log("listingModalData", listingModalData);
+  }, [listingModalData])
+  
   useEffect(() => {
     setInitialData({
       title: { value: listingModalData.title as string, error: null },
@@ -450,7 +458,9 @@ const ListingGeneralEditModal: React.FC<Props> = ({
 
   useEffect(() => {
     fullNameRef?.current?.focus()
-    if (onComplete !== undefined || pageType(listingModalData?.type) === 'product') {
+
+    if (onComplete !== undefined || (isProductPage && isProductURLEditable)) {
+      console.log('onComplete', onComplete)
       let pageUrl: string = data.title.value
       console.log(pageUrl)
       pageUrl = pageUrl

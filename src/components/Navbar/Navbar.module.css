@@ -29,6 +29,10 @@
   gap: 34.74px;
 }
 
+.home-icon {
+  margin-inline: 20px;
+}
+
 .navbar-right {
   height: 100%;
 }
@@ -192,10 +196,13 @@
 
 .user-menu {
   height: 60px !important;
-  width: 127px;
+  width: 90px;
   padding: 10px;
   gap: 0px;
   border-radius: 8px 8px 0px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .user-menu .img {

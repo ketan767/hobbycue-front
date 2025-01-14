@@ -463,7 +463,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
               {
                 isLoggedIn && (
-                  <Link href={'/community'} className={styles['pos-relative-z-2']}>
+                  <Link href={'/community'} className={styles['home-icon']}>
                     <Image src={HomeIcon} width={20} height={20} alt="home" />
                   </Link>
                 )

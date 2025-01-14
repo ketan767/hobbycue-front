@@ -1,6 +1,6 @@
 .action-btn {
   /* background-color: #f7f5f9; */
-  background-color: #fff;
+  background-color: #ccc1da;
   border-radius: 50%;
   width: 36px;
   height: 36px;
@@ -16,3 +16,8 @@
 /* .action-btn img {
   border-radius: 8px;
 } */
+
+.action-btn:hover {
+  background-color: #f7f5f9;
+  transition: 0.3s;
+}
