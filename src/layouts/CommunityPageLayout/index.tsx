@@ -212,6 +212,26 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }, [hobbyQuery, locationQuery, activeProfile])
 
+  useEffect(() => {
+    const query = { ...router.query };
+    if (selectedHobby && selectedHobby !== 'All Hobbies') {
+      const hobbyDetail = activeProfile?.data?._hobbies.find(
+        (hobby: any) => hobby?.hobby?._id === selectedHobby,
+      )
+      if (hobbyDetail) {
+        query.hobby = hobbyDetail?.hobby?.display;
+      }
+    } else {
+      delete query.hobby;
+    }
+    if (selectedLocation && selectedLocation !== 'All Locations') {
+      query.location = selectedLocation;
+    } else {
+      delete query.location;
+    }
+    router.push({ pathname: router.pathname, query }, undefined, { shallow: true });
+  }, [selectedHobby, selectedLocation, activeProfile]);
+
   const [seeMoreOpenedFirstTime, setSeeMoreOpenedFirstTime] =
     useState<boolean>(false)
   const toggleSeeMore = () => {
