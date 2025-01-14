@@ -90,7 +90,7 @@ const ListingCard: React.FC<Props> = ({
     return result
   }
 
-  const handlePublish = async (_id: string, event) => {
+  const handlePublish = async (_id: string, event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 

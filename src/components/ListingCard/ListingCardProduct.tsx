@@ -19,6 +19,7 @@ import HobbyIconHexagon from '@/assets/icons/HobbyIconHexagon'
 import { Inter } from 'next/font/google'
 import ListingBookmark from './icon/ListingBookmark'
 import ListingMenu from './icon/ListingMenu'
+import { updateListing } from '@/services/listing.service'
 export const rupeesIcon = (
   <svg
     width="14"
@@ -88,7 +89,7 @@ const ListingCardProduct: React.FC<Props> = ({
   const [showMenu, setShowMenu] = useState<boolean>(false)
   console.log('router', router.pathname)
 
-  const handlePublish = async (_id: string, event) => {
+  const handlePublish = async (_id: string, event: React.MouseEvent) => {
       event.preventDefault();
       event.stopPropagation();
   
