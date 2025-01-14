@@ -22,6 +22,8 @@ import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import {
   checkIfUrlExists,
+  dateFormat,
+  dateFormatwithYear,
   htmlToPlainTextAdv,
   isMobile,
   validateEmail,
@@ -36,6 +38,7 @@ import CommunityTopDropdown from '@/components/_formElements/CommunityTopDropdow
 import { CommunityDropdownOption } from '@/components/_formElements/CommunityDropdownOption/CommunityDropdownOption'
 import PanelDropdownList from '@/layouts/CommunityPageLayout/PanelDropdownList'
 import { InviteToCommunity } from '@/services/auth.service'
+import { formatDate } from '@/utils/Date'
 
 type Props = {
   data: ListingPageData
@@ -482,32 +485,6 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
   //     : `${data.postsData?._allHobbies[0]?.display}`
   //   : data.postsData?._hobby?.display
 
-  const hobbiesInTitle = data.postsData?._allHobbies?._hobby1?.display
-    ? `${data.postsData._allHobbies._hobby1.display}${
-        data.postsData._allHobbies._genre1?.display
-          ? ' - ' + data.postsData._allHobbies._genre1.display
-          : ''
-      }${data.postsData._allHobbies._hobby2?.display ? ', ' : ''}${
-        data.postsData._allHobbies._hobby2?.display
-          ? data.postsData._allHobbies._hobby2.display
-          : ''
-      }${
-        data.postsData._allHobbies._genre2?.display
-          ? ' - ' + data.postsData._allHobbies._genre2.display
-          : ''
-      }${data.postsData._allHobbies._hobby3?.display ? ', ' : ''}${
-        data.postsData._allHobbies._hobby3?.display
-          ? data.postsData._allHobbies._hobby3.display
-          : ''
-      }${
-        data.postsData._allHobbies._genre3?.display
-          ? ' - ' + data.postsData._allHobbies._genre3.display
-          : ''
-      }`
-    : `${data.postsData?._hobby?.display}${
-        data.postsData._genre ? ' - ' + data.postsData?._genre?.display : ''
-      }`
-
   const singleHobbyInTitle = data.postsData?._allHobbies?._hobby?.display
     ? data.postsData?._allHobbies?._hobby?.display
     : data.postsData?._hobby?.display
@@ -519,14 +496,12 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
 
         <meta
           property="og:description"
-          // content={`${
-          //   data?.postsData?.content?.length > 0
-          //     ? data.postsData.content
-          //     : data.metadata?.data?.description
-          //     ? data.metadata?.data?.description
-          //     : 'View this post on hobbycue.com'
-          // }`}
-          content={data?.postcontent || 'View this post on hobbycue.com'}
+          content={`${data?.postcontent?.postCreatedAt} | ${
+            data?.postcontent?.hobbiesInTitle
+          } | ${data?.postsData?.visibility} ⬢ ${
+            data?.postcontent?.postContentPlain ||
+            'View this post on hobbycue.com'
+          }`}
         />
 
         <meta property="og:image:alt" content="Profile picture" />
@@ -535,7 +510,9 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
             data?.postsData?.author_type === 'User'
               ? data.postsData?._author?.full_name
               : data.postsData?._author?.title
-          } - ${hobbiesInTitle} at ${data.postsData?.visibility}`}`}
+          } - ${data.postcontent?.hobbiesInTitle} at ${
+            data.postsData?.visibility
+          }`}`}
         </title>
       </Head>
       <CommunityPageLayout activeTab="posts" singlePostPage={false} hide={true}>
@@ -590,6 +567,34 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
   let postContentPlain = htmlToPlainTextAdv(res?.data?.data?.posts[0]?.content)
 
+  const hobbiesInTitle = postsData?._allHobbies?._hobby1?.display
+    ? `${postsData._allHobbies._hobby1.display}${
+        postsData._allHobbies._genre1?.display
+          ? ' - ' + postsData._allHobbies._genre1.display
+          : ''
+      }${postsData._allHobbies._hobby2?.display ? ', ' : ''}${
+        postsData._allHobbies._hobby2?.display
+          ? postsData._allHobbies._hobby2.display
+          : ''
+      }${
+        postsData._allHobbies._genre2?.display
+          ? ' - ' + postsData._allHobbies._genre2.display
+          : ''
+      }${postsData._allHobbies._hobby3?.display ? ', ' : ''}${
+        postsData._allHobbies._hobby3?.display
+          ? postsData._allHobbies._hobby3.display
+          : ''
+      }${
+        postsData._allHobbies._genre3?.display
+          ? ' - ' + postsData._allHobbies._genre3.display
+          : ''
+      }`
+    : `${postsData?._hobby?.display}${
+        postsData._genre ? ' - ' + postsData?._genre?.display : ''
+      }`
+
+  const postCreatedAt = dateFormatwithYear.format(new Date(postsData.createdAt))
+
   return {
     props: {
       data: {
@@ -600,7 +605,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
         eventsData: null,
         storeData: null,
         metadata,
-        postcontent: postContentPlain,
+        postcontent: {
+          postContentPlain,
+          hobbiesInTitle,
+          postCreatedAt,
+        },
       },
     },
   }
