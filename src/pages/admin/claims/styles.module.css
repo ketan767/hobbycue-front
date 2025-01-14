@@ -162,6 +162,9 @@
   max-height: calc(100vh - 140px);
   overflow-y: auto;
 }
+.resultsContainer::-webkit-scrollbar {
+  display: none;
+}
 
 .resultsTable {
   width: 100%;
@@ -286,6 +289,15 @@
   color: #000000;
   /* Fixed width for the Login Types column */
 }
+.loginIcon {
+  width: auto;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 5px;
+}
 
 .lastLoggedIn {
   padding-right: 16px !important;
@@ -347,4 +359,61 @@
   .searchInput {
     margin-bottom: 10px;
   }
+}
+
+.pagination {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  gap: 20px;
+  padding: 5px 12px;
+  margin-left: auto;
+}
+
+
+.page-select-dropdown {
+  font-family: 'Poppins', sans-serif; 
+  font-size: 14px; 
+  padding: 5px 10px; 
+  border: 1px solid #ccc; 
+  border-radius: 8px; 
+  outline: none; 
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; 
+}
+
+.page-select-dropdown:focus {
+  border-color: #007bff; 
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+}
+
+.page-select-dropdown option {
+  font-family: 'Poppins', sans-serif; /* Ensure font consistency */
+  font-size: 14px;
+  background-color: #ffffff; /* Default background */
+  color: #000; /* Default text color */
+}
+
+.page-select-dropdown option:hover {
+  background-color: #007bff; /* Blue background on hover */
+  color: #ffffff; /* White text on hover */
+}
+
+.countText {
+  margin-left: 10px;
+  white-space: nowrap; 
+  position: relative; 
+  margin-right: 40%;
+}
+
+.avatarContainer {
+  margin-right: 10px;
+  width: 32px;
+  height: 32px;
+}
+.avatarImage {
+  border-radius: 50%;
+  border: 1px solid #0096c8;
+  height: 32px;
+  width: 32px;
+  margin: auto;
 }

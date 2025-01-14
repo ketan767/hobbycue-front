@@ -4,7 +4,7 @@ import styles from './UserDropDown.module.css' // Import your custom button comp
 
 import { searchUsersAdvanced } from '@/services/user.service'
 import Image from 'next/image'
-import { useSearchPageContext } from '@/pages/admin/searchHistory'
+import { useSearchPageContext } from '@/pages/admin/searches'
 
 interface InviteSectionProps {}
 

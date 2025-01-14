@@ -2,7 +2,7 @@ import React from 'react'
 
 import styles from './SearchFilter.module.css'
 
-import { useSearchPageContext } from '@/pages/admin/searchHistory'
+import { useSearchPageContext } from '@/pages/admin/searches'
 
 import FilterDropdown from './FilterDropDown/FilterDropDown'
 import UserDropdown from './UserDropDown/UserDropDown'
