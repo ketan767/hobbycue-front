@@ -422,7 +422,6 @@ const ModalManager: React.FC = () => {
                     activeModal === 'ListingSupportModal' ||
                     activeModal === 'SupportUserModal' ||
                     activeModal === 'claim-listing' ||
-                    activeModal === 'listing-cta-edit' ||
                     activeModal === 'listing-product-purchase' ||
                     activeModal === 'listing-place-purchase' ||
                     activeModal === 'CopyProfileDataModal') &&
@@ -456,7 +455,6 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'SupportUserModal' &&
                 activeModal !== 'user-onboarding' &&
                 activeModal !== 'claim-listing' &&
-                activeModal !== 'listing-cta-edit' &&
                 activeModal !== 'listing-product-purchase' &&
                 activeModal !== 'listing-place-purchase' &&
                 activeModal !== 'BlogFilterMobileModal' &&
@@ -692,7 +690,6 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'SupportUserModal' &&
                 activeModal !== 'blogPublish' &&
                 activeModal !== 'claim-listing' &&
-                activeModal !== 'listing-cta-edit' &&
                 activeModal !== 'listing-product-purchase' &&
                 activeModal !== 'listing-place-purchase' &&
                 activeModal !== 'BlogFilterMobileModal' &&

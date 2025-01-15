@@ -232,7 +232,6 @@ const ListingPlacePurchase: React.FC<Props> = ({
                 <div
                   className={styles['input-box']}
                   ref={dropdownRef}
-                  // tabIndex={0} // Makes it focusable
                 >
                   <InputSelect
                     onChange={(e: any) => {}}

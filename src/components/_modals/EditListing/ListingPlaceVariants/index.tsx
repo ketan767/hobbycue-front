@@ -20,7 +20,7 @@ import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import InputSelect from '@/components/_formElements/Select/Select'
 import { DropdownOption } from '../../CreatePost/Dropdown/DropdownOption'
-import { formatPrice } from '@/utils'
+import { formatPrice, isMobile } from '@/utils'
 
 type Props = {
   onComplete?: () => void
@@ -52,6 +52,7 @@ const ListingPlaceVariantsModal: React.FC<Props> = ({
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [cta, setCta] = useState('Contact')
+  const isMob = isMobile()
   const [data, setData] = useState<{
     _id?: string
     variant_tag: string
@@ -233,25 +234,27 @@ const ListingPlaceVariantsModal: React.FC<Props> = ({
                   }}
                 />
               </div>
-              <div className={styles['input-and-label']}>
-                <p>Membership Identifier</p>
-                <TextField
-                  autoComplete="off"
-                  placeholder="eg: Apartment number"
-                  value={
-                    data.membership_identifier === 'No value'
-                      ? ''
-                      : data.membership_identifier
-                  }
-                  className={`${styles['input']} ${styles['top-input']}`}
-                  onChange={(e) => {
-                    setData((prev) => ({
-                      ...prev,
-                      membership_identifier: e.target.value,
-                    }))
-                  }}
-                />
-              </div>
+              {!isMob && (
+                <div className={styles['input-and-label']}>
+                  <p>Membership Identifier</p>
+                  <TextField
+                    autoComplete="off"
+                    placeholder="eg: Apartment number"
+                    value={
+                      data.membership_identifier === 'No value'
+                        ? ''
+                        : data.membership_identifier
+                    }
+                    className={`${styles['input']} ${styles['top-input']}`}
+                    onChange={(e) => {
+                      setData((prev) => ({
+                        ...prev,
+                        membership_identifier: e.target.value,
+                      }))
+                    }}
+                  />
+                </div>
+              )}
             </div>
 
             <div className={styles['variations']}>
@@ -299,18 +302,28 @@ const ListingPlaceVariantsModal: React.FC<Props> = ({
           </p>
         </div>
         <footer className={styles['footer']}>
-          <>
-            <button className="modal-footer-btn cancel" onClick={OpenCTA}>
-              {backBtnLoading ? (
-                <CircularProgress color="inherit" size={'24px'} />
-              ) : onBackBtnClick ? (
-                'Back'
-              ) : (
-                'Back'
-              )}
-            </button>
-            {/* SVG Button for Mobile */}
-          </>
+          {Boolean(onBackBtnClick) ||
+            (isMob && (
+              <>
+                <button className="modal-footer-btn cancel" onClick={OpenCTA}>
+                  {backBtnLoading ? (
+                    <CircularProgress color="inherit" size={'24px'} />
+                  ) : onBackBtnClick ? (
+                    'Back'
+                  ) : (
+                    'Back'
+                  )}
+                </button>
+                {/* SVG Button for Mobile */}
+                <div onClick={OpenCTA}>
+                  <Image
+                    src={BackIcon}
+                    alt="Back"
+                    className="modal-mob-btn cancel"
+                  />
+                </div>
+              </>
+            ))}
 
           <button
             ref={nextButtonRef}
@@ -326,7 +339,7 @@ const ListingPlaceVariantsModal: React.FC<Props> = ({
             )}
           </button>
           {/* SVG Button for Mobile */}
-          {onComplete ? (
+          {onComplete || isMob ? (
             <div onClick={handleSubmit}>
               <Image
                 src={NextIcon}
@@ -349,6 +362,12 @@ const ListingPlaceVariantsModal: React.FC<Props> = ({
           )}
         </footer>
       </div>
+      {isMob && (
+        <section className={styles['step-indicators']}>
+          <span className={`${styles['step']}`}></span>
+          <span className={`${styles['step']} ${styles['active-step']}`}></span>
+        </section>
+      )}
     </>
   )
 }

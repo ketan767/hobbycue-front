@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './style.module.css'
-import { CircularProgress, FormControl } from '@mui/material'
+import { CircularProgress, FormControl, TextField } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
@@ -15,6 +15,7 @@ import { DropdownOption } from '../../CreatePost/Dropdown/DropdownOption'
 import DownArrow from '@/assets/svg/chevron-down.svg'
 import UpArrow from '@/assets/svg/chevron-up.svg'
 import { getMetadata } from '@/services/post.service'
+import { isMobile } from '@/utils'
 
 type Props = {
   onComplete?: () => void
@@ -134,6 +135,7 @@ const ListingCTAModal: React.FC<Props> = ({
   const [error, setError] = useState<string | null>(null)
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdownRef: any = useRef()
+  const isMob = isMobile()
   const handleChange = (name: any) => {
     setCta(name)
   }
@@ -352,9 +354,11 @@ const ListingCTAModal: React.FC<Props> = ({
                               }}
                             >
                               <p className={styles.tagDesc}>{item.name}</p>
-                              <p className={styles.tagDesc}>
-                                {item.description}
-                              </p>
+                              {!isMob && (
+                                <p className={styles.tagDesc}>
+                                  {item.description}
+                                </p>
+                              )}
                             </div>
                           )
                       },
@@ -392,26 +396,51 @@ const ListingCTAModal: React.FC<Props> = ({
               </div>
             )}
           {cta === 'Join' && (
-            <div className={styles['approval-box']}>
-              <p>Approval required </p>
-              <div className={styles.radioLabel}>
-                <input
-                  type="radio"
-                  name="approval"
-                  checked={isApprovalRequired === true}
-                  onChange={() => setIsApprovalRequired(true)}
-                />
-                <span className={styles.span}>Yes</span>
+            <div className={styles['membership-container']}>
+              <div className={styles['approval-box']}>
+                <p>Approval required </p>
+                <div className={styles.radioLabel}>
+                  <input
+                    type="radio"
+                    name="approval"
+                    checked={isApprovalRequired === true}
+                    className={`${styles['radio']} `}
+                    onChange={() => setIsApprovalRequired(true)}
+                  />
+                  <span className={styles.span}>Yes</span>
+                </div>
+                <div className={styles.radioLabel}>
+                  <input
+                    type="radio"
+                    name="approval"
+                    checked={isApprovalRequired === false}
+                    className={`${styles['radio']} `}
+                    onChange={() => setIsApprovalRequired(false)}
+                  />
+                  <span className={styles.span}>No</span>
+                </div>
               </div>
-              <div className={styles.radioLabel}>
-                <input
-                  type="radio"
-                  name="approval"
-                  checked={isApprovalRequired === false}
-                  onChange={() => setIsApprovalRequired(false)}
-                />
-                <span className={styles.span}>No</span>
-              </div>
+              {isMob && (
+                <div className={styles['input-and-label']}>
+                  <p>Membership Identifier</p>
+                  <TextField
+                    autoComplete="off"
+                    placeholder="eg: Apartment number"
+                    // value={
+                    //   data.membership_identifier === 'No value'
+                    //     ? ''
+                    //     : data.membership_identifier
+                    // }
+                    className={`${styles['input']} ${styles['top-input']}`}
+                    onChange={(e) => {
+                      // setData((prev) => ({
+                      //   ...prev,
+                      //   membership_identifier: e.target.value,
+                      // }))
+                    }}
+                  />
+                </div>
+              )}
             </div>
           )}
         </section>
@@ -455,8 +484,11 @@ const ListingCTAModal: React.FC<Props> = ({
               'Save'
             )}
           </button>
+          {onComplete || cta === 'Join' ? (
+            <div className={styles['desktop-hidden']}></div>
+          ) : null}
           {/* SVG Button for Mobile */}
-          {onComplete ? (
+          {onComplete || (cta === 'Join' && isMob) ? (
             <div onClick={handleSubmit}>
               <Image
                 src={NextIcon}
@@ -472,7 +504,7 @@ const ListingCTAModal: React.FC<Props> = ({
             >
               {submitBtnLoading ? (
                 <CircularProgress color="inherit" size={'14px'} />
-              ) : onComplete || cta === 'Register' || cta === 'Join' ? (
+              ) : onComplete || cta === 'Register' ? (
                 'Next'
               ) : (
                 'Save'
@@ -481,6 +513,23 @@ const ListingCTAModal: React.FC<Props> = ({
           )}
         </footer>
       </div>
+      {isMob && (
+        <div className={styles['notes-container']}>
+          <hr className={styles['hr-line']} />
+          <div className={styles['bottom-txt-container']}>
+            <p className={styles['bottom-text']}>
+              Users will be asked to enter the Membership Identifier you
+              specify.
+            </p>
+          </div>
+        </div>
+      )}
+      {isMob && (
+        <section className={styles['step-indicators']}>
+          <span className={`${styles['step']} ${styles['active-step']}`}></span>
+          <span className={`${styles['step']}`}></span>
+        </section>
+      )}
     </>
   )
 }
