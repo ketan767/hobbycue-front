@@ -1,5 +1,5 @@
 import addIcon from '@/assets/svg/add.svg'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { use, useEffect, useRef, useState } from 'react'
 import PageContentBox from '@/layouts/PageContentBox'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { withAuth } from '@/navigation/withAuth'
@@ -74,6 +74,7 @@ type Props = {
   children: React.ReactNode
   singlePostPage?: boolean
   hide?: boolean
+  query: any
 }
 type singlePostProps = {
   hobbyMembers: any[]
@@ -115,6 +116,7 @@ const CommunityLayout: React.FC<Props> = ({
   activeTab,
   singlePostPage,
   hide = false,
+  query,
 }) => {
   const dispatch = useDispatch()
   const membersContainerRef = useRef<HTMLElement>(null)
@@ -191,27 +193,30 @@ const CommunityLayout: React.FC<Props> = ({
   const { refreshNum } = useSelector((state: RootState) => state.post)
   const router = useRouter()
 
-  const { hobby: hobbyQuery, location: locationQuery } = router.query
-
+  // For Hobby/Locatoin using URL
   useEffect(() => {
-    if (hobbyQuery) {
+    if (query && query.hobby) {
       const hobbyDetail = activeProfile?.data?._hobbies.find(
-        (hobby: any) => hobby?.hobby?.display?.toLowerCase() === (hobbyQuery as string).toLowerCase(),
+        (hobby: any) => hobby?.hobby?.display?.toLowerCase() === (query.hobby as string).toLowerCase() || hobby?.genre?.display?.toLowerCase() === (query.hobby as string).toLowerCase(),
       )
       if (hobbyDetail) {
         setSelectedHobby(hobbyDetail?.hobby?._id)
+        if (hobbyDetail?.genre?._id) {
+          setSelectedGenre(hobbyDetail?.genre?._id)
+        }
       }
     }
-    if (locationQuery) {
+    if (query && query.location) {
       const locationDetail = activeProfile?.data?._addresses.find(
-        (address: any) => address?.city?.toLowerCase() === (locationQuery as string).toLowerCase(),
+        (address: any) => address?.city?.toLowerCase() === (query.location as string).toLowerCase(),
       )
       if (locationDetail) {
         setSelectedLocation(locationDetail?.city)
       }
     }
-  }, [hobbyQuery, locationQuery, activeProfile])
+  }, [query, activeProfile])
 
+  // For setting query using selected Hobby/Locatoin
   useEffect(() => {
     const query = { ...router.query };
     if (selectedHobby && selectedHobby !== 'All Hobbies') {
