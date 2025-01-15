@@ -204,6 +204,8 @@ const CommunityLayout: React.FC<Props> = ({
         if (hobbyDetail?.genre?._id) {
           setSelectedGenre(hobbyDetail?.genre?._id)
         }
+      } else {
+        setSelectedHobby(query.hobby)
       }
     }
     if (query && query.location) {
@@ -212,6 +214,8 @@ const CommunityLayout: React.FC<Props> = ({
       )
       if (locationDetail) {
         setSelectedLocation(locationDetail?.city)
+      } else {
+        setSelectedLocation(query.location)
       }
     }
   }, [query, activeProfile])
@@ -1838,7 +1842,7 @@ const CommunityLayout: React.FC<Props> = ({
                         >
                           <Link
                             key={tab}
-                            href={`/community/${tab !== 'posts' ? tab : ''}`}
+                            href={`/community/${tab !== 'posts' ? tab : ''}?${query?.hobby ? 'hobby=' : ''}${query?.hobby ? query?.hobby : ''}${query?.location ? '&location=' : ''}${query?.location ? query?.location : ''}`}
                           >
                             {tab.charAt(0).toUpperCase() + tab.slice(1)}
                           </Link>
@@ -1917,7 +1921,7 @@ const CommunityLayout: React.FC<Props> = ({
                   <span>
                     {activeProfile.data?._hobbies?.find(
                       (obj: any) => obj?.hobby?._id === selectedHobby,
-                    )?.hobby?.display ?? 'All Hobbies'}
+                    )?.hobby?.display ?? selectedHobby}
 
                     {activeProfile.data?._hobbies?.find(
                       (obj: any) =>
