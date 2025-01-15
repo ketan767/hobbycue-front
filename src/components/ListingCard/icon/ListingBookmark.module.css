@@ -2,8 +2,8 @@
   /* background-color: #f7f5f9; */
   background-color: #ccc1da;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 26px;
+  height: 26px;
   cursor: pointer;
   display: grid;
   place-items: center;
@@ -16,6 +16,11 @@
 /* .action-btn img {
   border-radius: 8px;
 } */
+
+.action-btn > * {
+  width: 19.5px;
+  height: 19.5px;
+}
 
 .action-btn:hover {
   background-color: #f7f5f9;

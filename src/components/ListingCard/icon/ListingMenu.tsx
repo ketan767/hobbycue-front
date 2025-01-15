@@ -16,7 +16,7 @@ const ListingMenu = ({isCardHovered}: Props) => {
       style={isCardHovered ? { opacity: 1 } : { opacity: 0.3 }}
     >
       {/* <MoreVertRoundedIcon color="primary" /> */}
-      <Image src={MoreIcon} alt="More" />
+      <Image src={MoreIcon} width={19.5} height={19.5} alt="More" />
     </div>
   )
 }
