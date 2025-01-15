@@ -1,6 +1,7 @@
 .aside {
     background-color: white;
-    max-height: 150px;
+    height: 150px;
+    min-height: 150px;
     width: 230px;
     min-width: 230px;
     border: 1px solid #ebebeb;
@@ -21,6 +22,8 @@
     outline: none;
     border: none;
     resize: none;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
 
     color: var(--Purple-1, #8064a2);
     font-family: Poppins;
