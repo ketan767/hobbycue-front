@@ -486,7 +486,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     searchResult()
                   }
                 }}
-                style={isLoggedIn ? { width: '350px' } : { width: '300px' }}
+                style={isLoggedIn ? { width: '398px' } : { width: '300px' }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: '8px',
