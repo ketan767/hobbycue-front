@@ -16,6 +16,7 @@
 }
 
 .filter-wrapper {
+  position: relative;
   background: #ffffff;
   padding: 16px 16px 32px;
   box-sizing: border-box;
@@ -102,6 +103,7 @@ line-height: 26px; /* 144.444% */
 
 .cat-subCat input{
   height: 40px !important;
+  border: 5px solid red !important;
 }
 
 .select-filter div {
@@ -129,6 +131,7 @@ line-height: 26px; /* 144.444% */
 
 .select-filter select {
   font-family: 'poppins';
+  margin-top: 250px;
 }
 
 .hobby-desc-container {
@@ -304,7 +307,7 @@ line-height: 26px; /* 144.444% */
 }
 
 .dropdown {
-  top: 115px;
+  top: 126px;
   max-width: 210px;
   width: 100%;
   position: absolute;
@@ -442,17 +445,16 @@ line-height: 26px; /* 144.444% */
 }
 
 .hobby-list-expanded-table {
+  width: 719px;
   max-height: 5000px;
   transition: max-height 2s ease-in-out;
 }
 
 .hobby-list-collapsed-table {
-  max-height: 35px;
+  max-height: 30px;
   width: 719px;
   transition: max-height 2s ease-in-out;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 .accordion-content {
@@ -561,7 +563,7 @@ letter-spacing: 0.48px;
 
   .table-hobby{
     padding: 8px 12px;
-    max-width: 48.055vw;
+    max-width: 719px;
   }
 
 
