@@ -26,11 +26,7 @@
 .navbar-left {
   display: flex;
   align-items: center;
-  gap: 34.74px;
-}
-
-.home-icon {
-  margin-inline: 20px;
+  gap: 20px;
 }
 
 .navbar-right {
