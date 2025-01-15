@@ -74,7 +74,7 @@ type Props = {
   children: React.ReactNode
   singlePostPage?: boolean
   hide?: boolean
-  query: any
+  query?: any
 }
 type singlePostProps = {
   hobbyMembers: any[]
