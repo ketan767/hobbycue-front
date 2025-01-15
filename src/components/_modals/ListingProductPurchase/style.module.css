@@ -504,6 +504,10 @@ line-height: 16px;
 }
 
 @media screen and (max-width: 1100px) {
+  .topBar {
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.08);
+    height: 60px;
+  }
 
   .eventDate-parent{
     margin-top: 5px;
