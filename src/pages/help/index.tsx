@@ -43,7 +43,6 @@ const index: FC<indexProps> = ({}) => {
         title: title,
       }
       const data = await updateOtherPage('help', formData)
-      console.log('Updated ', data)
     } catch (error) {
       console.log('error', error)
     }
