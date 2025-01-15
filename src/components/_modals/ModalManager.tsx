@@ -55,6 +55,7 @@ import ViewImageModal from './ViewImage'
 import { ModalType } from '@/redux/slices/modal'
 import SupportModal from './EditListing/ListingSupport'
 import hobbycueLogo from '../../assets/svg/Search/hobbycue.svg'
+import leftArrow from '@/assets/svg/arrow/leftArrow.svg'
 import UserOnboardingWelcomeModal from './UserOnboardingWelcomeModal/UserOnboardingWelcomeModal.tsx'
 
 import ExpiredPassword from './ExpiredPasswordModal'
@@ -463,11 +464,20 @@ const ModalManager: React.FC = () => {
                   <>
                     <header className={styles['header']}>
                       <Image
-                        className={styles['responsive-logo']}
-                        src={hobbycueLogo}
-                        alt="hobbycue"
-                        height={40}
-                        width={40}
+                        className={
+                          styles['responsive-logo'] +
+                          ` ${
+                            closeIconClicked ? styles['display-none'] : ''
+                          }`
+                        }
+                        src={leftArrow}
+                        alt="left-arrow"
+                        height={20}
+                        width={20}
+                        onClick={() => {
+                          activeCloseHandler()
+                          setCloseIconClicked((prev) => !prev)
+                        }}
                       />
 
                       <h2 className={styles['modal-heading']}>

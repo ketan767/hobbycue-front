@@ -158,6 +158,24 @@ const BlogEditor: React.FC<Props> = ({
   return (
     // <div className={`${error ? 'quill-error' : ''}`}>
     <div ref={editorRef}>
+      <style>
+        {`
+      .blog-quill .ql-editor::before {
+        content: "\\00a0\\00a0Text"; 
+        color: gray; /* Placeholder color */
+        font-family: normal !important;
+        line-height: 26px;
+        font-size: 18px !important;
+        font-styl: normal !important;
+        pointer-events: none; /* Prevent interaction with placeholder */
+        position: absolute; /* Ensure proper positioning */
+        display: none;
+      }
+      .blog-quill .ql-editor.ql-blank::before {
+        display: block;
+      }
+    `}
+      </style>
       <ReactQuill
         ref={quillRef}
         theme="snow"
@@ -167,7 +185,6 @@ const BlogEditor: React.FC<Props> = ({
         onBlur={() => setIsBlurred(true)}
         // onBlur={() => handleEditBlog('content')}
         className={`${styles.quill} ${styles['ql-editor']} blog-quill`}
-        placeholder={'Text'}
         modules={{
           toolbar: {
             container: [

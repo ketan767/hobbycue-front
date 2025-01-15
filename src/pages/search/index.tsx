@@ -153,6 +153,7 @@ type BlogData = {
   author: any
   cover_pic: string
   createdAt: any
+  content?: any
 }
 type PostData = {
   _id: string
@@ -3465,7 +3466,15 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{page?.title}</div>
                         <div className={styles.userTagline}>
-                          {page?.tagline || '\u00a0'}
+                          {page?.tagline ? (
+                            page?.tagline
+                          ) : (
+                            <p
+                              dangerouslySetInnerHTML={{
+                                __html: page?.content,
+                              }}
+                            ></p>
+                          )}
                         </div>
                         <div className={styles.blogAuthor}>
                           <div className={styles.full_name}>

@@ -191,6 +191,7 @@ line-height: 16px; /* 114.286% */
 
 @media screen and (max-width: 1100px) {
   .uploadButtonDescktop {
+    margin-top: 8px;
     border-radius: 0;
   }
   /* .data-container {

@@ -35,6 +35,7 @@ type ListingPageTabs =
   | 'store'
   | 'related'
   | 'orders'
+  | 'members'
 
 type ListingLayoutMode = 'view' | 'edit'
 
