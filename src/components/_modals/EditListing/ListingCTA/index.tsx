@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, } from 'react'
 import styles from './style.module.css'
 import { CircularProgress, FormControl } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
@@ -214,6 +214,28 @@ const ListingCTAModal: React.FC<Props> = ({
   }
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+
+  const handleDropdownClose = (e: any) => {
+    if (
+      dropdownRef?.current &&
+      !dropdownRef?.current?.contains(e.target as Node)
+    ) {
+      setShowDropdown(false)
+    }
+  }
+
+  useEffect(() => {
+    if (showDropdown) {
+      window.addEventListener('mousedown', handleDropdownClose)
+    } else {
+      window.removeEventListener('mousedown', handleDropdownClose)
+    }
+
+    return () => {
+      window.removeEventListener('mousedown', handleDropdownClose)
+    }
+  }, [showDropdown])
+
   return (
     <>
       <div className={styles['modal-wrapper']}>

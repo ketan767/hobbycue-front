@@ -66,6 +66,45 @@ const ListingPlacePurchase: React.FC<Props> = ({
   const [showDays, setShowDays] = useState(true)
   const [selectedVariant, setSelectedVariant] = useState<string>('Select')
   const [openDropdown, setOpenDropdown] = useState(false)
+  const [hoveredValue, setHoveredValue] = useState<number | null>(null)
+
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (['Enter'].includes(e.key) || e.key === ' ') {
+      e.preventDefault()
+      e.stopPropagation()
+      if (e.key === 'Enter' && openDropdown && hoveredValue !== null) {
+        setFormData((prev: any) => ({
+          ...prev,
+          variant_value: data?.variations[hoveredValue].name,
+        }))
+        setOpenDropdown(false)
+        console.log(openDropdown)
+        setHoveredValue(null)
+      } else if (!openDropdown) {
+        setOpenDropdown(true)
+        setHoveredValue(0)
+        console.log(openDropdown)
+      }
+    } else if (e.key === 'ArrowUp' && openDropdown && hoveredValue !== null) {
+      setHoveredValue((prev) => {
+        if (prev === 0) {
+          return data?.variations.length - 1
+        } else {
+          return (prev as number) - 1
+        }
+      })
+    } else if (e.key === 'ArrowDown' && openDropdown && hoveredValue !== null) {
+      setHoveredValue((prev) => {
+        if (prev === data?.variations.length - 1) {
+          return 0
+        } else {
+          return (prev as number) + 1
+        }
+      })
+    }
+  }
 
   const [data, setData] = useState<{
     _id?: string
@@ -118,7 +157,7 @@ const ListingPlacePurchase: React.FC<Props> = ({
   }, [])
 
   const handleSubmit = async () => {
-    if(formData?.variant_value ==='Select'){
+    if (formData?.variant_value === 'Select') {
       return setSnackbar({
         display: true,
         type: 'warning',
@@ -190,19 +229,20 @@ const ListingPlacePurchase: React.FC<Props> = ({
                   {data?.variant_tag}
                   <span className={styles['styles-red']}>*</span>
                 </p>
-                <div className={styles['input-box']}>
+                <div
+                  className={styles['input-box']}
+                  ref={dropdownRef}
+                  // tabIndex={0} // Makes it focusable
+                >
                   <InputSelect
-                    onChange={(e: any) => {
-                      // let val = e.target.value
-                      // setData((prev: any) => ({ ...prev, visibility: val }))
-                    }}
+                    onChange={(e: any) => {}}
                     value={formData.variant_value}
                     className={styles['input-select']}
                     optionsContainerClass={styles['options-container-class']}
-                    // style={!isMobile ? { width: '354px' } : {}}
                     openDropdown={openDropdown}
                     setOpenDropdown={setOpenDropdown}
                     id={'ListingPlaceAdminHeader'}
+                    handleKeyDown={handleKeyDown}
                   >
                     {data?.variations?.map((item: any, idx: number) => {
                       return (
@@ -211,6 +251,7 @@ const ListingPlacePurchase: React.FC<Props> = ({
                             display={item.name}
                             key={idx}
                             selected={item.name == formData.variant_value}
+                            isHovered={hoveredValue == idx}
                             onChange={() =>
                               setFormData((prev: any) => ({
                                 ...prev,
@@ -235,7 +276,7 @@ const ListingPlacePurchase: React.FC<Props> = ({
                   autoComplete="off"
                   placeholder=""
                   value={formData.memberIdentifierValue}
-                  className={`${styles['input-member']} ${styles['']}`}
+                  className={`${styles['input-member']}`}
                   onChange={(e) => {
                     setFormData((prev: any) => ({
                       ...prev,
