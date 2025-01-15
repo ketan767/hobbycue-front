@@ -191,6 +191,7 @@ const CommunityLayout: React.FC<Props> = ({
   const { showPageLoader } = useSelector((state: RootState) => state.site)
   const { refreshNum } = useSelector((state: RootState) => state.post)
   const router = useRouter()
+  const settingsIconRef = useRef<HTMLAnchorElement>(null);
 
   const { hobby: hobbyQuery, location: locationQuery } = router.query
 
@@ -236,6 +237,12 @@ const CommunityLayout: React.FC<Props> = ({
     }
     router.push({ pathname: router.pathname, query }, undefined, { shallow: true });
   }, [selectedHobby, selectedLocation, activeProfile]);
+
+  useEffect(() => {
+    if (visibilityData?.length > 0 && settingsIconRef.current) {
+      settingsIconRef.current.style.marginTop = `${visibilityData?.length * 38 + 50}px`;
+    }
+  }, [visibilityData, settingsIconRef]);
 
   const [seeMoreOpenedFirstTime, setSeeMoreOpenedFirstTime] =
     useState<boolean>(false)
@@ -1500,21 +1507,22 @@ const CommunityLayout: React.FC<Props> = ({
                   </ContentLoader>
                 )}
               </section>
+              <Link
+                ref={settingsIconRef}
+                href={'/settings/visibility-notification'}
+                className={styles['settings-icon']}
+              >
+                <Image
+                  height={20}
+                  width={20}
+                  src={settingsIcon}
+                  alt="settings-icon"
+                />
+                <span className={styles['default-settings-text']}>
+                  Default Settings
+                </span>
+              </Link>
             </aside>
-            <Link
-              href={'/settings/visibility-notification'}
-              className={styles['settings-icon']}
-            >
-              <Image
-                height={20}
-                width={20}
-                src={settingsIcon}
-                alt="settings-icon"
-              />
-              <span className={styles['default-settings-text']}>
-                Default Settings
-              </span>
-            </Link>
           </div>
         )}
 
