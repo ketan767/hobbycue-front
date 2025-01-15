@@ -214,8 +214,8 @@ line-height: 26px; /* 144.444% */
   display: flex;
   flex-direction: column;
   /* padding: 16px 10px; */
-  border-left: 1px solid #ced4da;
-  border-right: 1px solid #ced4da;
+  border-left: 1px solid rgba(235, 237, 240, 1);
+  border-right: 1px solid rgba(235, 237, 240, 1);
   background: #ffffff;
   
 }
@@ -243,8 +243,8 @@ line-height: 26px; /* 144.444% */
 .hobbies-table tbody tr td:nth-child(1) {
   min-width: 130px;
   padding: 10px;
-  border-right: 1px solid #ced4da;
-  border-bottom: 1px solid #ced4da;
+  border-right: 1px solid rgba(235, 237, 240, 1);
+  border-bottom: 1px solid rgba(235, 237, 240, 1);
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
@@ -265,7 +265,7 @@ line-height: 26px; /* 144.444% */
 .hobbies-table tbody tr td div {
   /* background-color: red; */
   display: flex;
-  border-bottom: 1px solid #ced4da;
+  border-bottom: 1px solid rgba(235, 237, 240, 1);
 }
 
 .hobbies-table tbody tr td div p:first-of-type {
@@ -303,7 +303,8 @@ line-height: 26px; /* 144.444% */
   padding: 0;
   margin-top: 0;
   padding-top: 0;
-  background-color: #ced4da;
+  /* background-color: #ced4da; */
+  background-color: rgba(235, 237, 240, 1);
 }
 
 .dropdown {
