@@ -13,6 +13,7 @@ import { getAllHobbies } from '@/services/hobby.service'
 import { updatePostByAdmin } from '@/services/admin.service'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 
 type Props = {
   _id: string
@@ -47,9 +48,33 @@ const EditPostModal: React.FC<Props> = ({ _id, handleClose }) => {
   const [post, setPost] = useState<any>(null)
   const [hobbies, setHobbies] = useState<DropdownListItem[]>([])
   const [genres, setGenres] = useState<DropdownListItem[]>([])
+  const modalRef = useRef<HTMLDivElement | null>(null)
 
   console.log({ genres })
   console.log({ post })
+  // Close modal on clicking outside
+  const handleClickOutside = (event: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      handleClose()
+    }
+  }
+
+  // Close modal on pressing 'Esc'
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      handleClose()
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
   useEffect(() => {
     const fetchPostData = async () => {
       const { err, res } = await getAllPosts(
@@ -117,9 +142,12 @@ const EditPostModal: React.FC<Props> = ({ _id, handleClose }) => {
     await updatePostFunc()
   }
 
+   
+  
+
   return (
     <>
-      <div className={`${styles['modal-wrapper']}`}>
+      <div className={`${styles['modal-wrapper']}`} ref={modalRef}>
         <header className={styles['header']}>
           <h4 className={styles['heading']}>Edit Post</h4>
           <CloseIcon
@@ -237,9 +265,71 @@ const EditPostModal: React.FC<Props> = ({ _id, handleClose }) => {
           </div>
         </section>
 
+        <div className={styles.auditFields}>
+            <Link
+                    href={`/profile/${post?._author?.profile_url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >
+              <div className={styles.auditField}>
+              
+                <span className={styles.label}>Created By:</span>
+                   
+                    <span className={styles.value}>{post?._author.full_name || "N/A"}</span>
+                  
+              </div>
+              </Link>
+              <div className={styles.auditField}>
+                <span className={styles.label}>Created At:</span>
+                <span className={styles.value}>
+                {post?.createdAt ? 
+                  (() => {
+                      const date = new Date(post?.createdAt);
+                      const options = { year: 'numeric' as const, month: 'short' as const, day: 'numeric' as const, hour: 'numeric' as const, minute: 'numeric' as const, hour12: true };
+                      const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+                      const [monthDay, year, time] = formattedDate.split(', ');
+                      return `${year} ${monthDay}, ${time}`;
+                  })() 
+                  : "N/A"
+                }
+                </span>
+                
+              </div>
+              <Link
+                    href={`/profile/admin`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >
+              <div className={styles.auditField}>
+             
+                <span className={styles.label}>Updated By:</span>
+                
+                    <span className={styles.value}>{"HobbyCue Admin"}</span>
+                    
+                {/* <span className={styles.value}></span> */}
+              </div>
+              </Link>
+              <div className={styles.auditField}>
+                <span className={styles.label}>Updated At:</span>
+                <span className={styles.value}>
+                {post?.updatedAt ? 
+                  (() => {
+                      const date = new Date(post?.updatedAt);
+                      const options = { year: 'numeric' as const, month: 'short' as const, day: 'numeric' as const, hour: 'numeric' as const, minute: 'numeric' as const, hour12: true };
+                      const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+                      const [monthDay, year, time] = formattedDate.split(', ');
+                      return `${year} ${monthDay}, ${time}`;
+                  })() 
+                  : "N/A"
+                }
+                </span>
+              </div>
+            </div>
+
         <footer className={styles['footer']}>
           <button
             className="modal-footer-btn submit"
+            style={{ backgroundColor: '#0096C8' }}
             onClick={handleFormSubmit}
             disabled={submitBtnLoading}
           >

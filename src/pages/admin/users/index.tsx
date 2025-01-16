@@ -19,7 +19,7 @@ import GoogleIcon from '@/assets/svg/admin_google.svg'
 import MailIcon from '@/assets/svg/admin_email.svg'
 import FacebookIcon from '@/assets/svg/admin_facebook.svg'
 import ToggleButton from '@/components/_buttons/ToggleButton'
-import ModalWrapper from '@/components/Modal'
+import ModalWrapper from '@/components/UserEModal'
 import UserFilter from '@/components/AdminPage/Filters/UserFilter/UserFilter'
 import EditUser from '@/components/AdminPage/Modal/UserEditModal/UserEditModal'
 import { setShowPageLoader } from '@/redux/slices/site'
@@ -125,11 +125,12 @@ const AdminDashboard: React.FC = () => {
   const [NameSort, setNameSort] = useState<boolean>(true)
   const [loading, setLoading] = useState<boolean>(false)
   const [count, setCount] = useState(0)
+  const [totalUserCount, setTotalUserCount] = useState(0);
   const [activeSort, setActiveSort] = useState('login')
   const [isError, setIsError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<String>('')
   const [isSearching, setIsSearching] = useState<boolean>(false)
-
+  const [totalPages, setTotalPages] = useState(0);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
 
@@ -247,11 +248,9 @@ const AdminDashboard: React.FC = () => {
       setIsError(true)
       setErrorMessage('No users found')
     } else {
-      // console.log('fetchUsers', res.data)
       setIsError(false)
       setLoading(false)
       setSearchResults(res.data.data.users)
-      // setCount(res.data.data.no_of_users)
       dispatch(setShowPageLoader(false))
     }
     setLoading(false)
@@ -270,6 +269,7 @@ const AdminDashboard: React.FC = () => {
       } else {
         setIsError(false)
         setCount(res.data.data.no_of_users)
+        setTotalUserCount(res.data.data.no_of_users);
       }
     } catch (error) {
       console.error('Unexpected error:', error)
@@ -278,7 +278,9 @@ const AdminDashboard: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [pagelimit])
+
+ 
 
   useEffect(() => {
     fetchAllUsersCount()
@@ -339,20 +341,20 @@ const AdminDashboard: React.FC = () => {
         }
       }
 
-      // Check "status"
-      if (
-        status === 'deactivate' &&
-        (user.is_account_activated || user.deactivation_date === null)
-      ) {
-        return false
+
+      if (status === 'active') {
+        if (!user.is_account_activated) return false; 
+      } else if (status === 'deactivate') {
+        if (user.is_account_activated || !user.deactivation_date) return false; 
       }
 
+      // setTotalPages(Math.ceil(filterUsers.length / pagelimit))
       return true
     })
   }
-
+  
   const filteredUsers: User[] = filterUsers(searchResults, modalState) || []
-
+  
   const goToPreviousPage = () => {
     setPage(page - 1)
   }
@@ -428,10 +430,33 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     if (hasNonEmptyValues(modalState)) {
       setPagelimit(1000)
-    } else {
-      setPagelimit(10)
-    }
+    } 
   }, [modalState])
+
+  useEffect(() => {
+    const minHeight = 600; 
+    const minNumber = 8; 
+
+    const updatePageLimit = () => {
+      const height = window.innerHeight;
+      const additionalEntries = Math.max(0, Math.floor((height - minHeight) / 52.9));
+      const newPagelimit = minNumber + additionalEntries;
+      setPagelimit(newPagelimit);
+    };
+
+    updatePageLimit();
+
+    window.addEventListener('resize', updatePageLimit);
+    return () => {
+      window.removeEventListener('resize', updatePageLimit);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (totalUserCount > 0) {
+      setTotalPages(Math.ceil(totalUserCount / pagelimit));
+    }
+  }, [totalUserCount, pagelimit]);
 
   return (
     <>
@@ -857,7 +882,22 @@ const AdminDashboard: React.FC = () => {
           </div>
           {pageNumber === 0 && (
             <div className={styles.pagination}>
-              {/* Previous Page Button */}
+             
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginRight: '16px' }}>
+              <span className={styles.userName}>Page</span>
+              <select
+                value={page}
+                onChange={(e) => setPage(Number(e.target.value))}
+                className={styles["page-select-dropdown"]}
+              >
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+              <span className={styles.userName}>of {totalPages}</span>
+            </div>
 
               <button
                 disabled={page <= 1}
@@ -868,7 +908,7 @@ const AdminDashboard: React.FC = () => {
               </button>
 
               <button
-                disabled={searchResults.length !== pagelimit}
+                disabled={page >= totalPages}
                 className="users-next-btn"
                 onClick={goToNextPage}
               >

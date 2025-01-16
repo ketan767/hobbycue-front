@@ -1,222 +1,276 @@
-import { withAuth } from '@/navigation/withAuth'
-import React from 'react'
-import styles from '@/styles/ExplorePage.module.css'
+import { FC, useEffect, useRef, useState } from 'react'
+import styles from '@/styles/Brand.module.css'
+import Image from 'next/image'
+import Head from 'next/head'
+import styles2 from '@/styles/ExplorePage.module.css'
 
-type Props = {}
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
-const Privacy: React.FC<Props> = (props) => {
-  return (
-    <div
-      className={
-        styles['explore-wrapper'] +
-        ` ${styles['side-margin-auto']} ${styles['padding-top-12']}`
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import dynamic from 'next/dynamic'
+import { GetOtherPage, updateOtherPage } from '@/services/admin.service'
+import PageGridLayout from '@/layouts/PageGridLayout'
+import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
+
+const QuillEditor = dynamic(
+  () => import('@/components/QuillEditor/QuillEditor'),
+  {
+    ssr: false,
+    loading: () => <h1>Loading...</h1>,
+  },
+)
+
+interface indexProps {}
+
+const index: FC<indexProps> = ({}) => {
+  const [isEditing, setIsEditing] = useState(false)
+  const [content, setContent] = useState('')
+  const [title, setTitle] = useState('')
+  const { user } = useSelector((state: RootState) => state.user)
+  const [id, setId] = useState('')
+  const titleRef = useRef<HTMLTextAreaElement | null>(null)
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+
+  const handleChange = (e: any, type: string) => {
+    const { value } = e.target
+    console.warn('valiee', value)
+    setTitle(value)
+  }
+
+  const handleValueChange = (value: string) => {
+    setContent(value)
+  }
+  const handleSave = async (e: any) => {
+    setIsUpdating(true)
+    try {
+      const formData = {
+        content: content,
+        title: title,
       }
+      const data = await updateOtherPage('privacy', formData)
+      // console.log('data=================>', data)
+      if (data.res.status === 200) {
+        setSnackbar({
+          display: true,
+          type: 'success',
+          message: 'Page updated successfully',
+        })
+        setIsEditing(false)
+      }
+    } catch (error) {
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Unable to update data',
+      })
+      console.log('error', error)
+    } finally {
+      setIsUpdating(false)
+    }
+  }
+
+  const updateTitle = async () => {
+    try {
+      const formData = {
+        title: title,
+      }
+      const data = await updateOtherPage('privacy', formData)
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
+  const toggleEditing = () => {
+    setIsEditing(!isEditing)
+  }
+  const pencilIconSvg = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
     >
-      <div className={styles.terms}>
-        <h1 className={styles.pageheading}>Privacy Policy</h1>
+      <g clip-path="url(#clip0_13842_168963)">
+        <path
+          d="M2 11.5002V14.0002H4.5L11.8733 6.62687L9.37333 4.12687L2 11.5002ZM13.8067 4.69354C14.0667 4.43354 14.0667 4.01354 13.8067 3.75354L12.2467 2.19354C11.9867 1.93354 11.5667 1.93354 11.3067 2.19354L10.0867 3.41354L12.5867 5.91354L13.8067 4.69354Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_13842_168963">
+          <rect width="16" height="16" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
 
-        <p>[Updated: 27-Nov-2018]</p>
+  useEffect(() => {
+    const fetchBrands = async () => {
+      const result = await GetOtherPage('privacy')
 
-        <h2 className={styles.pheading}>Introduction</h2>
-        <p>
-          Purple Cues Pvt Ltd (“PCPL”) is the licensed owner of the service
-          hobbycue.com (also referred to as our website, site, or platform).
-          This Privacy Policy applies to information collected when you visit,
-          access, or use the services that are available through our website. By
-          visiting, accessing, or using our website, you are agreeing to the
-          terms of this Privacy Policy.
-        </p>
-        <h2 className={styles.pheading}>Registered User Information</h2>
-        <p>
-          When you sign up to become a Registered User, you need to provide
-          personal information such as your name, email ID, personal phone
-          number, password, location, and gender. Our website also prompts you
-          to optionally share your profile picture. By submitting your personal
-          information on our website, you are explicitly consenting to the use
-          of your information for the purpose of enhancing your future
-          experience. For our website to recognise you as a registered member,
-          you must sign in with your email address and password. And if you do
-          not explicitly logout, our website remembers you so that you do not
-          have to sign in for any subsequent visits. In such cases, your email
-          and password are never shared by our with anybody. In addition,
-          Registered Users may choose to use their Facebook or Google login
-          accounts to automatically populate certain information on our
-          registration page. If you use such third party logins, you are
-          authorising us to collect, store, and use, in accordance with this
-          Privacy Policy, any and all information that you agreed that Facebook
-          or such other third parties could provide to us through their
-          application programming interface. You control the information that we
-          receive from Facebook or Google including, but not limited to, your
-          first and last name, username, profile picture, unique identifiers and
-          access tokens, and e-mail address.
-        </p>
-        <h2 className={styles.pheading}>Third-Party Transactions</h2>
-        <p>
-          If you create an account, your name, address, email and phone number
-          will be stored and used to populate the checkout for future orders. If
-          you purchase a service, purchase a product, book a venue, or book
-          tickets for an event through our website, you will be required to
-          provide certain information to our third-party payment processors in
-          accordance to the terms and conditions of their privacy policies and
-          terms of use. Such information may include a debit or credit card
-          number, expiration date, billing and shipping addresses. You authorise
-          our third-party payment vendors to collect, process, and store this
-          information. We do not store or process this information and disclaim
-          any liability that may arise from such transactions.
-        </p>
-        <h2 className={styles.pheading}>Cookies</h2>
-        <p>
-          Similar to most websites, our website utilises “Cookies” and Web
-          server logs to collect information about how our website is used.
-          Cookies are small pieces of information that are stored by your
-          browser on your computer’s hard drive. Cookies allow Web servers to
-          recognise your computer and collect information about how you use our
-          website. We use cookies and your website usage information for
-          identification and analysis. Most web browsers automatically accept
-          cookies. By changing the options on your web browser or using certain
-          software programs, you can control how and whether cookies will be
-          accepted by your browser. We understand and support your right to
-          block cookies. However, blocking cookies may disable certain features
-          on our website and may make it impossible for you to use certain
-          services available on our website.
-        </p>
-        <h2 className={styles.pheading}>Session Data</h2>
-        <p>
-          When you view, access, or use our website, we automatically log the
-          session data. Session data is general information about your
-          computer’s connection to the Internet and is anonymous and not linked
-          to any personal information. Session data consists of information such
-          as the IP address, operating system, browser used by you and the
-          activities conducted by you on our website. We collect session data to
-          help us analyse the items users are likely to click on most, the
-          manner in which users click preferences on our website, number of
-          users browsing our website, frequency and time spent on our website.
-          Session data also helps us diagnose problems with our servers and lets
-          us administer our systems better. Although such data does not identify
-          any visitor personally, it is possible to determine the Internet
-          Service Provider (ISP) and the approximate geographic location from an
-          IP address.
-        </p>
-        <h2 className={styles.pheading}>Comments</h2>
-        <p>
-          When you leave comments on our website, we collect the data shown in
-          the comments form, your IP address, and browser user agent string to
-          help detect any potential spam. An anonymised string created from your
-          email address (also called a hash) may be provided to the Gravatar
-          service to see if you are using it. You can read the Gravatar service
-          Privacy Policy here: https://automattic.com/privacy/
-        </p>
-        <h2 className={styles.pheading}>External Sites</h2>
-        <p>
-          Our website may contain links to third-party websites (“External
-          Sites”). We have no control over the privacy practices of these
-          External Sites. These websites may collect data about you, use
-          cookies, embed additional third-party tracking, and monitor your
-          interaction with that embedded content. As such, we are not
-          responsible for the privacy policies of those External Sites. You
-          should check the applicable third-party privacy policy and terms of
-          use when visiting any External Sites, and before providing any
-          personal information to such External Sites.
-        </p>
-        <h2 className={styles.pheading}>Use of Information</h2>
-        <p>
-          Personal information provided by Registered Users is available to all
-          users and visitors of our website. Personal information may also be
-          published on our website as a part of any user’s search results. Our
-          website authorised third parties, and service partners may use your
-          information to support your interaction with us and to provide our
-          services and products to you. Our website also collects other personal
-          details including, but not limited to your feedback, suggestions,
-          views, posts, media, comments, and articles that may be
-          shared/volunteered by you on our discussion forums or other pages on
-          our website. Such information, being in the public domain, is
-          available to all our website’s users and visitors. We are not
-          responsible for any third party use of your information, and this
-          Privacy Policy does not apply to any information that you share in any
-          of the above methods. In addition, please ensure that you do not
-          violate any copyright laws if you cross-post information from other
-          third party sources. The onus for such compliance is with you and we
-          disclaim any liability that way arise from such copyright violations.
-        </p>
-        <h2 className={styles.pheading}>
-          Access to Personal and Account Information
-        </h2>
-        <p>
-          If you have an account or posted comments on our website, you may send
-          an email request to info@hobbycue.com to receive the personal data we
-          hold about you. After you sign in, you may correct or update your
-          account information by updating your user profile. Administrators of
-          our website may also edit your personal information. You may choose to
-          send us an email request to delete your personal data from our
-          website. However, we retain the legal right to save any data we are
-          obliged to keep for administrative, legal, or security purposes.
-        </p>
-        <h2 className={styles.pheading}>
-          Retention Period of Personal Information
-        </h2>
-        <p>
-          We will retain your personal information for as long as it serves the
-          purposes for which it was initially collected as stated in this
-          Privacy Policy or subsequently authorised. We may continue processing
-          your personal information for longer periods, but only for the time
-          and to the extent that such processing serves valid purposes such as
-          analysis, administrative, legal, and security purposes, and is subject
-          to the protection of this Privacy Policy. After such time periods have
-          expired, we may either delete your personal information or retain it
-          in a form such that it does not identify you personally.
-        </p>
-        <h2 className={styles.pheading}>Data Security and Privacy</h2>
-        <p>
-          We are committed to the security and privacy of the personal
-          information that we collect in accordance with this Privacy Policy. We
-          will implement reasonable and appropriate security measures to protect
-          your personal information from loss, misuse and unauthorised access,
-          disclosure, alteration and destruction, taking into account the risks
-          involved in the processing and the nature of such data, and comply
-          with applicable laws and regulations.
-        </p>
-        <h2 className={styles.pheading}>Disclosure to Third Parties</h2>
-        <p>
-          We may be required to disclose personal information in response to
-          lawful requests by public authorities or third parties, including, but
-          not limited to purposes such as judicial and legal requirements,
-          regulatory compliance, outsourcing our support services, and
-          protection of any and all of our rights or property.
-        </p>
-        <h2 className={styles.pheading}>Children’s Privacy</h2>
-        <p>
-          We require that users of the site are at least 13 years old and have
-          their own e-mail ID. We do not knowingly collect any personal
-          information from children under the age of 13 through our website. If
-          you are under the age of 13, please do not give us any personal
-          information. We encourage parents and legal guardians to monitor their
-          children’s Internet usage and to help enforce our Privacy Policy by
-          instructing their children never to provide personal information to us
-          without their permission. If you have reason to believe that a child
-          under the age of 13 has provided personal information to us, please
-          contact us at info@hobbycue.com so that we may take immediate steps to
-          delete the child’s information.{' '}
-        </p>
-        <h2 className={styles.pheading}>Revisions to this Privacy Policy</h2>
-        <p>
-          This Privacy Policy is effective as of the date stated at the top of
-          this Privacy Policy. However, in connection with specific products or
-          services offered by us, you may be provided with privacy policies or
-          statements that substitute or supplement this Privacy Policy. In
-          addition, we may change this Privacy Policy from time to time and post
-          the changes on our website as soon as they go into effect. Please
-          refer to this Privacy Policy on a regular basis. By accessing or using
-          our website after we make any changes to this Privacy Policy, you are
-          deemed to have accepted such changes.
-        </p>
-        <h2 className={styles.pheading}>Queries / Concerns</h2>
-        <p>
-          For any queries or concerns regarding the Privacy Policy of our
-          website, you may send an email to info@hobbycue.com
-        </p>
-      </div>
-    </div>
+      const currContent = result.res.data[0] ? result.res.data[0].content : ''
+      const currTitle = result.res.data[0] ? result.res.data[0].title : ''
+      const currId = result.res.data[0] ? result.res.data[0]._id : ''
+      setContent(currContent)
+      setTitle(currTitle)
+      setId(currId)
+    }
+    fetchBrands()
+
+    if (user?.is_admin) {
+      setIsEditing(true)
+    }
+  }, [user])
+  return (
+    <>
+      <Head>
+        <title>HobbyCue - Privacy</title>
+      </Head>
+
+      <PageGridLayout column={2}>
+        <aside
+          className={`${styles2['community-left-aside']} custom-scrollbar`}
+        >
+          <section
+            className={`content-box-wrapper ${styles2['hobbies-side-wrapper']}`}
+          >
+            <header className={styles2['header']}>
+              <div className={styles2['heading']}>
+                {isEditing ? (
+                  <textarea
+                    className={styles['title'] + ' ' + styles.editInput}
+                    placeholder="Title"
+                    value={title || ''}
+                    name="title"
+                    onChange={(e) => handleChange(e, 'title')}
+                    onBlur={() => updateTitle()}
+                    ref={titleRef}
+                    onKeyDown={(e) =>
+                      e.key === 'Enter' && titleRef.current?.blur()
+                    }
+                    rows={1}
+                    onInput={function (e) {
+                      const target = e.target as HTMLTextAreaElement
+                      target.style.height = 'auto'
+                      target.style.height = target.scrollHeight + 'px'
+                    }}
+                  />
+                ) : (
+                  <h1 className={styles['title']}>{title || ''}</h1>
+                )}
+              </div>
+            </header>
+          </section>
+        </aside>
+        <main className={styles['main']}>
+          <section className={styles['white-container']}>
+            <div className={styles['heading-container']}>
+              {/* <span className={styles['heading']}>BRAND </span> */}
+              {user.is_admin && (
+                <div className={styles['pencil']} onClick={toggleEditing}>
+                  {pencilIconSvg}
+                </div>
+              )}
+            </div>
+            <div className={styles['list-container']}>
+              <div className={styles['max-w-1296px']}>
+                <style>
+                  {`
+                        .ql-toolbar.ql-snow {
+                          width: 100%;
+                          border-left:none;
+                          border-right:none;
+                          border-bottom:none;
+                        }
+                        .ql-container.ql-snow {
+                          width: 100%;
+                          border:none;
+                        }
+                        .ql-editor{
+                          border: none !important;
+                          width: 100%;
+                          border-top:1px solid #ccc;
+                          padding-right:16px;
+                          margin-inline: auto;
+                        }
+                        .ql-editor.ql-indent-1{
+                          padding-left:4px;
+                        }
+                        .ql-editor ul, 
+                        .ql-editor ol {
+                          padding-left: 4px;  
+                                        text-align:justify; 
+
+                        }
+
+                        .ql-editor a {
+                          color: rgb(128, 100, 162);  
+                          text-decoration: none !important;
+                                        text-align:justify;
+
+                        }
+                        .ql-editor p {
+                          color: var(--Grey-Darkest, #08090a);
+                          font-family: Cambria;
+                          font-size: 16px !important;
+                          font-style: normal;
+                          font-weight: 400;
+                          line-height: 24px;
+                          margin-bottom: 11px;
+                          }
+                        }
+                         @media screen and (max-width:1100px) {
+                          .ql-editor{
+                          
+                            width: 114vw;
+                          
+                          }
+                        }
+                        
+                      `}
+                </style>
+                <div className={`ql-snow ${styles['max-w-1296px']}`}>
+                  {!isEditing && (
+                    <div
+                      className={`ql-editor ${styles['max-w-full']}`}
+                      dangerouslySetInnerHTML={{ __html: content }}
+                    />
+                  )}
+                </div>
+                {isEditing && (
+                  <>
+                    <QuillEditor value={content} onChange={handleValueChange} />
+                    <div className={styles.buttonContainer}>
+                      <button className={styles.button} onClick={handleSave}>
+                        {!isUpdating ? 'Save' : 'Saving...'}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </section>
+        </main>
+      </PageGridLayout>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
+    </>
   )
 }
 
-export default Privacy
+export default index

@@ -66,7 +66,7 @@ const HobbiesRequest: React.FC = () => {
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const [showAdminActionModal, setShowAdminActionModal] = useState(false)
   const dispatch = useDispatch()
-  const [createdAtSort, setCreatedAtSort] = useState(false);
+  const [createdAtSort, setCreatedAtSort] = useState(true);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
@@ -89,7 +89,8 @@ const HobbiesRequest: React.FC = () => {
 
   const [applyFilter, setApplyFilter] = useState<boolean>(false)
   const [page, setPage] = useState(1)
-  const [pagelimit, setPagelimit] = useState(25)
+  const [pagelimit, setPagelimit] = useState(10)
+  const [totalPages, setTotalPages] = useState(0);
   const [deleteData, setDeleteData] = useState<{
     open: boolean
     _id: string | undefined
@@ -112,10 +113,27 @@ const HobbiesRequest: React.FC = () => {
   // const [createdAtSort, setCreatedAtSort] = useState(false);
   const [openDropdownIndex, setOpenDropdownIndex] = useState<number | null>(null);
 
-  const handleDropdownToggle = (index: number) => {
-    
-    setOpenDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
-  };
+  
+
+  useEffect(() => {
+    const minHeight = 600; // Replace with the minimum height
+    const minNumber = 8; // Replace with the minimum number of entries
+
+    const updatePageLimit = () => {
+      const height = window.innerHeight;
+      const additionalEntries = Math.max(0, Math.floor((height - minHeight) / 52.9));
+      setPagelimit(minNumber + additionalEntries);
+    };
+
+    // Set initial page limit
+    updatePageLimit();
+
+    // Update on resize
+    window.addEventListener('resize', updatePageLimit);
+    return () => {
+      window.removeEventListener('resize', updatePageLimit);
+    };
+  }, []);
 
 
 
@@ -124,9 +142,6 @@ const HobbiesRequest: React.FC = () => {
     const searchValue = data.search.value.trim();
 
     if (!searchValue) {
-      // setSearchResults([]);
-      // setPageNumber([]);
-      // setCount(0);
       return;
     }
 
@@ -146,6 +161,7 @@ const HobbiesRequest: React.FC = () => {
 
     // Set the total count of filtered results
     setCount(filteredResults.length);
+    setTotalPages(Math.ceil(filteredResults.length / pagelimit))
   };
 
 
@@ -274,43 +290,15 @@ const HobbiesRequest: React.FC = () => {
       console.log('FetchHobbyReq', res.data)
       let filteredResults = res.data.data.hobbyreq;
 
-      if (modalState.hobby) {
-        filteredResults = filteredResults.filter(
-          (hobbyreq: any) => hobbyreq?.hobby?.toLowerCase().includes(modalState.hobby.toLowerCase())
-        );
+
+      if (!hasNonEmptyValues(modalState)) {
+        const totalRequests = hobbiesreq.res.data.data.no_of_requests;
+        const totalPages = Math.ceil(totalRequests / pagelimit);
+        setCount(totalRequests);
+        setTotalPages(totalPages);
+        setSearchResults(filteredResults);
       }
 
-      if (modalState.genre) {
-        filteredResults = filteredResults.filter(
-          (hobbyreq: any) => hobbyreq?.genre?.toLowerCase().includes(modalState.genre.toLowerCase())
-        );
-      }
-
-      if (modalState.requestedBy) {
-        filteredResults = filteredResults.filter(
-          (hobbyreq: any) => hobbyreq?.user_id?.full_name?.toLowerCase().includes(modalState.requestedBy.toLowerCase())
-        );
-      }
-
-      if (modalState.requestedOn.start && modalState.requestedOn.end) {
-        filteredResults = filteredResults.filter(
-          (hobbyreq: any) =>
-            new Date(hobbyreq?.createdAt) >= new Date(modalState.requestedOn.start) &&
-            new Date(hobbyreq?.createdAt) <= new Date(modalState.requestedOn.end)
-        );
-      }
-
-      if (modalState.status) {
-        filteredResults = filteredResults.filter(
-          (hobbyreq: any) => hobbyreq?.status === modalState.status
-        );
-      }
-      setSearchResults(filteredResults);
-      if (hasNonEmptyValues(modalState)) {
-        setCount(filteredResults.length);
-      } else {
-        setCount(hobbiesreq.res.data.data.no_of_requests);
-      }
       dispatch(setShowPageLoader(false))
     }
   }
@@ -318,6 +306,50 @@ const HobbiesRequest: React.FC = () => {
     await FetchHobbyReq();
     setAdminNoteModal(false);
   };
+
+  const ApplyFilter = (): void => {
+    let filteredResults = searchResults;
+
+    if (modalState.hobby) {
+      filteredResults = filteredResults.filter(
+        (hobbyreq: any) => hobbyreq?.hobby?.toLowerCase().includes(modalState.hobby.toLowerCase())
+      );
+    }
+
+    if (modalState.genre) {
+      filteredResults = filteredResults.filter(
+        (hobbyreq: any) => hobbyreq?.genre?.toLowerCase().includes(modalState.genre.toLowerCase())
+      );
+    }
+
+    if (modalState.requestedBy) {
+      filteredResults = filteredResults.filter(
+        (hobbyreq: any) => hobbyreq?.user_id?.full_name?.toLowerCase().includes(modalState.requestedBy.toLowerCase())
+      );
+    }
+
+    if (modalState.requestedOn.start && modalState.requestedOn.end) {
+      filteredResults = filteredResults.filter(
+        (hobbyreq: any) =>
+          new Date(hobbyreq?.createdAt) >= new Date(modalState.requestedOn.start) &&
+          new Date(hobbyreq?.createdAt) <= new Date(modalState.requestedOn.end)
+      );
+    }
+
+    if (modalState.status) {
+      filteredResults = filteredResults.filter(
+        (hobbyreq: any) => hobbyreq?.status === modalState.status
+      );
+    }
+
+    setSearchResults(filteredResults);
+
+    // Update the count based on filtered results
+    setCount(filteredResults.length);
+    setTotalPages(Math.ceil(filteredResults.length / pagelimit))
+    
+  };
+
 
 
   useEffect(() => {
@@ -328,7 +360,7 @@ const HobbiesRequest: React.FC = () => {
       FetchHobbyReq()
     }
     setShowPreLoader(false)
-  }, [data.search.value, page, modalState])
+  }, [data.search.value, page, modalState,pagelimit])
 
   useEffect(() => {
     const initialNotes: { [key: string]: string } = {}
@@ -415,25 +447,39 @@ const HobbiesRequest: React.FC = () => {
 
 
   const handleSubmit = async () => {
+    console.log(hobbyData);
+    
     let jsondata = {
       user_id: hobbyData?.user_id,
       listing_id: hobbyData?.listing_id,
       hobby: hobbyData?.hobby,
       status: hobbyData?.status,
       description: hobbyData?.description,
-    }
-    console.log("jsonData", jsondata)
-    const { err, res } = await UpdateHobbyreq(jsondata)
+    };
+    
+    const filteredData = Object.fromEntries(
+      Object.entries(jsondata).filter(([_, value]) => value !== undefined)
+    );
+    
+    console.log("Filtered jsonData", filteredData);
+    
+    const { err, res } = await UpdateHobbyreq(filteredData);
     if (err) {
       console.log(err.response.data);
-
-      throw new Error()
+      setSnackbar({
+        display: true,
+        message: "Error updating hobby request" + err.response.data.error,
+        // autoHideDuration: 3000,
+        type:'error'
+      })
     } else {
       window.location.reload()
     }
   }
 
   const handleStatusChange = async (hobbyreq: any, newStatus: any) => {
+    console.log(hobbyreq);
+    
     setHobbydata({
       user_id: hobbyreq?.user_id?._id,
       listing_id: hobbyreq?.listing_id?._id,
@@ -441,8 +487,9 @@ const HobbiesRequest: React.FC = () => {
       description: hobbyreq?.description,
       status: newStatus?.status,
     })
-    console.log('status changed')
-    await handleSubmit()
+    console.log('status changed',hobbyData)
+    setShowAdminActionModal(true);
+    // await handleSubmit()
   }
 
   const handleAction = async (hobbyreq: any) => {
@@ -472,8 +519,8 @@ const HobbiesRequest: React.FC = () => {
     ?.slice()
     ?.sort((a, b) => {
       return createdAtSort
-        ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
     });
 
 
@@ -568,6 +615,7 @@ const HobbiesRequest: React.FC = () => {
                 setModalState={setModalState}
                 setIsModalOpen={setIsModalOpen}
                 setApplyFilter={setApplyFilter}
+                onApplyFilter={ApplyFilter}
               />
             )}
           </div>
@@ -581,28 +629,19 @@ const HobbiesRequest: React.FC = () => {
                   <th >Requested By</th>
                   <th >
                     <div className={styles.sortButtonWrapper}>
-                      Created At
+                      On
                       <button
                         className={styles.sortButton}
                         onClick={handleCreatedAtSort}
                       >
-                        {createdAtSort ? (
-                          <Image
-                            src={sortAscending}
-                            width={15}
-                            height={15}
-                            alt="sort"
-                            style={{ transform: 'rotate(180deg)' }}
-                          />
-                        ) : (
-                          <Image
-                            src={sortDescending}
-                            width={15}
-                            height={15}
-                            alt="sort"
-                            style={{ transform: 'rotate(180deg)' }}
-                          />
-                        )}
+                        <Image
+                          src={createdAtSort ? sortAscending : sortDescending}
+                          width={15}
+                          height={15}
+                          alt="sort"
+                          style={{ transform: 'rotate(180deg)' }}
+                        />
+
                       </button>
                     </div>
                   </th>
@@ -620,7 +659,7 @@ const HobbiesRequest: React.FC = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody >
                 {sortedResults?.map((hobbyreq, index) => (
                   <tr key={index}>
                     <td>
@@ -693,8 +732,11 @@ const HobbiesRequest: React.FC = () => {
                     <td>
                       <div>{formatDate(hobbyreq?.createdAt)}</div>
                     </td>
-                    <td >
-                      <div>{hobbyreq?.similar}</div>
+                    <td>
+                      <div style={{display:'flex',gap:8,justifyContent:'center'}}>
+                        <div>{hobbyreq?.similar}</div>
+                        <div>{hobbyreq?.similar&&<ToggleButton/>}</div>
+                      </div>
                     </td>
 
                     <td >
@@ -720,29 +762,13 @@ const HobbiesRequest: React.FC = () => {
 
                         className={styles.actions}
                       >
-                        <div onClick={() => {
-                          handleAction(hobbyreq);
-                          setShowAdminActionModal(true)
-                        }}>{pencilSvg}</div>
+                        <div></div>
                         <StatusDropdown
                           key={index}
                           status={hobbyreq?.status}
-                          onStatusChange={async (newStatus) => {
-                            console.log(newStatus, hobbyreq, 100);
-                            const { err, res } = await UpdateHobbyreq({
-                              user_id: hobbyreq?.user_id?._id,
-                              listing_id: hobbyreq?.listing_id?._id,
-                              hobby: hobbyreq?.hobby,
-                              description: hobbyreq?.description,
-                              status: newStatus?.status,
-                            })
-                            if (err) {
-                              console.log(err);
-
-                            }
-                          }}
+                          onStatusChange={(status)=>handleStatusChange(hobbyreq,status)}
                           isOpen={openDropdownIndex === index}
-                          onToggle={() => handleDropdownToggle(index)}
+                        // onToggle={() => handleDropdownToggle(index)}
                         />
 
                       </div>
@@ -753,23 +779,41 @@ const HobbiesRequest: React.FC = () => {
             </table>
           </div>
           <div className={styles.pagination}>
-            {/* Previous Page Button */}
-            {page > 1 ? (
-              <button className="users-next-btn" onClick={goToPreviousPage}>Prev</button>
-            ) : (
-              ''
-            )}
-            {searchResults.length === pagelimit ? (
-              <button
-                className="users-next-btn"
-                onClick={goToNextPage}
+            {/* Page Selection with Text */}
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginRight: '16px' }}>
+              <span className={styles.userName}>Page</span>
+              <select
+                value={page}
+                onChange={(e) => setPage(Number(e.target.value))}
+                className={styles["page-select-dropdown"]}
               >
-                Next
-              </button>
-            ) : (
-              ''
-            )}
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+              <span className={styles.userName}>of {totalPages}</span>
+            </div>
+
+            {/* Previous Page Button */}
+            <button
+              disabled={page <= 1 || totalPages<=1}
+              className="users-next-btn"
+              onClick={goToPreviousPage}
+            >
+              Prev
+            </button>
+
+            {/* Next Page Button */}
+
+            <button className="users-next-btn" onClick={goToNextPage} disabled={page>=totalPages}>
+              Next
+            </button>
+
           </div>
+
+
         </div>
       </AdminLayout>
       {deleteData.open && (

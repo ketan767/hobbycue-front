@@ -4,7 +4,8 @@ import { useDispatch } from 'react-redux'
 import { searchUsers } from '../../../services/user.service'
 import styles from './styles.module.css'
 import Image from 'next/image'
-
+import phoneIcon from '@/assets/svg/admin_phone.svg'
+import MailIcon from '@/assets/svg/admin_email.svg'
 import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
@@ -16,12 +17,11 @@ import {
 } from '@/services/admin.service'
 import { pageType } from '@/utils'
 import AdminActionModal from '@/components/_modals/AdminModals/ActionModal'
-import selectIcon from '@/assets/svg/select_icon.svg'
-import InProgressIcon from '@/assets/svg/In_progress_icon.svg'
-import AcceptedIcon from '@/assets/svg/checked_icon.svg'
-import RejectedIcon from '@/assets/svg/cancel_icon.svg'
+
 import { setShowPageLoader } from '@/redux/slices/site'
 import AdminNote from '@/components/AdminPage/Modal/AdminNote/AdminNote'
+import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
+import StatusDropdown from '@/components/_formElements/AdminStatusDropdown'
 type SearchInput = {
   search: InputData<string>
 }
@@ -63,51 +63,13 @@ const searchSvg = (
   </svg>
 )
 
-const pencilSvg = (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="25"
-    height="24"
-    viewBox="0 0 25 24"
-    fill="none"
-  >
-    <g clip-path="url(#clip0_11582_192095)">
-      <path
-        d="M4 16.9588V20.5H7.54117L17.9853 10.0559L14.4441 6.51472L4 16.9588ZM20.7238 7.31739C21.0921 6.9491 21.0921 6.35419 20.7238 5.9859L18.5141 3.77621C18.1458 3.40793 17.5509 3.40793 17.1826 3.77621L15.4545 5.5043L18.9957 9.04548L20.7238 7.31739Z"
-        fill="#8064A2"
-      />
-    </g>
-    <defs>
-      <clipPath id="clip0_11582_192095">
-        <rect width="24" height="24" fill="white" transform="translate(0.5)" />
-      </clipPath>
-    </defs>
-  </svg>
-)
-
-const deleteSvg = (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="25"
-    height="24"
-    viewBox="0 0 25 24"
-    fill="none"
-  >
-    <path
-      d="M17.1726 5.01579L17.1839 5.05H17.22H20.5C20.752 5.05 20.9936 5.15009 21.1718 5.32825C21.3499 5.50641 21.45 5.74804 21.45 6C21.45 6.25196 21.3499 6.49359 21.1718 6.67175C20.9936 6.84991 20.752 6.95 20.5 6.95H20.4521L20.45 6.99789L20.4471 7.06744L20.447 7.06889L19.5801 19.2104C19.5269 19.9544 19.1938 20.6507 18.648 21.159C18.1021 21.6673 17.3839 21.9499 16.638 21.95H8.362C7.61611 21.9499 6.89793 21.6673 6.35204 21.159C5.80615 20.6507 5.47308 19.9544 5.41987 19.2104L4.55287 7.06644L4.55285 7.06613C4.55113 7.04399 4.55018 7.0218 4.55 6.99959L4.54959 6.95H4.5C4.24804 6.95 4.00641 6.84991 3.82825 6.67175C3.65009 6.49359 3.55 6.25196 3.55 6C3.55 5.74804 3.65009 5.50641 3.82825 5.32825C4.00641 5.15009 4.24804 5.05 4.5 5.05H7.78H7.81606L7.82744 5.01579L8.37044 3.3838C8.49982 2.99535 8.74819 2.65748 9.08033 2.41808C9.41248 2.17868 9.81156 2.0499 10.221 2.05H10.221L14.78 2.05C14.78 2.05 14.78 2.05 14.78 2.05C15.1893 2.05011 15.5881 2.17898 15.9201 2.41836C16.252 2.65775 16.5002 2.99551 16.6296 3.3838L17.1726 5.01579ZM18.5469 7.00356L18.5507 6.95H18.497H6.503H6.4493L6.45313 7.00356L7.31513 19.0746C7.33398 19.3394 7.45244 19.5872 7.64667 19.7682C7.84091 19.9492 8.09649 20.0499 8.36198 20.05H16.638C16.9035 20.0499 17.1591 19.9492 17.3533 19.7682C17.5476 19.5872 17.666 19.3394 17.6849 19.0745L18.5469 7.00356ZM14.8274 3.9842L14.816 3.95H14.78H10.22H10.184L10.1726 3.9842L9.83956 4.9842L9.81765 5.05H9.887H15.113H15.1823L15.1604 4.9842L14.8274 3.9842ZM10.5 10.05C10.7327 10.05 10.9573 10.1355 11.1311 10.2901C11.3047 10.4444 11.4157 10.6569 11.4432 10.8874L11.45 11.0015V15.9999C11.4497 16.2421 11.357 16.475 11.1908 16.651C11.0246 16.8271 10.7974 16.9331 10.5557 16.9473C10.314 16.9614 10.0759 16.8828 9.89026 16.7274C9.70495 16.5723 9.58572 16.3524 9.55682 16.1125L9.55 15.9985V11C9.55 10.748 9.65009 10.5064 9.82825 10.3282C10.0064 10.1501 10.248 10.05 10.5 10.05ZM14.5 10.05C14.752 10.05 14.9936 10.1501 15.1718 10.3282C15.3499 10.5064 15.45 10.748 15.45 11V16C15.45 16.252 15.3499 16.4936 15.1718 16.6718C14.9936 16.8499 14.752 16.95 14.5 16.95C14.248 16.95 14.0064 16.8499 13.8282 16.6718C13.6501 16.4936 13.55 16.252 13.55 16V11C13.55 10.748 13.6501 10.5064 13.8282 10.3282C14.0064 10.1501 14.248 10.05 14.5 10.05Z"
-      fill="#B42318"
-      stroke="white"
-      stroke-width="0.1"
-    />
-  </svg>
-)
 const ClaimsPage: React.FC<{}> = () => {
-  const router = useRouter()
+
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
   const [showAdminActionModal, setShowAdminActionModal] = useState(false)
-  const [email, setEmail] = useState('')
+ 
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,7 +77,9 @@ const ClaimsPage: React.FC<{}> = () => {
     setData((prev) => ({ ...prev, search: { value, error: null } }))
   }
   const [page, setPage] = useState(1)
-  const [pagelimit, setPagelimit] = useState(25)
+    const [totalPages, setTotalPages] = useState(0);
+  const [pagelimit, setPagelimit] = useState(10)
+  const [openDropdownIndex, setOpenDropdownIndex] = useState<number | null>(null);
   const [deleteData, setDeleteData] = useState<{
     open: boolean
     _id: string | undefined
@@ -136,7 +100,7 @@ const ClaimsPage: React.FC<{}> = () => {
     title: '',
   })
   const [adminNoteModal, setAdminNoteModal] = useState<boolean>(false)
-
+  const [count, setCount] = useState(0)
   const [adminNoteModalData, setAdminNoteModalData] =
     useState<AdminNoteModalData>({
       adminNotes: 'Admin Note',
@@ -186,21 +150,6 @@ const ClaimsPage: React.FC<{}> = () => {
   }
 
   console.log({ searchResults })
-  const fullNumber = (user: any) => {
-    if (user?.phone?.prefix && user?.phone?.number) {
-      return user?.phone?.prefix + user?.phone?.number
-    } else {
-      return 'No number'
-    }
-  }
-
-  const pagesLength = (user: any) => {
-    return user?._listings?.length || 0
-  }
-  const handleEdit = (profile_url: any) => {
-    setAdminNoteModal(true)
-    console.log('adminNoteModal')
-  }
 
   const fetchSearchResults = async () => {
     const searchValue = data.search.value.trim()
@@ -227,10 +176,15 @@ const ClaimsPage: React.FC<{}> = () => {
     const { res, err } = await getClaimRequests(
       `limit=${pagelimit}&sort=-createdAt&page=${page}&populate=user_id`,
     )
+      const claimreq = await getClaimRequests(`limit=2500000&sort=-createdAt`)
     if (err) {
       console.log('An error', err)
     } else {
       console.log('FetchClaimReq', res.data)
+      const totalRequests = claimreq.res.data.data.no_of_requests;
+      const totalPages = Math.ceil(totalRequests / pagelimit);
+      setCount(totalRequests);
+      setTotalPages(totalPages);
       setSearchResults(res.data.data.claimreq)
     }
   }
@@ -240,15 +194,41 @@ const ClaimsPage: React.FC<{}> = () => {
     } else if (page) {
       FetchClaimReq()
     }
-  }, [data.search.value, page])
+  }, [data.search.value, page, pagelimit])
 
-  const getUserName = async (_id: any) => {
-    const { res, err } = await getClaimRequests(`_id=${_id}`)
-    return res?.data.data.users[0].full_name
-  }
+ useEffect(() => {
+    const minHeight = 600; 
+    const minNumber = 8; 
 
-  const goToPage = (page: number) => {
-    // Logic to navigate to specific page
+    const updatePageLimit = () => {
+      const height = window.innerHeight;
+      const additionalEntries = Math.max(0, Math.floor((height - minHeight) / 52.9));
+      setPagelimit(minNumber + additionalEntries);
+    };
+
+    // Set initial page limit
+    updatePageLimit();
+
+    // Update on resize
+    window.addEventListener('resize', updatePageLimit);
+    return () => {
+      window.removeEventListener('resize', updatePageLimit);
+    };
+  }, []);
+
+  const handleStatusChange = async (hobbyreq: any, newStatus: any) => {
+    console.log(hobbyreq);
+    
+    // setHobbydata({
+    //   user_id: hobbyreq?.user_id?._id,
+    //   listing_id: hobbyreq?.listing_id?._id,
+    //   hobby: hobbyreq?.hobby,
+    //   description: hobbyreq?.description,
+    //   status: newStatus?.status,
+    // })
+    // console.log('status changed',hobbyData)
+    setAdminNoteModal(true);
+    
   }
 
   const goToPreviousPage = () => {
@@ -257,10 +237,6 @@ const ClaimsPage: React.FC<{}> = () => {
 
   const goToNextPage = () => {
     setPage(page + 1)
-  }
-
-  const handleDelete = (user_id: string) => {
-    setDeleteData({ open: true, _id: user_id })
   }
 
   const deleteFunc = async (user_id: string) => {
@@ -297,17 +273,7 @@ const ClaimsPage: React.FC<{}> = () => {
     const { err, res } = await UpdateClaim(jsondata)
   }
 
-  const handleAction = async (hobbyreq: any) => {
-    setClaimData({
-      title: hobbyreq?.title,
-      description: hobbyreq?.description,
-      pageUrl: hobbyreq?.pageUrl,
-      status: hobbyreq?.status,
-    })
-
-    setSingleData(hobbyreq)
-    setAdminNoteModal(true)
-  }
+  
   const handleEditAdminNoteData = (e: any, x: any) => {
     setAdminNoteModalData((pre) => {
       return { ...pre, adminNotes: e.target.value, userId: x._id }
@@ -340,13 +306,14 @@ const ClaimsPage: React.FC<{}> = () => {
                 autoComplete="new"
                 value={data.search.value}
                 onChange={handleInputChange}
-                placeholder="Search users..."
+                placeholder="Search User Name, MailID, Page Number, Page URL..."
                 className={styles.searchInput}
               />
               <button type="submit" className={styles.searchButton}>
                 {searchSvg}
               </button>
             </form>
+            <span className={styles.countText}>Count: <span style={{ color: "#0096c8", fontWeight: "500" }}>{count}</span></span>
             <button className={styles.filterBtn}>{filterSvg}</button>
           </div>
 
@@ -354,10 +321,12 @@ const ClaimsPage: React.FC<{}> = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th>Name</th>
+                  <th>User</th>
+                  <th>Contact</th>
                   <th>Page</th>
+                  <th>Current Admin</th>
                   <th>Relation to Page</th>
-                  <th style={{ paddingRight: '16px', textAlign: 'center' }}>
+                  <th >
                     Web Link
                   </th>
                   <th style={{ paddingRight: '16px' }}>Admin Note</th>
@@ -370,21 +339,74 @@ const ClaimsPage: React.FC<{}> = () => {
                 {searchResults?.map((hobbyreq, index) => (
                   <tr key={index}>
                     <td>
-                      <div className={styles.resultItem}>
-                        <div className={styles.detailsContainer}>
-                          {hobbyreq?.user_id?.profile_url ? (
-                            <Link
-                              href={`/profile/${hobbyreq?.user_id?.profile_url}`}
-                              className={styles.userName}
-                            >
-                              {hobbyreq?.name}
-                            </Link>
-                          ) : (
-                            <p className={styles.userName}>{hobbyreq?.name}</p>
-                          )}
-                        </div>
+                    <div className={styles.resultItem}>
+                      <div className={styles.avatarContainer}>
+                      <Link
+                            href={`/profile/${hobbyreq?.user_id?.profile_url}`}>
+                        {hobbyreq?.user_id?.profile_image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={hobbyreq?.user_id?.profile_image}
+                            alt={`${hobbyreq?.user_id?.name}'s profile`}
+                            width={40}
+                            height={40}
+                            className={styles.avatarImage}
+                          />
+                        ) : (
+                          <Image
+                            className={styles.avatarImage}
+                            src={DefaultProfile}
+                            alt="profile"
+                            width={40}
+                            height={40}
+                          />  
+                        )}
+                        </Link>
                       </div>
-                    </td>
+                      <div className={styles.detailsContainer}>
+                        {hobbyreq?.user_id?.profile_url ? (
+                          <Link
+                            href={`/profile/${hobbyreq?.user_id?.profile_url}`}
+                            className={styles.userName}
+                          >
+                            {hobbyreq?.name}
+                          </Link>
+                        ) : (
+                          <p className={styles.userName}>{hobbyreq?.name}</p>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+
+                    <td className={styles.LoginType}>
+                          <div className={styles.loginIcon}>
+                            {hobbyreq?.phone?.number && (
+                              <Link
+                                href={`tel:${
+                                  hobbyreq.phone.prefix + hobbyreq.phone.number
+                                }`}
+                              >
+                                <Image
+                                  alt={hobbyreq?.full_name}
+                                  src={phoneIcon}
+                                  width={24}
+                                  height={24}
+                                />
+                              </Link>
+                            )}
+                            {hobbyreq?.user_id?.email && (
+                              <Link href={`mailto:${hobbyreq?.user_id?.public_email}`}>
+                                <Image
+                                  alt={hobbyreq?.full_name}
+                                  src={MailIcon}
+                                  width={24}
+                                  height={24}
+                                />
+                              </Link>
+                            )}
+                          </div>
+                        </td>
+                       
                     <td className={styles.userName}>
                       <Link
                         href={`/${pageType(hobbyreq?.type)}/${
@@ -394,6 +416,9 @@ const ClaimsPage: React.FC<{}> = () => {
                         {hobbyreq?.pageUrl}
                       </Link>
                     </td>
+                    <td>
+                          Hobbycue
+                        </td>
                     <td className={styles.lastLoggedIn}>
                       {hobbyreq?.HowRelated.slice(0, 60)}
                     </td>
@@ -428,23 +453,16 @@ const ClaimsPage: React.FC<{}> = () => {
                     </td>
                     <td>
                       <div
-                        onClick={() => handleAction(hobbyreq)}
+
                         className={styles.actions}
                       >
-                        {pencilSvg}
-                        <div>
-                          {hobbyreq?.status === 'accepted' ? (
-                            <Image src={AcceptedIcon} alt="" />
-                          ) : hobbyreq?.status === 'rejected' ? (
-                            <Image src={RejectedIcon} alt="" />
-                          ) : hobbyreq?.status === 'in_progress' ? (
-                            <Image src={InProgressIcon} alt="" />
-                          ) : hobbyreq?.status === 'New' ? (
-                            <Image src={selectIcon} alt="" />
-                          ) : (
-                            ''
-                          )}
-                        </div>
+                        <div></div>
+                        <StatusDropdown
+                          key={index}
+                          status={hobbyreq?.status}
+                          onStatusChange={(status)=>handleStatusChange(hobbyreq,status)}
+                          isOpen={openDropdownIndex === index}
+                        />
                       </div>
                     </td>
                   </tr>
@@ -453,16 +471,31 @@ const ClaimsPage: React.FC<{}> = () => {
             </table>
           </div>
           <div className={styles.pagination}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginRight: '16px' }}>
+              <span className={styles.userName}>Page</span>
+              <select
+                value={page}
+                onChange={(e) => setPage(Number(e.target.value))}
+                className={styles["page-select-dropdown"]}
+              >
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+              <span className={styles.userName}>of {totalPages}</span>
+            </div>
             <button
-              disabled={page <= 1}
-              className="admin-next-btn"
+              disabled={page <= 1 || totalPages<=1}
+              className="users-next-btn"
               onClick={goToPreviousPage}
             >
-              Previous
+              Prev
             </button>
             <button
               disabled={searchResults.length !== pagelimit}
-              className="admin-next-btn"
+              className="users-next-btn"
               onClick={goToNextPage}
             >
               Next

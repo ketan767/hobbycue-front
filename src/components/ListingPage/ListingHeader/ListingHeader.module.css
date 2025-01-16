@@ -393,6 +393,7 @@ font-family:'Poppins';
   display: flex;
   gap: 8px;
   align-items: center;
+  justify-content: center;
 }
 
 .contactBtn p {

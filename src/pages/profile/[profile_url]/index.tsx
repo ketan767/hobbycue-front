@@ -324,6 +324,12 @@ const ProfileHome: React.FC<Props> = ({
     } else if (router.asPath.includes('showLocation=true')) {
       router.replace(`/profile/${user.profile_url}`)
       dispatch(openModal({ type: 'profile-address-edit', closable: true }))
+    } else if (router.asPath.includes('showContact=true')) {
+      router.replace(`/profile/${user.profile_url}`)
+      dispatch(openModal({ type: 'listing-contact-edit', closable: true }))
+    } else if (router.asPath.includes('showSocial=true')) {
+      router.replace(`/profile/${user.profile_url}`)
+      dispatch(openModal({ type: 'listing-social-media-edit', closable: true }))
     }
     localStorage.setItem('meUrl', '')
   }, [router.asPath])

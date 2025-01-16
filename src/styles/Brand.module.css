@@ -1,6 +1,5 @@
 .main {
   background: #f4f4f4;
-  padding-top: 12px;
   padding-bottom: 45px;
 }
 
@@ -195,7 +194,19 @@
 .ql-editor ol {
   padding-left: 4px;
 }
-
+.title {
+  margin-top: 8px;
+  padding: var(--spacing-16);
+  padding-top: 8px;
+  font-size: 20px;
+  line-height: 16px;
+  font-weight: 500;
+  color: #8064a2;
+  border: none;
+  outline: none;
+  resize: none;
+  width: 100%;
+}
 @media screen and (max-width: 1100px) {
   .white-container {
     padding: 0;
@@ -218,7 +229,7 @@
     margin-top: 8px;
   }
   .main {
-    padding-top: 0;
+    padding-top: 16px;
     padding-bottom: 0;
   }
   .white-container {

@@ -579,6 +579,23 @@ export const purchasePlaceMembership = async (
   }
 }
 
+export const upadtePlaceMembership = async (
+  id: string,
+  data: any,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.patch(`listing/place-membership-update/${id}`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 export const getPurchases = async (id: string): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }

@@ -20,13 +20,16 @@ const statusOptions = [
 
 const StatusDropdown: React.FC<{
   status?: string;
-  isOpen?: boolean; // Optional
-  onToggle?: () => void; // Optional
+  isOpen?: boolean;
+  onToggle?: () => void;
   onStatusChange: (status: any) => void;
-}> = ({ status, isOpen, onToggle, onStatusChange }) => {
+  long?: boolean;
+}> = ({ status, isOpen, onToggle, onStatusChange, long }) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const isControlled = isOpen !== undefined && onToggle !== undefined;
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const isDropdownOpen = isControlled ? isOpen : internalIsOpen;
 
   const selectedStatus =
     statusOptions.find((option) => option.status === status) || statusOptions[0];
@@ -42,9 +45,8 @@ const StatusDropdown: React.FC<{
   const closeDropdown = () => {
     if (isControlled) {
       onToggle?.();
-    } else {
-      setInternalIsOpen(false);
     }
+    setInternalIsOpen(false);
   };
 
   const selectStatus = (status: any) => {
@@ -73,19 +75,29 @@ const StatusDropdown: React.FC<{
       <button
         className={styles.dropdownButton}
         onClick={toggleDropdown}
-        aria-expanded={isControlled ? isOpen : internalIsOpen}
+        aria-expanded={isDropdownOpen}
+        style={{
+          width: long ? '180px' : '66px',
+          justifyContent: long ? 'space-between' : 'space-around',
+          padding: long ? '4px' : '0px',
+        }}
       >
-        <span style={{ color: selectedStatus.color }}>
+        
+        <span>
           <Image src={selectedStatus.icon} alt={selectedStatus.label} />
+          {long&&(
+          <span className={styles.statusLabel}>
+          {selectedStatus.label}
         </span>
+        )}
+        </span>
+        
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="8"
           height="6"
           style={{
-            transform: (isControlled ? isOpen : internalIsOpen)
-              ? 'rotate(180deg)'
-              : 'rotate(0deg)',
+            transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: 'transform 0.2s ease',
           }}
           viewBox="0 0 8 6"
@@ -97,8 +109,14 @@ const StatusDropdown: React.FC<{
           />
         </svg>
       </button>
-      {(isControlled ? isOpen : internalIsOpen) && (
-        <ul className={styles.dropdownMenu}>
+      {isDropdownOpen && (
+        <ul
+          className={styles.dropdownMenu}
+          style={{
+            width: long ? '180px' : '140px',
+            ...(long ? { left: '0px' } : { right: '0px' }),
+          }}
+        >
           {statusOptions.map((status) => (
             <li
               key={status.label}

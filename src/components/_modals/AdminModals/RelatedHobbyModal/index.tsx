@@ -9,6 +9,7 @@ import {
 } from '@mui/material'
 
 import {
+    getAllUserDetail,
     getMyProfileDetail,
     updateMyProfileDetail,
 } from '@/services/user.service'
@@ -36,42 +37,38 @@ import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import { log } from 'console'
+import { getAdminHobbies } from '@/services/admin.service'
+import { getHobbyMembers } from '@/services/hobby.service'
 
 type Props = {
-    onComplete?: () => void
+    onSave? : any;
     onBackBtnClick?: () => void
     confirmationModal?: boolean
     setConfirmationModal?: any
     handleClose?: any
     isError?: boolean
     onStatusChange?: (isChanged: boolean) => void
-    title?: string
+    type?: string;
+    data?: any
 }
 
 const HobbyRelatedEditModal: React.FC<Props> = ({
-    onComplete,
+    onSave,
     onBackBtnClick,
     confirmationModal,
     setConfirmationModal,
     handleClose,
     onStatusChange,
-    title,
+    type,
+    data,
 }) => {
-    const dispatch = useDispatch()
-    const { user } = useSelector((state: RootState) => state.user)
     const { listingModalData, listingTypeModalMode, pageDataForEvent } =
         useSelector((state: RootState) => state.site)
-    const [list, setList] = useState<{ name: string; description: string }[]>([])
-    const [pagedata, setPagedata] = useState<
-        {
-            Description: string
-            Show: 'Y' | 'N' | ''
-            pageType: string
-            listingCategory: string
-        }[]
-    >([])
+    const [list, setList] = useState<{ name: string; description: string,id : string }[]>([])
+    const [pagedata, setPagedata] = useState([])
     const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
     const [value, setValue] = useState<any>([])
+    const [id, setId] = useState<any>([])
     const [hoveredValue, setHoveredValue] = useState<number | null>(null)
     const [error, setError] = useState<string | null>(null)
     const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -89,296 +86,80 @@ const HobbyRelatedEditModal: React.FC<Props> = ({
     const handleSubmit = async () => {
         setError('')
         if (!value || value === '' || value.length === 0) {
-            return setError('Select a Category!')
+            return setError('Select a Hobby!')
         }
-        if (listingTypeModalMode === 'edit' || pageDataForEvent !== null) {
-            // make this true with listingModalData automatic update will happen just page route change required
-            handleEdit()
-        } else {
-            dispatch(
-                updateListingModalData({ ...listingModalData, page_type: value }),
-            )
-            dispatch(openModal({ type: 'listing-onboarding', closable: true }))
-        }
+        onSave(id)
     }
-    const handleEdit = async () => {
-        // setSubmitBtnLoading(true)
-        if (pageDataForEvent) {
-            console.warn({ pageDataForEvent })
-            const { err, res } = await updateListing(pageDataForEvent?._id, {
-                page_type: value,
-            })
-            if (err) return console.log(err)
-            if (res?.data.success) {
-                dispatch(updateListingModalData(res.data.data.listing))
-                dispatch(openModal({ type: 'listing-onboarding', closable: true }))
-            }
-        }
-        if (onComplete) {
-            dispatch(
-                updateListingModalData({ ...listingModalData, page_type: value }),
-            )
-            dispatch(openModal({ type: 'listing-onboarding', closable: true }))
-        } else {
-            const { err, res } = await updateListing(listingModalData._id, {
-                page_type: value,
-            })
-            setSubmitBtnLoading(false)
-            if (err) return console.log(err)
-            if (res?.data.success) {
-                dispatch(updateListingModalData(res.data.data.listing))
-                window.location.reload()
-                dispatch(closeModal())
-            }
-        }
-    }
+   
 
     useEffect(() => {
-        getAllListingCategories()
-            .then((result) => {
-                const { res, err } = result
-                if (err) {
-                    console.log({ err })
-                } else if (res?.data && res?.data?.data) {
-                    setPagedata(res.data.data)
+        const fetchData = async () => {
+            
+
+            try {
+                let data = [];
+                if (type === 'Related') {
+                    const { res } = await getAdminHobbies(`sort=-createdAt`);
+                    // console.log(res.data);
+
+                    data = res.data.data.hobbies.map((item: any) => ({
+                        name: item.display || item.slug || "None",
+                        description: (item.description || 'No description available').slice(0, 40) + '....',
+                        id : item._id
+                    }));
+                    
+                } else if (type === 'Admin') {
+
+
+                    const { res } = await getAllUserDetail(
+                          `sort=-last_login&populate=_addresses`,
+                        )
+                        console.log("users : ",res.data.data.users);
+                        
+                    data = res.data.data.users
+                        .filter((item: any) => item !== null && item !== undefined) // Filter out null or undefined items
+                        .map((item: any) => ({
+                            name: item.display_name ||"Unknown user",
+                            description: (item?.about||item?.tagline + item?._addresses[0]?.city || 'No description available').slice(0, 50) + '....',
+                            id : item._id
+                        }));
+
                 }
-            })
-            .catch((err) => {
-                console.log({ err })
-            })
-    }, [])
+                // console.log(data);
 
-    const peoplePageTypeList: PeoplePageType = [
-        {
-            name: 'Teacher',
-            description: 'Trainer, Instructor - usually for an Art',
-        },
-        // {
-        //   name: 'Trainer',
-        //   description: '',
-        // },
-        {
-            name: 'Coach',
-            description: 'Trainer, Instructor - usually for a Sport',
-        },
-        // {
-        //   name: 'Instructor',
-        //   description: '',
-        // },
-        {
-            name: 'Academia',
-            description: 'Expert, Researcher',
-        },
-        {
-            name: 'Professional',
-            description: 'Artist, Sportsperson as source of income',
-        },
-        {
-            name: 'Seller',
-            description: 'Seller or Online Store',
-        },
-        {
-            name: 'Specialist',
-            description: 'Anchor, MC, Technician, etc.',
-        },
-        {
-            name: 'Ensemble',
-            description: 'A group that performs together',
-        },
-        // {
-        //   name: 'Company',
-        //   description: '',
-        // },
-        {
-            name: 'Business',
-            description: 'Company or Organization',
-        },
-        // {
-        //   name: 'Society',
-        //   description: '',
-        // },
-        {
-            name: 'Association',
-            description: 'Club, Society, Trust, Sabha or other Organization',
-        },
-        // {
-        //   name: 'Organization',
-        //   description: 'Sabha',
-        // },
-    ]
+                setList(data);
+            } catch (error) {
+                console.error('Error fetching dropdown data:', error);
+            }
+        };
 
-    const placePageTypeList: ProgramPageType = [
-        {
-            name: 'Shop',
-            description: 'Buy or Rent Items or Services',
-        },
-        // {
-        //   name: 'Gallery',
-        //   description: 'View Exhibits',
-        // },
-        {
-            name: 'School',
-            description: 'Institute or Academy',
-        },
-        {
-            name: 'Auditorium',
-            description: 'Performance Venue',
-        },
-        {
-            name: 'Clubhouse',
-            description: 'Practice or Play Area for Club member',
-        },
-        {
-            name: 'Studio',
-            description: 'Practice area for artists and others',
-        },
-        {
-            name: 'Play Area',
-            description: 'Court, Field, or Stadium for Sports',
-        },
-        // {
-        //   name: 'Campus',
-        //   description: '',
-        // },
-        {
-            name: 'Apartment',
-            description: 'Flat or Condo with shared amenities',
-        },
-    ]
-
-    const programPageTypeList: { name: string; description: string }[] = [
-        {
-            name: 'Classes',
-            description: 'Recurring Classes',
-        },
-        {
-            name: 'Workshop',
-            description: 'Seminar, Webinar or Class',
-        },
-        {
-            name: 'Performance',
-            description: 'Live Show',
-        },
-        // {
-        //   name: 'Competition',
-        //   description: 'Contests to Rank and/or give Prizes',
-        // },
-        {
-            name: 'Event',
-            description: 'Other types of Events',
-        },
-        {
-            name: 'Other',
-            description: 'Request addition of options',
-        },
-    ]
-
-    const productPageTypeList: ProductPageType = [
-        {
-            name: 'Item Sale',
-            description: 'Shippable product',
-        },
-        // {
-        //   name: 'Item Rental',
-        //   description: 'Equipment on rent',
-        // },
-        // {
-        //   name: 'Space Rental',
-        //   description: 'Book a play court or studio',
-        // },
-        // {
-        //   name: 'Consult / Service',
-        //   description: 'Consultation or service appointment',
-        // },
-        // {
-        //   name: 'Live Classes',
-        //   description: 'Recurring classes registration',
-        // },
-        // {
-        //   name: 'Online Access',
-        //   description: 'To view or download digital content',
-        // },
-        {
-            name: 'Event Ticket',
-            description: 'Scheduled programs',
-        },
-        {
-            name: 'Voucher',
-            description: 'Redeemable code',
-        },
-        {
-            name: 'Other',
-            description: 'Request addition of options',
-        },
-    ]
-
-    useEffect(() => {
-        switch (listingModalData.type) {
-            case 1:
-                setList(
-                    pagedata
-                        ?.filter((obj) => obj.pageType === 'People' && obj.Show === 'Y')
-                        .map((obj) => ({
-                            name: obj.listingCategory,
-                            description: obj.Description,
-                        })),
-                )
-                break
-            case 2:
-                setList(
-                    pagedata
-                        ?.filter((obj) => obj.pageType === 'Place' && obj.Show === 'Y')
-                        .map((obj) => ({
-                            name: obj.listingCategory,
-                            description: obj.Description,
-                        })),
-                )
-                break
-            case 3:
-                setList(
-                    pagedata
-                        ?.filter((obj) => obj.pageType === 'Program' && obj.Show === 'Y')
-                        .map((obj) => ({
-                            name: obj.listingCategory,
-                            description: obj.Description,
-                        })),
-                )
-                break
-            case 4:
-                setList(
-                    pagedata
-                        ?.filter((obj) => obj.pageType === 'Product' && obj.Show === 'Y')
-                        .map((obj) => ({
-                            name: obj.listingCategory,
-                            description: obj.Description,
-                        })),
-                )
-                break
-            default:
-                setList([])
-                break
+        if(type==='Related'){
+            setValue(data?.related_hobbies.map((key : any) =>key?.display||key.slug))
+            setId(data?.related_hobbies.map((key : any) =>key?._id))
         }
-        setValue(listingModalData.page_type as string)
-        setInitialData(listingModalData.page_type as string)
-    }, [listingModalData, pagedata])
+
+        fetchData();
+    }, [type]);
 
     const handleChange = (itemToChange: any) => {
-        if (value?.includes(itemToChange)) {
-            setError('') // Clear error when removing a value
-            setValue((prev: any) => prev.filter((item: any) => item !== itemToChange))
+        if (value?.includes(itemToChange.name)) {
+            // Clear error when removing a value
+            setError('');
+            setValue((prev: any) => prev.filter((item: any) => item !== itemToChange.name));
+            setId((prev: any) => prev.filter((item: any) => item !== itemToChange.id));
         } else {
-            if (value?.length >= 2) {
-                setError('You can select only two Categories')
+            // Clear error when adding a value within the limit
+            setError('');
+            if (value) {
+                setValue((prev: any) => [...prev, itemToChange.name]);
+                setId((prev: any) => [...prev, itemToChange.id]);
             } else {
-                setError('') // Clear error when adding a value within the limit
-                if (value) {
-                    setValue((prev: any) => [...prev, itemToChange])
-                } else {
-                    setValue((prev: any) => [itemToChange])
-                }
+                setValue([itemToChange.name]);
+                setId([itemToChange.id]);
             }
         }
-    }
+    };
+    
     const HandleSaveError = async () => {
         if (!value || value === '' || value.length === 0) {
             setIsError(true)
@@ -413,24 +194,7 @@ const HobbyRelatedEditModal: React.FC<Props> = ({
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {
             console.log({ event })
-            // if(event.key==="ArrowUp" && showDropdown && hoveredValue!==null){
-            //   setHoveredValue(prev=>{
-            //     if(prev===0){
-            //       return list.length-1;
-            //     }else{
-            //       return (prev as number) - 1
-            //     }
-            //   })
-            // }
-            // else if(event.key==="ArrowDown" && showDropdown && hoveredValue!==null){
-            //   setHoveredValue(prev=>{
-            //     if(prev===list.length-1){
-            //       return 0;
-            //     }else{
-            //       return (prev as number) + 1
-            //     }
-            //   })
-            // }
+            
             if (event.key === 'Enter') {
                 nextButtonRef.current?.focus()
             }
@@ -465,21 +229,13 @@ const HobbyRelatedEditModal: React.FC<Props> = ({
                     {/* Modal Header */}
                     <header className={styles['header']}>
                         <h4 className={styles['heading']}>
-                            {title}
-                            {listingTypeModalMode === 'create' && (
-                                <span className={styles['red-error-mobile']}>*</span>
-                            )}
+                            {type}
                         </h4>
                     </header>
 
                     <hr className={styles['modal-hr']} />
 
                     <section className={styles['body'] + ' custom-scrollbar'}>
-                        {/* <p className={styles['info']}>
-              Please select two of the most appropriate categories. One type is
-              recommended. Use another type only if it is significantly
-              different
-            </p> */}
 
                         <div
                             className={styles['input-box']}
@@ -559,9 +315,9 @@ const HobbyRelatedEditModal: React.FC<Props> = ({
                                             }
                                         }}
                                     >
-                                        
-                                            <p>Search and select Related hobbies</p>
-                                        
+
+                                        <p>Search and select Related hobbies</p>
+
                                         <Image
                                             src={showDropdown ? UpArrow : DownArrow}
                                             alt="down"
@@ -573,9 +329,9 @@ const HobbyRelatedEditModal: React.FC<Props> = ({
                                                 styles['options-container'] + ' custom-scrollbar'
                                             }
                                         >
-                                            {placePageTypeList.map(
+                                            {list.map(
                                                 (
-                                                    item: { name: string; description: string },
+                                                    item: { name: string; description: string,id : string },
                                                     idx: number,
                                                 ) => {
                                                     const desc = item.description.trim()
@@ -597,15 +353,24 @@ const HobbyRelatedEditModal: React.FC<Props> = ({
                                 `}
                                                                 key={item.name}
                                                                 onClick={() => {
-                                                                    handleChange(item.name)
+                                                                    handleChange(item)
                                                                     setShowDropdown(false)
                                                                     setHoveredValue(null)
                                                                 }}
                                                             >
                                                                 <p className={styles.tagDesc}>{item.name}</p>
-                                                                <p className={styles.tagDesc}>
-                                                                    {item.description}
-                                                                </p>
+                                                                {type === 'Admin' && (
+                                                                    <p
+                                                                        className={styles.tagDesc}
+                                                                        dangerouslySetInnerHTML={{ __html: item.description }}
+                                                                    />
+                                                                )}
+                                                                {type === 'Related' && (
+                                                                    <p className={styles.tagDesc}>
+                                                                        {item.description}
+                                                                    </p>
+                                                                )}
+
                                                             </div>
                                                         )
                                                 },
@@ -652,39 +417,12 @@ const HobbyRelatedEditModal: React.FC<Props> = ({
                         >
                             {submitBtnLoading ? (
                                 <CircularProgress color="inherit" size={'24px'} />
-                            ) : listingTypeModalMode === 'edit' ? (
+                            ) :
                                 'Save'
-                            ) : (
-                                'Next'
-                            )}
+                            }
                         </button>
-                        {/* SVG Button for Mobile */}
-                        {onComplete || listingTypeModalMode === 'create' ? (
-                            <div className={styles['desktop-hidden']}></div>
-                        ) : null}
-                        {onComplete || listingTypeModalMode === 'create' ? (
-                            <div onClick={handleSubmit}>
-                                <Image
-                                    src={NextIcon}
-                                    alt="back"
-                                    className="modal-mob-btn cancel"
-                                />
-                            </div>
-                        ) : (
-                            <button
-                                ref={nextButtonRef}
-                                className="modal-mob-btn-save"
-                                onClick={handleSubmit}
-                            >
-                                {submitBtnLoading ? (
-                                    <CircularProgress color="inherit" size={'14px'} />
-                                ) : listingTypeModalMode === 'edit' ? (
-                                    'Save'
-                                ) : (
-                                    'Next'
-                                )}
-                            </button>
-                        )}
+
+
                     </footer>
                 </div>
             </div>

@@ -17,6 +17,14 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px 5px;
+  border-bottom: 2px solid #ddd
+}
+.modalHeaderWrapper {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: white; 
+  border-bottom: 1px solid #ddd; 
 }
 .title {
   color: black;

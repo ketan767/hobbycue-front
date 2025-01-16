@@ -118,6 +118,13 @@ const ListingPlacePurchase: React.FC<Props> = ({
   }, [])
 
   const handleSubmit = async () => {
+    if(formData?.variant_value ==='Select'){
+      return setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Please select the required field.',
+      })
+    }
     const apiFunc = purchasePlaceMembership
     setSubmitBtnLoading(true)
     const { err, res } = await apiFunc(data._id as string, {
@@ -176,67 +183,69 @@ const ListingPlacePurchase: React.FC<Props> = ({
               </div>
             </div>
           </div>
-          <div className={styles['input-container']}>
-            <div className={styles['input-field']}>
-              <p className={styles['variant-tag']}>
-                {data?.variant_tag}
-                <span className={styles['styles-red']}>*</span>
-              </p>
-              <div className={styles['input-box']}>
-                <InputSelect
-                  onChange={(e: any) => {
-                    // let val = e.target.value
-                    // setData((prev: any) => ({ ...prev, visibility: val }))
-                  }}
-                  value={formData.variant_value}
-                  className={styles['input-select']}
-                  optionsContainerClass={styles['options-container-class']}
-                  // style={!isMobile ? { width: '354px' } : {}}
-                  openDropdown={openDropdown}
-                  setOpenDropdown={setOpenDropdown}
-                  id={'ListingPlaceAdminHeader'}
-                >
-                  {data?.variations?.map((item: any, idx: number) => {
-                    return (
-                      <>
-                        <DropdownOption
-                          display={item.name}
-                          key={idx}
-                          selected={item.name == formData.variant_value}
-                          onChange={() =>
-                            setFormData((prev: any) => ({
-                              ...prev,
-                              variant_value: item.name,
-                            }))
-                          }
-                        />
-                      </>
-                    )
-                  })}
-                </InputSelect>
-              </div>
-            </div>
-            <div className={styles['input-field']}>
-              <div className={styles['input-label']}>
+          {data?.variations?.length > 0 && (
+            <div className={styles['input-container']}>
+              <div className={styles['input-field']}>
                 <p className={styles['variant-tag']}>
-                  {data?.membership_identifier}
+                  {data?.variant_tag}
+                  <span className={styles['styles-red']}>*</span>
                 </p>
+                <div className={styles['input-box']}>
+                  <InputSelect
+                    onChange={(e: any) => {
+                      // let val = e.target.value
+                      // setData((prev: any) => ({ ...prev, visibility: val }))
+                    }}
+                    value={formData.variant_value}
+                    className={styles['input-select']}
+                    optionsContainerClass={styles['options-container-class']}
+                    // style={!isMobile ? { width: '354px' } : {}}
+                    openDropdown={openDropdown}
+                    setOpenDropdown={setOpenDropdown}
+                    id={'ListingPlaceAdminHeader'}
+                  >
+                    {data?.variations?.map((item: any, idx: number) => {
+                      return (
+                        <>
+                          <DropdownOption
+                            display={item.name}
+                            key={idx}
+                            selected={item.name == formData.variant_value}
+                            onChange={() =>
+                              setFormData((prev: any) => ({
+                                ...prev,
+                                variant_value: item.name,
+                              }))
+                            }
+                          />
+                        </>
+                      )
+                    })}
+                  </InputSelect>
+                </div>
               </div>
-              <input
-                type="text"
-                autoComplete="off"
-                placeholder=""
-                value={formData.memberIdentifierValue}
-                className={`${styles['input-member']} ${styles['']}`}
-                onChange={(e) => {
-                  setFormData((prev: any) => ({
-                    ...prev,
-                    memberIdentifierValue: e.target.value,
-                  }))
-                }}
-              />
+              <div className={styles['input-field']}>
+                <div className={styles['input-label']}>
+                  <p className={styles['variant-tag']}>
+                    {data?.membership_identifier}
+                  </p>
+                </div>
+                <input
+                  type="text"
+                  autoComplete="off"
+                  placeholder=""
+                  value={formData.memberIdentifierValue}
+                  className={`${styles['input-member']} ${styles['']}`}
+                  onChange={(e) => {
+                    setFormData((prev: any) => ({
+                      ...prev,
+                      memberIdentifierValue: e.target.value,
+                    }))
+                  }}
+                />
+              </div>
             </div>
-          </div>
+          )}
         </section>
 
         <footer className={styles['footer']}>

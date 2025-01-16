@@ -18,6 +18,10 @@
   height: calc(100vh - calc(var(--navbar-height-desktop) + var(--spacing-24)));
   overflow: auto;
 }
+/* .community-left-aside {
+  height: calc(100vh - calc(var(--navbar-height-desktop) + var(--spacing-68)));
+  overflow: auto;
+} */
 
 .desktop-members-conatiner {
   display: flex;
@@ -171,6 +175,44 @@
   transform: translate(0);
 }
 /* Side Hobby Wrapper */
+.settings-icon {
+  /* margin-top: 200px; */
+  /* margin-bottom: var(--spacing-12); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 225px;
+  height: 40px;
+  gap: 10px;
+  border-radius: 8px;
+  border: 1px solid #8064a2;
+  background-color: white;
+  cursor: pointer;
+  z-index: 500;
+  margin-top: 0px;
+}
+.default-settings-text {
+  font-family: 'Poppins';
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: left;
+  color: #8064a2;
+}
+.settings-icon-mob-container {
+  padding-top: 8px;
+  margin-bottom: 0;
+  padding-inline: 16px;
+  border-bottom: 1px solid var(--Grey-Light, #ced4da);
+}
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: sticky;
+  top: calc(var(--navbar-height-desktop) + var(--spacing-12));
+}
 .hobbies-side-wrapper {
   margin-bottom: var(--spacing-12);
 }
@@ -489,7 +531,7 @@
   border-radius: 100px;
 }
 
-.sidemenu-name{
+.sidemenu-name {
   font-weight: 500;
   font-size: 12px;
   line-height: 20px;
@@ -501,7 +543,6 @@
   overflow: hidden;
   width: 100%;
 }
-
 
 .start-post-btn:hover {
   background-color: #8064a2;
@@ -846,7 +887,7 @@
   .parentSection {
     padding-top: 0.1px;
   }
-  
+
   .whatsNewImg img {
     height: 32px;
     width: 32px;
@@ -913,10 +954,10 @@
   }
   .dropdowns-panel {
     display: flex;
-    padding: 12px 0px;
+    padding-bottom: 12px;
     flex-direction: column;
     align-items: flex-start;
-    margin: 0 -16px; /* Added this to override parent's padding of 16px and adding full length border */
+    margin: 0; /* Added this to override parent's padding of 16px and adding full length border */
     animation: fadeDown 0.3s ease forwards;
   }
   .dropdowns-panel > * {
@@ -937,7 +978,7 @@
   .dropdowns-panel .parent-list .list {
     display: flex;
     width: 100%;
-    padding: 15px 14px 15px 16px;
+    padding: 15px 0 15px 0;
     justify-content: space-between;
     align-items: center;
   }
@@ -962,13 +1003,13 @@
     /* identical to box height, or 129% */
     letter-spacing: 0.005em;
     /* Grey/Darker */
-    color: #6D747A;
+    color: #6d747a;
   }
 
   .member-invite {
     display: flex;
     width: 100%;
-    padding: 0px 16px 12px 16px;
+    padding: 0px 0 12px 0;
     align-items: flex-start;
     margin-bottom: 0;
   }
@@ -997,7 +1038,7 @@
 
   .dropdowns-panel .parent-list .options-parent {
     display: flex;
-    padding: 0px 14px 0px 16px;
+    padding: 0;
     flex-direction: column;
     align-items: flex-end;
     gap: 12px;
@@ -1014,7 +1055,7 @@
   }
   .dropdowns-panel .parent-list .options-parent .member-container {
     display: flex;
-    padding: 7px 16px 0;
+    padding: 7px 0 0;
     justify-content: space-between;
     align-items: center;
     align-self: stretch;
@@ -1209,6 +1250,36 @@
     width: 28px;
     height: 35px;
   }
+  .settings-icon {
+    margin-bottom: 0;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    height: 40px;
+    gap: 10px;
+    border-radius: 8px;
+    border: 1px solid #8064a2;
+    background-color: white;
+    cursor: pointer;
+  }
+  .settingsIconImage{
+    margin-left: 16px;
+  }
+  .default-settings-text {
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+    text-align: left;
+    color: #8064a2;
+  }
+  .settings-icon-mob-container {
+    padding-block: 8px;
+    /* padding-inline: 16px; */
+    border-bottom: 1px solid var(--Grey-Light, #ced4da);
+  }
 }
 
 @media screen and (min-width: 1100px) {
@@ -1268,10 +1339,9 @@
 
 /* Modal styling */
 .modal-container {
-  
   position: absolute;
   top: 81%; /* Position below the input */
-  
+
   width: 94%; /* Match input width */
   background-color: white;
   border: 1px solid #ccc;

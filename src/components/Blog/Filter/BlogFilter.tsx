@@ -375,7 +375,7 @@ const BlogFilter: React.FC = () => {
             </p>
           )}
         </div>
-        <div className={`${styles.formGroup} ${styles.position}`}>
+        {/* <div className={`${styles.formGroup} ${styles.position}`}>
           <label htmlFor="genre" className={styles.formLabel}>
             Genre/Style
           </label>
@@ -401,7 +401,7 @@ const BlogFilter: React.FC = () => {
               ))}
             </p>
           )}
-        </div>
+        </div> */}
         <div className={styles.formGroup}>
           <label htmlFor="keywords" className={styles.formLabel}>
             Keywords

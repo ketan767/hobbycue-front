@@ -1,13 +1,11 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Button, CircularProgress } from '@mui/material'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/redux/store'
+import { useDispatch } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
-import StatusDropdown from '@/components/_formElements/StatusDropdown'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import styles from './styles.module.css'
-import Image from 'next/image'
+import { getAllHobbies } from '@/services/hobby.service'
 
 type Props = {
     data?: any
@@ -16,40 +14,78 @@ type Props = {
     handleClose?: any
 }
 
-const EditHobbyModal: React.FC<Props> = ({
-    data,
-    setData,
-    handleSubmit,
-    handleClose,
-}) => {
+const EditHobbyModal: React.FC<Props> = ({ data,handleSubmit, handleClose }) => {
+    // console.log(data);
+    
     const dispatch = useDispatch()
     const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
-    const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
-        error: null,
-    })
-    const nextButtonRef = useRef<HTMLButtonElement | null>(null)
-    const [snackbar, setSnackbar] = useState({
+    const [categories, setCategories] = useState([])
+    const [subcategories, setSubcategories] = useState([])
+    const [snackbar, setSnackbar] = useState<{
+        type: 'success' | 'error';
+        display: boolean;
+        message: string;
+    }>({
         type: 'success',
         display: false,
         message: '',
     })
 
+    // State for form data
+    const [formData, setFormData] = useState({
+        slug: data?.slug,
+        show: data?.show,
+        display: data?.display,
+        level: data?.level,
+        category: data?.category?._id,
+        sub_category: data?.sub_category?._id,
+        tags: data?.tags[0]?.display,
+        styleType: '',
+    })
 
+    useEffect(() => {
+        getAllHobbies(`level=0`)
+            .then((res) => setCategories(res.res.data.hobbies))
+            .catch((err) => console.log({ err }))
+    }, [])
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const value = event.target.value
-        setData((prev: any) => ({ ...prev, description: value }))
-        setInputErrs({ error: null })
-    }
+    useEffect(() => {
+        if (formData.category) {
+            getAllHobbies(`level=1&category=${formData.category}`)
+                .then((res) => setSubcategories(res.res.data.hobbies))
+                .catch((err) => console.log({ err }))
+        }
+    }, [formData.category])
 
-    const handleStatusChange = (newStatus: any) => {
-        setData((prev: any) => ({ ...prev, status: newStatus.status }))
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const target = event.target as HTMLInputElement;
+        const { id, value, type, checked } = target
+        setFormData((prev) => ({
+            ...prev,
+            [id]: type === 'checkbox' ? checked : value,
+        }))
     }
 
     const handleFormSubmit = async () => {
+        console.log("formData : ",formData);
+        
         setSubmitBtnLoading(true)
-
-        await handleSubmit()
+        try {
+            await handleSubmit({...data,...formData});
+            setSnackbar({
+                type: 'success',
+                display: true,
+                message: 'Hobby updated successfully!',
+            })
+        } catch (error) {
+            setSnackbar({
+                type: 'error',
+                display: true,
+                message: 'Failed to update hobby.',
+            })
+        } finally {
+            setSubmitBtnLoading(false)
+        }
     }
 
     return (
@@ -69,14 +105,16 @@ const EditHobbyModal: React.FC<Props> = ({
                     {/* Row 1 */}
                     <div className={styles['input-row']}>
                         <div className={styles['input-box-wrapper']}>
-                            <label htmlFor="hobby-url" className={styles['label']}>
+                            <label htmlFor="hobbyUrl" className={styles['label']}>
                                 Hobby URL <span className={styles['required-star']}>*</span>
                             </label>
                             <input
-                                id="hobby-url"
+                                id="slug"
                                 type="text"
                                 className={styles['input-box-element']}
-                                placeholder='Unique name using dashes instead of spaces'
+                                placeholder="Unique name using dashes instead of spaces"
+                                value={formData.slug}
+                                onChange={handleInputChange}
                                 required
                             />
                         </div>
@@ -84,46 +122,51 @@ const EditHobbyModal: React.FC<Props> = ({
                             <label htmlFor="show" className={styles['label']}>
                                 Show <span className={styles['required-star']}>*</span>
                             </label>
-                            <div className={`${styles['input-box-element']} ${styles['input-box-element-small']}`}>
-                                <input type="checkbox" id="show" className={styles['checkbox']} />
-                            </div>
+                            <input
+                                id="show"
+                                type="checkbox"
+                                className={styles['checkbox']}
+                                checked={formData.show}
+                                onChange={handleInputChange}
+                            />
                         </div>
                     </div>
-
-
 
                     {/* Row 2 */}
                     <div className={styles['input-row']}>
                         <div className={styles['input-box-wrapper']}>
-                            <label htmlFor="hobby-url" className={styles['label']}>
-                                Display
+                            <label htmlFor="display" className={styles['label']}>
+                                Display Name
                             </label>
                             <input
-                                id="hobby-url"
+                                id="display"
                                 type="text"
-                                placeholder='The name that will come up in the searchbox'
                                 className={styles['input-box-element']}
+                                placeholder="The name that will come up in the searchbox"
+                                value={formData.display}
+                                onChange={handleInputChange}
                                 required
                             />
                         </div>
-
                         <div>
                             <label htmlFor="level" className={styles['label']}>
                                 Level <span className={styles['required-star']}>*</span>
                             </label>
-                            <div>
-                                <select id="level" className={`${styles['input-box-element']} ${styles['input-box-element-small']}`} required>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                </select>
-                            </div>
+                            <select
+                                id="level"
+                                className={styles['input-box-element']}
+                                value={formData.level}
+                                onChange={handleInputChange}
+                                required
+                            >
+                                {[1, 2, 3, 4, 5].map((level) => (
+                                    <option key={level} value={level}>
+                                        {level}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                     </div>
-
-
 
                     {/* Row 3 */}
                     <div className={styles['input-row']}>
@@ -131,34 +174,38 @@ const EditHobbyModal: React.FC<Props> = ({
                             <label htmlFor="category" className={styles['label']}>
                                 Category
                             </label>
-                            {/* <input
-                                id="category"
-                                type="text"
-                                className={styles['input-box-element']}
-                                required
-                            /> */}
                             <select
-                                id="sub-category"
-                                className={`${styles['input-box-element']}`}
+                                id="category"
+                                className={styles['input-box-element']}
+                                value={formData.category}
+                                onChange={handleInputChange}
                                 required
                             >
-
-                                <option value="arts">Arts</option>
-                                <option value="sports">Sports</option>
+                                <option value="">Select category</option>
+                                {categories.map((category: any) => (
+                                    <option key={category._id} value={category._id}>
+                                        {category.display}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                         <div className={styles['input-box-wrapper']}>
-                            <label htmlFor="sub-category" className={styles['label']}>
+                            <label htmlFor="subcategory" className={styles['label']}>
                                 Sub-Category
                             </label>
                             <select
-                                id="sub-category"
-                                className={`${styles['input-box-element']} ${styles['sub-category']}`}
+                                id="sub_category"
+                                className={styles['input-box-element']}
+                                value={formData.sub_category}
+                                onChange={handleInputChange}
                                 required
                             >
-
-                                <option value="arts">Arts</option>
-                                <option value="sports">Sports</option>
+                                <option value="">Select sub-category</option>
+                                {subcategories.map((subcategory: any) => (
+                                    <option key={subcategory._id} value={subcategory._id}>
+                                        {subcategory.display}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                     </div>
@@ -171,18 +218,26 @@ const EditHobbyModal: React.FC<Props> = ({
                             </label>
                             <input
                                 id="tags"
-                                placeholder='search and select tags'
                                 type="text"
                                 className={styles['input-box-element']}
+                                placeholder="Search and select tags"
+                                value={formData.tags}
+                                onChange={handleInputChange}
                                 required
                             />
                         </div>
                         <div className={styles['input-box-wrapper']}>
-                            <label htmlFor="style-type" className={styles['label']}>
+                            <label htmlFor="styleType" className={styles['label']}>
                                 Style Type
                             </label>
-                            <select id="style-type" className={`${styles['input-box-element']} ${styles['sub-category']}`} required>
-                                <option value="modern">Select style</option>
+                            <select
+                                id="styleType"
+                                className={styles['input-box-element']}
+                                value={formData.styleType}
+                                onChange={handleInputChange}
+                                required
+                            >
+                                <option value="">Select style</option>
                                 <option value="modern">Modern</option>
                                 <option value="classic">Classic</option>
                             </select>
@@ -190,11 +245,9 @@ const EditHobbyModal: React.FC<Props> = ({
                     </div>
                 </section>
 
-
                 <footer className={styles['footer']}>
                     <button
                         className="modal-footer-btn submit"
-                        style={{backgroundColor:''}} 
                         onClick={handleFormSubmit}
                         disabled={submitBtnLoading}
                     >
@@ -208,12 +261,10 @@ const EditHobbyModal: React.FC<Props> = ({
             </div>
 
             <CustomSnackbar
-                message={snackbar?.message}
-                triggerOpen={snackbar?.display}
-                type={snackbar.type === 'success' ? 'success' : 'error'}
-                closeSnackbar={() => {
-                    setSnackbar((prevValue) => ({ ...prevValue, display: false }))
-                }}
+                message={snackbar.message}
+                triggerOpen={snackbar.display}
+                type={snackbar.type}
+                closeSnackbar={() => setSnackbar((prev) => ({ ...prev, display: false }))}
             />
         </>
     )

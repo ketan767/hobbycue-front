@@ -4,9 +4,11 @@ import { ModalState } from '@/pages/admin/users'
 import { formatDate } from '../../Filters/UserFilter/UserFilter'
 import { format } from 'path'
 import { HobbyModalState } from '../../Modal/HobbiesFilterModal/HobbiesFilter'
+import { CommunitiesModalState } from '../../Filters/CommunityFilter/CommunityFilter'
+import { PostModalState } from '../../Filters/PostsFilter/PostsFilter'
 
 interface Props {
-  modalState: ModalState | HobbyModalState
+  modalState: ModalState | HobbyModalState | CommunitiesModalState | PostModalState
 }
 
 const DisplayState: React.FC<Props> = ({ modalState }) => {
@@ -58,19 +60,26 @@ const DisplayState: React.FC<Props> = ({ modalState }) => {
         )
       } else if (typeof value === 'object' && value) {
         // For objects, display in compact form
-        const filteredObject = Object.entries(value).filter(([, v]) => v !== '')
+        const filteredObject = Object.entries(value).filter(([, v]) => v !== '');
         if (filteredObject.length > 0) {
           return (
             <div key={key} className={styles.stateItem}>
               <span className={styles.divider}>|</span>
               <strong>{key}:</strong>{' '}
               {filteredObject
-                .map(([subKey, subValue]) => ` ${subValue}`)
+                .map(([subKey, subValue]) => {
+                  // Check if subValue is a Date
+                  if (subValue instanceof Date) {
+                    return ` ${formatDate(subValue)}`;
+                  }
+                  return ` ${subValue}`;
+                })
                 .join('- ')}
             </div>
-          )
+          );
         }
-      } else if (typeof value === 'string' && value) {
+      }
+       else if (typeof value === 'string' && value) {
         // For all other strings, display in one line
         return (
           <div key={key} className={styles.stateItem}>

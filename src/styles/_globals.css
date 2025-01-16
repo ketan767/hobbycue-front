@@ -51,7 +51,11 @@ html {
   --spacing-16: 1rem; /* 16px */
   --spacing-24: 1.5rem; /* 24px */
   --spacing-32: 2rem; /* 32px */
-  --spacing-40: 2.5rem; /* 40px */
+  --spacing-40: 2.5rem; 
+  --spacing-48: 3rem;
+  --spacing-56: 3.5rem;
+  --spacing-62: 4rem;
+  --spacing-68: 4.5rem;
 
   /* Z-Indexes */
   --navbar-z-index: 10;
@@ -326,6 +330,10 @@ select:-webkit-autofill {
   /* max-width: 800px; */
   width: 100%;
   font-family: 'Poppins';
+}
+
+.ql-editor a {
+  color: #8064a2 !important;
 }
 
 .blog-quill .ql-container {

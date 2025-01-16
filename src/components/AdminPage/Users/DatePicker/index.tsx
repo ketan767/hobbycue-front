@@ -6,11 +6,13 @@ import 'react-datepicker/dist/react-datepicker.css'
 interface Props {
   handleDatePick?: (date: Date) => void // Callback for date selection
   updateState: () => void // Function to update state after date is picked
+  minDate ?: Date;
 }
 
-const MyDatePicker: React.FC<Props> = ({ handleDatePick, updateState }) => {
+const MyDatePicker: React.FC<Props> = ({ handleDatePick, updateState,minDate }) => {
   const [startDate, setStartDate] = useState<Date | null>(new Date()) // Allow null to handle cleared dates
 
+  
   const handleDateChange = (date: Date | null) => {
     setStartDate(date) // Update state with the new date
     if (date) {
@@ -22,6 +24,7 @@ const MyDatePicker: React.FC<Props> = ({ handleDatePick, updateState }) => {
   return (
     <div className={styles.container}>
       <DatePicker
+      minDate={minDate}
         selected={startDate}
         onChange={(date) => handleDateChange(date as Date | null)} // Ensure type safety
         inline
