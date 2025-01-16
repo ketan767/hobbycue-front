@@ -135,7 +135,9 @@ const ListingHome: React.FC<Props> = (props) => {
           activeTab={'orders'}
         >
           <div className={styles['display-desktop']}>
-            <ListingOrdersTab data={props.data.pageData._purchases} />
+            {props.data.pageData.cta_text === 'Register' && (
+              <ListingOrdersTab data={props.data.pageData._purchases} />
+            )}
           </div>
         </ListingPageMain>
       </ListingPageLayout>

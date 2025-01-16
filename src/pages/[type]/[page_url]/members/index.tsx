@@ -15,7 +15,6 @@ import {
 } from '@/redux/slices/site'
 import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
-import ListingOrdersTab from '@/components/ListingPage/ListingOrdersTab/ListingOrdersTab'
 import styles from '@/styles/Page.module.css'
 import { useMediaQuery } from '@mui/material'
 import { pageType } from '@/utils'
