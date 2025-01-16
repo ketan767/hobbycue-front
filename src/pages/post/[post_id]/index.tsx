@@ -498,7 +498,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
           property="og:description"
           content={`${data?.postcontent?.postCreatedAt} | ${
             data?.postcontent?.hobbiesInTitle
-          } | ${data?.postsData?.visibility} ⬢ ${
+          } | ${data?.postsData?.visibility} • ${
             data?.postcontent?.postContentPlain ||
             'View this post on hobbycue.com'
           }`}
