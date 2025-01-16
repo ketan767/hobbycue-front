@@ -525,7 +525,7 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
     { url: '/admin/hobbies', name: 'Hobbies', Icon: UserHobbies },
     { url: '/admin/pages', name: 'Pages', Icon: PageIcon },
     { url: '/admin/activity', name: 'Activity', Icon: Activity },
-    { url: '/admin/searchHistory', name: 'Searches', Icon: Searches },
+    { url: '/admin/searches', name: 'Searches', Icon: Searches },
     { url: '/admin/claims', name: 'Claims', Icon: Claims },
     { url: '/admin/reports', name: 'Reports', Icon: Reports },
     { url: '/admin/supports', name: 'Support', Icon: Supports },
