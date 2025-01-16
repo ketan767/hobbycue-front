@@ -833,13 +833,15 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                       )
                       .map((cat: any, i) => (
                         <tr key={i}>
+                          {/* isCategoryExpanded[i] === true ? MinusIcon : AddIcon */}
                           <td className="">
-                            <Image onClick={() => handleCategoryShowHide(i)} src={isCategoryExpanded[i] === true ? MinusIcon : AddIcon} width={16} height={16} alt={isCategoryExpanded[i] ? "minus" : "add"} />{' '}
+                            <Image onClick={() => handleCategoryShowHide(i)} src={MinusIcon} width={16} height={16} alt={isCategoryExpanded[i] ? "minus" : "add"} />{' '}
                             <Link href={`/hobby/${cat.slug}`}>
                               {cat.display}
                             </Link>
                           </td>
-                          <td className={`${styles['hobby-list-expanded']} ${isCategoryExpanded[i] ? "" : styles['hobby-list-collapsed']}`}>
+                          {/*  className={`${styles['hobby-list-expanded']} ${isCategoryExpanded[i] ? "" : styles['hobby-list-collapsed']}`}> */}
+                          <td>
                             {subCategories
                               .filter((subCat: any) => {
                                 if (filterData.hobby) {
@@ -869,8 +871,9 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                         styles['table-content-container']
                                       }
                                     >
+                                      {/* isSubCategoryExpanded[subCat._id] ? MinusIcon : AddIcon */}
                                       <p>
-                                        <Image onClick={() => handleSubCategoryShowHide(subCat._id)} src={isSubCategoryExpanded[subCat._id] ? MinusIcon : AddIcon} width={16} height={16} alt={isSubCategoryExpanded[subCat._id] ? "minus" : "add"} />{' '}
+                                        <Image onClick={() => handleSubCategoryShowHide(subCat._id)} src={MinusIcon} width={16} height={16} alt={isSubCategoryExpanded[subCat._id] ? "minus" : "add"} />{' '}
                                         <Link href={`/hobby/${subCat.slug}`}>
                                           {subCat.display}
                                         </Link>
@@ -878,10 +881,11 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                       <div
                                         className={styles['vertical-line']}
                                       ></div>
+                                      {/*  ${styles['hobby-list-expanded-table']} ${isSubCategoryExpanded[subCat._id] === true ? "" : styles['hobby-list-collapsed-table']} */}
                                       <section
                                         className={
                                           styles['table-hobby'] +
-                                          ` ${hobbyStyles['tags-genres-sect']} ${styles['hobby-list-expanded-table']} ${isSubCategoryExpanded[subCat._id] === true ? "" : styles['hobby-list-collapsed-table']}`
+                                          ` ${hobbyStyles['tags-genres-sect']}`
                                         }
                                       >
                                         {hobbyData
