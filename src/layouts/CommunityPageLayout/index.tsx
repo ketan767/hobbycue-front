@@ -194,6 +194,7 @@ const CommunityLayout: React.FC<Props> = ({
   const { refreshNum } = useSelector((state: RootState) => state.post)
   const router = useRouter()
   const settingsIconRef = useRef<HTMLAnchorElement>(null)
+  const [openOptionsTracker, setOpenOptionsTracker] = useState<number>(1)
 
   // For Hobby/Locatoin using URL
   // useEffect(() => {
@@ -246,10 +247,10 @@ const CommunityLayout: React.FC<Props> = ({
   useEffect(() => {
     if (visibilityData?.length > 0 && settingsIconRef.current) {
       settingsIconRef.current.style.marginTop = `${
-        visibilityData?.length * 38 + 50
+        visibilityData?.length * 38 + (openOptionsTracker * 32) + 10
       }px`
     }
-  }, [visibilityData, settingsIconRef])
+  }, [visibilityData, settingsIconRef, openOptionsTracker])
 
   const [seeMoreOpenedFirstTime, setSeeMoreOpenedFirstTime] =
     useState<boolean>(false)
@@ -1432,6 +1433,7 @@ const CommunityLayout: React.FC<Props> = ({
                           return (
                             <>
                               <DropdownOption
+                                setOpenOptionsTracker={setOpenOptionsTracker}
                                 className={
                                   styles['location-dropdown-container']
                                 }
