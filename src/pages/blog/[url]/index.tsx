@@ -357,7 +357,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         />
         <meta
           property="og:description"
-          content={`${data?.blog_url?.tagline ?? ''} ⬢ ${
+          content={`${data?.blog_url?.tagline ?? ''} • ${
             data?.blog_url?.author?.full_name
           } | ${data?.publishDateForMetaData}`}
         />
