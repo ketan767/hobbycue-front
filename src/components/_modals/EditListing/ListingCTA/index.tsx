@@ -5,7 +5,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
 import Image from 'next/image'
-import { updateListing } from '@/services/listing.service'
+import {
+  addPlaceVariant,
+  getPlaceVariant,
+  updateListing,
+  updatePlaceVariant,
+} from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
@@ -46,6 +51,7 @@ const ListingCTAModal: React.FC<Props> = ({
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [isApprovalRequired, setIsApprovalRequired] = useState<boolean>(false)
   console.log('listingModalData:', listingModalData)
+  const [membership_identifier, setMembershipIdentifier] = useState<string>('')
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [cta, setCta] = useState('Contact')
@@ -134,6 +140,16 @@ const ListingCTAModal: React.FC<Props> = ({
   const [hoveredValue, setHoveredValue] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [showDropdown, setShowDropdown] = useState(false)
+  const [placeVariantData, setPlaceVariantData] = useState<{
+    _id?: string
+    variant_tag: string
+    membership_identifier: string
+    variations: { name: string; value: string }[]
+  }>({
+    variant_tag: '',
+    membership_identifier: '',
+    variations: [{ name: '', value: '' }],
+  })
   const dropdownRef: any = useRef()
   const isMob = isMobile()
   const handleChange = (name: any) => {
@@ -148,6 +164,27 @@ const ListingCTAModal: React.FC<Props> = ({
     }
     if (listingModalData && listingModalData.is_approval_required) {
       setIsApprovalRequired(listingModalData.is_approval_required)
+    }
+
+    if (listingModalData && listingModalData?._id) {
+      getPlaceVariant(listingModalData._id)
+        .then((result) => {
+          if (result.res && result.res.data && result.res.data.data) {
+            const { membership_identifier, ...rest } = result.res?.data?.data
+            setMembershipIdentifier(membership_identifier)
+
+            if (result.res?.data?.data.variations)
+              setPlaceVariantData(result.res?.data?.data)
+            else {
+              setPlaceVariantData({ ...result.res?.data?.data, variations: [] })
+            }
+          } else if (result.err) {
+            console.log({ err: result.err })
+          }
+        })
+        .catch((err) => {
+          console.log({ err })
+        })
     }
   }, [listingModalData])
 
@@ -167,6 +204,22 @@ const ListingCTAModal: React.FC<Props> = ({
     dispatch(updateListingModalData(updatedData))
     if (err) return console.log(err)
     console.log('res', res?.data.data.listing)
+
+    if (cta === 'Join' && isMob) {
+      const apiFunc = placeVariantData._id
+        ? updatePlaceVariant
+        : addPlaceVariant
+
+      const newData = {
+        _id: placeVariantData?._id ? placeVariantData._id : null,
+        membership_identifier: membership_identifier,
+        isResponsive: true,
+      }
+      const { err, res } = await apiFunc(listingModalData._id as string, {
+        ...newData,
+      })
+      if (err) return console.log(err)
+    }
 
     if (onComplete) onComplete()
     else {
@@ -426,17 +479,10 @@ const ListingCTAModal: React.FC<Props> = ({
                   <TextField
                     autoComplete="off"
                     placeholder="eg: Apartment number"
-                    // value={
-                    //   data.membership_identifier === 'No value'
-                    //     ? ''
-                    //     : data.membership_identifier
-                    // }
+                    value={membership_identifier}
                     className={`${styles['input']} ${styles['top-input']}`}
                     onChange={(e) => {
-                      // setData((prev) => ({
-                      //   ...prev,
-                      //   membership_identifier: e.target.value,
-                      // }))
+                      setMembershipIdentifier(e.target.value)
                     }}
                   />
                 </div>
@@ -527,7 +573,7 @@ const ListingCTAModal: React.FC<Props> = ({
       {isMob && (
         <section className={styles['step-indicators']}>
           <span className={`${styles['step']} ${styles['active-step']}`}></span>
-          <span className={`${styles['step']}`}></span>
+          <span onClick={handleSubmit} className={`${styles['step']}`}></span>
         </section>
       )}
     </>
