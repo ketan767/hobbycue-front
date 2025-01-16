@@ -534,7 +534,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
 <div className={styles['filter-wrapper']}>
   <div className={styles['filter-header']}>
     <h2>Hobbies</h2>
-    <Image src={FilterIcon} alt="filter" />
+    {/* <Image src={FilterIcon} alt="filter" /> */}
   </div>
   <div className={`${styles['select-filter']}`}>
     <TextField
@@ -953,7 +953,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
             )}
 
             {/* hobby list for mobile */}
-            {isMobile && categories.length > 0 && (
+            {/* {isMobile && categories.length > 0 && (
               <div className={styles['hobby-list-container']}>
                 <div className={styles['hobby-list-heading-container']}>
                   <div className={styles['hobby-list-heading']}>
@@ -1014,9 +1014,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                 return (
                                   subCat?.category?._id === cat._id && (
                                     <div
-                                      className={
-                                        styles['table-content-container']
-                                      }
+                                      
                                     >
                                       <div className={styles['accordion-sub-header']}>
                                         <Link href={`/hobby/${subCat.slug}`}>
@@ -1024,11 +1022,9 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                         </Link>
                                         <Image onClick={() => handleSubCategoryShowHide(subCat._id)} src={ArrowIcon} width={20} height={20} alt={isSubCategoryExpanded[subCat._id] ? "close" : "open"} style={isSubCategoryExpanded[subCat._id] === true ? { transform: 'rotate(180deg)' } : { transform: 'rotate(0deg)' }} />
                                       </div>
-                                      <div
-                                        className={styles['vertical-line']}
-                                      ></div>
                                       <section
                                         className={`${styles['accordion-content']} ${styles['hobby-list-expanded']} ${isSubCategoryExpanded[subCat._id] === true ? "" : styles['hobby-list-collapsed']}`}
+                                        style={isSubCategoryExpanded[subCat._id] === true ? { visibility: 'visible' } : { visibility: 'hidden' }}
                                       >
                                         {hobbyData
                                           .filter(
@@ -1091,7 +1087,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                       ))}
                 </div>
               </div>
-            )}
+            )} */}
           </main>
         </div>
       </div>
