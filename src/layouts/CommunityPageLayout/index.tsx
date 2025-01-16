@@ -193,7 +193,7 @@ const CommunityLayout: React.FC<Props> = ({
   const { showPageLoader } = useSelector((state: RootState) => state.site)
   const { refreshNum } = useSelector((state: RootState) => state.post)
   const router = useRouter()
-  const settingsIconRef = useRef<HTMLAnchorElement>(null);
+  const settingsIconRef = useRef<HTMLAnchorElement>(null)
 
   // For Hobby/Locatoin using URL
   // useEffect(() => {
@@ -245,9 +245,11 @@ const CommunityLayout: React.FC<Props> = ({
 
   useEffect(() => {
     if (visibilityData?.length > 0 && settingsIconRef.current) {
-      settingsIconRef.current.style.marginTop = `${visibilityData?.length * 38 + 50}px`;
+      settingsIconRef.current.style.marginTop = `${
+        visibilityData?.length * 38 + 50
+      }px`
     }
-  }, [visibilityData, settingsIconRef]);
+  }, [visibilityData, settingsIconRef])
 
   const [seeMoreOpenedFirstTime, setSeeMoreOpenedFirstTime] =
     useState<boolean>(false)
@@ -1897,7 +1899,11 @@ const CommunityLayout: React.FC<Props> = ({
                         >
                           <Link
                             key={tab}
-                            href={`/community/${tab !== 'posts' ? tab : ''}?${query?.hobby ? 'hobby=' : ''}${query?.hobby ? query?.hobby : ''}${query?.location ? '&location=' : ''}${query?.location ? query?.location : ''}`}
+                            href={`/community/${tab !== 'posts' ? tab : ''}?${
+                              query?.hobby ? 'hobby=' : ''
+                            }${query?.hobby ? query?.hobby : ''}${
+                              query?.location ? '&location=' : ''
+                            }${query?.location ? query?.location : ''}`}
                           >
                             {tab.charAt(0).toUpperCase() + tab.slice(1)}
                           </Link>
