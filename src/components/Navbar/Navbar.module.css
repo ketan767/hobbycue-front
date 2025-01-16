@@ -36,7 +36,7 @@
 .navbar-right > ul {
   display: flex;
   align-items: center;
-  gap: var(--spacing-24);
+  gap: 0px;
   list-style: none;
   height: 100%;
 }
@@ -65,6 +65,7 @@
   padding: 10px;
   gap: 0px;
   border-radius: 8px 8px 0px 0px;
+  margin-right: 4px;
 }
 
 .hobby-icon {
@@ -73,6 +74,7 @@
   padding: 10px;
   gap: 0px;
   border-radius: 8px 8px 0px 0px;
+  margin-right: 13px;
 }
 
 .nav-explore-li:hover, .hobby-icon:hover, .user-menu:hover {
@@ -191,8 +193,8 @@
 }
 
 .user-menu {
-  height: 60px !important;
-  width: 90px;
+  height: 48px !important;
+  width: 76px;
   padding: 10px;
   gap: 0px;
   border-radius: 8px 8px 0px 0px;
@@ -203,7 +205,7 @@
 
 .user-menu .img {
   width: 48px;
-  height: auto;
+  height: 48px;
   border-radius: 100%;
   aspect-ratio: 1/1;
   border: 1px solid #8064a2;
