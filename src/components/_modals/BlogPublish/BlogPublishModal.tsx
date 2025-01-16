@@ -344,7 +344,11 @@ const BlogPublish = (props: any) => {
                         blog?.tagline
                       ) : (
                         <p
-                          dangerouslySetInnerHTML={{ __html: blog?.content }}
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              blog?.content?.substring(0, 80) +
+                              (blog?.content?.length > 80 ? '...' : ''),
+                          }}
                         ></p>
                       )}
                     </h4>

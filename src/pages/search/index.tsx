@@ -3471,7 +3471,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           ) : (
                             <p
                               dangerouslySetInnerHTML={{
-                                __html: page?.content,
+                                __html:
+                                  page?.content?.substring(0, 80) +
+                                  (page?.content?.length > 80 ? '...' : ''),
                               }}
                             ></p>
                           )}
