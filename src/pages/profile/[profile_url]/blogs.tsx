@@ -115,7 +115,7 @@ const ProfileBlogsPage: React.FC<Props> = ({
         />
         <meta
           property="og:description"
-          content={`${result + ' ⬢ ' + addressAndHObby}`}
+          content={`${result + ' • ' + addressAndHObby}`}
         />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`Blogs | ${data.pageData.full_name} | HobbyCue`}</title>

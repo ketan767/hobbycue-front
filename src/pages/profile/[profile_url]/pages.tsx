@@ -137,7 +137,7 @@ const ProfileListingsPage: React.FC<Props> = ({
         />
         <meta
           property="og:description"
-          content={`${result + ' ⬢ ' + addressAndHObby}`}
+          content={`${result + ' • ' + addressAndHObby}`}
         />
         <meta property="og:image:alt" content="Profile picture" />
       </Head>

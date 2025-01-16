@@ -135,9 +135,7 @@ const index: FC<indexProps> = ({}) => {
       </Head>
 
       <PageGridLayout column={2}>
-        <aside
-          className={`${styles2['community-left-aside']} custom-scrollbar`}
-        >
+        <aside className={`${styles['left-aside']} custom-scrollbar`}>
           <section
             className={`content-box-wrapper ${styles2['hobbies-side-wrapper']}`}
           >
@@ -172,7 +170,6 @@ const index: FC<indexProps> = ({}) => {
         <main className={styles['main']}>
           <section className={styles['white-container']}>
             <div className={styles['heading-container']}>
-              {/* <span className={styles['heading']}>BRAND </span> */}
               {user.is_admin && (
                 <div className={styles['pencil']} onClick={toggleEditing}>
                   {pencilIconSvg}

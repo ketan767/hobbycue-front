@@ -77,9 +77,11 @@
     font-size: 20px;
     font-style: normal;
     font-weight: 500;
-    line-height: 16px;
+    line-height: 24px;
   }
-
+.static-title {
+  line-height: 24px !important;
+}
   
   .community-left-aside,
   .community-right-aside{
@@ -124,6 +126,7 @@
   .heading {
     margin: 10px 8px 10px;
   }
+
   .community-left-aside,
   .community-right-aside {
     margin: 0 1rem;
