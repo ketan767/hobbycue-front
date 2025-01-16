@@ -196,52 +196,52 @@ const CommunityLayout: React.FC<Props> = ({
   const settingsIconRef = useRef<HTMLAnchorElement>(null);
 
   // For Hobby/Locatoin using URL
-  useEffect(() => {
-    if (query && query.hobby) {
-      const hobbyDetail = activeProfile?.data?._hobbies.find(
-        (hobby: any) => hobby?.hobby?.display?.toLowerCase() === (query.hobby as string).toLowerCase() || hobby?.genre?.display?.toLowerCase() === (query.hobby as string).toLowerCase(),
-      )
-      if (hobbyDetail) {
-        setSelectedHobby(hobbyDetail?.hobby?._id)
-        if (hobbyDetail?.genre?._id) {
-          setSelectedGenre(hobbyDetail?.genre?._id)
-        }
-      } else {
-        setSelectedHobby(query.hobby)
-      }
-    }
-    if (query && query.location) {
-      const locationDetail = activeProfile?.data?._addresses.find(
-        (address: any) => address?.city?.toLowerCase() === (query.location as string).toLowerCase(),
-      )
-      if (locationDetail) {
-        setSelectedLocation(locationDetail?.city)
-      } else {
-        setSelectedLocation(query.location)
-      }
-    }
-  }, [query, activeProfile])
+  // useEffect(() => {
+  //   if (query && query.hobby) {
+  //     const hobbyDetail = activeProfile?.data?._hobbies.find(
+  //       (hobby: any) => hobby?.hobby?.display?.toLowerCase() === (query.hobby as string).toLowerCase() || hobby?.genre?.display?.toLowerCase() === (query.hobby as string).toLowerCase(),
+  //     )
+  //     if (hobbyDetail) {
+  //       setSelectedHobby(hobbyDetail?.hobby?._id)
+  //       if (hobbyDetail?.genre?._id) {
+  //         setSelectedGenre(hobbyDetail?.genre?._id)
+  //       }
+  //     } else {
+  //       setSelectedHobby(query.hobby)
+  //     }
+  //   }
+  //   if (query && query.location) {
+  //     const locationDetail = activeProfile?.data?._addresses.find(
+  //       (address: any) => address?.city?.toLowerCase() === (query.location as string).toLowerCase(),
+  //     )
+  //     if (locationDetail) {
+  //       setSelectedLocation(locationDetail?.city)
+  //     } else {
+  //       setSelectedLocation(query.location)
+  //     }
+  //   }
+  // }, [query, activeProfile])
 
   // For setting query using selected Hobby/Locatoin
-  useEffect(() => {
-    const query = { ...router.query };
-    if (selectedHobby && selectedHobby !== 'All Hobbies') {
-      const hobbyDetail = activeProfile?.data?._hobbies.find(
-        (hobby: any) => hobby?.hobby?._id === selectedHobby,
-      )
-      if (hobbyDetail) {
-        query.hobby = hobbyDetail?.hobby?.display;
-      }
-    } else {
-      delete query.hobby;
-    }
-    if (selectedLocation && selectedLocation !== 'All Locations') {
-      query.location = selectedLocation;
-    } else {
-      delete query.location;
-    }
-    router.push({ pathname: router.pathname, query }, undefined, { shallow: true });
-  }, [selectedHobby, selectedLocation, activeProfile]);
+  // useEffect(() => {
+  //   const query = { ...router.query };
+  //   if (selectedHobby && selectedHobby !== 'All Hobbies') {
+  //     const hobbyDetail = activeProfile?.data?._hobbies.find(
+  //       (hobby: any) => hobby?.hobby?._id === selectedHobby,
+  //     )
+  //     if (hobbyDetail) {
+  //       query.hobby = hobbyDetail?.hobby?.display;
+  //     }
+  //   } else {
+  //     delete query.hobby;
+  //   }
+  //   if (selectedLocation && selectedLocation !== 'All Locations') {
+  //     query.location = selectedLocation;
+  //   } else {
+  //     delete query.location;
+  //   }
+  //   router.push({ pathname: router.pathname, query }, undefined, { shallow: true });
+  // }, [selectedHobby, selectedLocation, activeProfile]);
 
   useEffect(() => {
     if (visibilityData?.length > 0 && settingsIconRef.current) {
