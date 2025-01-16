@@ -123,7 +123,7 @@
     .container {
         flex-direction: column;
         padding-inline: 16px;
-        gap: 16px;
+        gap: 8px;
     }
     .cards-parent{
         flex-direction: column;
