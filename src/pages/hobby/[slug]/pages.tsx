@@ -166,7 +166,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
           property="og:description"
           content={
             props?.previewLine1 +
-            ' ⬢ ' +
+            ' • ' +
             props?.unformattedAbout +
             ' • ' +
             data?.display +

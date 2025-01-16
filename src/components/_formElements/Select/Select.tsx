@@ -26,6 +26,7 @@ type Props = {
     React.SetStateAction<string | null | undefined>
   >
   id?: string
+  handleKeyDown?: (e: any) => void
 }
 
 const InputSelect: React.FC<Props> = ({
@@ -42,10 +43,11 @@ const InputSelect: React.FC<Props> = ({
   openDropdown,
   setOpenDropdown,
   style,
-  singleActiveMode = false, // New optional prop
+  singleActiveMode = false,
   openDropdownId,
   setOpenDropdownId,
   id,
+  handleKeyDown,
 }) => {
   const [active, setActive] = useState(false)
 
@@ -90,6 +92,12 @@ const InputSelect: React.FC<Props> = ({
     }
   }, [openDropdown, singleActiveMode])
 
+  useEffect(() => {
+    if (openDropdown === false && handleKeyDown) {
+      setActive(false)
+    }
+  }, [openDropdown])
+
   const handleHeaderClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation()
     toggle()
@@ -117,6 +125,12 @@ const InputSelect: React.FC<Props> = ({
     <div
       style={{ backgroundColor: `${notSelected && '#8064a2'}`, ...style }}
       className={`${styles.container} ${className || ''}`}
+      tabIndex={0}
+      onKeyDown={(e: any) => {
+        if (handleKeyDown) {
+          handleKeyDown(e)
+        }
+      }}
     >
       <header
         className={styles.header}

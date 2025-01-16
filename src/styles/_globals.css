@@ -546,7 +546,7 @@ select:-webkit-autofill {
   .modal-mob-btn-save {
     display: flex;
     color: white;
-    font-family: Poppins;
+    font-family: 'Poppins';
     font-size: 12px;
     font-style: normal;
     font-weight: 600;

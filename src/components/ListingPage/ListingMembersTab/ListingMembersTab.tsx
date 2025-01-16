@@ -79,10 +79,6 @@ const ListingMembersTab: FC<ListingMembersTabProps> = ({
   const isMob = isMobile()
   useEffect(() => {
     if (pageData) {
-      console.log(
-        'Craeted at----------------------------------->',
-        pageData.createdAt,
-      )
       setStartDate(formatDate(pageData.createdAt, true))
     }
   }, [pageData])

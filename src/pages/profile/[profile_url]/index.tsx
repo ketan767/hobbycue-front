@@ -347,7 +347,7 @@ const ProfileHome: React.FC<Props> = ({
         />
         <meta
           property="og:description"
-          content={`${result + ' ⬢ ' + addressAndHObby}`}
+          content={`${result + ' • ' + addressAndHObby}`}
         />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data.pageData.full_name} | HobbyCue`}</title>
@@ -779,14 +779,22 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
   const result = `${taglineOrHobby}${additionalHobbies}`
 
+  const address = (() => {
+    const { society, locality, city } = user?.primary_address || {}
+    const visibility = user?.preferences?.location_visibility
+
+    if (visibility === 'My Society') {
+      return society + ', ' + locality + ', ' + city || '\u00a0'
+    } else if (visibility === 'My Locality') {
+      return `${locality + ', ' + city || '\u00a0'}`
+    } else if (visibility === 'My City') {
+      return `${city || '\u00a0'}`
+    }
+    return '\u00a0'
+  })()
+
   const addressAndHObby =
-    (user.primary_address?.society || '') +
-    (user.primary_address?.society && user.primary_address?.locality
-      ? ', '
-      : '') +
-    (user.primary_address?.locality || '') +
-    (user.primary_address?.city && user.primary_address?.locality ? ', ' : '') +
-    (user.primary_address?.city || '\u00a0') +
+    address +
     (user?.tagline && user.primary_address?.city && user?._hobbies?.length > 0
       ? ' | '
       : '') +

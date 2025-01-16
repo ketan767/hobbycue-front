@@ -390,7 +390,7 @@ const CommunityLayout: React.FC<Props> = ({
     }
     if (selectedHobby === 'My Hobbies') {
       activeProfile?.data?._hobbies.forEach((item: any) => {
-        params.append('_hobby', item?.hobby?._id)
+        params.append('hobbyId', item?.hobby?._id)
       })
     } else if (selectedHobby === 'All Hobbies') {
       params = new URLSearchParams(

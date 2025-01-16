@@ -168,7 +168,7 @@ const ProfilePostsPage: React.FC<Props> = ({
         />
         <meta
           property="og:description"
-          content={`${result + ' ⬢ ' + addressAndHObby}`}
+          content={`${result + ' • ' + addressAndHObby}`}
         />
         <meta property="og:image:alt" content="Profile picture" />
       </Head>
@@ -269,7 +269,9 @@ const ProfilePostsPage: React.FC<Props> = ({
                   )
                 })}
                 {unpinnnedPosts.length > 0 && (
-                  <PostWrapper title={pinnedPosts.length > 0 ? 'Recent Post' : ''}>
+                  <PostWrapper
+                    title={pinnedPosts.length > 0 ? 'Recent Post' : ''}
+                  >
                     {unpinnnedPosts.map((post: any) => {
                       return (
                         <PostCard
