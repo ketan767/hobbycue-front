@@ -1162,11 +1162,11 @@ export const Navbar: React.FC<Props> = ({}) => {
                   ) : null}
                 </div>
                 {data.search.value.length === 0 && (
-                  <li onClick={toggleSearchInput} className={''}>
+                  <li onClick={toggleSearchInput} className={''} style={{ marginRight: '24px'}}>
                     <Image src={Search} alt="search" />
                   </li>
                 )}
-                <li>
+                <li style={{ marginRight: '24px'}}>
                   <Link href={'/notifications'}>
                     <Image src={BellIcon} alt="Bell" />
                   </Link>
