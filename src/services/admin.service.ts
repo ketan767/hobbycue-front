@@ -274,19 +274,21 @@ export const getsearchHistory = async (
 }
 
 /** Get `/api/admin/hobbyreq` */
-export const getCommunities = async (): Promise<ApiReturnObject> => {
-  const token = localStorage.getItem('token')
-  const headers = { Authorization: `Bearer ${token}` }
+export const getCommunities = async (params?: { sort?: string }): Promise<ApiReturnObject> => { 
+  const token = localStorage.getItem('token');
+  const headers = { Authorization: `Bearer ${token}` };
+
   try {
     const res = await axiosInstance.get(`/admin/countUsersByHobbyAndCity`, {
       headers,
-    })
-    return { res: res, err: null }
+      params, 
+    });
+    return { res: res, err: null };
   } catch (error) {
-    console.error(error)
-    return { err: error, res: null }
+    console.error(error);
+    return { err: error, res: null };
   }
-}
+};
 
 /** Post `/api/admin/hobbyreq` */
 export const UpdateClaim = async (data: any): Promise<ApiReturnObject> => {

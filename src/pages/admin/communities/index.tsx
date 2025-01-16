@@ -53,19 +53,16 @@ const AdminCommunities: React.FC = () => {
     pageCount: { min: '', max: '' }
   })
 
-  const [sortBy, setSortBy] = useState<"post_count" | "user_count" | null>(null);
+  const [sortBy, setSortBy] = useState<"user_count" | "-user_count" | "post_count" | "-post_count">("user_count");
 
-  const handleSort = (field: "post_count" | "user_count") => {
-    if (sortBy === field) {
-      setSearchResults(totalData.slice((page - 1) * itemsPerPage, page * itemsPerPage));
-      setSortBy(null);
-    } else {
-      // Sort by the selected field
-      const sortedResults = [...searchResults].sort((a, b) => a[field] - b[field]);
-      setSearchResults(sortedResults);
-      setSortBy(field);
-    }
-  };
+  const handleSort = async (field: "user_count" | "post_count") => {
+      
+      const newSort: "user_count" | "-user_count" | "post_count" | "-post_count" =
+        sortBy === field ? `-${field}` as const : field;
+      setSortBy(newSort);
+      await fetchUsers(newSort);
+    };
+
   const dispatch = useDispatch()
   const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -124,12 +121,12 @@ const AdminCommunities: React.FC = () => {
     </svg>
   )
 
-  const fetchUsers = async () => {
-    dispatch(setShowPageLoader(true))
-    const { res, err } = await getCommunities()
+  const fetchUsers = async (sort?: string) => {
+    dispatch(setShowPageLoader(true));
+    const { res, err } = await getCommunities({ sort });
     if (err) {
-      console.log('An error', err)
-      dispatch(setShowPageLoader(false))
+      console.log('An error', err);
+      dispatch(setShowPageLoader(false));
     } else {
       console.log('fetchUsers', res.data);
       const totalData = res.data.data;
@@ -139,12 +136,13 @@ const AdminCommunities: React.FC = () => {
       setSearchResults(totalData.slice(startIndex, startIndex + itemsPerPage));
       dispatch(setShowPageLoader(false));
     }
-  }
+  };
+
   useEffect(() => {
     if (data.search.value === '' && !hasNonEmptyValues(modalState)) {
-      fetchUsers()
+      fetchUsers(sortBy || undefined)
     }
-  }, [data.search.value, modalState, page])
+  }, [data.search.value, modalState, page, sortBy])
 
 
   const goToPreviousPage = () => {
@@ -279,14 +277,15 @@ const AdminCommunities: React.FC = () => {
                         className={styles.sortButton}
                         onClick={() => handleSort('user_count')}
                       >
-                        <Image
-                          src={sortBy == 'user_count' ? sortAscending : sortDescending}
+                         <Image
+                          src={sortBy === "user_count" ? sortAscending : sortDescending}
                           width={15}
                           height={15}
                           alt="sort"
-                          style={{ transform: 'rotate(180deg)' }}
+                          style={{
+                            transform: sortBy === "user_count" || sortBy === "-user_count" ? "rotate(180deg)" : "rotate(180deg)" ,
+                          }}
                         />
-
                       </button>
                     </div>
                   </th>
@@ -298,11 +297,13 @@ const AdminCommunities: React.FC = () => {
                         onClick={() => handleSort('post_count')}
                       >
                         <Image
-                          src={sortBy == 'post_count' ? sortAscending : sortDescending}
-                          width={15}
-                          height={15}
-                          alt="sort"
-                          style={{ transform: 'rotate(180deg)' }}
+                        src={sortBy === "post_count" ? sortAscending : sortDescending}
+                        width={15}
+                        height={15}
+                        alt="sort"
+                        style={{
+                          transform: sortBy === "post_count" || sortBy === "-post_count" ? "rotate(180deg)" : "rotate(180deg)" ,
+                        }}
                         />
                       </button>
                     </div>
