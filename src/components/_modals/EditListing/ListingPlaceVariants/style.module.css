@@ -294,16 +294,35 @@
     flex-direction: column;
   }
   .input-and-label {
-    width: 100%;
+    width: 163px;
   }
   .input-and-label p {
-    width: 100%;
+    width: 163px;
   }
 
   .input-and-label input {
-    width: 100%;
+    width: 163px;
   }
   .top-input {
+    width: 163px;
+  }
+  .step-indicators {
     width: 100%;
+    position: fixed;
+    bottom: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 27px;
+    z-index: 1001;
+  }
+  .active-step {
+    background-color: rgb(var(--primary-100-rgb));
+    cursor: pointer;
+  }
+  .step {
+    width: 12px;
+    height: 12px;
+    border: 1px solid rgb(var(--primary-100-rgb));
+    border-radius: 100%;
   }
 }

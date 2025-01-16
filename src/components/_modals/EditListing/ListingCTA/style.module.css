@@ -74,14 +74,14 @@
   text-align: left;
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
-  color: #6D747A;
+  color: #6d747a;
   display: flex;
   gap: 12px;
 }
 
-.radioLabel{
+.radioLabel {
   display: flex;
-  gap:4px;
+  gap: 4px;
 }
 
 @media screen and (min-width: 1100px) {
@@ -370,6 +370,7 @@
 }
 
 .select-container .options-container {
+  z-index: 2;
   max-height: 473px;
   overflow: auto;
   position: absolute;
@@ -502,20 +503,27 @@
   border-radius: 5px;
 }
 
-.modal-hr{
-  border-top: 1px solid #CED4DA;
+.modal-hr {
+  border-top: 1px solid #ced4da;
 }
-
+.desktop-hidden {
+  display: none;
+}
+.bottom-text {
+  color: #6d747a;
+  text-align: left;
+  font-family: 'Poppins';
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+}
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
-    /* max-width: 1100px;
+    max-width: 1100px;
     width: 100%;
     max-height: none;
-    height: 100%; */
-    width: 91%;
-    height: 500px;
-    border-radius: 8px;
-    overflow: hidden;
+    height: 100%;
 
     margin: -5px 0 2rem 0;
     padding: 5px 0 0 0;
@@ -567,12 +575,8 @@
     z-index: 1000;
   }
 
-  .footer button {
-    border: none;
-  }
-
   .select-container .single-option .tagDesc:first-of-type {
-    max-width: 108px;
+    max-width: 100%;
     height: 100%;
     max-height: max-content;
   }
@@ -581,10 +585,9 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-4);
-    margin-bottom: var(--spacing-32);
     /* position: absolute; */
     /* top: 112px; */
-    width: 100%;
+    width: 242px;
   }
   .modal-hr {
     display: none;
@@ -594,5 +597,135 @@
   }
   .desktop-hidden {
     display: block;
+  }
+  .membership-container {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-top: 32px;
+  }
+
+  .input-and-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    width: 242px;
+  }
+
+  .input-and-label p {
+    color: var(--Grey-Darker, #6d747a);
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 21px;
+    /* 157.143% */
+    width: 242px;
+  }
+
+  .input input {
+    height: 16px;
+    border-radius: 8px;
+    /* border: 1px solid var(--Grey-Lighter, #ebedf0); */
+    background: var(--Grey-Hover, #f8f9fa);
+    padding: 12px;
+  }
+
+  .input {
+    z-index: 1;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background: var(--Grey-Hover, #f8f9fa);
+  }
+  .top-input {
+    width: 242px;
+  }
+
+  .input > div {
+    border-radius: 8px;
+    border: 1px solid var(--Grey-Lighter, #ebedf0);
+    background: var(--Grey-Hover, #f8f9fa);
+  }
+
+  .input input::placeholder {
+    font-family: 'Poppins';
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+    /* 133.333% */
+  }
+
+  .input:hover * {
+    border-color: #8064a2 !important;
+  }
+  .radioLabel {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .radio {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #8064a2;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .radio:checked {
+    border: 1px solid #8064a2;
+    border-color: #8064a2;
+    background-color: #8064a2;
+    box-shadow: inset 0 0 0 3px white;
+  }
+
+  .radio:hover {
+    border-color: #8064a2;
+  }
+
+  .radio:focus {
+    outline: 1px solid #8064a2;
+    outline-offset: 0px;
+  }
+  .desktop-hidden {
+    display: block;
+  }
+  .step-indicators {
+    width: 100%;
+    position: fixed;
+    bottom: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 27px;
+    z-index: 1001;
+  }
+  .active-step {
+    background-color: rgb(var(--primary-100-rgb));
+    cursor: pointer;
+  }
+  .step {
+    width: 12px;
+    height: 12px;
+    border: 1px solid rgb(var(--primary-100-rgb));
+    border-radius: 100%;
+  }
+  .hr-line {
+    display: flex;
+    width: 90%;
+    margin: 0 auto;
+    height: 1px;
+    border-top: 1px solid #ebedf0;
+  }
+  .bottom-txt-container {
+    padding: 19.5px 16px 16px 16px;
+  }
+  .notes-container {
+    position: fixed;
+    bottom: 80px;
   }
 }
