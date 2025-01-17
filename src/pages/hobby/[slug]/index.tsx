@@ -211,6 +211,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
                   handleSubmit={async (formData: any) => {
                     await updateHobbyByAdmin(data._id, formData)
                     setShowAdminActionModal(false);
+                    window.location.reload();
                   }}
                   handleClose={() => {
                     setShowAdminActionModal(false)
