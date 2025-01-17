@@ -872,7 +872,8 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                         }/${tab}`}
                         className={activeTab === tab ? styles['active'] : ''}
                       >
-                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                        {data?.cta_text === 'Register'
+                          ? 'Register' :tab.charAt(0).toUpperCase() + tab.slice(1)}
                       </Link>
                     )
                 } else {
