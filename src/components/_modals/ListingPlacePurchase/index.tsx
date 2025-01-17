@@ -157,7 +157,7 @@ const ListingPlacePurchase: React.FC<Props> = ({
   }, [])
 
   const handleSubmit = async () => {
-    if (formData?.variant_value === 'Select') {
+    if (data?.variations?.length > 0 && formData?.variant_value === 'Select') {
       return setSnackbar({
         display: true,
         type: 'warning',
@@ -229,10 +229,7 @@ const ListingPlacePurchase: React.FC<Props> = ({
                   {data?.variant_tag}
                   <span className={styles['styles-red']}>*</span>
                 </p>
-                <div
-                  className={styles['input-box']}
-                  ref={dropdownRef}
-                >
+                <div className={styles['input-box']} ref={dropdownRef}>
                   <InputSelect
                     onChange={(e: any) => {}}
                     value={formData.variant_value}

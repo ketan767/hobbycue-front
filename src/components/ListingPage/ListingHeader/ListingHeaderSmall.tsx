@@ -41,16 +41,6 @@ type Props = {
   data: ListingPageData['pageData']
   activeTab: any
 }
-const tabs: ListingPageTabs[] = [
-  'home',
-  'posts',
-  'events',
-  'media',
-  'reviews',
-  'store',
-  'related',
-  'orders',
-]
 
 const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   const dispatch = useDispatch()
@@ -79,6 +69,21 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
       message: 'This feature is under development',
     })
   }
+  const tabs: ListingPageTabs[] = [
+    'home',
+    'posts',
+    'events',
+    'media',
+    'reviews',
+    'store',
+    'related',
+  ]
+  if (data?.cta_text === 'Join') {
+    tabs.push('members')
+  } else if (data?.cta_text === 'Register') {
+    tabs.push('orders')
+  }
+
   // console.log('head', data)
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
