@@ -65,7 +65,7 @@
 }
 
 .orders-table thead th:nth-child(3) {
-  width: 19.89%;
+  width: 12%;
 }
 
 .orders-table thead th:nth-child(4) {
@@ -140,6 +140,8 @@
   align-self: stretch;
   height: 100%;
   width: 100%;
+  max-width: 137px;
+  overflow: hidden;
 }
 
 .orders-table tbody tr td:nth-child(4) p {
@@ -163,6 +165,7 @@
   font-weight: 400;
   line-height: 20px;
   text-align: left;
+  max-width: 210px;
 }
 
 .orders-table tbody {

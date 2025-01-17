@@ -211,7 +211,10 @@ const ListingMembersTab: FC<ListingMembersTabProps> = ({
                 </td>
                 <td>
                   <div>
-                    <p>{obj.note}</p>
+                    <p>
+                      {obj.note?.substring(0, 200)}
+                      {obj?.note && obj.note?.length > 200 ? '...' : ''}
+                    </p>
                   </div>
                 </td>
                 <td>
