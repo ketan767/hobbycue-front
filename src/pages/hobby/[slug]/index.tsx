@@ -14,7 +14,7 @@ import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
-import { getAllUserDetail } from '@/services/user.service'
+import { addUserHobbies, getAllUserDetail } from '@/services/user.service'
 import EditIcon from '@/assets/svg/edit-colored.svg'
 import { Fade, Modal, useMediaQuery } from '@mui/material'
 import { openModal } from '@/redux/slices/modal'
@@ -23,7 +23,7 @@ import EditHobbyModal from '@/components/_modals/AdminModals/EditHobbyModal'
 import HobbyRelatedEditModal from '@/components/_modals/AdminModals/RelatedHobbyModal'
 import { title } from 'process'
 import { log } from 'console'
-import { updateHobbyByAdmin } from '@/services/admin.service'
+import { addHobbyToUsers, updateHobbyByAdmin } from '@/services/admin.service'
 
 type Props = {
   data: { hobbyData: any }
@@ -173,8 +173,12 @@ const HobbyDetail: React.FC<Props> = (props) => {
       };
       console.log("updateddata",updatedData);
       
-
-      await updateHobbyByAdmin(hobbyId, updatedData);
+      if(type === 'Related'){
+        await updateHobbyByAdmin(hobbyId, updatedData);
+      }else{
+        await addHobbyToUsers(hobbyId,formData)
+      }
+      
       console.log('Hobby updated successfully!');
       setShowRelatedHobbies(false);
       window.location.reload();

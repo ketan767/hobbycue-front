@@ -13,6 +13,7 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import {
   deleteUserByAdmin,
   getCommunities,
+  getFilteredCommunities,
   getsearchHistory,
 } from '@/services/admin.service'
 
@@ -33,7 +34,7 @@ const AdminCommunities: React.FC = () => {
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
-  const [itemsPerPage] = useState(11);
+  const [pageLimit,setpageLimit] = useState(11);
   const [count, setCount] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [applyFilter, setApplyFilter] = useState<boolean>(false)
@@ -53,43 +54,20 @@ const AdminCommunities: React.FC = () => {
     pageCount: { min: '', max: '' }
   })
 
-  const [sortBy, setSortBy] = useState<"post_count" | "user_count" | null>(null);
+  const [sortBy, setSortBy] = useState<"post_count" | "user_count" | null>("post_count");
 
   const handleSort = (field: "post_count" | "user_count") => {
-    if (sortBy === field) {
-      setSearchResults(totalData.slice((page - 1) * itemsPerPage, page * itemsPerPage));
-      setSortBy(null);
-    } else {
-      // Sort by the selected field
-      const sortedResults = [...searchResults].sort((a, b) => a[field] - b[field]);
-      setSearchResults(sortedResults);
-      setSortBy(field);
+    if(field===sortBy){
+      setSortBy(null)
     }
+    setSortBy(field);
   };
   const dispatch = useDispatch()
   const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const searchValue = data.search.value.trim().toLowerCase(); // Normalize search value for case-insensitive comparison
-
-    // If searchValue is empty, reset results and exit
-    if (!searchValue) {
-      setSearchResults(totalData.slice(0, itemsPerPage)); // Reset to initial results
-      setCount(totalData.length); // Reset total count
-      return;
-    }
-
-    // Filter based on location and hobby
-    const filteredResults = totalData.filter((item: any) => {
-      const location = item?._id?.city?.toLowerCase() || ""; // Normalize location value
-      const hobby = item?.hobby?.display?.toLowerCase() || ""; // Normalize hobby value
-
-      return location.includes(searchValue) || hobby.includes(searchValue);
-    });
-
+    setPage(1);
+    fetchUsers();
     // Update search results and count
-    setSearchResults(filteredResults.slice(0, itemsPerPage)); // Paginate results
-    setCount(filteredResults.length); // Set total count of filtered results
   };
 
 
@@ -124,19 +102,64 @@ const AdminCommunities: React.FC = () => {
     </svg>
   )
 
+  const buildQueryParams = () => {
+    const params = new URLSearchParams();
+  
+    // Add hobby filter if provided
+    if (modalState.hobby) {
+      params.append('hobby', modalState.hobby);
+    }
+  
+    // Add location filter if provided
+    if (modalState.Location) {
+      params.append('location', modalState.Location);
+    }
+  
+    // Add user count range filters if provided
+    if (modalState.userCount.min) {
+      params.append('userCountMin', modalState.userCount.min);
+    }
+    if (modalState.userCount.max) {
+      params.append('userCountMax', modalState.userCount.max);
+    }
+  
+    // Add page count range filters if provided
+    if (modalState.pageCount.min) {
+      params.append('postCountMin', modalState.pageCount.min);
+    }
+    if (modalState.pageCount.max) {
+      params.append('postCountMax', modalState.pageCount.max);
+    }
+
+    if(data.search.value!==''){
+      params.append('search', data.search.value);
+    }
+  
+    // Add pagination and sorting
+    params.append('limit', pageLimit.toString());
+    if(sortBy!==null){
+      params.append('sort', `-${sortBy}`); // Sort by postCount
+    }
+    params.append('page', page.toString());
+  
+    return params.toString();
+  };
+  
+
   const fetchUsers = async () => {
+    const queryParams = buildQueryParams();
+    const newUrl = `${window.location.pathname}?${queryParams.toString()}`;
+    window.history.pushState({ path: newUrl }, '', newUrl);
+    
     dispatch(setShowPageLoader(true))
-    const { res, err } = await getCommunities()
+    const { res, err } = await getFilteredCommunities(queryParams);
     if (err) {
       console.log('An error', err)
       dispatch(setShowPageLoader(false))
     } else {
       console.log('fetchUsers', res.data);
-      const totalData = res.data.data;
-      setTotalData(totalData);
-      setCount(totalData.length);
-      const startIndex = (page - 1) * itemsPerPage;
-      setSearchResults(totalData.slice(startIndex, startIndex + itemsPerPage));
+      setSearchResults(res.data.data);
+      setCount(res.data.totalCount);
       dispatch(setShowPageLoader(false));
     }
   }
@@ -144,7 +167,13 @@ const AdminCommunities: React.FC = () => {
     if (data.search.value === '' && !hasNonEmptyValues(modalState)) {
       fetchUsers()
     }
-  }, [data.search.value, modalState, page])
+  }, [data.search.value, modalState, page,sortBy])
+
+  useEffect(()=>{
+    if(page){
+      fetchUsers()
+    }
+  },[page,sortBy])
 
 
   const goToPreviousPage = () => {
@@ -154,54 +183,12 @@ const AdminCommunities: React.FC = () => {
   };
 
   const goToNextPage = () => {
-    if (page < Math.ceil(totalData.length / itemsPerPage)) {
       setPage(page + 1);
-    }
   };
 
   const ApplyFilter = (): void => {
-    let filteredResults = totalData;
-
-    // Filter by hobby
-    if (modalState.hobby) {
-      filteredResults = filteredResults.filter(
-        (data: any) =>
-          data?.hobby?.display?.toLowerCase().includes(modalState.hobby.toLowerCase())
-      );
-    }
-
-    // Filter by location (if location data exists in the structure)
-    if (modalState.Location) {
-      filteredResults = filteredResults.filter(
-        (data: any) =>
-          data?._id?.city?.toLowerCase().includes(modalState.Location.toLowerCase())
-      );
-    }
-
-    // Filter by user count
-    if (modalState.userCount.min || modalState.userCount.max) {
-      filteredResults = filteredResults.filter((data: any) => {
-        const userCount = data?.user_count || 0;
-        const min = modalState.userCount.min ? parseInt(modalState.userCount.min) : 0;
-        const max = modalState.userCount.max ? parseInt(modalState.userCount.max) : Infinity;
-        return userCount >= min && userCount <= max;
-      });
-    }
-
-    // Filter by page count (if applicable in your data)
-    if (modalState.pageCount.min || modalState.pageCount.max) {
-      filteredResults = filteredResults.filter((data: any) => {
-        const pageCount = data?.post_count || 0; // Assuming `post_count` corresponds to page count
-        const min = modalState.pageCount.min ? parseInt(modalState.pageCount.min) : 0;
-        const max = modalState.pageCount.max ? parseInt(modalState.pageCount.max) : Infinity;
-        return pageCount >= min && pageCount <= max;
-      });
-    }
-
-    // Update the results
-    setSearchResults(filteredResults.slice(0, itemsPerPage));
-    setCount(filteredResults.length);
-
+    setPage(1);
+    fetchUsers();
   };
 
 
@@ -353,13 +340,13 @@ const AdminCommunities: React.FC = () => {
                 onChange={(e) => setPage(Number(e.target.value))}
                 className={styles["page-select-dropdown"]}
               >
-                {Array.from({ length: Math.ceil(totalData.length / itemsPerPage) }, (_, i) => (
+                {Array.from({ length: Math.ceil(count / pageLimit) }, (_, i) => (
                   <option key={i + 1} value={i + 1}>
                     {i + 1}
                   </option>
                 ))}
               </select>
-              <span className={styles.userName}>of {Math.ceil(count / itemsPerPage)}</span>
+              <span className={styles.userName}>of {Math.ceil(count / pageLimit)}</span>
             </div>
 
             {/* Previous Page Button */}
@@ -373,7 +360,7 @@ const AdminCommunities: React.FC = () => {
 
             {/* Next Page Button */}
 
-            <button className="users-next-btn" onClick={goToNextPage} disabled={page >= Math.ceil(totalData.length / itemsPerPage)}>
+            <button className="users-next-btn" onClick={goToNextPage} disabled={page >= Math.ceil(count/ pageLimit)}>
               Next
             </button>
           </div>
