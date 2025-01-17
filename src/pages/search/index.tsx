@@ -1904,7 +1904,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           )}
                         </div>
                         <div className={styles.hobbydescription}>
-                          {hobby?.description}
+                          {hobby?.description
+                            ? hobby.description.replace(/<[^>]+>/g, '')
+                            : ''}
                         </div>
                       </div>
                     </div>
