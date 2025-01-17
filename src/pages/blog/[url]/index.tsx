@@ -10,6 +10,7 @@ import {
   calculateReadingTime,
   dateFormat,
   dateFormatwithYear,
+  formatDateTimeThree,
   isMobile,
 } from '@/utils'
 import Image from 'next/image'
@@ -46,6 +47,7 @@ import {
   setPreview,
   setRefetch,
 } from '@/redux/slices/blog'
+import ScrollToTop from '@/components/ScrollToTop'
 
 const BlogEditor = dynamic(() => import('@/components/BlogEditor/BlogEditor'), {
   ssr: false,
@@ -54,6 +56,7 @@ const BlogEditor = dynamic(() => import('@/components/BlogEditor/BlogEditor'), {
 type Props = {
   data: {
     blog_url?: any
+    publishDateForMetaData: string
   }
 }
 export const downarrow = (
@@ -135,9 +138,24 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     }
   }
 
+  useEffect(() => {
+    const scrollToTopHandler = () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
+    }
+    window.addEventListener('scrollToTop', scrollToTopHandler)
+    return () => {
+      window.removeEventListener('scrollToTop', scrollToTopHandler)
+    }
+  }, [])
+
   const handleEditBlog = async (type: string) => {
     if (!isEditing || !blog) return
     if (!blog?.title) {
+      const scrollEvent = new CustomEvent('scrollToTop')
+      window.dispatchEvent(scrollEvent)
       setSnackbar({
         display: true,
         type: 'error',
@@ -174,6 +192,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         response = await updateBlog({
           blogId: blog._id,
           content: blog.content,
+          tagline: blog.tagline,
         })
         router.reload()
         break
@@ -221,7 +240,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     const { err, res } = await uploadBlogImage(formData, data.blog_url._id)
     if (err) return console.log('Error in uploadImageToServer(): ', err)
     if (res?.data.success) {
-      dispatch(setBlog({ ...blog, cover_pic: res?.data?.data.img_url }))
+      dispatch(setBlog({ ...blog, cover_pic: res?.data?.data.cover_pic }))
       dispatch(closeModal())
     }
   }
@@ -338,7 +357,9 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         />
         <meta
           property="og:description"
-          content={`${data?.blog_url?.description ?? ''}`}
+          content={`${data?.blog_url?.tagline ?? ''} • ${
+            data?.blog_url?.author?.full_name
+          } | ${data?.publishDateForMetaData}`}
         />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data?.blog_url?.title} | HobbyCue`}</title>
@@ -367,7 +388,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                 </div>
               )}
 
-              {/* TITLE */}
+              {/* TITLE AND TAGLINE */}
               {isEditing ? (
                 <textarea
                   className={styles['blog-title'] + ' ' + styles.editInput}
@@ -766,8 +787,16 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     }
   }
 
+  const blogPublishDate = res.data.data.blog[0].publish_date
+  const blogCreatedAt = res.data.data.blog[0].createdAt
+
+  const publishDateForMetaData = formatDateTimeThree(
+    new Date(blogPublishDate || blogCreatedAt),
+  )
+
   const data = {
     blog_url: res.data.data.blog[0],
+    publishDateForMetaData,
   }
 
   return {

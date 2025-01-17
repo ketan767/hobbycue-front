@@ -692,12 +692,10 @@ const HobbiesRequest: React.FC = () => {
                       </button>
                     </div>
                   </th>
-                  <th
-
-                  >
+                  <th>
                     Matching or Similar
                   </th>
-
+                  <th/>
                   <th >
                     Admin Notes
                   </th>
@@ -780,14 +778,14 @@ const HobbiesRequest: React.FC = () => {
                       <div>{formatDate(hobbyreq?.createdAt)}</div>
                     </td>
                     <td>
-                      <div style={{ display: 'flex', gap: 12 }}>
-                        <div>{similarHobbies[hobbyreq._id]?.display}</div>
-                        <div style={{ marginTop: 2 }}>
+                     {similarHobbies[hobbyreq._id]?.display}
+                    </td>
+                    <td>
+                    
                           {similarHobbies[hobbyreq._id] && (
                             <AdminToggleButton isOn={similarHobbies[hobbyreq._id]?.show} handleToggle={() => HandleToggle(similarHobbies[hobbyreq._id]?._id)} />
                           )}
-                        </div>
-                      </div>
+                        
                     </td>
                     <td >
                       <input

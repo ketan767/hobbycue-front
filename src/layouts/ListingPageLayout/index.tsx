@@ -247,9 +247,12 @@ const ListingPageLayout: React.FC<Props> = ({
     'reviews',
     'store',
     'related',
-    'orders',
-    'members',
   ]
+  if (listingModalData?.cta_text === 'Join') {
+    tabs.push('members')
+  } else if (listingModalData?.cta_text === 'Register') {
+    tabs.push('orders')
+  }
   let content
 
   if (React.isValidElement(children) && typeof children.type !== 'string') {
@@ -332,7 +335,9 @@ const ListingPageLayout: React.FC<Props> = ({
                         onClick={() => navigationTabs(tab)}
                         className={activeTab === tab ? styles['active'] : ''}
                       >
-                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                        {listingModalData?.cta_text === 'Register'
+                          ? 'Register'
+                          : tab.charAt(0).toUpperCase() + tab.slice(1)}
                       </a>
                     )
                 } else if (tab === 'members') {
@@ -617,12 +622,13 @@ const ListingPageLayout: React.FC<Props> = ({
               <ListingEventsTab data={data.pageData} />
             </div>
           )}
-          {activeTab === 'orders' && (
-            <div className={styles['display-mobile']}>
-              <ListingOrdersTab data={data.pageData?._purchases || []} />
-            </div>
-          )}
-          {activeTab === 'members' && (
+          {activeTab === 'orders' &&
+            listingModalData?.cta_text === 'Register' && (
+              <div className={styles['display-mobile']}>
+                <ListingOrdersTab data={data.pageData?._purchases || []} />
+              </div>
+            )}
+          {activeTab === 'members' && listingModalData?.cta_text === 'Join' && (
             <div className={styles['display-mobile']}>
               <ListingMembersTab
                 pageData={data.pageData}

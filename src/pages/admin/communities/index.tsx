@@ -54,7 +54,7 @@ const AdminCommunities: React.FC = () => {
     pageCount: { min: '', max: '' }
   })
 
-  const [sortBy, setSortBy] = useState<"post_count" | "user_count" | null>("post_count");
+  const [sortBy, setSortBy] = useState<"post_count" | "user_count" | null>("user_count");
 
   const handleSort = (field: "post_count" | "user_count") => {
     if(field===sortBy){
@@ -69,6 +69,26 @@ const AdminCommunities: React.FC = () => {
     fetchUsers();
     // Update search results and count
   };
+
+   useEffect(() => {
+      const minHeight = 600; // Replace with the minimum height
+      const minNumber = 9; // Replace with the minimum number of entries
+  
+      const updatePageLimit = () => {
+        const height = window.innerHeight;
+        const additionalEntries = Math.max(0, Math.floor((height - minHeight) / 48));
+        setpageLimit(minNumber + additionalEntries);
+      };
+  
+      // Set initial page limit
+      updatePageLimit();
+  
+      // Update on resize
+      window.addEventListener('resize', updatePageLimit);
+      return () => {
+        window.removeEventListener('resize', updatePageLimit);
+      };
+    }, []);
 
 
   const filterSvg = (
@@ -154,26 +174,27 @@ const AdminCommunities: React.FC = () => {
     dispatch(setShowPageLoader(true))
     const { res, err } = await getFilteredCommunities(queryParams);
     if (err) {
-      console.log('An error', err)
-      dispatch(setShowPageLoader(false))
+      console.log('An error', err);
+      dispatch(setShowPageLoader(false));
     } else {
       console.log('fetchUsers', res.data);
       setSearchResults(res.data.data);
       setCount(res.data.totalCount);
       dispatch(setShowPageLoader(false));
     }
-  }
+  };
+
   useEffect(() => {
     if (data.search.value === '' && !hasNonEmptyValues(modalState)) {
       fetchUsers()
     }
-  }, [data.search.value, modalState, page,sortBy])
+  }, [data.search.value, modalState, page,sortBy,pageLimit])
 
   useEffect(()=>{
     if(page){
       fetchUsers()
     }
-  },[page,sortBy])
+  },[page,sortBy,pageLimit])
 
 
   const goToPreviousPage = () => {
@@ -266,14 +287,15 @@ const AdminCommunities: React.FC = () => {
                         className={styles.sortButton}
                         onClick={() => handleSort('user_count')}
                       >
-                        <Image
-                          src={sortBy == 'user_count' ? sortAscending : sortDescending}
+                         <Image
+                          src={sortBy === "user_count" ? sortAscending : sortDescending}
                           width={15}
                           height={15}
                           alt="sort"
-                          style={{ transform: 'rotate(180deg)' }}
+                          style={{
+                            transform: sortBy === "user_count" ? "rotate(180deg)" : "rotate(180deg)" ,
+                          }}
                         />
-
                       </button>
                     </div>
                   </th>
@@ -285,11 +307,13 @@ const AdminCommunities: React.FC = () => {
                         onClick={() => handleSort('post_count')}
                       >
                         <Image
-                          src={sortBy == 'post_count' ? sortAscending : sortDescending}
-                          width={15}
-                          height={15}
-                          alt="sort"
-                          style={{ transform: 'rotate(180deg)' }}
+                        src={sortBy === "post_count" ? sortAscending : sortDescending}
+                        width={15}
+                        height={15}
+                        alt="sort"
+                        style={{
+                          transform: sortBy === "post_count" ? "rotate(180deg)" : "rotate(180deg)" ,
+                        }}
                         />
                       </button>
                     </div>

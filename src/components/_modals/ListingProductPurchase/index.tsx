@@ -43,6 +43,21 @@ const initialEventHour = {
   to_time: '9:00 pm',
 }
 
+const backButtonSvg = (
+  <svg
+    width="16"
+    height="17"
+    viewBox="0 0 16 17"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M15.0005 7.49973H3.83047L8.71047 2.61973C9.10047 2.22973 9.10047 1.58973 8.71047 1.19973C8.32047 0.809727 7.69047 0.809727 7.30047 1.19973L0.710469 7.78973C0.320469 8.17973 0.320469 8.80973 0.710469 9.19973L7.30047 15.7897C7.69047 16.1797 8.32047 16.1797 8.71047 15.7897C9.10047 15.3997 9.10047 14.7697 8.71047 14.3797L3.83047 9.49973H15.0005C15.5505 9.49973 16.0005 9.04973 16.0005 8.49973C16.0005 7.94973 15.5505 7.49973 15.0005 7.49973Z"
+      fill="#6D747A"
+    />
+  </svg>
+)
+
 const ListingProductPurchase: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
@@ -340,10 +355,19 @@ const ListingProductPurchase: React.FC<Props> = ({
   return (
     <>
       <div className={styles['modal-wrapper']}>
-        <CloseIcon
-          className={styles['modal-close-icon']}
-          onClick={handleClose}
-        />
+        <div className={styles.topBar}>
+          <div
+            className={styles['modal-close-icon']}
+            style={{ left: 16, width: 'fit-content' }}
+            onClick={handleClose}
+          >
+            {backButtonSvg}
+          </div>
+          <CloseIcon
+            className={styles['modal-close-icon']}
+            onClick={handleClose}
+          />
+        </div>
         {/* Modal Header */}
 
         <section className={styles['body']}>

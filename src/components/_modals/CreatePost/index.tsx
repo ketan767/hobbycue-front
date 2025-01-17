@@ -783,19 +783,21 @@ export const CreatePost: React.FC<Props> = ({
           </h3>
           <div className={styles['create-post-modal']}>
             <div className={styles['image-posting-as']}>
-              {!isMobile && <Link
-                href={'/settings/visibility-notification'}
-                className={styles['settings-icon']}
-                onClick={handleClose}
-              >
-                <Image
-                  height={20}
-                  width={20}
-                  src={settingsIcon}
-                  alt="settings-icon"
-                  className={styles['settingsIconImage']}
-                />
-              </Link>}
+              {!isMobile && (
+                <Link
+                  href={'/settings/visibility-notification'}
+                  className={styles['settings-icon']}
+                  onClick={handleClose}
+                >
+                  <Image
+                    height={20}
+                    width={20}
+                    src={settingsIcon}
+                    alt="settings-icon"
+                    className={styles['settingsIconImage']}
+                  />
+                </Link>
+              )}
               {data.type === 'user' ? (
                 <img
                   className={styles['user-profile-img']}
@@ -1368,10 +1370,10 @@ export const CreatePost: React.FC<Props> = ({
                           {!isMobile && metaData?.url && (
                             <>
                               <p className={styles['metadata-url']}>
-                                {metaData?.description?.split(' ⬢ ')[0]}
+                                {metaData?.description?.split(' • ')[0]}
                               </p>
                               <p className={styles['metadata-url']}>
-                                {metaData?.description?.split(' ⬢ ')[1]}
+                                {metaData?.description?.split(' • ')[1]}
                               </p>
                             </>
                           )}
@@ -1381,11 +1383,11 @@ export const CreatePost: React.FC<Props> = ({
                         <>
                           <p className={styles['metadata-url']}>
                             {' '}
-                            {metaData?.description?.split(' ⬢ ')[0]}
+                            {metaData?.description?.split(' • ')[0]}
                           </p>
                           <p className={styles['metadata-url']}>
                             {' '}
-                            {metaData?.description?.split(' ⬢ ')[1]}
+                            {metaData?.description?.split(' • ')[1]}
                           </p>
                         </>
                       )}

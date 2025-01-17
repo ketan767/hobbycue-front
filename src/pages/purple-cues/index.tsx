@@ -128,6 +128,13 @@ const index: FC<indexProps> = ({}) => {
       setIsEditing(true)
     }
   }, [user])
+
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.style.height = 'auto'
+      titleRef.current.style.height = `${titleRef.current.scrollHeight}px`
+    }
+  }, [title])
   return (
     <>
       <Head>
@@ -135,9 +142,7 @@ const index: FC<indexProps> = ({}) => {
       </Head>
 
       <PageGridLayout column={2}>
-        <aside
-          className={`${styles2['community-left-aside']} custom-scrollbar`}
-        >
+        <aside className={`${styles2['left-aside']} custom-scrollbar`}>
           <section
             className={`content-box-wrapper ${styles2['hobbies-side-wrapper']}`}
           >
@@ -163,7 +168,7 @@ const index: FC<indexProps> = ({}) => {
                     }}
                   />
                 ) : (
-                  <h1 className={styles['title']}>{title || ''}</h1>
+                  <h1 className={styles['static-title']}>{title || ''}</h1>
                 )}
               </div>
             </header>

@@ -13,7 +13,7 @@ import Posts from '../../../../../assets/svg/Search/Posts.svg'
 import Classes from '../../../../../assets/svg/Search/classes.svg'
 import Rentals from '../../../../../assets/svg/Search/rentals.svg'
 import styles from './FilterDropDown.module.css'
-import { useSearchPageContext } from '@/pages/admin/searchHistory'
+import { useSearchPageContext } from '@/pages/admin/searches'
 const filters = [
   { key: 'all', label: 'All of HobbyCue', icon: hobbycue },
   { key: 'hobby', label: 'Hobbies', icon: Hobby },

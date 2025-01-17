@@ -29,6 +29,7 @@
 
   border: 1px solid var(--Grey-Light, #ced4da);
   background: var(--background-white, #fff);
+  height: 40px;
 }
 
 .orders-table thead th:nth-child(5) div {
@@ -68,11 +69,11 @@
 }
 
 .orders-table thead th:nth-child(4) {
-  width: 8.52%;
+  width: 10%;
 }
 
 .orders-table thead th:nth-child(5) {
-  width: 21%;
+  width: 20.5%;
 }
 .minimum-padding {
   margin: -9px 0;

@@ -18,10 +18,10 @@
   height: calc(100vh - calc(var(--navbar-height-desktop) + var(--spacing-24)));
   overflow: auto;
 }
-.community-left-aside {
+/* .community-left-aside {
   height: calc(100vh - calc(var(--navbar-height-desktop) + var(--spacing-68)));
   overflow: auto;
-}
+} */
 
 .desktop-members-conatiner {
   display: flex;
@@ -177,7 +177,7 @@
 /* Side Hobby Wrapper */
 .settings-icon {
   /* margin-top: 200px; */
-  margin-bottom: var(--spacing-12);
+  /* margin-bottom: var(--spacing-12); */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -189,6 +189,8 @@
   border: 1px solid #8064a2;
   background-color: white;
   cursor: pointer;
+  z-index: 500;
+  margin-top: 0px;
 }
 .default-settings-text {
   font-family: 'Poppins';

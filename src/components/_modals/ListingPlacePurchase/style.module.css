@@ -84,7 +84,7 @@
 }
 .input-container {
   display: flex;
-  align-items: center;
+  align-items: end;
   gap: 16px;
   margin-top: 32.35px;
 }

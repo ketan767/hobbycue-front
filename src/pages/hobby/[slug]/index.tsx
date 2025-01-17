@@ -165,7 +165,12 @@ const HobbyDetail: React.FC<Props> = (props) => {
     }
   }, [expandAll])
 
-  const updateHobbyData = async (type: string, hobbyId: string, formData: any, data: any) => {
+  const updateHobbyData = async (
+    type: string,
+    hobbyId: string,
+    formData: any,
+    data: any,
+  ) => {
     try {
       const updatedData = {
         ...data,
@@ -183,10 +188,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
       setShowRelatedHobbies(false);
       window.location.reload();
     } catch (error) {
-      console.error('Error updating hobby:', error);
+      console.error('Error updating hobby:', error)
     }
-  };
-
+  }
 
   const isMobile = useMediaQuery('(max-width:1100px)')
   console.log('hobbydata', data)
@@ -238,15 +242,14 @@ const HobbyDetail: React.FC<Props> = (props) => {
               <main className={styles['pos-relative']}>
                 <HobbyRelatedEditModal
                   onSave={async (formData: any) => {
-                    await updateHobbyData(modalTitle, data._id, formData, data);
+                    await updateHobbyData(modalTitle, data._id, formData, data)
                   }}
                   data={data}
                   type={modalTitle}
                   handleClose={() => {
-                    setShowRelatedHobbies(false);
+                    setShowRelatedHobbies(false)
                   }}
                 />
-
               </main>
             </div>
           </Fade>
@@ -276,10 +279,11 @@ const HobbyDetail: React.FC<Props> = (props) => {
           property="og:description"
           content={
             props?.previewLine1 +
-            ' ⬢ ' +
+            ' • ' +
             props?.unformattedAbout +
             ' • ' +
             data?.display +
+            ' ' +
             'hobby community'
           }
         />
@@ -400,14 +404,14 @@ const HobbyDetail: React.FC<Props> = (props) => {
                       {data?.level === 0
                         ? 'Sub-Categories and Tags'
                         : data?.level === 1
-                          ? 'Tags and Hobbies'
-                          : data?.level === 2
-                            ? 'Hobbies'
-                            : data?.level === 3
-                              ? 'Genre/Styles'
-                              : data?.level === 5
-                                ? 'Next Level'
-                                : 'Next Level'}
+                        ? 'Tags and Hobbies'
+                        : data?.level === 2
+                        ? 'Hobbies'
+                        : data?.level === 3
+                        ? 'Genre/Styles'
+                        : data?.level === 5
+                        ? 'Next Level'
+                        : 'Next Level'}
                     </h4>
                     {user?.is_admin && (
                       <Image
@@ -526,8 +530,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
                     )}
                   </h4>
                   <div
-                    className={`${styles['display-desktop']}${showHobby ? ' ' + styles['display-mobile'] : ''
-                      }`}
+                    className={`${styles['display-desktop']}${
+                      showHobby ? ' ' + styles['display-mobile'] : ''
+                    }`}
                   >
                     <ul className={styles['classification-items']}>
                       {data.level !== 5 && nextLevels?.length > 0 ? (
@@ -596,23 +601,23 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     data?.hobbyData?.level === 0
       ? 'Category'
       : data?.hobbyData?.level === 1
-        ? 'Sub-Category'
-        : data?.hobbyData?.level === 2
-          ? 'Hobby Tag'
-          : data?.hobbyData?.level === 3
-            ? 'Hobby'
-            : data?.hobbyData?.level === 5
-              ? 'Genre/Style'
-              : 'Hobby'
+      ? 'Sub-Category'
+      : data?.hobbyData?.level === 2
+      ? 'Hobby Tag'
+      : data?.hobbyData?.level === 3
+      ? 'Hobby'
+      : data?.hobbyData?.level === 5
+      ? 'Genre/Style'
+      : 'Hobby'
 
   const additionalInfo =
     data?.hobbyData?.level !== 0
       ? (data?.hobbyData?.category?.display
-        ? ' | ' + data?.hobbyData?.category?.display
-        : '') +
-      (data?.hobbyData?.level > 1 && data?.hobbyData?.sub_category?.display
-        ? ', ' + data?.hobbyData?.sub_category?.display
-        : '')
+          ? ' | ' + data?.hobbyData?.category?.display
+          : '') +
+        (data?.hobbyData?.level > 1 && data?.hobbyData?.sub_category?.display
+          ? ', ' + data?.hobbyData?.sub_category?.display
+          : '')
       : ''
   const previewLine1 = `${hobbyType}${additionalInfo}`
   return {
