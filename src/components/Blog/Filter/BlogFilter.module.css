@@ -176,6 +176,7 @@
     cursor: pointer;
     font-size: 14px;
     color: var(--Grey-Darker, #6d747a);
+    width: 162px;
 }
 .formLabel {
   color: var(--Grey-Darker, #6d747a);
