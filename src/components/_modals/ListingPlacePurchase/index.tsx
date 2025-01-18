@@ -63,6 +63,7 @@ const ListingPlacePurchase: React.FC<Props> = ({
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [isMember, setIsMember] = useState<boolean>(false)
   const [showDays, setShowDays] = useState(true)
   const [selectedVariant, setSelectedVariant] = useState<string>('Select')
   const [openDropdown, setOpenDropdown] = useState(false)
@@ -170,6 +171,12 @@ const ListingPlacePurchase: React.FC<Props> = ({
       ...formData,
     })
     if (err) {
+      if (err.response.status === 409) {
+        setIsMember(true)
+        setSubmitBtnLoading(false)
+        return
+      }
+      setSubmitBtnLoading(false)
       return setSnackbar({
         display: true,
         type: 'warning',
@@ -206,14 +213,20 @@ const ListingPlacePurchase: React.FC<Props> = ({
           >
             <div className={styles['img-and-label']}>
               {listingModalData.profile_image ? (
-                <img src={listingModalData?.profile_image} alt="" className={`${styles['default-img']}`}/>
+                <img
+                  src={listingModalData?.profile_image}
+                  alt=""
+                  className={`${styles['default-img']}`}
+                />
               ) : (
                 <div
                   className={`${styles['default-img']} default-program-listing-icon ${styles['w-100px']}`}
                 ></div>
               )}
               <div className={styles['label-content']}>
-                <strong className={styles['title']}>{listingModalData?.title}</strong>
+                <strong className={styles['title']}>
+                  {listingModalData?.title}
+                </strong>
                 <p className={styles['tagline']}>{listingModalData?.tagline}</p>
               </div>
             </div>
@@ -227,7 +240,9 @@ const ListingPlacePurchase: React.FC<Props> = ({
                 </p>
                 <div className={styles['input-box']} ref={dropdownRef}>
                   <InputSelect
-                    onChange={(e: any) => {}}
+                    onChange={(e: any) => {
+                      if (isMember) setIsMember(false)
+                    }}
                     value={formData.variant_value}
                     className={styles['input-select']}
                     optionsContainerClass={styles['options-container-class']}
@@ -270,6 +285,7 @@ const ListingPlacePurchase: React.FC<Props> = ({
                   value={formData.memberIdentifierValue}
                   className={`${styles['input-member']}`}
                   onChange={(e) => {
+                    if (isMember) setIsMember(false)
                     setFormData((prev: any) => ({
                       ...prev,
                       memberIdentifierValue: e.target.value,
@@ -283,6 +299,12 @@ const ListingPlacePurchase: React.FC<Props> = ({
 
         <footer className={styles['footer']}>
           <div className={styles['price']}>
+            {isMember && (
+              <span className={styles['already-member']}>
+                {'You are already a member '}
+                {data?.variations?.length > 0 ? 'with details seen above' : ''}
+              </span>
+            )}
             <div className={styles['note']}>
               <p>Note</p>
               <textarea
