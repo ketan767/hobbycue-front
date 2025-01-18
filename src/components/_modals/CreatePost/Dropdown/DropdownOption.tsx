@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import styles from './dropdown.module.css'
 import { MenuItem } from '@mui/material'
 import ChevronDown from '@/assets/svg/chevron-up.svg'
@@ -20,6 +20,7 @@ type Props = {
   _id: any
   item?: any
   className?: string
+  setOpenOptionsTracker?: React.Dispatch<React.SetStateAction<number>>
 }
 
 export const DropdownOption: React.FC<Props> = (props) => {
@@ -35,6 +36,7 @@ export const DropdownOption: React.FC<Props> = (props) => {
     selected,
     item,
     className,
+    setOpenOptionsTracker = () => {},
   } = props
   const { activeProfile, user } = useSelector((state: any) => state.user)
   const { activeModal } = useSelector((state: RootState) => state.modal)
@@ -46,6 +48,9 @@ export const DropdownOption: React.FC<Props> = (props) => {
 
   const toggle = (e: any) => {
     e.stopPropagation()
+    setOpenOptionsTracker((prev: number) => {
+      return active ? prev - 1 : prev + 1
+    })
     setActive(!active)
   }
 

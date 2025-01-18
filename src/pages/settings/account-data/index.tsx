@@ -202,6 +202,17 @@ const DataAndOthers: React.FC<Props> = ({}) => {
             />
           </aside>
         )}
+
+{isMobile && (
+          <aside className={styles['aside-two']}>
+            <ViewProfileBtn />
+            <ExploreSidebarBtn
+              text="Help Center"
+              href="/help"
+              icon={<QuestionIcon />}
+            />
+          </aside>
+        )}
       </PageGridLayout>
       {
         <CustomSnackbar

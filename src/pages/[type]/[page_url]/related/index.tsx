@@ -16,9 +16,18 @@ import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPag
 import styles from '@/styles/Page.module.css'
 import { useMediaQuery } from '@mui/material'
 import ListingRelatedTab from '@/components/ListingPage/ListingPageRelated/ListingRelatedTab'
-import { pageType } from '@/utils'
+import { formatDateRange, htmlToPlainTextAdv, pageType } from '@/utils'
 
-type Props = { data: ListingPageData }
+type Props = {
+  data: ListingPageData
+  unformattedAbout?: string
+  address?: any
+  result?: any
+  pageTypeAndCity?: any
+  date?: any
+  time?: string
+  pageTypeAndPrice?: any
+}
 
 const ListingHome: React.FC<Props> = (props) => {
   console.warn({ props })
@@ -115,7 +124,32 @@ const ListingHome: React.FC<Props> = (props) => {
         />
         <meta
           property="og:description"
-          content={`${props?.data?.pageData?.tagline ?? ''}`}
+          content={`${
+            props?.data?.pageData?.type === 1 ||
+            props?.data?.pageData?.type === 2
+              ? props?.data?.pageData?.tagline
+                ? props?.data?.pageData?.tagline +
+                  ' • ' +
+                  props?.pageTypeAndCity
+                : props?.result + ' • ' + props.pageTypeAndCity
+              : props?.data?.pageData?.type === 3
+              ? props?.data?.pageData?.tagline
+                ? props?.data?.pageData?.tagline +
+                  ' • ' +
+                  props?.pageTypeAndCity +
+                  ' | ' +
+                  props?.date +
+                  (props?.time ? ` | ${props?.time}` : '')
+                : props?.address +
+                  ' • ' +
+                  props?.pageTypeAndCity +
+                  ' ' +
+                  props?.date +
+                  (props?.time ? ` | ${props?.time}` : '')
+              : props?.data?.pageData?.tagline
+              ? props?.data?.pageData?.tagline + ' • ' + props?.pageTypeAndPrice
+              : props?.result + ' • ' + props?.pageTypeAndPrice
+          }`}
         />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
@@ -192,9 +226,76 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     eventsData: null,
     storeData: null,
   }
+
+  const address = [
+    data.pageData?._address?.society,
+    data.pageData?._address?.locality,
+    data.pageData?._address?.city,
+  ]
+    .filter(Boolean)
+    .join(', ')
+
+  const unformattedAbout = htmlToPlainTextAdv(data.pageData?.description)
+
+  const hobbiesDisplay =
+    data.pageData?._hobbies
+      ?.slice(0, 3)
+      ?.map((hobbyItem: any, index: any) => {
+        const hobbyDisplay = hobbyItem?.hobby?.display || ''
+        const genreDisplay = hobbyItem?.genre?.display
+          ? ` - ${hobbyItem?.genre?.display}`
+          : ''
+        const separator =
+          index < data.pageData?._hobbies.length - 1 && index < 2 ? ', ' : ''
+        return `${hobbyDisplay}${genreDisplay}${separator}`
+      })
+      ?.join('') || ''
+
+  const additionalHobbies =
+    data.pageData?._hobbies?.length > 3
+      ? ` (+${data.pageData?._hobbies?.length - 3})`
+      : ''
+
+  const result = `${hobbiesDisplay}${additionalHobbies}`
+
+  const pageTypeAndCity =
+    data.pageData?.page_type.map((pt: string, index: number) => {
+      return `${index > 0 ? ' ' : ''}${pt}`
+    }) +
+      (data.pageData?._address?.city
+        ? ` | ${data.pageData?._address?.city}`
+        : '') || '\u00a0'
+
+  const date =
+    data.pageData?.event_date_time.length !== 0
+      ? formatDateRange(data.pageData?.event_date_time[0])
+      : ''
+
+  const time = data.pageData?.event_date_time[0]?.from_time
+    ? ` ${data.pageData?.event_date_time[0]?.from_time}` +
+      (data.pageData?.event_date_time[0]?.to_time
+        ? ` - ${data.pageData?.event_date_time[0]?.to_time}`
+        : '')
+    : ''
+
+  const pageTypeAndPrice =
+    data.pageData?.page_type.map((pt: string, index: number) => {
+      return `${index > 0 ? ' ' : ''}${pt}`
+    }) +
+    (data.pageData?.product_variant?.variations[0]?.value
+      ? ` | ₹${data.pageData?.product_variant?.variations[0]?.value}`
+      : ` | ₹0`)
+
   return {
     props: {
       data,
+      address,
+      unformattedAbout,
+      result,
+      pageTypeAndCity,
+      date,
+      time,
+      pageTypeAndPrice,
     },
   }
 }

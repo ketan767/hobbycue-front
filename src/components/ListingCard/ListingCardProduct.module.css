@@ -40,6 +40,12 @@
   /* height: 271px; */
 }
 
+.container:hover {
+  .contentImageContainer {
+    filter: brightness(0.7);
+  }
+}
+
 .content {
   /* padding: 12px; */
   font-family: 'Poppins';
@@ -65,6 +71,7 @@
   border-bottom-right-radius: 8px;
   height: 161px;
   min-width: 161px;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
 }
 .contentImage {
@@ -249,6 +256,7 @@
     border-bottom-right-radius: 8px;
     height: 180px;
     min-width: 180px;
+    aspect-ratio: 1 / 1;
     overflow: hidden;
   }
   .contentHead {

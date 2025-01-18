@@ -124,6 +124,9 @@ font-weight: 400;
 line-height: 18px; /* 150% */
 text-transform: capitalize;
 margin-bottom: 10px;
+overflow: hidden;
+white-space: nowrap;
+text-overflow: ellipsis;
 }
 
 .time-and-title{
@@ -189,6 +192,7 @@ gap: 8px;
   display: block;
   flex: 1;
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;

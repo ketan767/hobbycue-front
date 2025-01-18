@@ -8,6 +8,7 @@ import {
   updateLoading,
   updatePosts,
 } from '@/redux/slices/post'
+import { setRedirectPath } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { getMyProfileDetail } from '@/services/user.service'
 import styles from '@/styles/Community.module.css'
@@ -15,9 +16,11 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-type Props = {}
+type Props = {
+  query: any
+}
 
-const CommunityHome: React.FC<Props> = ({}) => {
+const CommunityHome: React.FC<Props> = ({ query }) => {
   const { activeProfile, user } = useSelector((state: RootState) => state.user)
   const { allPosts, loading, currentPage, hasMore } = useSelector(
     (state: RootState) => state.post,
@@ -25,6 +28,8 @@ const CommunityHome: React.FC<Props> = ({}) => {
   const observer = useRef<IntersectionObserver | null>(null)
   const router = useRouter()
   const dispatch = useDispatch()
+  const { isLoggedIn } = useSelector((state: RootState) => state.user);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // First time user onboarding modal 07B002-39
   const ShowWelcomeModal = async () => {
@@ -43,6 +48,26 @@ const CommunityHome: React.FC<Props> = ({}) => {
       ShowWelcomeModal()
     }
   }, [user.profile_url])
+
+  // useEffect(() => {
+  //   if (!isInitialized) {
+  //     setIsInitialized(true)
+  //     dispatch(setRedirectPath('/community'))
+  //     return
+  //   }
+  //   const handleRedirect = () => {
+  //     if (!isLoggedIn) {
+  //       localStorage.setItem('communityUrl', '/community')
+  //       router.push('/?hobbylocationfilter=true')
+  //     }
+  //   }
+
+  //   handleRedirect()
+  // }, [isLoggedIn, router, isInitialized])
+
+  // if (!isInitialized) {
+  //   return null
+  // }
 
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -65,7 +90,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
 
   return (
     <>
-      <CommunityPageLayout activeTab="posts">
+      <CommunityPageLayout query={query} activeTab="posts">
         <section
           style={{ padding: `${loading && '0'}` }}
           className={loading ? '' : styles['posts-container']}
@@ -83,7 +108,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
               </div>
             </>
           ) : allPosts.length > 0 ? (
-            allPosts.map((post: any) => {
+            allPosts.filter((item : any)=>item.is_published).map((post: any) => {
               return (
                 <div key={post._id} ref={lastPostElementRef}>
                   <PostCard postData={post} currentSection="posts" />
@@ -114,6 +139,12 @@ const CommunityHome: React.FC<Props> = ({}) => {
       </CommunityPageLayout>
     </>
   )
+}
+
+export const getServerSideProps = async (context: any) => {
+  const { query } = context
+
+  return { props: { query } }
 }
 
 export default withAuth(CommunityHome)

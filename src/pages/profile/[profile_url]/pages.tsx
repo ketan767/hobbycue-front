@@ -24,12 +24,21 @@ import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import { useRouter } from 'next/router'
 import { useMediaQuery } from '@mui/material'
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
+import { htmlToPlainTextAdv } from '@/utils'
 
 interface Props {
   data: ProfilePageData
+  unformattedAbout?: string
+  result?: any
+  addressAndHObby?: any
 }
 
-const ProfileListingsPage: React.FC<Props> = ({ data }) => {
+const ProfileListingsPage: React.FC<Props> = ({
+  data,
+  addressAndHObby,
+  result,
+  unformattedAbout,
+}) => {
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
@@ -118,6 +127,19 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
     <>
       <Head>
         <title>{`Pages | ${data.pageData.full_name} | HobbyCue`}</title>
+        <meta
+          property="og:image"
+          content={`${data?.pageData?.profile_image}`}
+        />
+        <meta
+          property="og:image:secure_url"
+          content={`${data?.pageData?.profile_image}`}
+        />
+        <meta
+          property="og:description"
+          content={`${result + ' • ' + addressAndHObby}`}
+        />
+        <meta property="og:image:alt" content="Profile picture" />
       </Head>
 
       <ProfileLayout
@@ -154,7 +176,15 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
                 <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 2 }}>
                   <Masonry
                     gutter={isMobile ? `8px` : `12px`}
-                    style={isMobile ? {columnGap: '24px', rowGap: '12px', marginTop:"8px"}: {columnGap: '24px', rowGap: '12px'}}
+                    style={
+                      isMobile
+                        ? {
+                            columnGap: '24px',
+                            rowGap: '12px',
+                            marginTop: '8px',
+                          }
+                        : { columnGap: '24px', rowGap: '12px' }
+                    }
                   >
                     {itsMe && (
                       <div
@@ -257,9 +287,68 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     listingsData: response?.data.data.listings,
     blogsData: null,
   }
+
+  const unformattedAbout = htmlToPlainTextAdv(res.data.data.users[0]?.about)
+
+  const taglineOrHobby = data?.pageData?.tagline
+    ? data.pageData?.tagline
+    : data?.pageData?._hobbies
+        ?.slice(0, 3)
+        ?.map((hobbyItem: any, index: any) => {
+          const hobbyDisplay = hobbyItem?.hobby?.display || ''
+          const genreDisplay = hobbyItem?.genre?.display
+            ? ` - ${hobbyItem?.genre?.display}`
+            : ''
+          const separator =
+            index < data?.pageData?._hobbies.length - 1 && index < 2 ? ', ' : ''
+          return `${hobbyDisplay}${genreDisplay}${separator}`
+        })
+        ?.join('') || ''
+
+  const additionalHobbies =
+    data?.pageData?._hobbies?.length > 3
+      ? ` (+${data?.pageData?._hobbies?.length - 3})`
+      : ''
+
+  const result = `${taglineOrHobby}${additionalHobbies}`
+
+  const addressAndHObby =
+    (user.primary_address?.society || '') +
+    (user.primary_address?.society && user.primary_address?.locality
+      ? ', '
+      : '') +
+    (user.primary_address?.locality || '') +
+    (user.primary_address?.city && user.primary_address?.locality ? ', ' : '') +
+    (user.primary_address?.city || '\u00a0') +
+    (user?.tagline && user.primary_address?.city && user?._hobbies?.length > 0
+      ? ' | '
+      : '') +
+    (user?.tagline
+      ? (user?._hobbies[0]?.hobby?.display || '') +
+        (user?._hobbies[0]?.genre?.display
+          ? ' - ' + user?._hobbies[0]?.genre?.display
+          : '') +
+        (user?._hobbies[1]?.hobby?.display ? ', ' : '') +
+        (user?._hobbies[1]?.hobby?.display || '') +
+        (user?._hobbies[1]?.genre?.display
+          ? ' - ' + user?._hobbies[1]?.genre?.display
+          : '') +
+        (user?._hobbies[2]?.hobby?.display ? ', ' : '') +
+        (user?._hobbies[2]?.hobby?.display || '') +
+        (user?._hobbies[2]?.genre?.display
+          ? ' - ' + user?._hobbies[2]?.genre?.display
+          : '') +
+        (user?._hobbies?.length > 3
+          ? ' (+' + (user?._hobbies?.length - 3) + ')'
+          : '')
+      : '')
+
   return {
     props: {
       data,
+      unformattedAbout,
+      result,
+      addressAndHObby,
     },
   }
 }

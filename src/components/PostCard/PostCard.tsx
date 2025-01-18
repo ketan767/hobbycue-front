@@ -805,14 +805,14 @@ const PostCard: React.FC<Props> = (props) => {
                                 target="_blank"
                                 className={styles.contentUrl}
                               >
-                                {metaData?.description?.split(' ⬢ ')[0] || ''}
+                                {metaData?.description?.split(' • ')[0] || ''}
                               </a>
                               <a
                                 href={url}
                                 target="_blank"
                                 className={styles.contentUrl}
                               >
-                                {metaData?.description?.split(' ⬢ ')[1] || ''}
+                                {metaData?.description?.split(' • ')[1] || ''}
                               </a>
                             </div>
                           </div>

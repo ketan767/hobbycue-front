@@ -12,8 +12,11 @@ import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import {
+  ToggleHobby,
   UpdateHobbyreq,
   deleteUserByAdmin,
+  getAdminHobbies,
+  getFilteredHobbyRequests,
   getHobbyRequests,
 } from '@/services/admin.service'
 import { pageType } from '@/utils'
@@ -33,6 +36,8 @@ import { filterIcon } from '../users'
 import sortAscending from '@/assets/icons/Sort-Ascending-On.png'
 import sortDescending from '@/assets/icons/Sort-Ascending-Off.png'
 import UserFilter from '@/components/AdminPage/Filters/UserFilter/UserFilter'
+import { searchAllHobbies } from '@/services/hobby.service'
+import AdminToggleButton from '@/components/_buttons/AdminToggle/AdminToggle'
 type SearchInput = {
   search: InputData<string>
 }
@@ -66,7 +71,7 @@ const HobbiesRequest: React.FC = () => {
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const [showAdminActionModal, setShowAdminActionModal] = useState(false)
   const dispatch = useDispatch()
-  const [createdAtSort, setCreatedAtSort] = useState(false);
+  const [createdAtSort, setCreatedAtSort] = useState(true);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
@@ -109,14 +114,29 @@ const HobbiesRequest: React.FC = () => {
     status: '',
     user_id: '',
     listing_id: '',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    user: {}
   })
   // const [createdAtSort, setCreatedAtSort] = useState(false);
   const [openDropdownIndex, setOpenDropdownIndex] = useState<number | null>(null);
+  const [similarHobbies, setSimilarHobbies] = useState<{ [key: string]: any | null }>({});
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  const handleDropdownToggle = (index: number) => {
-    console.log("Current Index:", openDropdownIndex, "Clicked Index:", index);
-    setOpenDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
+  const handleFetchSimilarHobby = async (key: string, searchQuery: string) => {
+    if (similarHobbies[key] !== undefined) return; // Skip if already fetched
+    try {
+      const result = await fetchSimillarHobby(searchQuery);
+      setSimilarHobbies((prev) => ({ ...prev, [key]: result }));
+    } catch (error) {
+      console.error('Error fetching similar hobby:', error);
+      setSimilarHobbies((prev) => ({ ...prev, [key]: null }));
+    }
   };
+
+
+
+
 
   useEffect(() => {
     const minHeight = 600; // Replace with the minimum height
@@ -138,35 +158,45 @@ const HobbiesRequest: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+  
+    // Set modalState values based on the URL search params
+    setModalState((prevState) => ({
+      ...prevState,
+      requestedBy: params.get('requestedBy') || '',
+      hobby: params.get('hobby') || '',
+      genre: params.get('genre') || '',
+      requestedOn: {
+        start: params.get('startDate') || '',
+        end: params.get('endDate') || '',
+      },
+      status: params.get('status') || '',
+    }));
+  
+    // Set data.search.value based on the URL search params
+    setData((prevState) => ({
+      ...prevState,
+      search: { value: params.get('search') || '', error: null },
+    }));
+  
+    // Set page and limit
+    setPage(Number(params.get('page')) || 1);
+    setPagelimit(Number(params.get('limit')) || 10);
+  
+    // Set sorting
+    
+    setIsInitialized(true);
+  }, []);
 
 
   const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const searchValue = data.search.value.trim();
-
-    if (!searchValue) {
-      return;
-    }
-
-    // Assuming `originalResults` is the full dataset (e.g., an array of objects)
-    const filteredResults = searchResults.filter((item) =>
-      Object.values(item).some((value: any) =>
-        value?.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
-        (value?.full_name &&
-          value.full_name.toLowerCase().includes(searchValue.toLowerCase()))
-      )
-    );
-
-    setSearchResults(filteredResults);
-
-
-
-
-    // Set the total count of filtered results
-    setCount(filteredResults.length);
-    setTotalPages(Math.ceil(filteredResults.length / pagelimit))
+    setPage(1)
+    FetchHobbyReq();
   };
 
+  
 
 
   const filterSvg = (
@@ -252,56 +282,68 @@ const HobbiesRequest: React.FC = () => {
   //   }
   // }
 
-  const fetchSearchResults = async () => {
-    const searchValue = data.search.value.trim();
-    if (!searchValue) return;
-
-    const queryString = `limit=${pagelimit}&sort=-createdAt&page=${page}&populate=user_id,listing_id&search=${encodeURIComponent(searchValue)}`;
-    const { res, err } = await getHobbyRequests(queryString);
-    if (err) {
-      console.error('Error fetching search results:', err);
-    } else {
-      setSearchResults(res.data.data.hobbyreq || []);
-      setCount(res.data.data.no_of_requests || 0);
-
-      const totalPages = Math.ceil(res.data.data.no_of_requests / 50);
-      setPageNumber(Array.from({ length: totalPages }, (_, i) => i + 1));
-    }
-  };
+ 
 
   const handleCreatedAtSort = () => {
     setCreatedAtSort((prev) => !prev);
   };
 
+  const fetchSimillarHobby = async (searchQuery: string) => {
+    try {
+      const searchres = await searchAllHobbies(`searchValue=${searchQuery}`);
+
+      const hobbies = searchres.res.data;
+
+      if (hobbies && hobbies.length > 0) {
+        return hobbies[0];
+      } else {
+        // console.log('No hobbies found for the search query.');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching hobbies:', error);
+      throw new Error('Failed to fetch hobbies');
+    }
+  };
+
+  const buildQueryParams = () => {
+    const params = new URLSearchParams();
+    if (modalState.hobby) params.append('hobby', modalState.hobby);
+    if (modalState.genre) params.append('genre', modalState.genre);
+    if (modalState.requestedBy) params.append('requestedBy', modalState.requestedBy);
+    if (modalState.requestedOn.start) params.append('startDate', String(modalState.requestedOn.start));
+    if (modalState.requestedOn.end) params.append('endDate', String(modalState.requestedOn.end));
+    if (modalState.status) params.append('status', modalState.status);
+    if (data.search.value !== '') params.append('search', data.search.value);
+
+    params.append('limit', pagelimit.toString());
+    params.append('sort', createdAtSort ? '-createdAt' : 'createdAt');
+    params.append('page', page.toString());
+
+    return params.toString();
+  };
+
+ 
+
+  
 
 
   const FetchHobbyReq = async () => {
+
     dispatch(setShowPageLoader(true))
-    const { res, err } = await getHobbyRequests(
-      `limit=${pagelimit}&sort=-createdAt&page=${page}&populate=user_id,listing_id`,
-    )
-
-    const hobbiesreq = await getHobbyRequests(`limit=2500000&sort=-createdAt`)
-
-    console.log(hobbiesreq);
-
-
+    const params = buildQueryParams();
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({ path: newUrl }, '', newUrl);
+    const { res, err } = await getFilteredHobbyRequests(params.toString());
     if (err) {
       console.log('An error', err)
       dispatch(setShowPageLoader(false))
     } else {
       console.log('FetchHobbyReq', res.data)
       let filteredResults = res.data.data.hobbyreq;
-
-
-      if (!hasNonEmptyValues(modalState)) {
-        const totalRequests = hobbiesreq.res.data.data.no_of_requests;
-        const totalPages = Math.ceil(totalRequests / pagelimit);
-        setCount(totalRequests);
-        setTotalPages(totalPages);
-        setSearchResults(filteredResults);
-      }
-
+      setCount(res.data.data.totalCount);
+      setTotalPages(res.data.data.totalPages);
+      setSearchResults(filteredResults);
       dispatch(setShowPageLoader(false))
     }
   }
@@ -310,60 +352,38 @@ const HobbiesRequest: React.FC = () => {
     setAdminNoteModal(false);
   };
 
-  const ApplyFilter = (): void => {
-    let filteredResults = searchResults;
+  // const ApplyFilter = async () => {
+  //   const params = buildQueryParams();
+  //   console.log(params);
 
-    if (modalState.hobby) {
-      filteredResults = filteredResults.filter(
-        (hobbyreq: any) => hobbyreq?.hobby?.toLowerCase().includes(modalState.hobby.toLowerCase())
-      );
-    }
+  //   const { err, res } = await getFilteredHobbyRequests(params.toString());
+  //   setSearchResults(res.data.data.hobbyreq);
 
-    if (modalState.genre) {
-      filteredResults = filteredResults.filter(
-        (hobbyreq: any) => hobbyreq?.genre?.toLowerCase().includes(modalState.genre.toLowerCase())
-      );
-    }
 
-    if (modalState.requestedBy) {
-      filteredResults = filteredResults.filter(
-        (hobbyreq: any) => hobbyreq?.user_id?.full_name?.toLowerCase().includes(modalState.requestedBy.toLowerCase())
-      );
-    }
+  //   // setSearchResults(filteredResults);
 
-    if (modalState.requestedOn.start && modalState.requestedOn.end) {
-      filteredResults = filteredResults.filter(
-        (hobbyreq: any) =>
-          new Date(hobbyreq?.createdAt) >= new Date(modalState.requestedOn.start) &&
-          new Date(hobbyreq?.createdAt) <= new Date(modalState.requestedOn.end)
-      );
-    }
+  //   // // Update the count based on filtered results
+  //   setCount(res.data.data.totalCount);
+  //   setTotalPages(res.data.data.totalPages);
 
-    if (modalState.status) {
-      filteredResults = filteredResults.filter(
-        (hobbyreq: any) => hobbyreq?.status === modalState.status
-      );
-    }
-
-    setSearchResults(filteredResults);
-
-    // Update the count based on filtered results
-    setCount(filteredResults.length);
-    setTotalPages(Math.ceil(filteredResults.length / pagelimit))
-    
-  };
+  // };
 
 
 
   useEffect(() => {
-    setShowPreLoader(true)
-    if (data.search.value) {
-      fetchSearchResults()
-    } else if (page) {
-      FetchHobbyReq()
+    if (!isInitialized) return; 
+  
+    setShowPreLoader(true);
+    if (
+      (!hasNonEmptyValues(modalState) && data.search.value === '') || 
+      page > 1
+    ) {
+      FetchHobbyReq();
     }
-    setShowPreLoader(false)
-  }, [data.search.value, page, modalState,pagelimit])
+  
+    setShowPreLoader(false);
+  }, [isInitialized, data.search.value, pagelimit, createdAtSort, modalState, page]);
+  
 
   useEffect(() => {
     const initialNotes: { [key: string]: string } = {}
@@ -380,10 +400,18 @@ const HobbiesRequest: React.FC = () => {
 
   const goToPreviousPage = () => {
     setPage(page - 1)
+
   }
 
   const goToNextPage = () => {
     setPage(page + 1)
+
+  }
+
+  const HandleToggle = async (hobbyreq: any) => {
+    console.log(hobbyreq);
+    await ToggleHobby(hobbyreq);
+    window.location.reload();
   }
 
 
@@ -451,7 +479,7 @@ const HobbiesRequest: React.FC = () => {
 
   const handleSubmit = async () => {
     console.log(hobbyData);
-    
+
     let jsondata = {
       user_id: hobbyData?.user_id,
       listing_id: hobbyData?.listing_id,
@@ -459,13 +487,13 @@ const HobbiesRequest: React.FC = () => {
       status: hobbyData?.status,
       description: hobbyData?.description,
     };
-    
+
     const filteredData = Object.fromEntries(
       Object.entries(jsondata).filter(([_, value]) => value !== undefined)
     );
-    
+
     console.log("Filtered jsonData", filteredData);
-    
+
     const { err, res } = await UpdateHobbyreq(filteredData);
     if (err) {
       console.log(err.response.data);
@@ -473,7 +501,7 @@ const HobbiesRequest: React.FC = () => {
         display: true,
         message: "Error updating hobby request" + err.response.data.error,
         // autoHideDuration: 3000,
-        type:'error'
+        type: 'error'
       })
     } else {
       window.location.reload()
@@ -482,32 +510,36 @@ const HobbiesRequest: React.FC = () => {
 
   const handleStatusChange = async (hobbyreq: any, newStatus: any) => {
     console.log(hobbyreq);
-    
+
     setHobbydata({
       user_id: hobbyreq?.user_id?._id,
       listing_id: hobbyreq?.listing_id?._id,
       hobby: hobbyreq?.hobby,
       description: hobbyreq?.description,
       status: newStatus?.status,
+      createdAt: new Date(hobbyreq?.createdAt),
+      updatedAt: new Date(hobbyreq?.updatedAt || hobbyreq?.createdAt),
+      user: hobbyreq?.user_id
     })
-    console.log('status changed',hobbyData)
-    await handleSubmit()
+    console.log('status changed', hobbyData)
+    setShowAdminActionModal(true);
+    // await handleSubmit()
   }
 
-  const handleAction = async (hobbyreq: any) => {
-    setHobbydata({
-      user_id: hobbyreq?.user_id?._id,
-      listing_id: hobbyreq?.listing_id?._id,
-      hobby: hobbyreq?.hobby,
-      description: hobbyreq?.description,
-      status: hobbyreq?.status,
-    })
+  // const handleAction = async (hobbyreq: any) => {
+  //   setHobbydata({
+  //     user_id: hobbyreq?.user_id?._id,
+  //     listing_id: hobbyreq?.listing_id?._id,
+  //     hobby: hobbyreq?.hobby,
+  //     description: hobbyreq?.description,
+  //     status: hobbyreq?.status,
+  //   })
 
-    setSingleData(hobbyreq)
-    // setAdminNoteModal(true)
+  //   setSingleData(hobbyreq)
+  //   // setAdminNoteModal(true)
 
-    //setShowAdminActionModal(true)
-  }
+  //   //setShowAdminActionModal(true)
+  // }
 
   const CustomBackdrop: React.FC = () => {
     return <div className={styles['custom-backdrop']}></div>
@@ -517,13 +549,23 @@ const HobbiesRequest: React.FC = () => {
   //   setCreatedAtSort((prev) => !prev);
   // };
 
-  const sortedResults = searchResults
-    ?.slice()
-    ?.sort((a, b) => {
-      return createdAtSort
-        ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  // const sortedResults = searchResults
+  //   ?.slice()
+  //   ?.sort((a, b) => {
+  //     return createdAtSort
+  //       ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  //       : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+  //   });
+
+
+  useEffect(() => {
+    searchResults?.forEach((hobbyreq) => {
+      const searchQuery = hobbyreq.genre || hobbyreq.hobby;
+      if (searchQuery) {
+        handleFetchSimilarHobby(hobbyreq._id, searchQuery);
+      }
     });
+  }, [searchResults]);
 
 
   // const sortedResults = searchResults
@@ -617,7 +659,10 @@ const HobbiesRequest: React.FC = () => {
                 setModalState={setModalState}
                 setIsModalOpen={setIsModalOpen}
                 setApplyFilter={setApplyFilter}
-                onApplyFilter={ApplyFilter}
+                onApplyFilter={()=>{
+                  setPage(1);
+                  FetchHobbyReq();
+                }}
               />
             )}
           </div>
@@ -647,12 +692,10 @@ const HobbiesRequest: React.FC = () => {
                       </button>
                     </div>
                   </th>
-                  <th
-
-                  >
+                  <th>
                     Matching or Similar
                   </th>
-
+                  <th/>
                   <th >
                     Admin Notes
                   </th>
@@ -662,14 +705,14 @@ const HobbiesRequest: React.FC = () => {
                 </tr>
               </thead>
               <tbody >
-                {sortedResults?.map((hobbyreq, index) => (
+                {searchResults?.map((hobbyreq, index) => (
                   <tr key={index}>
                     <td>
                       <div className={styles.resultItem}>
                         <div className={styles.detailsContainer}>
                           <Link
                             // className={styles.userName}
-                            href={`/hobby/${hobbyreq?.hobby}`}
+                            href={hobbyreq?.level === "Hobby" ? '' : `/hobby/${hobbyreq?.hobby}`}
                           >
                             {hobbyreq?.hobby}
                           </Link>
@@ -734,10 +777,16 @@ const HobbiesRequest: React.FC = () => {
                     <td>
                       <div>{formatDate(hobbyreq?.createdAt)}</div>
                     </td>
-                    <td >
-                      <div>{hobbyreq?.similar}</div>
+                    <td>
+                     {similarHobbies[hobbyreq._id]?.display}
                     </td>
-
+                    <td>
+                    
+                          {similarHobbies[hobbyreq._id] && (
+                            <AdminToggleButton isOn={similarHobbies[hobbyreq._id]?.show} handleToggle={() => HandleToggle(similarHobbies[hobbyreq._id]?._id)} />
+                          )}
+                        
+                    </td>
                     <td >
                       <input
                         className={styles.notesInput}
@@ -761,14 +810,11 @@ const HobbiesRequest: React.FC = () => {
 
                         className={styles.actions}
                       >
-                        <div onClick={() => {
-                          handleAction(hobbyreq);
-                          setShowAdminActionModal(true)
-                        }}>{pencilSvg}</div>
+                        <div></div>
                         <StatusDropdown
                           key={index}
                           status={hobbyreq?.status}
-                          onStatusChange={(status)=>handleStatusChange(hobbyreq,status)}
+                          onStatusChange={(status) => handleStatusChange(hobbyreq, status)}
                           isOpen={openDropdownIndex === index}
                         // onToggle={() => handleDropdownToggle(index)}
                         />
@@ -800,7 +846,7 @@ const HobbiesRequest: React.FC = () => {
 
             {/* Previous Page Button */}
             <button
-              disabled={page <= 1 || totalPages<=1}
+              disabled={page <= 1 || totalPages <= 1}
               className="users-next-btn"
               onClick={goToPreviousPage}
             >
@@ -809,7 +855,7 @@ const HobbiesRequest: React.FC = () => {
 
             {/* Next Page Button */}
 
-            <button className="users-next-btn" onClick={goToNextPage} disabled={page>=totalPages}>
+            <button className="users-next-btn" onClick={goToNextPage} disabled={page >= totalPages}>
               Next
             </button>
 

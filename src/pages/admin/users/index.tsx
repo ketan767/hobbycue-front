@@ -125,11 +125,13 @@ const AdminDashboard: React.FC = () => {
   const [NameSort, setNameSort] = useState<boolean>(true)
   const [loading, setLoading] = useState<boolean>(false)
   const [count, setCount] = useState(0)
+  const [sortFactor, setSortFactor] = useState('-last_login')
+  const [totalUserCount, setTotalUserCount] = useState(0);
   const [activeSort, setActiveSort] = useState('login')
   const [isError, setIsError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<String>('')
   const [isSearching, setIsSearching] = useState<boolean>(false)
-
+  const [totalPages, setTotalPages] = useState(0);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
 
@@ -239,7 +241,7 @@ const AdminDashboard: React.FC = () => {
 
     setLoading(true)
     const { res, err } = await getAllUserDetail(
-      `limit=${pagelimit}&sort=-last_login&page=${page}&populate=sessions`,
+      `limit=${pagelimit}&sort=${sortFactor}&page=${page}&populate=sessions`,
     )
     if (err) {
       console.log('An error', err)
@@ -247,15 +249,13 @@ const AdminDashboard: React.FC = () => {
       setIsError(true)
       setErrorMessage('No users found')
     } else {
-      // console.log('fetchUsers', res.data)
       setIsError(false)
       setLoading(false)
       setSearchResults(res.data.data.users)
-      // setCount(res.data.data.no_of_users)
       dispatch(setShowPageLoader(false))
     }
     setLoading(false)
-  }, [dispatch, pagelimit, page])
+  }, [dispatch, pagelimit, page, sortFactor, activeSort])
 
   const fetchAllUsersCount = useCallback(async () => {
     try {
@@ -270,6 +270,7 @@ const AdminDashboard: React.FC = () => {
       } else {
         setIsError(false)
         setCount(res.data.data.no_of_users)
+        setTotalUserCount(res.data.data.no_of_users);
       }
     } catch (error) {
       console.error('Unexpected error:', error)
@@ -278,7 +279,9 @@ const AdminDashboard: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [pagelimit])
+
+ 
 
   useEffect(() => {
     fetchAllUsersCount()
@@ -345,12 +348,14 @@ const AdminDashboard: React.FC = () => {
       } else if (status === 'deactivate') {
         if (user.is_account_activated || !user.deactivation_date) return false; 
       }
+
+      // setTotalPages(Math.ceil(filterUsers.length / pagelimit))
       return true
     })
   }
-
+  
   const filteredUsers: User[] = filterUsers(searchResults, modalState) || []
-
+  
   const goToPreviousPage = () => {
     setPage(page - 1)
   }
@@ -397,20 +402,26 @@ const AdminDashboard: React.FC = () => {
           Object.values(value).every((v) => v === '')),
     )
   }
+
   const handleLoginSort = () => {
     setActiveSort((prev) => (prev === 'login' ? '' : 'login'))
+    setSortFactor((prev) => (prev === '-last_login' ? 'last_login' : '-last_login'))
     setLoginSort((prev) => !prev)
     setJoinedSort(false)
     setNameSort(false)
   }
+
   const handleNameSort = () => {
     setActiveSort((prev) => (prev === 'name' ? '' : 'name'))
+    setSortFactor((prev) => (prev === 'full_name' ? '-full_name' : 'full_name'))
     setNameSort((prev) => !prev)
     setLoginSort(false)
     setJoinedSort(false)
   }
+
   const handleJoinedSort = () => {
     setActiveSort((prev) => (prev === 'joined' ? '' : 'joined'))
+    setSortFactor((prev) => (prev === '-createdAt' ? 'createdAt' : '-createdAt'))
     setJoinedSort((prev) => !prev)
     setLoginSort(false)
     setNameSort(false)
@@ -418,6 +429,7 @@ const AdminDashboard: React.FC = () => {
 
   useEffect(() => {
     setActiveSort('login')
+    setSortFactor('-last_login')
     setLoginSort(false)
     setJoinedSort(false)
     setNameSort(false)
@@ -426,10 +438,33 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     if (hasNonEmptyValues(modalState)) {
       setPagelimit(1000)
-    } else {
-      setPagelimit(10)
-    }
+    } 
   }, [modalState])
+
+  useEffect(() => {
+    const minHeight = 600; 
+    const minNumber = 8; 
+
+    const updatePageLimit = () => {
+      const height = window.innerHeight;
+      const additionalEntries = Math.max(0, Math.floor((height - minHeight) / 52.9));
+      const newPagelimit = minNumber + additionalEntries;
+      setPagelimit(newPagelimit);
+    };
+
+    updatePageLimit();
+
+    window.addEventListener('resize', updatePageLimit);
+    return () => {
+      window.removeEventListener('resize', updatePageLimit);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (totalUserCount > 0) {
+      setTotalPages(Math.ceil(totalUserCount / pagelimit));
+    }
+  }, [totalUserCount, pagelimit]);
 
   return (
     <>
@@ -604,34 +639,8 @@ const AdminDashboard: React.FC = () => {
               <tbody>
                 {!loading &&
                   filteredUsers?.length > 0 &&
-                  filteredUsers
-                    ?.sort((a, b) => {
-                      if (NameSort) {
-                        return NameSort
-                          ? (a.full_name || '').localeCompare(b.full_name || '')
-                          : b.full_name.localeCompare(a.full_name)
-                      }
-                      if (loginSort) {
-                        return loginSort
-                          ? new Date(a.last_login).getTime() -
-                              new Date(b.last_login).getTime()
-                          : new Date(b.last_login).getTime() -
-                              new Date(a.last_login).getTime()
-                      }
-
-                      if (joinedSort) {
-                        return joinedSort
-                          ? new Date(a.createdAt).getTime() -
-                              new Date(b.createdAt).getTime()
-                          : new Date(b.createdAt).getTime() -
-                              new Date(a.createdAt).getTime()
-                      }
-
-                      return 0
-                    })
-                    ?.map((user: any) => (
+                  filteredUsers?.map((user: any) => (
                       <tr key={user._id}>
-                        {/* user */}
                         <td>
                           <Link
                             href={`/profile/${user.profile_url}`}
@@ -855,7 +864,22 @@ const AdminDashboard: React.FC = () => {
           </div>
           {pageNumber === 0 && (
             <div className={styles.pagination}>
-              {/* Previous Page Button */}
+             
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginRight: '16px' }}>
+              <span className={styles.userName}>Page</span>
+              <select
+                value={page}
+                onChange={(e) => setPage(Number(e.target.value))}
+                className={styles["page-select-dropdown"]}
+              >
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+              <span className={styles.userName}>of {totalPages}</span>
+            </div>
 
               <button
                 disabled={page <= 1}
@@ -866,7 +890,7 @@ const AdminDashboard: React.FC = () => {
               </button>
 
               <button
-                disabled={searchResults.length !== pagelimit}
+                disabled={page >= totalPages}
                 className="users-next-btn"
                 onClick={goToNextPage}
               >

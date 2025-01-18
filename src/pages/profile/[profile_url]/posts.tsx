@@ -29,12 +29,21 @@ import { RootState } from '@/redux/store'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import ErrorPage from '@/components/ErrorPage'
 import { useMediaQuery } from '@mui/material'
+import { htmlToPlainTextAdv } from '@/utils'
 
 interface Props {
   data: ProfilePageData
+  unformattedAbout?: string
+  result?: any
+  addressAndHObby?: any
 }
 
-const ProfilePostsPage: React.FC<Props> = ({ data }) => {
+const ProfilePostsPage: React.FC<Props> = ({
+  data,
+  addressAndHObby,
+  result,
+  unformattedAbout,
+}) => {
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [posts, setPosts] = useState([])
   const dispatch = useDispatch()
@@ -149,6 +158,19 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
     <>
       <Head>
         <title>{`Posts | ${data.pageData.full_name} | HobbyCue`}</title>
+        <meta
+          property="og:image"
+          content={`${data?.pageData?.profile_image}`}
+        />
+        <meta
+          property="og:image:secure_url"
+          content={`${data?.pageData?.profile_image}`}
+        />
+        <meta
+          property="og:description"
+          content={`${result + ' • ' + addressAndHObby}`}
+        />
+        <meta property="og:image:alt" content="Profile picture" />
       </Head>
 
       <ProfileLayout
@@ -247,7 +269,9 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                   )
                 })}
                 {unpinnnedPosts.length > 0 && (
-                  <PostWrapper title={pinnedPosts.length > 0 ? 'Recent Post' : ''}>
+                  <PostWrapper
+                    title={pinnedPosts.length > 0 ? 'Recent Post' : ''}
+                  >
                     {unpinnnedPosts.map((post: any) => {
                       return (
                         <PostCard
@@ -398,9 +422,68 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     listingsData: response?.data.data.listings,
     blogsData: null,
   }
+
+  const unformattedAbout = htmlToPlainTextAdv(res.data.data.users[0]?.about)
+
+  const taglineOrHobby = data?.pageData?.tagline
+    ? data.pageData?.tagline
+    : data?.pageData?._hobbies
+        ?.slice(0, 3)
+        ?.map((hobbyItem: any, index: any) => {
+          const hobbyDisplay = hobbyItem?.hobby?.display || ''
+          const genreDisplay = hobbyItem?.genre?.display
+            ? ` - ${hobbyItem?.genre?.display}`
+            : ''
+          const separator =
+            index < data?.pageData?._hobbies.length - 1 && index < 2 ? ', ' : ''
+          return `${hobbyDisplay}${genreDisplay}${separator}`
+        })
+        ?.join('') || ''
+
+  const additionalHobbies =
+    data?.pageData?._hobbies?.length > 3
+      ? ` (+${data?.pageData?._hobbies?.length - 3})`
+      : ''
+
+  const result = `${taglineOrHobby}${additionalHobbies}`
+
+  const addressAndHObby =
+    (user.primary_address?.society || '') +
+    (user.primary_address?.society && user.primary_address?.locality
+      ? ', '
+      : '') +
+    (user.primary_address?.locality || '') +
+    (user.primary_address?.city && user.primary_address?.locality ? ', ' : '') +
+    (user.primary_address?.city || '\u00a0') +
+    (user?.tagline && user.primary_address?.city && user?._hobbies?.length > 0
+      ? ' | '
+      : '') +
+    (user?.tagline
+      ? (user?._hobbies[0]?.hobby?.display || '') +
+        (user?._hobbies[0]?.genre?.display
+          ? ' - ' + user?._hobbies[0]?.genre?.display
+          : '') +
+        (user?._hobbies[1]?.hobby?.display ? ', ' : '') +
+        (user?._hobbies[1]?.hobby?.display || '') +
+        (user?._hobbies[1]?.genre?.display
+          ? ' - ' + user?._hobbies[1]?.genre?.display
+          : '') +
+        (user?._hobbies[2]?.hobby?.display ? ', ' : '') +
+        (user?._hobbies[2]?.hobby?.display || '') +
+        (user?._hobbies[2]?.genre?.display
+          ? ' - ' + user?._hobbies[2]?.genre?.display
+          : '') +
+        (user?._hobbies?.length > 3
+          ? ' (+' + (user?._hobbies?.length - 3) + ')'
+          : '')
+      : '')
+
   return {
     props: {
       data,
+      unformattedAbout,
+      result,
+      addressAndHObby,
     },
   }
 }

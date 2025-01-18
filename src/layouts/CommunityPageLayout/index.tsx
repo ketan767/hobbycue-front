@@ -1,5 +1,5 @@
 import addIcon from '@/assets/svg/add.svg'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { use, useEffect, useRef, useState } from 'react'
 import PageContentBox from '@/layouts/PageContentBox'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { withAuth } from '@/navigation/withAuth'
@@ -75,6 +75,7 @@ type Props = {
   children: React.ReactNode
   singlePostPage?: boolean
   hide?: boolean
+  query?: any
 }
 type singlePostProps = {
   hobbyMembers: any[]
@@ -116,6 +117,7 @@ const CommunityLayout: React.FC<Props> = ({
   activeTab,
   singlePostPage,
   hide = false,
+  query,
 }) => {
   const dispatch = useDispatch()
   const membersContainerRef = useRef<HTMLElement>(null)
@@ -191,31 +193,63 @@ const CommunityLayout: React.FC<Props> = ({
   const { showPageLoader } = useSelector((state: RootState) => state.site)
   const { refreshNum } = useSelector((state: RootState) => state.post)
   const router = useRouter()
+  const settingsIconRef = useRef<HTMLAnchorElement>(null)
 
-  const { hobby: hobbyQuery, location: locationQuery } = router.query
+  // For Hobby/Locatoin using URL
+  // useEffect(() => {
+  //   if (query && query.hobby) {
+  //     const hobbyDetail = activeProfile?.data?._hobbies.find(
+  //       (hobby: any) => hobby?.hobby?.display?.toLowerCase() === (query.hobby as string).toLowerCase() || hobby?.genre?.display?.toLowerCase() === (query.hobby as string).toLowerCase(),
+  //     )
+  //     if (hobbyDetail) {
+  //       setSelectedHobby(hobbyDetail?.hobby?._id)
+  //       if (hobbyDetail?.genre?._id) {
+  //         setSelectedGenre(hobbyDetail?.genre?._id)
+  //       }
+  //     } else {
+  //       setSelectedHobby(query.hobby)
+  //     }
+  //   }
+  //   if (query && query.location) {
+  //     const locationDetail = activeProfile?.data?._addresses.find(
+  //       (address: any) => address?.city?.toLowerCase() === (query.location as string).toLowerCase(),
+  //     )
+  //     if (locationDetail) {
+  //       setSelectedLocation(locationDetail?.city)
+  //     } else {
+  //       setSelectedLocation(query.location)
+  //     }
+  //   }
+  // }, [query, activeProfile])
+
+  // For setting query using selected Hobby/Locatoin
+  // useEffect(() => {
+  //   const query = { ...router.query };
+  //   if (selectedHobby && selectedHobby !== 'All Hobbies') {
+  //     const hobbyDetail = activeProfile?.data?._hobbies.find(
+  //       (hobby: any) => hobby?.hobby?._id === selectedHobby,
+  //     )
+  //     if (hobbyDetail) {
+  //       query.hobby = hobbyDetail?.hobby?.display;
+  //     }
+  //   } else {
+  //     delete query.hobby;
+  //   }
+  //   if (selectedLocation && selectedLocation !== 'All Locations') {
+  //     query.location = selectedLocation;
+  //   } else {
+  //     delete query.location;
+  //   }
+  //   router.push({ pathname: router.pathname, query }, undefined, { shallow: true });
+  // }, [selectedHobby, selectedLocation, activeProfile]);
 
   useEffect(() => {
-    if (hobbyQuery) {
-      const hobbyDetail = activeProfile?.data?._hobbies.find(
-        (hobby: any) =>
-          hobby?.hobby?.display?.toLowerCase() ===
-          (hobbyQuery as string).toLowerCase(),
-      )
-      if (hobbyDetail) {
-        setSelectedHobby(hobbyDetail?.hobby?._id)
-      }
+    if (visibilityData?.length > 0 && settingsIconRef.current) {
+      settingsIconRef.current.style.marginTop = `${
+        visibilityData?.length * 38 + 50
+      }px`
     }
-    if (locationQuery) {
-      const locationDetail = activeProfile?.data?._addresses.find(
-        (address: any) =>
-          address?.city?.toLowerCase() ===
-          (locationQuery as string).toLowerCase(),
-      )
-      if (locationDetail) {
-        setSelectedLocation(locationDetail?.city)
-      }
-    }
-  }, [hobbyQuery, locationQuery, activeProfile])
+  }, [visibilityData, settingsIconRef])
 
   const [seeMoreOpenedFirstTime, setSeeMoreOpenedFirstTime] =
     useState<boolean>(false)
@@ -356,7 +390,7 @@ const CommunityLayout: React.FC<Props> = ({
     }
     if (selectedHobby === 'My Hobbies') {
       activeProfile?.data?._hobbies.forEach((item: any) => {
-        params.append('_hobby', item?.hobby?._id)
+        params.append('hobbyId', item?.hobby?._id)
       })
     } else if (selectedHobby === 'All Hobbies') {
       params = new URLSearchParams(
@@ -418,6 +452,7 @@ const CommunityLayout: React.FC<Props> = ({
     const { err, res } = await getAllHobbyPosts(params.toString())
     const params2 = params
     params2.append('has_link', 'true')
+    params2.append('community', 'true')
 
     const { err: linksPostsErr, res: linksPostsRes } = await getAllHobbyPosts(
       params2.toString(),
@@ -1480,21 +1515,22 @@ const CommunityLayout: React.FC<Props> = ({
                   </ContentLoader>
                 )}
               </section>
+              <Link
+                ref={settingsIconRef}
+                href={'/settings/visibility-notification'}
+                className={styles['settings-icon']}
+              >
+                <Image
+                  height={20}
+                  width={20}
+                  src={settingsIcon}
+                  alt="settings-icon"
+                />
+                <span className={styles['default-settings-text']}>
+                  Default Settings
+                </span>
+              </Link>
             </aside>
-            <Link
-              href={'/settings/visibility-notification'}
-              className={styles['settings-icon']}
-            >
-              <Image
-                height={20}
-                width={20}
-                src={settingsIcon}
-                alt="settings-icon"
-              />
-              <span className={styles['default-settings-text']}>
-                Default Settings
-              </span>
-            </Link>
           </div>
         )}
 
@@ -1864,7 +1900,11 @@ const CommunityLayout: React.FC<Props> = ({
                         >
                           <Link
                             key={tab}
-                            href={`/community/${tab !== 'posts' ? tab : ''}`}
+                            href={`/community/${tab !== 'posts' ? tab : ''}?${
+                              query?.hobby ? 'hobby=' : ''
+                            }${query?.hobby ? query?.hobby : ''}${
+                              query?.location ? '&location=' : ''
+                            }${query?.location ? query?.location : ''}`}
                           >
                             {tab.charAt(0).toUpperCase() + tab.slice(1)}
                           </Link>
@@ -1943,7 +1983,7 @@ const CommunityLayout: React.FC<Props> = ({
                   <span>
                     {activeProfile.data?._hobbies?.find(
                       (obj: any) => obj?.hobby?._id === selectedHobby,
-                    )?.hobby?.display ?? 'All Hobbies'}
+                    )?.hobby?.display ?? selectedHobby}
 
                     {activeProfile.data?._hobbies?.find(
                       (obj: any) =>

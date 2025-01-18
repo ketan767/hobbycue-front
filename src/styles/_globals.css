@@ -332,6 +332,10 @@ select:-webkit-autofill {
   font-family: 'Poppins';
 }
 
+.ql-editor a {
+  color: #8064a2 !important;
+}
+
 .blog-quill .ql-container {
   max-width: 100% !important;
   min-height: 100vh;

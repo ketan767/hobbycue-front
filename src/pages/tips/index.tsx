@@ -128,16 +128,30 @@ const index: FC<indexProps> = ({}) => {
       setIsEditing(true)
     }
   }, [user])
+
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.style.height = 'auto'
+      titleRef.current.style.height = `${titleRef.current.scrollHeight}px`
+    }
+  }, [title])
   return (
     <>
       <Head>
         <title>HobbyCue - Tips</title>
+        <meta
+          name="description"
+          content="hobbycue – explore your hobby or passion Sign-in to interact with a community of fellow hobbyists and an eco-system of experts, teachers, suppliers, classes, workshops, and places to practice, participate or perform. Your hobby may be about visual or performing arts, sports, games, gardening, model making, cooking, indoor or outdoor activities… If you are an expert […]"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:image" content="/hobbycuecom.png" />
+        <meta property="og:image:width" content="478" />
+        <meta property="og:image:height" content="477" />
+        <meta property="og:image:type" content="image/png" />
       </Head>
 
       <PageGridLayout column={2}>
-        <aside
-          className={`${styles2['community-left-aside']} custom-scrollbar`}
-        >
+        <aside className={`${styles2['left-aside']} custom-scrollbar`}>
           <section
             className={`content-box-wrapper ${styles2['hobbies-side-wrapper']}`}
           >
@@ -163,7 +177,7 @@ const index: FC<indexProps> = ({}) => {
                     }}
                   />
                 ) : (
-                  <h1 className={styles['title']}>{title || ''}</h1>
+                  <h1 className={styles['static-title']}>{title || ''}</h1>
                 )}
               </div>
             </header>

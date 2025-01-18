@@ -27,6 +27,7 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
 
   const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
+  const [hoverCardIndex, setHoveredCardIndex] = useState(-1);
   const itsMe = user?._id === data?.admin
   console.warn({ itsMe })
   useEffect(() => {
@@ -158,7 +159,7 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
                 </div>
 
                 {sortedListings.map((listing: any) => {
-                  return <ListingCard key={listing._id} data={listing} />
+                  return <ListingCard key={listing._id} data={listing} hoverCardIndex={hoverCardIndex} setHoveredCardIndex={setHoveredCardIndex} />
                 })}
               </Masonry>
             </ResponsiveMasonry>

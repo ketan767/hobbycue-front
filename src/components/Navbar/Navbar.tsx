@@ -463,7 +463,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
               {
                 isLoggedIn && (
-                  <Link href={'/community'} className={styles['pos-relative-z-2']}>
+                  <Link href={'/community'} className={styles['home-icon']}>
                     <Image src={HomeIcon} width={20} height={20} alt="home" />
                   </Link>
                 )
@@ -486,7 +486,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     searchResult()
                   }
                 }}
-                style={isLoggedIn ? { width: '350px' } : { width: '300px' }}
+                style={isLoggedIn ? { width: '398px' } : { width: '300px' }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: '8px',
@@ -898,7 +898,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                 </li>
 
                 {/* Bookmark */}
-                <li>
+                <li style={{ marginRight: '24px'}}>
                   <Link href={'/bookmarks'}>
                     <CustomizedTooltips title="Bookmark">
                       <Image src={BookmarksIcon} width={24} height={24} alt="bookmark" />
@@ -907,7 +907,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                 </li>
 
                 {/* Notification */}
-                <li>
+                <li style={{ marginRight: '24px'}}>
                   <Link href={'/notifications'}>
                     <CustomizedTooltips title="Notification">
                       <Image src={NotificationIcon} width={24} height={24} alt="notification" />
@@ -916,7 +916,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                 </li>
 
                 {/* Cart */}
-                <li>
+                <li style={{ marginRight: '24px'}}>
                   <Link href={'/cart'}>
                     <CustomizedTooltips title="Cart">
                       <Image src={CartIcon} width={24} height={24} alt="cart" />
@@ -1162,11 +1162,11 @@ export const Navbar: React.FC<Props> = ({}) => {
                   ) : null}
                 </div>
                 {data.search.value.length === 0 && (
-                  <li onClick={toggleSearchInput} className={''}>
+                  <li onClick={toggleSearchInput} className={''} style={{ marginRight: '24px'}}>
                     <Image src={Search} alt="search" />
                   </li>
                 )}
-                <li>
+                <li style={{ marginRight: '24px'}}>
                   <Link href={'/notifications'}>
                     <Image src={BellIcon} alt="Bell" />
                   </Link>

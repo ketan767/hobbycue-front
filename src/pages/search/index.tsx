@@ -492,9 +492,6 @@ const MainContent: React.FC<SearchResultsProps> = ({
   //   callForData(result_pagination)
   // }, [result_pagination])
 
-  // console.log('asifs hobbies', hobbiesSearchResults)
-  // console.log('asifs page', page)
-
   // const lastPostElementRef = useCallback(
   //   (node: HTMLDivElement | null) => {
   //     if (searchLoading) return
@@ -1907,7 +1904,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           )}
                         </div>
                         <div className={styles.hobbydescription}>
-                          {hobby?.description}
+                          {hobby?.description
+                            ? hobby.description.replace(/<[^>]+>/g, '')
+                            : ''}
                         </div>
                       </div>
                     </div>
@@ -3471,7 +3470,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           ) : (
                             <p
                               dangerouslySetInnerHTML={{
-                                __html: page?.content,
+                                __html:
+                                  page?.content?.substring(0, 80) +
+                                  (page?.content?.length > 80 ? '...' : ''),
                               }}
                             ></p>
                           )}

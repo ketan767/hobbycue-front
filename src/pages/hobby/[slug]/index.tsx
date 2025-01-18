@@ -14,7 +14,7 @@ import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
-import { getAllUserDetail } from '@/services/user.service'
+import { addUserHobbies, getAllUserDetail } from '@/services/user.service'
 import EditIcon from '@/assets/svg/edit-colored.svg'
 import { Fade, Modal, useMediaQuery } from '@mui/material'
 import { openModal } from '@/redux/slices/modal'
@@ -23,6 +23,7 @@ import EditHobbyModal from '@/components/_modals/AdminModals/EditHobbyModal'
 import HobbyRelatedEditModal from '@/components/_modals/AdminModals/RelatedHobbyModal'
 import { title } from 'process'
 import { log } from 'console'
+import { addHobbyToUsers, updateHobbyByAdmin } from '@/services/admin.service'
 
 type Props = {
   data: { hobbyData: any }
@@ -164,6 +165,33 @@ const HobbyDetail: React.FC<Props> = (props) => {
     }
   }, [expandAll])
 
+  const updateHobbyData = async (
+    type: string,
+    hobbyId: string,
+    formData: any,
+    data: any,
+  ) => {
+    try {
+      const updatedData = {
+        ...data,
+        ...(type === 'Related' && { related_hobbies: formData }),
+      };
+      console.log("updateddata",updatedData);
+      
+      if(type === 'Related'){
+        await updateHobbyByAdmin(hobbyId, updatedData);
+      }else{
+        await addHobbyToUsers(hobbyId,formData)
+      }
+      
+      console.log('Hobby updated successfully!');
+      setShowRelatedHobbies(false);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error updating hobby:', error)
+    }
+  }
+
   const isMobile = useMediaQuery('(max-width:1100px)')
   console.log('hobbydata', data)
   return (
@@ -182,9 +210,13 @@ const HobbyDetail: React.FC<Props> = (props) => {
             <div className={styles['modal-wrapper']}>
               <main className={styles['pos-relative']}>
                 <EditHobbyModal
-                  data={''}
+                  data={data}
                   setData={''}
-                  handleSubmit={''}
+                  handleSubmit={async (formData: any) => {
+                    await updateHobbyByAdmin(data._id, formData)
+                    setShowAdminActionModal(false);
+                    window.location.reload();
+                  }}
                   handleClose={() => {
                     setShowAdminActionModal(false)
                   }}
@@ -209,7 +241,11 @@ const HobbyDetail: React.FC<Props> = (props) => {
             <div className={styles['modal-wrapper']}>
               <main className={styles['pos-relative']}>
                 <HobbyRelatedEditModal
-                  title={modalTitle}
+                  onSave={async (formData: any) => {
+                    await updateHobbyData(modalTitle, data._id, formData, data)
+                  }}
+                  data={data}
+                  type={modalTitle}
                   handleClose={() => {
                     setShowRelatedHobbies(false)
                   }}
@@ -243,7 +279,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
           property="og:description"
           content={
             props?.previewLine1 +
-            ' ⬢ ' +
+            ' • ' +
             props?.unformattedAbout +
             ' • ' +
             data?.display +
@@ -436,7 +472,10 @@ const HobbyDetail: React.FC<Props> = (props) => {
                         className={styles['pencil-edit']}
                         src={EditIcon}
                         alt="edit"
-                        onClick={() => setShowRelatedHobbies(true)}
+                        onClick={() => {
+                          setModalTitle('Related')
+                          setShowRelatedHobbies(true)
+                        }}
                       />
                     )}
                   </div>

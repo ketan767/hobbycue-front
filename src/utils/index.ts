@@ -365,3 +365,27 @@ export function formatDateRange(prop: {
   }
   return result
 }
+
+export const contentWithLink = (content: string) => {
+  const processedContent = content
+    // Remove all images
+    .replace(/<img\b[^>]*>/g, '')
+
+    // Replace URLs that aren't already wrapped in <a> tags
+    .replace(/(https?:\/\/[^\s<]+)(?![^<]*<\/a>)/gi, (url: string) => {
+      return `<a href="${url}" target="_blank" style="color: rgb(128, 100, 162);">${url}</a>`;
+    });
+
+  // Ensure all <a> tags have a consistent style
+  const finalContent = processedContent.replace(
+    /<a\b([^>]*)>/gi,
+    (match: any) => {
+      if (!match.includes('style=')) {
+        return match.replace('<a', '<a style="color: rgb(128, 100, 162);"');
+      }
+      return match;
+    },
+  );
+
+  return finalContent;
+};

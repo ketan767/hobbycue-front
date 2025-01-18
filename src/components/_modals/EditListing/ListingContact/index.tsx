@@ -408,7 +408,7 @@ const ListingContactEditModal: React.FC<Props> = ({
   const debouncedSearch = debounce(async (value: any) => {
     setShowDropdown(true)
     setDropdownLoading(true)
-    const { res, err } = await searchUsers({ full_name: value })
+    const { res, err } = await searchUsers({ name: value })
     if (res) {
       setAllDropdownValues(res.data)
     } else {

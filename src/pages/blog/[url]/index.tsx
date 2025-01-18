@@ -10,6 +10,7 @@ import {
   calculateReadingTime,
   dateFormat,
   dateFormatwithYear,
+  formatDateTimeThree,
   isMobile,
 } from '@/utils'
 import Image from 'next/image'
@@ -55,6 +56,7 @@ const BlogEditor = dynamic(() => import('@/components/BlogEditor/BlogEditor'), {
 type Props = {
   data: {
     blog_url?: any
+    publishDateForMetaData: string
   }
 }
 export const downarrow = (
@@ -355,7 +357,9 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         />
         <meta
           property="og:description"
-          content={`${data?.blog_url?.description ?? ''}`}
+          content={`${data?.blog_url?.tagline ?? ''} • ${
+            data?.blog_url?.author?.full_name
+          } | ${data?.publishDateForMetaData}`}
         />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data?.blog_url?.title} | HobbyCue`}</title>
@@ -384,7 +388,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
                 </div>
               )}
 
-              {/* TITLE */}
+              {/* TITLE AND TAGLINE */}
               {isEditing ? (
                 <textarea
                   className={styles['blog-title'] + ' ' + styles.editInput}
@@ -783,8 +787,16 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     }
   }
 
+  const blogPublishDate = res.data.data.blog[0].publish_date
+  const blogCreatedAt = res.data.data.blog[0].createdAt
+
+  const publishDateForMetaData = formatDateTimeThree(
+    new Date(blogPublishDate || blogCreatedAt),
+  )
+
   const data = {
     blog_url: res.data.data.blog[0],
+    publishDateForMetaData,
   }
 
   return {

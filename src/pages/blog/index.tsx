@@ -162,11 +162,11 @@ const Explore: React.FC<Props> = ({ data }) => {
           })
         : true
 
-      const genreMatch = filters.genre
+      const genreMatch = filters.hobby
         ? item._hobbies.some((h) => {
             const match = h.genre?.display
               ?.toLowerCase()
-              ?.includes(filters.genre!.toLowerCase())
+              ?.includes(filters.hobby!.toLowerCase())
             console.log('Genre Match Debug:', {
               match,
               genreDisplay: h.genre?.display,
@@ -207,8 +207,8 @@ const Explore: React.FC<Props> = ({ data }) => {
           : true
 
       return (
-        hobbyMatch &&
-        genreMatch &&
+        (hobbyMatch ||
+        genreMatch) &&
         keywordMatch &&
         authorMatch &&
         statusMatch &&

@@ -12,7 +12,7 @@ import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import { getAllPostsWithComments } from '@/services/post.service'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
-import { deletePostByAdmin } from '@/services/admin.service'
+import { deletePostByAdmin, getFilteredPosts, ToggleHobby, UnpublishPost } from '@/services/admin.service'
 import { Fade, Icon, Modal } from '@mui/material'
 import EditPostModal from '@/components/_modals/AdminModals/EditpostsModal'
 import { formatDate } from '@/utils/Date'
@@ -29,6 +29,12 @@ import Upvote from '@/assets/icons/AdminIcons/Upvote'
 import Downvote from '@/assets/icons/AdminIcons/Downvote'
 import Comment from '@/assets/icons/AdminIcons/Comment'
 import UserFilter from '@/components/AdminPage/Filters/UserFilter/UserFilter'
+import UpvoteIcon from '@/assets/icons/UpvoteIcon'
+import { pageType } from '@/utils'
+import sortAscending from '@/assets/icons/Sort-Ascending-On.png'
+import sortDescending from '@/assets/icons/Sort-Ascending-Off.png'
+import PostsFilter, { PostModalState } from '@/components/AdminPage/Filters/PostsFilter/PostsFilter'
+import AdminToggleButton from '@/components/_buttons/AdminToggle/AdminToggle'
 
 type PostProps = any
 type SearchInput = {
@@ -73,20 +79,26 @@ const AdminDashboard: React.FC = () => {
     search: { value: '', error: null },
   })
   const [showAdminActionModal, setShowAdminActionModal] = useState(false)
-  const [modalState, setModalState] = useState<ModalState>({
-        onboarded: '',
-        joined: { start: '', end: '' },
-        loginModes: [],
-        pageCount: { min: '', max: '' },
-        status: '',
-      })
+  const [modalState, setModalState] = useState<PostModalState>({
+    upvotes: { min: '', max: '' },
+    downvotes: { min: '', max: '' },
+    comments: { min: '', max: '' },
+    author: '',
+    content: '',
+    hobby: '',
+    location: '',
+    postedAt: { start: '', end: '' },
+    spam: false,
+  })
   const [searchResults, setSearchResults] = useState<PostProps[]>([])
+  const [totalPages, setTotalPages] = useState(0);
   const [applyFilter, setApplyFilter] = useState<boolean>(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [id, setId] = useState('')
+  const [Count, setCount] = useState(0)
   const [page, setPage] = useState(1)
-  const [pagelimit, setPagelimit] = useState(25)
-  const [createdAtSort, setCreatedAtSort] = useState(false);
+  const [pagelimit, setPagelimit] = useState(10)
+  const [createdAtSort, setCreatedAtSort] = useState(true);
   const [deleteData, setDeleteData] = useState<{
     open: boolean
     _id: string | undefined
@@ -99,16 +111,64 @@ const AdminDashboard: React.FC = () => {
     display: false,
     message: '',
   })
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  const buildQueryParams = () => {
+    const params = new URLSearchParams();
+  
+    // Filter by upvotes range
+    if (modalState.upvotes.min) params.append('upvotesMin', modalState.upvotes.min);
+    if (modalState.upvotes.max) params.append('upvotesMax', modalState.upvotes.max);
+  
+    // Filter by downvotes range
+    if (modalState.downvotes.min) params.append('downvotesMin', modalState.downvotes.min);
+    if (modalState.downvotes.max) params.append('downvotesMax', modalState.downvotes.max);
+  
+    // Filter by comments range
+    if (modalState.comments.min) params.append('commentsMin', modalState.comments.min);
+    if (modalState.comments.max) params.append('commentsMax', modalState.comments.max);
+  
+    // Filter by author
+    if (modalState.author) params.append('author', modalState.author);
+  
+    // Filter by content
+    if (modalState.content) params.append('content', modalState.content);
+  
+    // Filter by hobby
+    if (modalState.hobby) params.append('hobby', modalState.hobby);
+  
+    // Filter by location
+    if (modalState.location) params.append('location', modalState.location);
+  
+    // Filter by postedAt date range
+    if (modalState.postedAt.start) params.append('startDate', modalState.postedAt.start);
+    if (modalState.postedAt.end) params.append('endDate', modalState.postedAt.end);
+  
+    // Filter by spam status
+    if (modalState.spam === true) params.append('spam', String(modalState.spam));
+    if(data.search.value!=='') params.append('search', data.search.value);
+    // Pagination and sorting
+    params.append('limit', pagelimit.toString());
+    params.append('sort', createdAtSort?'-createdAt' : 'createdAt');  // Default sort
+    params.append('page', page.toString());
+    
+    return params.toString();
+  };
+  
   const dispatch = useDispatch()
+  
   const fetchPosts = async () => {
+    const params = buildQueryParams();
+    const newUrl = `${window.location.pathname}?${params}`;
+    window.history.pushState({ path: newUrl }, '', newUrl);
     dispatch(setShowPageLoader(true))
-    const { res, err } = await getAllPostsWithComments(
-      `populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3&limit=${pagelimit}&sort=-createdAt&page=${page}`,
-    )
+    const{err,res} = await getFilteredPosts(params);
     if (err) {
       console.log('An error', err)
       dispatch(setShowPageLoader(false))
     } else {
+      setCount(res.data.data.totalCount)
+      setTotalPages(res.data.data.totalPages)
       setSearchResults(res.data?.data?.posts)
       console.log('res', res.data?.data?.posts)
       dispatch(setShowPageLoader(false))
@@ -117,15 +177,13 @@ const AdminDashboard: React.FC = () => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
-    if (value === '') {
-      fetchPosts()
-    } else {
-      const searchres = searchResults.filter((item) =>
-        item?._author?.full_name?.toLowerCase().includes(value.toLowerCase()),
-      )
-      setSearchResults(searchres)
-    }
     setData((prev) => ({ ...prev, search: { value, error: null } }))
+  }
+
+  const handleInputSearch = (event: React.FormEvent) => {
+    event.preventDefault();
+    setPage(1);
+    fetchPosts();
   }
 
   const goToPreviousPage = () => {
@@ -136,11 +194,94 @@ const AdminDashboard: React.FC = () => {
     setPage(page + 1)
   }
 
-  useEffect(() => {
-    if (page) {
-      fetchPosts()
+   const HandleToggle =async (postId : string)=>{
+      console.log(postId);
+      await UnpublishPost(postId);
+      window.location.reload();
     }
-  }, [page])
+
+  useEffect(() => {
+    const minHeight = 700; // Replace with the minimum height
+    const minNumber = 10; // Replace with the minimum number of entries
+
+    const updatePageLimit = () => {
+      const height = window.innerHeight;
+      const additionalEntries = Math.max(0, Math.floor((height - minHeight) / 50.4));
+      setPagelimit(minNumber + additionalEntries);
+    };
+
+    // Set initial page limit
+    updatePageLimit();
+
+    // Update on resize
+    window.addEventListener('resize', updatePageLimit);
+    return () => {
+      window.removeEventListener('resize', updatePageLimit);
+    };
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+  
+    // Set modalState values based on the URL search params
+    setModalState((prevState) => ({
+      ...prevState,
+      upvotes: {
+        min: params.get('upvotesMin') || '',
+        max: params.get('upvotesMax') || '',
+      },
+      downvotes: {
+        min: params.get('downvotesMin') || '',
+        max: params.get('downvotesMax') || '',
+      },
+      comments: {
+        min: params.get('commentsMin') || '',
+        max: params.get('commentsMax') || '',
+      },
+      author: params.get('author') || '',
+      content: params.get('content') || '',
+      hobby: params.get('hobby') || '',
+      location: params.get('location') || '',
+      postedAt: {
+        start: params.get('startDate') || '',
+        end: params.get('endDate') || '',
+      },
+      spam: params.get('spam') === 'true',
+    }));
+  
+    // Set data.search.value based on the URL search params
+    setData((prevState) => ({
+      ...prevState,
+      search: { value: params.get('search') || '', error: null },
+    }));
+  
+    // Set page and limit
+    setPage(Number(params.get('page')) || 1);
+    setPagelimit(Number(params.get('limit')) || 10);
+  
+    
+  
+    // Mark as initialized
+    setIsInitialized(true);
+  }, []);
+  
+
+ useEffect(() => {
+     if (!isInitialized) return; 
+   
+     if (
+       (!hasNonEmptyValues(modalState) && data.search.value === '') ||page>1
+     ) {
+       fetchPosts();
+     }
+   
+   }, [isInitialized, data.search.value, pagelimit, createdAtSort, modalState, page]);
+
+  // useEffect(() => {
+  //   if(page){
+  //     fetchPosts();
+  //   }
+  // }, [page])
 
   const filterSvg = (
     <svg
@@ -274,44 +415,32 @@ const AdminDashboard: React.FC = () => {
     }
   }
 
-  const sortedResults = searchResults
-    ?.slice() 
-    ?.sort((a, b) => {
-      return createdAtSort
-        ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    });
+  
 
-    const hasNonEmptyValues = (state: ModalState) => {
-          return !Object.entries(state).every(
-            ([_, value]) =>
-              !value ||
-              (Array.isArray(value) && value.length === 0) ||
-              (typeof value === 'object' &&
-                Object.values(value).every((v) => v === '')),
-          )
-        }
+  const hasNonEmptyValues = (state: PostModalState) => {
+    return !Object.entries(state).every(
+      ([_, value]) =>
+        !value ||
+        (Array.isArray(value) && value.length === 0) ||
+        (typeof value === 'object' &&
+          Object.values(value).every((v) => v === '')),
+    )
+  }
 
-    const handleSearch = async (event: React.FormEvent) => {
-        event.preventDefault(); 
-        const searchValue = data.search.value.trim();
-      
-        if (!searchValue) {
-          setSearchResults([]);
-          // setPageNumber([]);
-          // setCount(0);
-          return;
-        }
-      };
-
+ 
+  const ApplyFilter = (): void => {
+    setPage(1);
+    fetchPosts();
+  };
+  
   return (
     <>
       <AdminLayout>
         <div className={styles.searchContainer}>
           {/* <div className={styles.admintitle}>Admin Search</div> */}
           <div className={styles.searchAndFilter}>
-            <form onSubmit={()=>console.log("Success!")} 
-            className={styles.searchForm}>
+            <form onSubmit={() => console.log("Success!")}
+              className={styles.searchForm}>
               <input
                 type="text"
                 autoComplete="new"
@@ -320,11 +449,11 @@ const AdminDashboard: React.FC = () => {
                 placeholder="Search by User/Page Title, Content, Hobby, Location"
                 className={styles.searchInput}
               />
-              <button type="submit" className={styles.searchButton}>
+              <button type="submit" className={styles.searchButton} onClick={handleInputSearch}>
                 {searchSvg}
               </button>
             </form>
-            <span className={styles.countText}>Count: <span style={{ color:"#0096c8", fontWeight:"500"}}>{25}</span></span>
+            <span className={styles.countText}>Count: <span style={{ color: "#0096c8", fontWeight: "500" }}>{Count}</span></span>
             {/* <button
                 className={styles.filterBtn}
                 onClick={() => console.log("filter")
@@ -335,7 +464,7 @@ const AdminDashboard: React.FC = () => {
             {hasNonEmptyValues(modalState) && (
               <DisplayState modalState={modalState} />
             )}
-           
+
             {hasNonEmptyValues(modalState) ? (
               <button
                 className={styles.filterBtn}
@@ -353,11 +482,12 @@ const AdminDashboard: React.FC = () => {
             )}
 
             {isModalOpen && (
-              <UserFilter
+              <PostsFilter
                 modalState={modalState}
                 setModalState={setModalState}
                 setIsModalOpen={setIsModalOpen}
                 setApplyFilter={setApplyFilter}
+                onApplyFilter={ApplyFilter}
               />
             )}
           </div>
@@ -366,155 +496,262 @@ const AdminDashboard: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '18.06%', textAlign: 'left' }}>User</th>
-                  <th style={{ width: '19.48%', textAlign: 'left' }}>
-                    Content
-                  </th>
-                  <th
-                    style={{
-                      width: '21.54%',
-                      textAlign: 'left',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    Posted at
-                  </th>
-                  <th style={{ width: '9.163%' }}>Hobby</th>
-                  <th
-                    style={{
-                      width: '16.54%',
-                      paddingRight: '16px',
-                      textAlign: 'center',
-                    }}
-                  >
-                    Location
-                  </th>
-                  <th
-                    style={{
-                      width: '6.939%',
-                      paddingLeft: '16px',
-                      textAlign: 'left',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 5 }}>
-                      <div><Upvote/></div>
-                      <div><Downvote/></div>
-                      <div><Comment/></div>
+
+                  <th >User</th>
+                  <th >Content</th>
+                  <th >
+                    <div className={styles.sortButtonWrapper}>
+                      Posted at
+                      <button
+                        className={styles.sortButton}
+                        onClick={() => setCreatedAtSort((prev) => !prev)}
+                      >
+                        <Image
+                          src={createdAtSort ? sortAscending : sortDescending}
+                          width={15}
+                          height={15}
+                          alt="sort"
+                          style={{ transform: 'rotate(180deg)' }}
+                        />
+
+                      </button>
                     </div>
                   </th>
-
-
                   <th
-                    style={{
-                      width: '6.87%',
-                      paddingRight: '16px',
-                      textAlign: 'center',
-                    }}
+
                   >
+                    Hobby
+                  </th>
+
+                  <th >
+                    Location
+                  </th>
+                  <th>
+                    <svg
+                      width="18"
+                      height="16"
+                      viewBox="0 0 18 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12.5433 14.3338L5.52857 14.3338C5.46856 14.3338 5.411 14.31 5.36856 14.2675C5.32613 14.2251 5.30229 14.1675 5.30229 14.1075V10.2608H2.02122C1.97796 10.2608 1.93561 10.2484 1.89918 10.225C1.86275 10.2017 1.83377 10.1684 1.81568 10.1291C1.79758 10.0899 1.79112 10.0462 1.79707 10.0034C1.80302 9.96051 1.82113 9.92027 1.84924 9.8874L8.86395 1.74129C8.88574 1.71814 8.91204 1.69969 8.94122 1.68708C8.97041 1.67447 9.00187 1.66797 9.03366 1.66797C9.06545 1.66797 9.09691 1.67447 9.12609 1.68708C9.15528 1.69969 9.18158 1.71814 9.20337 1.74129L16.2181 9.8874C16.246 9.91997 16.264 9.95981 16.2701 10.0022C16.2762 10.0447 16.2702 10.088 16.2526 10.1271C16.2351 10.1662 16.2068 10.1996 16.171 10.2232C16.1352 10.2469 16.0935 10.2599 16.0506 10.2608H12.7696V14.1075C12.7696 14.1675 12.7457 14.2251 12.7033 14.2675C12.6608 14.31 12.6033 14.3338 12.5433 14.3338ZM5.75485 13.8813L12.317 13.8813V10.0345C12.317 9.97447 12.3408 9.91691 12.3833 9.87447C12.4257 9.83204 12.4833 9.8082 12.5433 9.8082H15.5573L9.03592 2.23571L2.51451 9.8082H5.52857C5.58858 9.8082 5.64614 9.83204 5.68857 9.87447C5.73101 9.91691 5.75485 9.97447 5.75485 10.0345V13.8813Z"
+                        fill="white"
+                        stroke="white"
+                        stroke-width="0.8"
+                      />
+                    </svg>
+                  </th>
+                  <th>
+                    <svg
+                      width="18"
+                      height="16"
+                      viewBox="0 0 18 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clip-path="url(#clip0_18418_292454)">
+                        <path
+                          d="M5.45966 2.00212L12.4744 2.00212C12.5344 2.00212 12.5919 2.02597 12.6344 2.0684C12.6768 2.11084 12.7006 2.16839 12.7006 2.22841L12.7006 6.07518L15.9817 6.07518C16.025 6.07518 16.0673 6.08757 16.1037 6.1109C16.1402 6.13422 16.1692 6.1675 16.1873 6.20679C16.2054 6.24608 16.2118 6.28973 16.2059 6.33258C16.1999 6.37543 16.1818 6.41567 16.1537 6.44854L9.13898 14.5946C9.11719 14.6178 9.09089 14.6362 9.06171 14.6489C9.03252 14.6615 9.00106 14.668 8.96927 14.668C8.93748 14.668 8.90602 14.6615 8.87684 14.6489C8.84765 14.6362 8.82135 14.6178 8.79956 14.5946L1.78486 6.44854C1.75698 6.41596 1.73893 6.37613 1.73281 6.33369C1.7267 6.29125 1.73277 6.24794 1.75031 6.20882C1.76786 6.16969 1.79616 6.13636 1.83192 6.1127C1.86769 6.08904 1.90943 6.07602 1.95231 6.07518L5.23338 6.07518L5.23338 2.22841C5.23338 2.16839 5.25722 2.11084 5.29965 2.0684C5.34209 2.02596 5.39964 2.00212 5.45966 2.00212ZM12.2481 2.45469L5.68594 2.45469L5.68594 6.30146C5.68594 6.36147 5.6621 6.41903 5.61966 6.46146C5.57723 6.5039 5.51967 6.52774 5.45966 6.52774L2.4456 6.52774L8.96701 14.1002L15.4884 6.52774L12.4744 6.52774C12.4143 6.52774 12.3568 6.5039 12.3144 6.46146C12.2719 6.41903 12.2481 6.36147 12.2481 6.30146L12.2481 2.45469Z"
+                          fill="white"
+                          stroke="white"
+                          stroke-width="0.8"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_18418_292454">
+                          <rect
+                            width="17.9681"
+                            height="15.999"
+                            fill="white"
+                            transform="translate(17.9697 16) rotate(-180)"
+                          />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </th>
+                  <th>
+                    <svg
+                      width="17"
+                      height="16"
+                      viewBox="0 0 17 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clip-path="url(#clip0_18418_292450)">
+                        <path
+                          d="M4.9702 12.4813H4.94878L4.934 12.4968L2.35371 15.2061V2.73194C2.35371 1.98728 2.93356 1.38203 3.63696 1.38203H14.3029C15.0063 1.38203 15.5862 1.98728 15.5862 2.73194V11.1314C15.5862 11.8761 15.0063 12.4813 14.3029 12.4813H4.9702ZM14.3029 11.1814H14.3529V11.1314V2.73194V2.68194H14.3029H3.63696H3.58696V2.73194V12.5313V12.6563L3.67316 12.5658L4.99163 11.1814H14.3029Z"
+                          fill="white"
+                          stroke="white"
+                          stroke-width="0.0999935"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_18418_292450">
+                          <rect
+                            width="15.999"
+                            height="15.999"
+                            fill="white"
+                            transform="translate(0.969727)"
+                          />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </th>
+                  <th>
+                    <svg
+                      width="17"
+                      height="16"
+                      viewBox="0 0 17 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M2.05062 14.5112L2.19345 14.9929L2.33808 14.5118L2.64734 13.4829L2.64746 13.4825C3.42034 10.8849 5.7071 9.14108 8.33209 9.14108C8.42955 9.14108 8.58699 9.14479 8.77087 9.14932V11.1202C8.77087 11.383 8.85068 11.5904 8.98586 11.7333C9.12037 11.8755 9.29911 11.9423 9.47397 11.9423C9.67 11.9423 9.8568 11.8661 10.0318 11.7248C10.0319 11.7248 10.032 11.7247 10.0321 11.7246L15.402 7.43108L15.402 7.43106C15.6425 7.23865 15.7854 6.95906 15.7854 6.66567C15.7854 6.37228 15.6425 6.09268 15.402 5.90028L15.402 5.90025L10.0315 1.60627L10.0316 1.60625L10.0293 1.60454C9.85861 1.47322 9.67253 1.38906 9.47397 1.38906C9.29911 1.38906 9.12037 1.45585 8.98586 1.59805C8.85068 1.74095 8.77087 1.94835 8.77087 2.21111V4.29122C8.58665 4.28542 8.42594 4.28542 8.33258 4.28542H8.33209C4.52761 4.28542 1.44375 7.47954 1.44375 11.3938C1.44375 12.1042 1.54697 12.8084 1.74723 13.488L1.74731 13.4883L2.05062 14.5112ZM9.70129 5.10747V2.54699L14.8102 6.63411L14.81 6.63435L14.8179 6.63987C14.8326 6.65019 14.8391 6.65875 14.8415 6.66292C14.8423 6.66422 14.8427 6.66516 14.8429 6.66576C14.8426 6.6667 14.842 6.66835 14.8406 6.67079C14.8369 6.6772 14.8283 6.68864 14.8102 6.70317L9.70129 10.7903V8.39634V8.25211L9.55717 8.24646L9.25473 8.2346C8.90104 8.21664 8.51236 8.21066 8.33209 8.21066C5.83028 8.21066 3.601 9.57134 2.38782 11.7128C2.38268 11.6071 2.38012 11.5009 2.38012 11.3938C2.38012 7.9866 5.05356 5.22773 8.33209 5.22773C8.50255 5.22773 8.87546 5.23364 9.21298 5.24548L9.54594 5.25737L9.70129 5.26292V5.10747Z"
+                        fill="white"
+                        stroke="white"
+                        stroke-width="0.3"
+                      />
+                    </svg>
+                  </th>
+                  <th>
+                    <svg
+                      width="17"
+                      height="16"
+                      viewBox="0 0 17 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clip-path="url(#clip0_18418_292460)">
+                        <path
+                          d="M8.88817 11.7902L8.63444 11.6718L8.38071 11.7902L4.23477 13.7249V2.22342C4.23477 1.65017 4.65603 1.26797 5.06324 1.26797H12.2056C12.6129 1.26797 13.0341 1.65017 13.0341 2.22342V13.7249L8.88817 11.7902Z"
+                          stroke="white"
+                          stroke-width="1.2"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_18418_292460">
+                          <rect
+                            width="15.999"
+                            height="15.999"
+                            fill="white"
+                            transform="translate(0.96875)"
+                          />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </th>
+                  <th>
                     Spam
                   </th>
-                  <th
-                    style={{
-                      width: '6.252%',
-                      paddingRight: '16px',
-                      textAlign: 'left',
-                    }}
-                  >
+                  <th >
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody>
-                {searchResults.map((post, index) => (
+              <tbody >
+                {searchResults?.map((hobbyreq, index) => (
                   <tr key={index}>
                     <td>
-                      <div className={styles.resultItem}>
-                        <Link
-                          href={`/profile/${post?._author?.profile_url}`}
-                          className={styles.avatarContainer}
-                        >
-                          {post?._author?.profile_image ? (
-                            <img
-                              src={post?._author?.profile_image}
-                              alt={`${post.full_name}'s profile`}
-                              width={40}
-                              height={40}
-                              className={styles.avatarImage}
-                            />
-                          ) : (
-                            <Image
-                              className={styles['img']}
-                              src={DefaultProfile}
-                              alt="profile"
-                              width={40}
-                              height={40}
-                            />
-                          )}
-                        </Link>
-                        <div className={styles.detailsContainer}>
-                          <Link
-                            href={`/profile/${post?._author?.profile_url}`}
-                            className={styles.userName}
-                            style={{
-                              whiteSpace: 'nowrap',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-
-                            }}
-                          >
-                            {(post?._author?.full_name || post?._author?.title || '').slice(0, 25)
+                      <Link
+                        href={
+                          hobbyreq.author_type == 'User'
+                            ? `/profile/${hobbyreq._author?.profile_url}`
+                            : `/${pageType(hobbyreq?.listing_id?.type)}/${hobbyreq.listing_id?.page_url
+                            }`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <div className={styles.resultItem}>
+                          <div className={styles.avatarContainer}>
+                            {hobbyreq?._author?.profile_image ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={hobbyreq?._author?.profile_image}
+                                alt={`${hobbyreq?._author?.full_name}'s profile`}
+                                width={40}
+                                height={40}
+                                className={styles.avatarImage}
+                              />
+                            ) : (
+                              <Image
+                                className={styles.avatarImage}
+                                src={DefaultProfile}
+                                alt="profile"
+                                width={40}
+                                height={40}
+                              />
+                            )}
+                          </div>
+                          <div
+                            className={styles.detailsContainer}
+                            title={
+                              // hobbyreq?.user_id?.full_name?.length > 25
+                              //   ? hobbyreq?.user_id?.full_name
+                              //   : ''
+                              hobbyreq?.author_type == 'User' && hobbyreq?._author?.full_name
+                                ? hobbyreq._author?.full_name.slice(0, 25)
+                                : hobbyreq.listing_id?.title
                             }
-                          </Link>
+                          // style={{whiteSpace: 'nowrap'}}
+                          >
+                            {hobbyreq.author_type == 'User' && hobbyreq._author?.full_name
+                              ? hobbyreq._author?.full_name.slice(0, 25)
+                              : hobbyreq._author?.title.slice(0, 25)}
+                          </div>
                         </div>
-                      </div>
+                      </Link>
                     </td>
+
                     <td
                       dangerouslySetInnerHTML={{
-                        __html: post?.content.slice(0, 30),
-                      }}
-                      className={styles.user}
-                      style={{ whiteSpace: 'nowrap' }}
-                    ></td>
-                    <td
-                      className={styles.userPhone}
-                      style={{
-                        width: '20%',
-                        whiteSpace: 'nowrap',
+                        __html: hobbyreq?.content.slice(0, 50),
                       }}
                     >
-                      {formatDate(post?.createdAt)}
                     </td>
-                    <td className={styles.LoginType}>
-                      {post?._hobby?.display}
-                      {`${post?._genre ? ` - ${post?._genre?.display}` : ''}`}
-                    </td>
-                    <td className={styles.pagesLength} style={{ whiteSpace: 'nowrap' }}>{post?.visibility}</td>
-                    <td>
-                      <div style={{ display: 'flex', flexDirection: 'row', gap: 16, marginLeft: 16,alignItems:'flex-end' }}>
-                        <p className={styles.pagesLength}>{post?.up_votes?.count}</p>
-                        <p className={styles.pagesLength}>{post?.down_votes?.count}</p>
-                        <p className={styles.pagesLength}>{post?.comments?.length}</p>
-                      </div>
 
+                    <td>
+                      <div>{formatDate(hobbyreq?.createdAt)}</div>
                     </td>
-                    {/* <td className={styles.pagesLength}>
-                      {post?.down_votes?.count}
+                    <td >
+                      <div>{hobbyreq?._hobby?.display}</div>
                     </td>
-                    <td className={styles.pagesLength}>
-                      {post?.comments?.length}
-                    </td> */}
-                    <td className={styles.pagesLength}>
-                      <ToggleButton />
+                    <td >
+                      <div>{hobbyreq?.visibility}</div>
+                    </td>
+                    <td >
+                      <div>{hobbyreq?.up_votes?.count}</div>
+                    </td>
+                    <td >
+                      <div>{hobbyreq?.down_votes?.count}</div>
+                    </td>
+                    <td >
+                      <div>{hobbyreq?.comments?.length}</div>
+                    </td>
+                    <td >
+                      <div>{hobbyreq?.down_votes?.count}</div>
+                    </td>
+                    <td >
+                      <div>{hobbyreq?.down_votes?.count}</div>
+                    </td>
+                    <td >
+                      <AdminToggleButton isOn= {!hobbyreq?.is_published} handleToggle={()=>HandleToggle(hobbyreq?._id)}/>
                     </td>
                     <td>
-                      <div className={styles.actions}>
-                        <div onClick={() => handleEdit(post._id)}>
-                          {pencilSvg}
-                        </div>
-                        <div onClick={() => handleDelete(post._id)}>
-                          {deleteSvg}
-                        </div>
+                      <div
+
+                        className={styles.actions}
+                      >
+                        <div onClick={() => {
+                          handleEdit(hobbyreq._id);
+
+                        }}>{pencilSvg}</div>
+                        <div onClick={() => {
+                          handleDelete(hobbyreq._id);
+
+                        }}>{deleteSvg}</div>
+
                       </div>
                     </td>
                   </tr>
@@ -524,23 +761,38 @@ const AdminDashboard: React.FC = () => {
           </div>
 
           <div className={styles.pagination}>
-            {/* Previous Page Button */}
+            {/* Page Selection with Text */}
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginRight: '16px' }}>
+              <span className={styles.userName}>Page</span>
+              <select
+                value={page}
+                onChange={(e) => setPage(Number(e.target.value))}
+                className={styles["page-select-dropdown"]}
+              >
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+              <span className={styles.userName}>of {totalPages}</span>
+            </div>
 
-            {page > 1 && <button
-              // disabled={page <= 1}
+            {/* Previous Page Button */}
+            <button
+              disabled={page <= 1 || totalPages <= 1}
               className="users-next-btn"
               onClick={goToPreviousPage}
             >
               Prev
-            </button>}
+            </button>
 
-            <button
-              disabled={searchResults.length !== pagelimit}
-              className="users-next-btn"
-              onClick={goToNextPage}
-            >
+            {/* Next Page Button */}
+
+            <button className="users-next-btn" onClick={goToNextPage} disabled={page >= totalPages}>
               Next
             </button>
+
           </div>
 
         </div>

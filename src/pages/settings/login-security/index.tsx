@@ -345,6 +345,16 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
           </aside>
         )}
       </PageGridLayout>
+      {isMobile && (
+          <aside className={styles['aside-two']}>
+            <ViewProfileBtn />
+            <ExploreSidebarBtn
+              text="Help Center"
+              href="/help"
+              icon={<QuestionIcon />}
+            />
+          </aside>
+        )}
       <CustomSnackbar
         triggerOpen={snackbar.show}
         message={snackbar.message ?? 'This feature is under development'}
