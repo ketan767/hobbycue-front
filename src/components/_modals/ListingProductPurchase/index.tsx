@@ -356,13 +356,15 @@ const ListingProductPurchase: React.FC<Props> = ({
     <>
       <div className={styles['modal-wrapper']}>
         <div className={styles.topBar}>
-          <div
-            className={styles['modal-close-icon']}
-            style={{ left: 16, width: 'fit-content' }}
-            onClick={handleClose}
-          >
-            {backButtonSvg}
-          </div>
+          {isMobile && (
+            <div
+              className={styles['modal-close-icon']}
+              style={{ left: 16, width: 'fit-content' }}
+              onClick={handleClose}
+            >
+              {backButtonSvg}
+            </div>
+          )}
           <CloseIcon
             className={styles['modal-close-icon']}
             onClick={handleClose}
