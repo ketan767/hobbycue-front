@@ -178,7 +178,7 @@ const ListingPageLayout: React.FC<Props> = ({
         ),
       )
 
-      if (userHasListing) {
+      if (userHasListing || user?.is_admin) {
         dispatch(updateListingLayoutMode('edit'))
       } else {
         dispatch(updateListingLayoutMode('view'))
