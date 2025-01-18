@@ -5,6 +5,7 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import styles from './styles.module.css'
 import StatusDropdown from '@/components/_formElements/AdminStatusDropdown'
+import Link from 'next/link'
 
 type Props = {
   data?: any
@@ -134,6 +135,66 @@ const AdminActionModal: React.FC<Props> = ({
               <div />
             </div>
           </section>
+          <div className={styles.auditFields}>
+            <Link
+                    href={`/profile/${data?.user?.profile_url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >
+              <div className={styles.auditField}>
+              
+                <span className={styles.label}>Created By:</span>
+                   
+                    <span className={styles.value}>{data?.user.full_name || "N/A"}</span>
+                  
+              </div>
+              </Link>
+              <div className={styles.auditField}>
+                <span className={styles.label}>Created At:</span>
+                <span className={styles.value}>
+                {data?.createdAt ? 
+                  (() => {
+                      const date = new Date(data?.createdAt);
+                      const options = { year: 'numeric' as const, month: 'short' as const, day: 'numeric' as const, hour: 'numeric' as const, minute: 'numeric' as const, hour12: true };
+                      const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+                      const [monthDay, year, time] = formattedDate.split(', ');
+                      return `${year} ${monthDay}, ${time}`;
+                  })() 
+                  : "N/A"
+                }
+                </span>
+                
+              </div>
+              <Link
+                    href={`/profile/admin`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >
+              <div className={styles.auditField}>
+             
+                <span className={styles.label}>Updated By:</span>
+                
+                    <span className={styles.value}>{"HobbyCue Admin"}</span>
+                    
+                {/* <span className={styles.value}></span> */}
+              </div>
+              </Link>
+              <div className={styles.auditField}>
+                <span className={styles.label}>Updated At:</span>
+                <span className={styles.value}>
+                {data?.updatedAt ? 
+                  (() => {
+                      const date = new Date(data?.updatedAt);
+                      const options = { year: 'numeric' as const, month: 'short' as const, day: 'numeric' as const, hour: 'numeric' as const, minute: 'numeric' as const, hour12: true };
+                      const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+                      const [monthDay, year, time] = formattedDate.split(', ');
+                      return `${year} ${monthDay}, ${time}`;
+                  })() 
+                  : "N/A"
+                }
+                </span>
+              </div>
+            </div>
           
           <footer className={styles['footer']}>
             <button
