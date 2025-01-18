@@ -157,7 +157,7 @@ const ListingPlacePurchase: React.FC<Props> = ({
   }, [])
 
   const handleSubmit = async () => {
-    if (formData?.variant_value === 'Select') {
+    if (data?.variations?.length > 0 && formData?.variant_value === 'Select') {
       return setSnackbar({
         display: true,
         type: 'warning',
@@ -195,10 +195,6 @@ const ListingPlacePurchase: React.FC<Props> = ({
   return (
     <>
       <div className={styles['modal-wrapper']}>
-        <CloseIcon
-          className={styles['modal-close-icon']}
-          onClick={handleClose}
-        />
         {/* Modal Header */}
 
         <section className={styles['body']}>
@@ -210,15 +206,15 @@ const ListingPlacePurchase: React.FC<Props> = ({
           >
             <div className={styles['img-and-label']}>
               {listingModalData.profile_image ? (
-                <img src={listingModalData?.profile_image} alt="" />
+                <img src={listingModalData?.profile_image} alt="" className={`${styles['default-img']}`}/>
               ) : (
                 <div
-                  className={`${styles['default-img']} default-program-listing-icon`}
+                  className={`${styles['default-img']} default-program-listing-icon ${styles['w-100px']}`}
                 ></div>
               )}
-              <div>
-                <strong>{listingModalData?.title}</strong>
-                <p>{listingModalData?.tagline}</p>
+              <div className={styles['label-content']}>
+                <strong className={styles['title']}>{listingModalData?.title}</strong>
+                <p className={styles['tagline']}>{listingModalData?.tagline}</p>
               </div>
             </div>
           </div>
@@ -229,10 +225,7 @@ const ListingPlacePurchase: React.FC<Props> = ({
                   {data?.variant_tag}
                   <span className={styles['styles-red']}>*</span>
                 </p>
-                <div
-                  className={styles['input-box']}
-                  ref={dropdownRef}
-                >
+                <div className={styles['input-box']} ref={dropdownRef}>
                   <InputSelect
                     onChange={(e: any) => {}}
                     value={formData.variant_value}
