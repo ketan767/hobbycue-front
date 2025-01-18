@@ -86,6 +86,7 @@ const SingleComment: React.FC<Props> = ({
     window.addEventListener('click', outsideClick)
     return () => window.removeEventListener('click', outsideClick)
   }, [])
+  console.log('comment', comment)
 
   return (
     <div key={comment?._id} className={styles['comment']}>
@@ -112,12 +113,12 @@ const SingleComment: React.FC<Props> = ({
       {/* All Content  */}
       <section className={styles['content-wrapper']}>
         {/* Header */}
-        <header>
+        <header style={{marginBottom: '4px'}}>
           <Link href={`/profile/${comment?._author?.profile_url}`}>
-            <p className={`${styles['author-name']} truncateOneLine`}>
+            <p className={`truncateOneLine ${styles['author-name']}`}>
               {comment?.author_type === 'Listing'
                 ? comment?._author?.title
-                : comment?._author?.full_name}
+                : comment?._author?.full_name} fljsfjihfhlfjfjorfjajfghgrijgg
             </p>
           </Link>
           <p className={styles['date']}>

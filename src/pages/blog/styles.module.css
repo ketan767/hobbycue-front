@@ -249,8 +249,8 @@
   margin-bottom: 34.5px;
   width: 100%;
   height: 296px;
-  position: relative;
   cursor: pointer;
+  position: relative;
 }
 .blank-cover-image {
   border-radius: 10px;
@@ -841,7 +841,9 @@
   .cover-image {
     height: 109.33px;
     margin-bottom: 8px;
-    width: 100vw;
+    margin-left: 15px;
+    /* width: 100vw; */
+    aspect-ratio: 3 / 1;
     border-radius: 0;
     transform: translateX(-16px);
   }
@@ -877,7 +879,7 @@
 
   .blog-desc {
     font-family: Poppins;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 500;
     line-height: 13.21px;
     text-align: center;

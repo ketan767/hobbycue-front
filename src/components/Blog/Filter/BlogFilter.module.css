@@ -124,7 +124,7 @@
   position: relative;
 }
 .resultContainer {
-  border-radius: 4px 0px 0px 0px;
+  /* border-radius: 4px 0px 0px 0px;
   box-shadow: 0px 8px 12px 0px #939ca31f;
   box-shadow: 0px 0px 2px 0px #939ca35c;
   cursor: pointer;
@@ -142,10 +142,16 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-  scrollbar-width: thin;
+  scrollbar-width: thin; */
+    padding-left: 8px;
+    padding-right: 8px;
+    /* border-bottom: 1px solid #ced4da; */
+    overflow-y: scroll;
+    height: 200px;
+    box-shadow: 0px 8px 12px 0px #939ca31f;
 }
-.resultContainer span {
-  font-family: Poppins;
+.resultContainer p {
+  /* font-family: Poppins;
   font-size: 14px;
   font-weight: 400;
   line-height: 18px;
@@ -153,7 +159,24 @@
   text-align: left;
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
-  color: #6d747a;
+  color: #6d747a; */
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  cursor: pointer;
+  line-height: 18px;
+  border-radius: 4px;
+  padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--Grey-Darker, #6d747a);
+    width: 162px;
 }
 .formLabel {
   color: var(--Grey-Darker, #6d747a);
@@ -162,6 +185,12 @@
   font-style: normal;
   font-weight: 400;
   line-height: 22px; /* 157.143% */
+}
+
+.resultContainer p:hover {
+  background: #ccc1da !important;
+  color: #8064a2;
+  transition: 0.3s;
 }
 
 .formInput {

@@ -171,7 +171,7 @@ const BlogCard: React.FC<Props> = ({ data }) => {
           <div className={styles.contentTitle}>
             <p className={styles.tagline}>
               {' '}
-              {data?.tagline ? data?.tagline : '\u00A0'}
+              {data?.tagline ? data?.tagline : data?.content ? data?.content?.replace(/<\/?[^>]+(>|$)/g, "") : '\u00A0'}
             </p>
           </div>
 

@@ -71,6 +71,7 @@
   border-bottom-right-radius: 8px;
   height: 161px;
   min-width: 161px;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
 }
 .contentImage {
@@ -255,6 +256,7 @@
     border-bottom-right-radius: 8px;
     height: 180px;
     min-width: 180px;
+    aspect-ratio: 1 / 1;
     overflow: hidden;
   }
   .contentHead {
