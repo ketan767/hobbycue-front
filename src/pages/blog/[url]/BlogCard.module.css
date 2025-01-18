@@ -302,6 +302,10 @@
   font-size: 14px;
   line-height: 18px;
   color: #000000;
+  width: 84px;
+  overflow: hhidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .all-comment-container .comment .content-wrapper .date {
@@ -646,10 +650,24 @@ background: rgba(128, 100, 162, 0.25);
 }
 @media screen and (max-width: 1100px) {
   .author-name {
-    max-width: calc(100% - 100px);
+    /* max-width: calc(100% - 100px); */
+    max-width: 100%;
+    font-family: Poppins;
+    font-weight: 500;
+    line-height: 18px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    font-size: 14px;
+
+    width: 84px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   .comment {
-    max-width: calc(100% - 48px);
+    /* max-width: calc(100% - 48px); */
+    max-width: 100%;
   }
   .metaImgContainer {
     
