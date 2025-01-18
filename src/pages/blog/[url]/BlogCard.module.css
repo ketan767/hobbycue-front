@@ -220,6 +220,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: transparent;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .comment-input-wrapper .submit-btn:focus-visible {

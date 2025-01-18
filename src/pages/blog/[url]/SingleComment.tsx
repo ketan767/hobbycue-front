@@ -118,7 +118,7 @@ const SingleComment: React.FC<Props> = ({
             <p className={`truncateOneLine ${styles['author-name']}`}>
               {comment?.author_type === 'Listing'
                 ? comment?._author?.title
-                : comment?._author?.full_name} fljsfjihfhlfjfjorfjajfghgrijgg
+                : comment?._author?.full_name}
             </p>
           </Link>
           <p className={styles['date']}>

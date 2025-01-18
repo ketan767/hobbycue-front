@@ -114,6 +114,14 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
   //   }
   // }, [isLoggedIn, isAuthenticated, user])
 
+  // For handling /undefined
+  useEffect(() => {
+    if (router.asPath.includes("/undefined")) {
+      router.replace(user?.isAuthenticated ? "/community" : "/");
+    }
+    dispatch(setShowPageLoader(false))
+  }, [router.asPath]);
+
   /** Handles `showPageLoader` while page changes. */
   useEffect(() => {
     let timeout: NodeJS.Timeout
