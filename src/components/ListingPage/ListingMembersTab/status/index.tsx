@@ -12,10 +12,10 @@ const statusOptions = [
     label: 'In Progress',
     icon: InProgressIcon,
     color: 'blue',
-    status: 'In Progress',
+    status: 'in_progress',
   },
-  { label: 'Accepted', icon: AcceptedIcon, color: 'green', status: 'Accepted' },
-  { label: 'Rejected', icon: RejectedIcon, color: 'red', status: 'Rejected' },
+  { label: 'Accepted', icon: AcceptedIcon, color: 'green', status: 'accepted' },
+  { label: 'Rejected', icon: RejectedIcon, color: 'red', status: 'rejected' },
 ]
 
 const StatusDropdown: React.FC<{
