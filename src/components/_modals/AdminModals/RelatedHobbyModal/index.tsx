@@ -36,12 +36,11 @@ import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
-import { log } from 'console'
 import { getAdminHobbies } from '@/services/admin.service'
 import { getHobbyMembers } from '@/services/hobby.service'
 
 type Props = {
-    onSave? : any;
+    onSave?: any;
     onBackBtnClick?: () => void
     confirmationModal?: boolean
     setConfirmationModal?: any
@@ -64,7 +63,7 @@ const HobbyRelatedEditModal: React.FC<Props> = ({
 }) => {
     const { listingModalData, listingTypeModalMode, pageDataForEvent } =
         useSelector((state: RootState) => state.site)
-    const [list, setList] = useState<{ name: string; description: string,id : string }[]>([])
+    const [list, setList] = useState<{ name: string; description: string, id: string }[]>([])
     const [pagedata, setPagedata] = useState([])
     const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
     const [value, setValue] = useState<any>([])
@@ -73,12 +72,14 @@ const HobbyRelatedEditModal: React.FC<Props> = ({
     const [error, setError] = useState<string | null>(null)
     const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
     const [isError, setIsError] = useState(false)
+    const [searchQuery, setSearchQuery] = useState('');
 
     const [showDropdown, setShowDropdown] = useState(false)
     const dropdownRef: any = useRef()
     useOutsideAlerter(dropdownRef, () => {
         setShowDropdown(false)
         setHoveredValue(null)
+        handleClose();
     })
     const [initialData, setInitialData] = useState<any>([])
     const [isChanged, setIsChanged] = useState(false)
@@ -90,11 +91,11 @@ const HobbyRelatedEditModal: React.FC<Props> = ({
         }
         onSave(id)
     }
-   
+
 
     useEffect(() => {
         const fetchData = async () => {
-            
+
 
             try {
                 let data = [];
@@ -104,44 +105,54 @@ const HobbyRelatedEditModal: React.FC<Props> = ({
 
                     data = res.data.data.hobbies.map((item: any) => ({
                         name: item.display || item.slug || "None",
-                        description: (item.description || 'No description available').slice(0, 40) + '....',
-                        id : item._id
+                        description: (item.description || 'No description available').slice(0, 80) + '....',
+                        id: item._id
                     }));
-                    
+
                 } else if (type === 'Admin') {
 
 
                     const { res } = await getAllUserDetail(
-                          `sort=-last_login&populate=_addresses`,
-                        )
-                        console.log("users : ",res.data.data.users);
-                        
-                    data = res.data.data.users
-                        .filter((item: any) => item !== null && item !== undefined) // Filter out null or undefined items
-                        .map((item: any) => ({
-                            name: item.display_name ||"Unknown user",
-                            description: (item?.about||item?.tagline + item?._addresses[0]?.city || 'No description available').slice(0, 50) + '....',
-                            id : item._id
-                        }));
+                        `sort=-last_login&populate=_addresses`,
+                    )
 
+                    data = res.data.data.users
+                        .filter((item: any) => item !== null && item !== undefined && item?.display_name || item?.full_name) // Filter out null or undefined items
+                        .map((item: any) => ({
+                            name: item?.display_name || item?.full_name?.slice(0, 30) || "Unknown user",
+                            description: (item?.about || item?.tagline + " " + item?._addresses[0]?.city || 'No description available').slice(0, 50) + '....',
+                            id: item._id
+                        }));
                 }
                 // console.log(data);
 
-                setList(data);
+                setList(data.sort((a: any, b: any) => a.name.localeCompare(b.name)));
             } catch (error) {
                 console.error('Error fetching dropdown data:', error);
             }
         };
 
-        if(type==='Related'){
-            setValue(data?.related_hobbies.map((key : any) =>key?.display||key.slug))
-            setId(data?.related_hobbies.map((key : any) =>key?._id))
-        }
+        const setData = async () => {
+            if (type === 'Related') {
+                setValue(data?.related_hobbies.map((key: any) => key?.display || key.slug))
+                setId(data?.related_hobbies.map((key: any) => key?._id))
+            } else if (type === 'Admin') {
+                const { res } = await getHobbyMembers(data._id);
+                const users = res.data.users.filter((item: any) => item !== null && item !== undefined)
+                // console.log(users);
+                setValue(users.map((key: any) => key?.display_name || key?.full_name.slice(0, 18) || "Unknown user"))
+                setId(users.map((key: any) => key?._id))
+            }
+        };
 
         fetchData();
+        setData();
     }, [type]);
 
+
+
     const handleChange = (itemToChange: any) => {
+        setSearchQuery('');
         if (value?.includes(itemToChange.name)) {
             // Clear error when removing a value
             setError('');
@@ -159,7 +170,7 @@ const HobbyRelatedEditModal: React.FC<Props> = ({
             }
         }
     };
-    
+
     const HandleSaveError = async () => {
         if (!value || value === '' || value.length === 0) {
             setIsError(true)
@@ -194,7 +205,7 @@ const HobbyRelatedEditModal: React.FC<Props> = ({
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {
             console.log({ event })
-            
+
             if (event.key === 'Enter') {
                 nextButtonRef.current?.focus()
             }
@@ -218,9 +229,16 @@ const HobbyRelatedEditModal: React.FC<Props> = ({
         )
     }
 
+    const filteredList = list.filter((item) => {
+        const nameMatch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+
+        return nameMatch;
+    });
+
+
     return (
         <>
-            <div className={styles['modal-container']}>
+            <div className={styles['modal-container']} ref={dropdownRef}>
                 <div className={styles['modal-wrapper']}>
                     <CloseIcon
                         className={styles['modal-close-icon']}
@@ -236,149 +254,94 @@ const HobbyRelatedEditModal: React.FC<Props> = ({
                     <hr className={styles['modal-hr']} />
 
                     <section className={styles['body'] + ' custom-scrollbar'}>
-
                         <div
                             className={styles['input-box']}
                             style={value?.length === 0 || !value ? { marginTop: '1rem' } : {}}
                         >
                             <input hidden required />
-                            {value.length > 0 && <div className={styles['selected-values']}>
-                                {value?.map((item: any) => {
-                                    console.log(value)
-                                    return (
-                                        <div key={item} className={styles['selected-value']}>
-                                            <p>{item}</p>
-                                            <Image
-                                                src={CrossIcon}
-                                                alt="cancel"
-                                                onClick={() => handleChange(item)}
-                                            />
-                                        </div>
-                                    )
-                                })}
-                            </div>}
+                            {value.length > 0 && (
+                                <div className={styles['selected-values']}>
+                                    {value?.map((item: any, index: number) => {
+                                        const ids = id[index];
+                                        return (
+                                            <div key={item} className={styles['selected-value']}>
+                                                <p>{item}</p>
+                                                <Image
+                                                    src={CrossIcon}
+                                                    alt="cancel"
+                                                    onClick={() => handleChange({ name: item, id: ids })}
+                                                />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
 
                             <FormControl variant="outlined" size="small">
                                 <div className={styles['select-container']} ref={dropdownRef}>
                                     <div
                                         tabIndex={0}
-                                        className={`${styles['select-input']} ${error ? styles['select-input-error'] : ' '
-                                            }`}
+                                        className={`${styles['select-input']} ${error ? styles['select-input-error'] : ''}`}
                                         onClick={() =>
                                             setShowDropdown((prev) => {
                                                 if (prev === true) {
-                                                    setHoveredValue(null)
+                                                    setHoveredValue(null);
                                                 }
-                                                return !prev
+                                                return !prev;
                                             })
                                         }
                                         onKeyDown={(e) => {
                                             if (['Enter'].includes(e.key) || e.key === ' ') {
-                                                e.preventDefault()
-                                                e.stopPropagation()
-                                                if (
-                                                    e.key === 'Enter' &&
-                                                    showDropdown &&
-                                                    hoveredValue !== null
-                                                ) {
-                                                    handleChange(list[hoveredValue].name)
-                                                    setShowDropdown(false)
-                                                    setHoveredValue(null)
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                if (e.key === 'Enter' && showDropdown && hoveredValue !== null) {
+                                                    handleChange(filteredList[hoveredValue!]);
+                                                    setShowDropdown(false);
+                                                    setHoveredValue(null);
                                                 } else if (!showDropdown) {
-                                                    setShowDropdown(true)
-                                                    setHoveredValue(0)
+                                                    setShowDropdown(true);
+                                                    setHoveredValue(0);
                                                 }
-                                            } else if (
-                                                e.key === 'ArrowUp' &&
-                                                showDropdown &&
-                                                hoveredValue !== null
-                                            ) {
-                                                setHoveredValue((prev) => {
-                                                    if (prev === 0) {
-                                                        return list.length - 1
-                                                    } else {
-                                                        return (prev as number) - 1
-                                                    }
-                                                })
-                                            } else if (
-                                                e.key === 'ArrowDown' &&
-                                                showDropdown &&
-                                                hoveredValue !== null
-                                            ) {
-                                                setHoveredValue((prev) => {
-                                                    if (prev === list.length - 1) {
-                                                        return 0
-                                                    } else {
-                                                        return (prev as number) + 1
-                                                    }
-                                                })
+                                            } else if (e.key === 'ArrowUp' && showDropdown && hoveredValue !== null) {
+                                                setHoveredValue((prev) => (prev === 0 ? filteredList.length - 1 : prev! - 1));
+                                            } else if (e.key === 'ArrowDown' && showDropdown && hoveredValue !== null) {
+                                                setHoveredValue((prev) => (prev === filteredList.length - 1 ? 0 : prev! + 1));
                                             }
                                         }}
                                     >
-
-                                        <p>Search and select Related hobbies</p>
-
-                                        <Image
-                                            src={showDropdown ? UpArrow : DownArrow}
-                                            alt="down"
+                                        <input
+                                            type="text"
+                                            placeholder="Search and select Related hobbies"
+                                            value={searchQuery}
+                                            onChange={(e) => { setSearchQuery(e.target.value) }}
                                         />
+                                        <Image src={showDropdown ? UpArrow : DownArrow} alt="down" />
                                     </div>
                                     {showDropdown && (
-                                        <div
-                                            className={
-                                                styles['options-container'] + ' custom-scrollbar'
-                                            }
-                                        >
-                                            {list.map(
-                                                (
-                                                    item: { name: string; description: string,id : string },
-                                                    idx: number,
-                                                ) => {
-                                                    const desc = item.description.trim()
+                                        <div className={styles['options-container'] + ' custom-scrollbar'}>
+                                            {filteredList.map((item, idx) => {
+                                                console.log(item);
 
-                                                    if (
-                                                        desc !== '' &&
-                                                        desc !== null &&
-                                                        desc !== undefined
-                                                    )
-                                                        return (
-                                                            <div
-                                                                className={`${styles['single-option']}  ${value?.includes(item.name)
-                                                                    ? styles['selcted-option']
-                                                                    : ''
-                                                                    }
-                                ${hoveredValue === idx &&
-                                                                    styles['hovered-single-option']
-                                                                    }
-                                `}
-                                                                key={item.name}
-                                                                onClick={() => {
-                                                                    handleChange(item)
-                                                                    setShowDropdown(false)
-                                                                    setHoveredValue(null)
-                                                                }}
-                                                            >
-                                                                <p className={styles.tagDesc}>{item.name}</p>
-                                                                {type === 'Admin' && (
-                                                                    <p
-                                                                        className={styles.tagDesc}
-                                                                        dangerouslySetInnerHTML={{ __html: item.description }}
-                                                                    />
-                                                                )}
-                                                                {type === 'Related' && (
-                                                                    <p className={styles.tagDesc}>
-                                                                        {item.description}
-                                                                    </p>
-                                                                )}
+                                                const desc = item.description.trim();
+                                                return (
+                                                    <div
+                                                        key={item.name}
+                                                        className={`${styles['single-option']} ${value?.includes(item.name) ? styles['selcted-option'] : ''} ${hoveredValue === idx && styles['hovered-single-option']}`}
+                                                        onClick={() => {
+                                                            handleChange(item);
+                                                            setShowDropdown(false);
+                                                            setHoveredValue(null);
+                                                        }}
+                                                    >
+                                                        <p className={styles.tagDesc}>{item.name}</p>
 
-                                                            </div>
-                                                        )
-                                                },
-                                            )}
+                                                        <p className={styles.tagDesc}>{item.description}</p>
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     )}
                                 </div>
-
                                 <p className={styles.error}>{error}</p>
                             </FormControl>
                         </div>

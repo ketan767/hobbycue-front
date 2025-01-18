@@ -1,11 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Button, CircularProgress } from '@mui/material'
+import { Button, CircularProgress, FormControl } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import styles from './styles.module.css'
 import { getAllHobbies } from '@/services/hobby.service'
+import Image from 'next/image'
+import useOutsideAlerter from '@/hooks/useOutsideAlerter'
+import DownArrow from '@/assets/svg/chevron-down.svg'
+import UpArrow from '@/assets/svg/chevron-up.svg'
+import CrossIcon from '@/assets/svg/cross.svg'
 
 type Props = {
     data?: any
@@ -14,9 +19,9 @@ type Props = {
     handleClose?: any
 }
 
-const EditHobbyModal: React.FC<Props> = ({ data,handleSubmit, handleClose }) => {
+const EditHobbyModal: React.FC<Props> = ({ data, handleSubmit, handleClose }) => {
     // console.log(data);
-    
+
     const dispatch = useDispatch()
     const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
     const [categories, setCategories] = useState([])
@@ -30,6 +35,7 @@ const EditHobbyModal: React.FC<Props> = ({ data,handleSubmit, handleClose }) => 
         display: false,
         message: '',
     })
+    const [list, setList] = useState<{ name: string; description: string, id: string }[]>([])
 
     // State for form data
     const [formData, setFormData] = useState({
@@ -39,13 +45,55 @@ const EditHobbyModal: React.FC<Props> = ({ data,handleSubmit, handleClose }) => 
         level: data?.level,
         category: data?.category?._id,
         sub_category: data?.sub_category?._id,
-        tags: data?.tags[0]?.display,
+        tags: data?.tags?.map((item : any)=>item?._id),
         styleType: '',
     })
+    const [selectedValues, setSelectedValues] = useState<string[]>([]);
+    const [selectedId, setSelectedId] = useState<string[]>([]);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+
+
+    const handleSelectValue = (item: any) => {
+        if (!selectedValues.includes(item.name)) {
+            setSelectedValues((prev) => [...prev, item.name]);
+            setFormData((prev) => ({
+                ...prev,
+                tags: [...prev.tags, item.id],
+            }));
+            // setSelectedId((prev) => [...prev, item.id]);
+        }
+        setShowDropdown(false);
+    };
+
+    const handleRemoveValue = (value:any) => {
+        setSelectedValues((prev) => prev.filter((item) => item !== value.name));
+        setFormData((prev) => ({
+            ...prev,
+            tags: prev.tags.filter((id : any) => id !== value.id),
+        }));
+    };
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            handleClose();
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     useEffect(() => {
         getAllHobbies(`level=0`)
-            .then((res) => setCategories(res.res.data.hobbies))
+            .then((res) => {
+                setCategories(res.res.data.hobbies);
+                setSelectedValues(data?.tags?.map((item : any)=>item?.display))
+            })
             .catch((err) => console.log({ err }))
     }, [])
 
@@ -57,6 +105,20 @@ const EditHobbyModal: React.FC<Props> = ({ data,handleSubmit, handleClose }) => 
         }
     }, [formData.category])
 
+    useEffect(() => {
+
+        getAllHobbies(`level=0&level=1&level=2&level=3&level=4&level=5`)
+            .then((res) => setList(res.res.data.hobbies.sort((a:any, b:any) => a.display.localeCompare(b.display)).map((h: any) => {
+                return {
+                    name: h.display,
+                    description: h.description,
+                    id: h._id,
+                }
+            })))
+            .catch((err) => console.log({ err }))
+
+    }, [])
+
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const target = event.target as HTMLInputElement;
         const { id, value, type, checked } = target
@@ -66,12 +128,17 @@ const EditHobbyModal: React.FC<Props> = ({ data,handleSubmit, handleClose }) => 
         }))
     }
 
+    const handleChange = (item: any) => {
+        console.log(item);
+
+    }
+
     const handleFormSubmit = async () => {
-        console.log("formData : ",formData);
-        
+        console.log("formData : ", formData);
+
         setSubmitBtnLoading(true)
         try {
-            await handleSubmit({...data,...formData});
+            await handleSubmit({ ...data, ...formData });
             setSnackbar({
                 type: 'success',
                 display: true,
@@ -90,7 +157,7 @@ const EditHobbyModal: React.FC<Props> = ({ data,handleSubmit, handleClose }) => 
 
     return (
         <>
-            <div className={`${styles['modal-wrapper']}`}>
+            <div className={`${styles['modal-wrapper']}`} ref={dropdownRef}>
                 <header className={styles['header']}>
                     <h4 className={styles['heading']}>Edit Hobby</h4>
                     <CloseIcon
@@ -211,21 +278,73 @@ const EditHobbyModal: React.FC<Props> = ({ data,handleSubmit, handleClose }) => 
                     </div>
 
                     {/* Row 4 */}
+                    {selectedValues.length > 0 && (
+                        <div className={styles['selected-values']}>
+                            {selectedValues.map((value, index) => (
+                                <div key={index} className={styles['selected-value']}>
+                                    <span>{value}</span>
+                                    <button
+                                        type="button"
+                                        className={styles['remove-btn']}
+                                        onClick={() => handleRemoveValue({name : value,id: selectedId[index]})}
+                                    >
+                                        <Image
+                                            src={CrossIcon}
+                                            alt="down"
+
+                                        />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                     <div className={styles['input-row']}>
+
                         <div className={styles['input-box-wrapper']}>
                             <label htmlFor="tags" className={styles['label']}>
                                 Tags
                             </label>
-                            <input
-                                id="tags"
-                                type="text"
-                                className={styles['input-box-element']}
-                                placeholder="Search and select tags"
-                                value={formData.tags}
-                                onChange={handleInputChange}
-                                required
-                            />
+                            <div className={styles['dropdown-container']}>
+
+                                <div
+                                    className={styles['dropdown']}
+                                    onClick={() => setShowDropdown((prev) => !prev)}
+                                >
+                                    <p className={styles['dropdown-placeholder']}>
+                                        {selectedValues.length === 0 ? 'Select tags' : ''}
+                                    </p>
+                                    <div>
+                                        <Image
+                                            src={showDropdown ? UpArrow : DownArrow}
+                                            alt="down"
+                                        />
+                                    </div>
+                                </div>
+                                {showDropdown && (
+                                    <div className={styles['dropdown-options']}>
+                                        {list.map((option,index) => (
+                                            <div
+                                                key={option.id}
+                                                className={`${styles["dropdown-option"]} ${selectedValues.some((item) => item === option.name)
+                                                        ? styles["selected-option"]
+                                                        : ""
+                                                    }`}
+                                                onClick={() => handleSelectValue(option)}
+                                            >
+                                                <div style={{display:'flex',gap:4}}>
+                                                    <p className={styles.tagDesc}>{option.name}</p>
+                                                    <p className={styles.tagDesc}>
+                                                        {option.description?.slice(0, 18)}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
+
+
                         <div className={styles['input-box-wrapper']}>
                             <label htmlFor="styleType" className={styles['label']}>
                                 Style Type
