@@ -174,7 +174,7 @@ const AdminActionModal: React.FC<Props> = ({
              
                 <span className={styles.label}>Updated By:</span>
                 
-                    <span className={styles.value}>{"HobbyCue Admin"}</span>
+                    <span className={styles.value}>{data?.updatedBy}</span>
                     
                 {/* <span className={styles.value}></span> */}
               </div>

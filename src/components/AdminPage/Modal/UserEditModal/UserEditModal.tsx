@@ -758,7 +758,7 @@ const EditUser: React.FC<UserEditProps> = ({
                 
               </div>
               <Link
-                    href={user.updated_profile_url ? `/profile/${user.updated_profile_url}` : `/profile/admin`}
+                    href={user.redirectUrl ? `/profile/${user.redirectUrl}` : `/profile/admin`}
                     target="_blank"
                     rel="noopener noreferrer"
                     >
@@ -766,7 +766,7 @@ const EditUser: React.FC<UserEditProps> = ({
              
                 <span className={styles.label}>Updated By:</span>
                 
-                    <span className={styles.value}>{user.updatedBy || "HobbyCue Admin"}</span>
+                    <span className={styles.value}>{user.updatedBy || ""}</span>
                     
                 {/* <span className={styles.value}></span> */}
               </div>

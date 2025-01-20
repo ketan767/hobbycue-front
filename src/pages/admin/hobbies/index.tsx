@@ -116,6 +116,7 @@ const HobbiesRequest: React.FC = () => {
     listing_id: '',
     createdAt: new Date(),
     updatedAt: new Date(),
+    updatedBy:'',
     user: {}
   })
   // const [createdAtSort, setCreatedAtSort] = useState(false);
@@ -519,6 +520,7 @@ const HobbiesRequest: React.FC = () => {
       status: newStatus?.status,
       createdAt: new Date(hobbyreq?.createdAt),
       updatedAt: new Date(hobbyreq?.updatedAt || hobbyreq?.createdAt),
+      updatedBy : hobbyreq?.updatedBy,
       user: hobbyreq?.user_id
     })
     console.log('status changed', hobbyData)
