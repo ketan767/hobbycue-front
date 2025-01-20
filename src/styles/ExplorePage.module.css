@@ -82,6 +82,11 @@
 .static-title {
   line-height: 24px !important;
 }
+
+.left-aside{
+  position: sticky;
+  top: calc(var(--navbar-height-desktop) + var(--spacing-12));
+}
   
   .community-left-aside,
   .community-right-aside{
@@ -118,6 +123,11 @@
   .community-left-aside,
   .community-right-aside {
     height: auto;
+  }
+
+  .left-aside{
+    position: relative;
+    top: 0;
   }
   .profileSwitcherWrapper {
     display: none;
