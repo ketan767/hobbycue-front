@@ -69,7 +69,38 @@
   flex-shrink: 0;
   border-radius: 2px;
 }
+.default-btn-seperator {
+  height: 12px;
+  background: #f2f0f5;
+}
+.default-settings-text {
+  font-family: 'Poppins';
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: left;
+  color: #8064a2;
+}
+.settings-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 224px;
+  height: 40px;
+  gap: 10px;
+  border-radius: 8px;
+  border: 1px solid #8064a2;
+  background-color: #fff;
+  cursor: pointer;
+  z-index: 500;
+  margin-top: 0
+}
 
+.padding {
+  height: 12px;
+  color: #ced4da;
+  border-radius: 0 4px 4px 0;
+}
 @media screen and (max-width: 1100px) {
   .container p {
     font-size: 12px;
