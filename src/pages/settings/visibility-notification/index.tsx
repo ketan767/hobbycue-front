@@ -482,7 +482,19 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                 </select>
               </div>
             </div>
-            {isMobile && (
+            {/* {isMobile && (
+              <aside className={styles['aside-two']}>
+                <ViewProfileBtn />
+                <ExploreSidebarBtn
+                  text="Help Center"
+                  href="/help"
+                  icon={<QuestionIcon />}
+                />
+              </aside>
+            )} */}
+          </div>
+        </SettingsDropdownLayout>
+        {isMobile && (
               <aside className={styles['aside-two']}>
                 <ViewProfileBtn />
                 <ExploreSidebarBtn
@@ -492,8 +504,6 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                 />
               </aside>
             )}
-          </div>
-        </SettingsDropdownLayout>
         {!isMobile && (
           <aside className={styles['aside-two']}>
             <ViewProfileBtn />

@@ -235,6 +235,106 @@ export const getHobbyRequests = async (
   }
 }
 
+export const getFilteredHobbyRequests = async (
+  query: string,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.get(`/admin/filtered-hobby-requests/?${query}`, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+export const getFilteredPosts = async (
+  query: string,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.get(`/admin/filtered-posts/?${query}`, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+export const getFilteredCommunities = async (
+  query: string,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.get(`/admin/filtered-communities/?${query}`, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+export const addHobbyToUsers = async (
+  hobbyId: string,
+  userIds: string[]
+):Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const response = await axiosInstance.post(
+      `/admin/add-hobby/${hobbyId}`,{ userIds },{headers}
+    );
+    return { res: response, err: null }
+  } catch (error: any) {
+    console.error('Error adding hobby to users:', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'An error occurred while adding the hobby.');
+  }
+};
+
+export const ToggleHobby = async (
+  slug: string,
+)=> {
+  console.log(slug);
+  
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const response = await axiosInstance.post(
+      `/admin/hobby/toggle`,{slug},{headers}
+    );
+    return { res: response, err: null }
+  } catch (error: any) {
+    console.error('Error', error.response?.data || error.message);
+    // throw new Error(error.response?.data?.message || 'An error occurred while adding the hobby.');
+  }
+};
+
+export const UnpublishPost = async (
+  postId: string,
+  
+):Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const response = await axiosInstance.post(
+      `/admin/posts/mark-as-spam`,{postId},{headers}
+    );
+    return { res: response, err: null }
+  } catch (error: any) {
+    console.error('Error', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'An error occurred while Marking the Post.');
+  }
+};
+
 /** Get `/api/admin/hobbyreq` */
 export const getClaimRequests = async (
   query: any,
@@ -274,19 +374,21 @@ export const getsearchHistory = async (
 }
 
 /** Get `/api/admin/hobbyreq` */
-export const getCommunities = async (): Promise<ApiReturnObject> => {
-  const token = localStorage.getItem('token')
-  const headers = { Authorization: `Bearer ${token}` }
+export const getCommunities = async (params?: { sort?: string }): Promise<ApiReturnObject> => { 
+  const token = localStorage.getItem('token');
+  const headers = { Authorization: `Bearer ${token}` };
+
   try {
     const res = await axiosInstance.get(`/admin/countUsersByHobbyAndCity`, {
       headers,
-    })
-    return { res: res, err: null }
+      params, 
+    });
+    return { res: res, err: null };
   } catch (error) {
-    console.error(error)
-    return { err: error, res: null }
+    console.error(error);
+    return { err: error, res: null };
   }
-}
+};
 
 /** Post `/api/admin/hobbyreq` */
 export const UpdateClaim = async (data: any): Promise<ApiReturnObject> => {

@@ -108,7 +108,7 @@ const CommunityHome: React.FC<Props> = ({ query }) => {
               </div>
             </>
           ) : allPosts.length > 0 ? (
-            allPosts.map((post: any) => {
+            allPosts.filter((item : any)=>item.is_published).map((post: any) => {
               return (
                 <div key={post._id} ref={lastPostElementRef}>
                   <PostCard postData={post} currentSection="posts" />

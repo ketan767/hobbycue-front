@@ -362,17 +362,17 @@ const BlogFilter: React.FC = () => {
           />
 
           {showHobby && hobbyDropdownList.length > 0 && (
-            <p
+            <div
               ref={hobbyRef}
               id="hobby-dropdown"
               className={styles.resultContainer}
             >
               {hobbyDropdownList?.map((x, i) => (
-                <span key={i} onClick={() => handleHobbySelection(x)}>
+                <p key={i} onClick={() => handleHobbySelection(x)}>
                   {x?.display}
-                </span>
+                </p>
               ))}
-            </p>
+            </div>
           )}
         </div>
         {/* <div className={`${styles.formGroup} ${styles.position}`}>

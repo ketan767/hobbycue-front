@@ -267,7 +267,7 @@
   .select-container .select-input {
     position: relative;
     padding: 7.5px 12px;
-    border: 1px solid #bababa;
+    /* border: 1px solid #bababa; */
     display: flex;
     align-items: center;
     border-radius: 8px;

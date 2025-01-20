@@ -125,6 +125,7 @@ const AdminDashboard: React.FC = () => {
   const [NameSort, setNameSort] = useState<boolean>(true)
   const [loading, setLoading] = useState<boolean>(false)
   const [count, setCount] = useState(0)
+  const [sortFactor, setSortFactor] = useState('-last_login')
   const [totalUserCount, setTotalUserCount] = useState(0);
   const [activeSort, setActiveSort] = useState('login')
   const [isError, setIsError] = useState<boolean>(false)
@@ -240,7 +241,7 @@ const AdminDashboard: React.FC = () => {
 
     setLoading(true)
     const { res, err } = await getAllUserDetail(
-      `limit=${pagelimit}&sort=-last_login&page=${page}&populate=sessions`,
+      `limit=${pagelimit}&sort=${sortFactor}&page=${page}&populate=sessions`,
     )
     if (err) {
       console.log('An error', err)
@@ -254,7 +255,7 @@ const AdminDashboard: React.FC = () => {
       dispatch(setShowPageLoader(false))
     }
     setLoading(false)
-  }, [dispatch, pagelimit, page])
+  }, [dispatch, pagelimit, page, sortFactor, activeSort])
 
   const fetchAllUsersCount = useCallback(async () => {
     try {
@@ -401,20 +402,26 @@ const AdminDashboard: React.FC = () => {
           Object.values(value).every((v) => v === '')),
     )
   }
+
   const handleLoginSort = () => {
     setActiveSort((prev) => (prev === 'login' ? '' : 'login'))
+    setSortFactor((prev) => (prev === '-last_login' ? 'last_login' : '-last_login'))
     setLoginSort((prev) => !prev)
     setJoinedSort(false)
     setNameSort(false)
   }
+
   const handleNameSort = () => {
     setActiveSort((prev) => (prev === 'name' ? '' : 'name'))
+    setSortFactor((prev) => (prev === 'full_name' ? '-full_name' : 'full_name'))
     setNameSort((prev) => !prev)
     setLoginSort(false)
     setJoinedSort(false)
   }
+
   const handleJoinedSort = () => {
     setActiveSort((prev) => (prev === 'joined' ? '' : 'joined'))
+    setSortFactor((prev) => (prev === '-createdAt' ? 'createdAt' : '-createdAt'))
     setJoinedSort((prev) => !prev)
     setLoginSort(false)
     setNameSort(false)
@@ -422,6 +429,7 @@ const AdminDashboard: React.FC = () => {
 
   useEffect(() => {
     setActiveSort('login')
+    setSortFactor('-last_login')
     setLoginSort(false)
     setJoinedSort(false)
     setNameSort(false)
@@ -631,34 +639,8 @@ const AdminDashboard: React.FC = () => {
               <tbody>
                 {!loading &&
                   filteredUsers?.length > 0 &&
-                  filteredUsers
-                    ?.sort((a, b) => {
-                      if (NameSort) {
-                        return NameSort
-                          ? (a.full_name || '').localeCompare(b.full_name || '')
-                          : b.full_name.localeCompare(a.full_name)
-                      }
-                      if (loginSort) {
-                        return loginSort
-                          ? new Date(a.last_login).getTime() -
-                              new Date(b.last_login).getTime()
-                          : new Date(b.last_login).getTime() -
-                              new Date(a.last_login).getTime()
-                      }
-
-                      if (joinedSort) {
-                        return joinedSort
-                          ? new Date(a.createdAt).getTime() -
-                              new Date(b.createdAt).getTime()
-                          : new Date(b.createdAt).getTime() -
-                              new Date(a.createdAt).getTime()
-                      }
-
-                      return 0
-                    })
-                    ?.map((user: any) => (
+                  filteredUsers?.map((user: any) => (
                       <tr key={user._id}>
-                        {/* user */}
                         <td>
                           <Link
                             href={`/profile/${user.profile_url}`}

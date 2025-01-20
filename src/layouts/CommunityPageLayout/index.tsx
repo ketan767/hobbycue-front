@@ -1427,6 +1427,7 @@ const CommunityLayout: React.FC<Props> = ({
                         value={selectedLocation}
                         // inputProps={{ 'aria-label': 'Without label' }}
                         className={` ${styles['location-dropdown']}`}
+                        showDefaultBtn={true}
                       >
                         {visibilityData?.map((item: any, idx) => {
                           return (
@@ -1515,21 +1516,6 @@ const CommunityLayout: React.FC<Props> = ({
                   </ContentLoader>
                 )}
               </section>
-              <Link
-                ref={settingsIconRef}
-                href={'/settings/visibility-notification'}
-                className={styles['settings-icon']}
-              >
-                <Image
-                  height={20}
-                  width={20}
-                  src={settingsIcon}
-                  alt="settings-icon"
-                />
-                <span className={styles['default-settings-text']}>
-                  Default Settings
-                </span>
-              </Link>
             </aside>
           </div>
         )}

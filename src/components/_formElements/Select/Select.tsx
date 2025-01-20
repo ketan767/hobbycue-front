@@ -5,6 +5,8 @@ import Image from 'next/image'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
 import { toggleButtonClasses } from '@mui/material'
 import DefaultPageImage from '@/assets/svg/default-images/default-people-listing-icon.svg'
+import Link from 'next/link'
+import settingsIcon from '@/assets/svg/setting/settings.svg'
 
 type Props = {
   options?: any
@@ -27,6 +29,7 @@ type Props = {
   >
   id?: string
   handleKeyDown?: (e: any) => void
+  showDefaultBtn?: boolean
 }
 
 const InputSelect: React.FC<Props> = ({
@@ -48,6 +51,7 @@ const InputSelect: React.FC<Props> = ({
   setOpenDropdownId,
   id,
   handleKeyDown,
+  showDefaultBtn,
 }) => {
   const [active, setActive] = useState(false)
 
@@ -122,73 +126,96 @@ const InputSelect: React.FC<Props> = ({
     value == 'All Hobbies'
 
   return (
-    <div
-      style={{ backgroundColor: `${notSelected && '#8064a2'}`, ...style }}
-      className={`${styles.container} ${className || ''}`}
-      tabIndex={0}
-      onKeyDown={(e: any) => {
-        if (handleKeyDown) {
-          handleKeyDown(e)
-        }
-      }}
-    >
-      <header
-        className={styles.header}
-        style={id === 'ListingPlaceAdminHeader' ? { height: '40px' } : {}}
-        onClick={handleHeaderClick}
-      >
-        {type === 'page' ? (
-          <div className={styles['page-type']}>
-            {value && <img src={img ?? DefaultPageImage.src} alt="" />}
-            <p>{value || selectText || 'Select...'}</p>
-          </div>
-        ) : (
-          <p>{value || selectText || 'Select...'}</p>
-        )}
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{
-            rotate:
-              (singleActiveMode && isSingleModeActive) || active
-                ? '180deg'
-                : '0deg',
-          }}
-        >
-          <g id="expand_more_black_24dp 1" clipPath="url(#clip0_173_70421)">
-            <path
-              id="Vector"
-              d="M10.5867 6.195L7.99999 8.78167L5.41332 6.195C5.15332 5.935 4.73332 5.935 4.47332 6.195C4.21332 6.455 4.21332 6.875 4.47332 7.135L7.53332 10.195C7.79332 10.455 8.21332 10.455 8.47332 10.195L11.5333 7.135C11.7933 6.875 11.7933 6.455 11.5333 6.195C11.2733 5.94167 10.8467 5.935 10.5867 6.195Z"
-              fill="#6D747A"
-            />
-          </g>
-          <defs>
-            <clipPath id="clip0_173_70421">
-              <rect width="16" height="16" fill="white" />
-            </clipPath>
-          </defs>
-        </svg>
-      </header>
+    <>
       <div
-        ref={dropdownRef}
-        className={`${styles['options-container']} ${
-          (singleActiveMode && isSingleModeActive) || active
-            ? styles['active']
-            : ''
-        } ${optionsContainerUnactiveClass || ''} ${
-          (singleActiveMode && isSingleModeActive) || active
-            ? optionsContainerClass || ''
-            : ''
-        } ${className || ''}`}
+        style={{ backgroundColor: `${notSelected && '#8064a2'}`, ...style }}
+        className={`${styles.container} ${className || ''}`}
+        tabIndex={0}
+        onKeyDown={(e: any) => {
+          if (handleKeyDown) {
+            handleKeyDown(e)
+          }
+        }}
       >
-        {React.Children.map(children, (child) =>
-          React.cloneElement(child, { onClick: handleChildClick }),
-        )}
+        <header
+          className={styles.header}
+          style={id === 'ListingPlaceAdminHeader' ? { height: '40px' } : {}}
+          onClick={handleHeaderClick}
+        >
+          {type === 'page' ? (
+            <div className={styles['page-type']}>
+              {value && <img src={img ?? DefaultPageImage.src} alt="" />}
+              <p>{value || selectText || 'Select...'}</p>
+            </div>
+          ) : (
+            <p>{value || selectText || 'Select...'}</p>
+          )}
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{
+              rotate:
+                (singleActiveMode && isSingleModeActive) || active
+                  ? '180deg'
+                  : '0deg',
+            }}
+          >
+            <g id="expand_more_black_24dp 1" clipPath="url(#clip0_173_70421)">
+              <path
+                id="Vector"
+                d="M10.5867 6.195L7.99999 8.78167L5.41332 6.195C5.15332 5.935 4.73332 5.935 4.47332 6.195C4.21332 6.455 4.21332 6.875 4.47332 7.135L7.53332 10.195C7.79332 10.455 8.21332 10.455 8.47332 10.195L11.5333 7.135C11.7933 6.875 11.7933 6.455 11.5333 6.195C11.2733 5.94167 10.8467 5.935 10.5867 6.195Z"
+                fill="#6D747A"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_173_70421">
+                <rect width="16" height="16" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        </header>
+        <div
+          ref={dropdownRef}
+          className={`${styles['options-container']} ${
+            (singleActiveMode && isSingleModeActive) || active
+              ? styles['active']
+              : ''
+          } ${optionsContainerUnactiveClass || ''} ${
+            (singleActiveMode && isSingleModeActive) || active
+              ? optionsContainerClass || ''
+              : ''
+          } ${className || ''}`}
+        >
+          {React.Children.map(children, (child) =>
+            React.cloneElement(child, { onClick: handleChildClick }),
+          )}
+
+          {showDefaultBtn && (
+            <>
+              <div className={styles['padding']}></div>
+              <div className={styles['default-btn-seperator']}></div>
+              <Link
+                href={'/settings/visibility-notification'}
+                className={styles['settings-icon']}
+              >
+                <Image
+                  height={20}
+                  width={20}
+                  src={settingsIcon}
+                  alt="settings-icon"
+                />
+                <span className={styles['default-settings-text']}>
+                  Default Settings
+                </span>
+              </Link>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

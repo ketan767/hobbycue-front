@@ -650,7 +650,12 @@ const ListingHeader: React.FC<Props> = ({
   useEffect(() => {
     return () => {
       dispatch(updateViewAs(''))
-      dispatch(updateListingLayoutMode('edit'))
+      const userHasListing = Boolean(
+        user._listings?.find(
+          (listing: any) => listing.page_url === router.query.page_url,
+        ),
+      )
+      if (userHasListing) dispatch(updateListingLayoutMode('edit'))
     }
   }, [])
 

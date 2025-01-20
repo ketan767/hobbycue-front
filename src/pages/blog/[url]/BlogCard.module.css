@@ -220,6 +220,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: transparent;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .comment-input-wrapper .submit-btn:focus-visible {
@@ -302,6 +304,10 @@
   font-size: 14px;
   line-height: 18px;
   color: #000000;
+  width: 30vw;
+  overflow: hhidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .all-comment-container .comment .content-wrapper .date {
@@ -646,10 +652,24 @@ background: rgba(128, 100, 162, 0.25);
 }
 @media screen and (max-width: 1100px) {
   .author-name {
-    max-width: calc(100% - 100px);
+    /* max-width: calc(100% - 100px); */
+    max-width: 100%;
+    font-family: Poppins;
+    font-weight: 500;
+    line-height: 18px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    font-size: 14px;
+
+    width: 84px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   .comment {
-    max-width: calc(100% - 48px);
+    /* max-width: calc(100% - 48px); */
+    max-width: 100%;
   }
   .metaImgContainer {
     
@@ -693,7 +713,9 @@ background: rgba(128, 100, 162, 0.25);
 
   padding: 8px 12px;
 }
-
+.all-comment-container .comment .content-wrapper .author-name {
+  width: 50vw;
+}
 .posts-meta-data-container {
   display: flex;
   /* width: 304px; */

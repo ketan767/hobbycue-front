@@ -12,7 +12,7 @@ import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import { getAllPostsWithComments } from '@/services/post.service'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
-import { deletePostByAdmin } from '@/services/admin.service'
+import { deletePostByAdmin, getFilteredPosts, ToggleHobby, UnpublishPost } from '@/services/admin.service'
 import { Fade, Icon, Modal } from '@mui/material'
 import EditPostModal from '@/components/_modals/AdminModals/EditpostsModal'
 import { formatDate } from '@/utils/Date'
@@ -34,6 +34,7 @@ import { pageType } from '@/utils'
 import sortAscending from '@/assets/icons/Sort-Ascending-On.png'
 import sortDescending from '@/assets/icons/Sort-Ascending-Off.png'
 import PostsFilter, { PostModalState } from '@/components/AdminPage/Filters/PostsFilter/PostsFilter'
+import AdminToggleButton from '@/components/_buttons/AdminToggle/AdminToggle'
 
 type PostProps = any
 type SearchInput = {
@@ -110,21 +111,64 @@ const AdminDashboard: React.FC = () => {
     display: false,
     message: '',
   })
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  const buildQueryParams = () => {
+    const params = new URLSearchParams();
+  
+    // Filter by upvotes range
+    if (modalState.upvotes.min) params.append('upvotesMin', modalState.upvotes.min);
+    if (modalState.upvotes.max) params.append('upvotesMax', modalState.upvotes.max);
+  
+    // Filter by downvotes range
+    if (modalState.downvotes.min) params.append('downvotesMin', modalState.downvotes.min);
+    if (modalState.downvotes.max) params.append('downvotesMax', modalState.downvotes.max);
+  
+    // Filter by comments range
+    if (modalState.comments.min) params.append('commentsMin', modalState.comments.min);
+    if (modalState.comments.max) params.append('commentsMax', modalState.comments.max);
+  
+    // Filter by author
+    if (modalState.author) params.append('author', modalState.author);
+  
+    // Filter by content
+    if (modalState.content) params.append('content', modalState.content);
+  
+    // Filter by hobby
+    if (modalState.hobby) params.append('hobby', modalState.hobby);
+  
+    // Filter by location
+    if (modalState.location) params.append('location', modalState.location);
+  
+    // Filter by postedAt date range
+    if (modalState.postedAt.start) params.append('startDate', modalState.postedAt.start);
+    if (modalState.postedAt.end) params.append('endDate', modalState.postedAt.end);
+  
+    // Filter by spam status
+    if (modalState.spam === true) params.append('spam', String(modalState.spam));
+    if(data.search.value!=='') params.append('search', data.search.value);
+    // Pagination and sorting
+    params.append('limit', pagelimit.toString());
+    params.append('sort', createdAtSort?'-createdAt' : 'createdAt');  // Default sort
+    params.append('page', page.toString());
+    
+    return params.toString();
+  };
+  
   const dispatch = useDispatch()
+  
   const fetchPosts = async () => {
+    const params = buildQueryParams();
+    const newUrl = `${window.location.pathname}?${params}`;
+    window.history.pushState({ path: newUrl }, '', newUrl);
     dispatch(setShowPageLoader(true))
-    const { res, err } = await getAllPostsWithComments(
-      `populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3&limit=${pagelimit}&sort=-createdAt&page=${page}`,
-    )
-    const posts = await getAllPostsWithComments(
-      `populate=_author,_genre,_hobby,_allHobbies._hobby1,_allHobbies._hobby2,_allHobbies._hobby3,_allHobbies._genre1,_allHobbies._genre2,_allHobbies._genre3`,
-    )
+    const{err,res} = await getFilteredPosts(params);
     if (err) {
       console.log('An error', err)
       dispatch(setShowPageLoader(false))
     } else {
-      setCount(posts?.res.data.data.posts.length)
-      setTotalPages(Math.ceil(posts?.res.data.data.posts.length / pagelimit))
+      setCount(res.data.data.totalCount)
+      setTotalPages(res.data.data.totalPages)
       setSearchResults(res.data?.data?.posts)
       console.log('res', res.data?.data?.posts)
       dispatch(setShowPageLoader(false))
@@ -138,15 +182,8 @@ const AdminDashboard: React.FC = () => {
 
   const handleInputSearch = (event: React.FormEvent) => {
     event.preventDefault();
-    const value = data.search.value
-    if (value === '') {
-      return;
-    } 
-      const searchres = searchResults.filter((item) =>
-        item?._author?.full_name?.toLowerCase().includes(value.toLowerCase()) || item?.visibility?.toLowerCase().includes(value.toLowerCase()) || item?.content?.toLowerCase().includes(value.toLowerCase()) || item?.hobby?.toLowerCase().includes(value.toLowerCase())
-      )
-      setSearchResults(searchres)
-      setCount(searchres.length)
+    setPage(1);
+    fetchPosts();
   }
 
   const goToPreviousPage = () => {
@@ -156,6 +193,12 @@ const AdminDashboard: React.FC = () => {
   const goToNextPage = () => {
     setPage(page + 1)
   }
+
+   const HandleToggle =async (postId : string)=>{
+      console.log(postId);
+      await UnpublishPost(postId);
+      window.location.reload();
+    }
 
   useEffect(() => {
     const minHeight = 700; // Replace with the minimum height
@@ -178,10 +221,67 @@ const AdminDashboard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if(page&&data.search.value===''&&!hasNonEmptyValues(modalState)){
-      fetchPosts();
-    }
-  }, [page, pagelimit,data,modalState])
+    const params = new URLSearchParams(window.location.search);
+  
+    // Set modalState values based on the URL search params
+    setModalState((prevState) => ({
+      ...prevState,
+      upvotes: {
+        min: params.get('upvotesMin') || '',
+        max: params.get('upvotesMax') || '',
+      },
+      downvotes: {
+        min: params.get('downvotesMin') || '',
+        max: params.get('downvotesMax') || '',
+      },
+      comments: {
+        min: params.get('commentsMin') || '',
+        max: params.get('commentsMax') || '',
+      },
+      author: params.get('author') || '',
+      content: params.get('content') || '',
+      hobby: params.get('hobby') || '',
+      location: params.get('location') || '',
+      postedAt: {
+        start: params.get('startDate') || '',
+        end: params.get('endDate') || '',
+      },
+      spam: params.get('spam') === 'true',
+    }));
+  
+    // Set data.search.value based on the URL search params
+    setData((prevState) => ({
+      ...prevState,
+      search: { value: params.get('search') || '', error: null },
+    }));
+  
+    // Set page and limit
+    setPage(Number(params.get('page')) || 1);
+    setPagelimit(Number(params.get('limit')) || 10);
+  
+    
+  
+    // Mark as initialized
+    setIsInitialized(true);
+  }, []);
+  
+
+ useEffect(() => {
+     if (!isInitialized) return; 
+   
+     if (
+       (!hasNonEmptyValues(modalState) && data.search.value === '') ||page>1
+     ) {
+       fetchPosts();
+     }
+   
+   }, [isInitialized, data.search.value, pagelimit, createdAtSort, modalState, page]);
+
+  // useEffect(() => {
+  //   if(page){
+  //     fetchPosts();
+  //   }
+  // }, [page])
 
   const filterSvg = (
     <svg
@@ -315,13 +415,7 @@ const AdminDashboard: React.FC = () => {
     }
   }
 
-  const sortedResults = searchResults
-    ?.slice()
-    ?.sort((a, b) => {
-      return createdAtSort
-        ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    });
+  
 
   const hasNonEmptyValues = (state: PostModalState) => {
     return !Object.entries(state).every(
@@ -333,96 +427,12 @@ const AdminDashboard: React.FC = () => {
     )
   }
 
-  const handleSearch = async (event: React.FormEvent) => {
-    event.preventDefault();
-    const searchValue = data.search.value.trim();
-
-    if (!searchValue) {
-      // setSearchResults([]);
-      // setPageNumber([]);
-      // setCount(0);
-      return;
-    }
-  };
-
+ 
   const ApplyFilter = (): void => {
-    let filteredResults = searchResults;
-
-    if (modalState.hobby) {
-      filteredResults = filteredResults.filter(
-        (hobbyreq: any) => hobbyreq?._hobby?.toLowerCase().includes(modalState.hobby.toLowerCase())
-      );
-    }
-
-    if (modalState.location) {
-      filteredResults = filteredResults.filter(
-        (hobbyreq: any) => hobbyreq?.visibility?.toLowerCase().includes(modalState.location.toLowerCase())
-      );
-    }
-
-    if (modalState.content) {
-      filteredResults = filteredResults.filter(
-        (hobbyreq: any) => hobbyreq?.content?.toLowerCase().includes(modalState.content.toLowerCase())
-      );
-    }
-
-    if (modalState.author) {
-      filteredResults = filteredResults.filter(
-        (hobbyreq: any) => hobbyreq?._author?.full_name?.toLowerCase().includes(modalState.author.toLowerCase())
-      );
-    }
-
-    if (modalState.postedAt.start && modalState.postedAt.end) {
-      filteredResults = filteredResults.filter(
-        (hobbyreq: any) =>
-          new Date(hobbyreq?.createdAt) >= new Date(modalState.postedAt.start) &&
-          new Date(hobbyreq?.createdAt) <= new Date(modalState.postedAt.end)
-      );
-    }
-
-    if (modalState.spam) {
-      filteredResults = filteredResults.filter(
-        (hobbyreq: any) => hobbyreq?.is_published === modalState.spam
-      );
-    }
-
-    if (modalState.comments.min || modalState.comments.max) {
-      filteredResults = filteredResults.filter((data: any) => {
-        const userCount = data?.comments?.length || 0;
-        const min = modalState.comments.min ? parseInt(modalState.comments.min) : 0;
-        const max = modalState.comments.max ? parseInt(modalState.comments.max) : Infinity;
-        return userCount >= min && userCount <= max;
-      });
-    }
-
-    if (modalState.upvotes.min || modalState.upvotes.max) {
-      filteredResults = filteredResults.filter((data: any) => {
-        const userCount = data?.up_votes?.length || 0;
-        const min = modalState.upvotes.min ? parseInt(modalState.upvotes.min) : 0;
-        const max = modalState.upvotes.max ? parseInt(modalState.upvotes.max) : Infinity;
-        return userCount >= min && userCount <= max;
-      });
-    }
-
-    if (modalState.downvotes.min || modalState.downvotes.max) {
-      filteredResults = filteredResults.filter((data: any) => {
-        const userCount = data?.down_votes?.length || 0;
-        const min = modalState.downvotes.min ? parseInt(modalState.downvotes.min) : 0;
-        const max = modalState.downvotes.max ? parseInt(modalState.downvotes.max) : Infinity;
-        return userCount >= min && userCount <= max;
-      });
-    }
-
-    setSearchResults(filteredResults);
-
-    // Update the count based on filtered results
-    setCount(filteredResults.length);
-    setTotalPages(Math.ceil(filteredResults.length / pagelimit))
-    
+    setPage(1);
+    fetchPosts();
   };
   
-
-
   return (
     <>
       <AdminLayout>
@@ -640,11 +650,8 @@ const AdminDashboard: React.FC = () => {
                 </tr>
               </thead>
               <tbody >
-                {sortedResults?.map((hobbyreq, index) => (
+                {searchResults?.map((hobbyreq, index) => (
                   <tr key={index}>
-
-
-
                     <td>
                       <Link
                         href={
@@ -708,7 +715,7 @@ const AdminDashboard: React.FC = () => {
                       <div>{formatDate(hobbyreq?.createdAt)}</div>
                     </td>
                     <td >
-                      <div>{hobbyreq?._hobby}</div>
+                      <div>{hobbyreq?._hobby?.display}</div>
                     </td>
                     <td >
                       <div>{hobbyreq?.visibility}</div>
@@ -729,7 +736,7 @@ const AdminDashboard: React.FC = () => {
                       <div>{hobbyreq?.down_votes?.count}</div>
                     </td>
                     <td >
-                      <ToggleButton isOn= {!hobbyreq?.is_published}/>
+                      <AdminToggleButton isOn= {!hobbyreq?.is_published} handleToggle={()=>HandleToggle(hobbyreq?._id)}/>
                     </td>
                     <td>
                       <div
