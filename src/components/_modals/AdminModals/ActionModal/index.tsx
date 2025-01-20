@@ -55,7 +55,6 @@ const AdminActionModal: React.FC<Props> = ({
       handleClose()
     }
   }
-  console.log(data)
 
   // Close modal on pressing 'Esc'
   const handleKeyDown = (event: KeyboardEvent) => {
