@@ -196,7 +196,7 @@
 }
 .title {
   margin-top: 8px;
-  padding: var(--spacing-16);
+  padding:  var(--spacing-16) var(--spacing-8);
   padding-top: 8px;
   font-size: 20px;
   line-height: 24px;

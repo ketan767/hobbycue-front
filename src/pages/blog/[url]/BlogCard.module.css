@@ -224,14 +224,22 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+.comment-input-wrapper .submit-btn:focus,
 .comment-input-wrapper .submit-btn:focus-visible {
-  color: #8064A2 !important;
-
+  outline:none;
+  background-color: rgba(var(--primary-100-rgb));
+  box-shadow: none;
 }
-
-.comment-input-wrapper .submit-btn:focus {
-  color: #8064A2 !important;
-
+.comment-input-wrapper .submit-btn:focus>svg>path,
+.comment-input-wrapper .submit-btn:focus-visible>svg>path {
+  fill: #ffffff;
+  }
+.comment-input-wrapper .submit-btn:hover {
+  background-color: rgba(var(--primary-100-rgb), 0.2);
+}
+.comment-input-wrapper .submit-btn:disabled {
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 .submit-btn-svg{
