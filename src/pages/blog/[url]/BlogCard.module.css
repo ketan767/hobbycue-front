@@ -304,7 +304,7 @@
   font-size: 14px;
   line-height: 18px;
   color: #000000;
-  width: 84px;
+  width: 30vw;
   overflow: hhidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -713,7 +713,9 @@ background: rgba(128, 100, 162, 0.25);
 
   padding: 8px 12px;
 }
-
+.all-comment-container .comment .content-wrapper .author-name {
+  width: 50vw;
+}
 .posts-meta-data-container {
   display: flex;
   /* width: 304px; */

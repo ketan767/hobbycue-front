@@ -113,9 +113,9 @@ const SingleComment: React.FC<Props> = ({
       {/* All Content  */}
       <section className={styles['content-wrapper']}>
         {/* Header */}
-        <header style={{marginBottom: '4px'}}>
+        <header style={{ marginBottom: '4px' }}>
           <Link href={`/profile/${comment?._author?.profile_url}`}>
-            <p className={`truncateOneLine ${styles['author-name']}`}>
+            <p className={` ${styles['author-name']}`}>
               {comment?.author_type === 'Listing'
                 ? comment?._author?.title
                 : comment?._author?.full_name}
