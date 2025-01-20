@@ -214,6 +214,7 @@ const index: FC<indexProps> = ({}) => {
                           border-top:1px solid #ccc;
                           padding-right:16px;
                           margin-inline: auto;
+                          padding-top: 0;
                         }
                         .ql-editor.ql-indent-1{
                           padding-left:4px;
