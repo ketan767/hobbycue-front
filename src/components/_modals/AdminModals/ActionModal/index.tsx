@@ -55,6 +55,7 @@ const AdminActionModal: React.FC<Props> = ({
       handleClose()
     }
   }
+  console.log(data)
 
   // Close modal on pressing 'Esc'
   const handleKeyDown = (event: KeyboardEvent) => {
@@ -174,7 +175,7 @@ const AdminActionModal: React.FC<Props> = ({
              
                 <span className={styles.label}>Updated By:</span>
                 
-                    <span className={styles.value}>{"HobbyCue Admin"}</span>
+                    <span className={styles.value}>{data?.updatedBy}</span>
                     
                 {/* <span className={styles.value}></span> */}
               </div>

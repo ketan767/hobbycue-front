@@ -304,7 +304,7 @@ const EditPostModal: React.FC<Props> = ({ _id, handleClose }) => {
              
                 <span className={styles.label}>Updated By:</span>
                 
-                    <span className={styles.value}>{"HobbyCue Admin"}</span>
+                    <span className={styles.value}>{post?.updatedBy || ""}</span>
                     
                 {/* <span className={styles.value}></span> */}
               </div>
